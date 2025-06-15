@@ -75,8 +75,6 @@
             border: 1px solid var(--glass-border);
             box-shadow: var(--glass-shadow);
         }
-.section-container .about-content .about-video-container.glass {
-}
 
         .glass-elevated {
             background: var(--surface-elevated);
@@ -772,9 +770,75 @@
             margin-bottom: 24px;
         }
 
-        .about-stats {
+        /* Fixed About Video Container */
+        .about-video-container {
+            position: relative;
+            height: 400px; /* Fixed height like hero video */
+            border-radius: 24px;
+            overflow: hidden;
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            background: linear-gradient(135deg, rgba(255, 255, 255, 0.05), rgba(255, 255, 255, 0.02));
+        }
+
+        .about-video {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            border-radius: 24px;
+        }
+
+        .about-video-loading {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            z-index: 2;
+            color: var(--text-secondary);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 16px;
+        }
+
+        .about-video-loading-spinner {
+            width: 40px;
+            height: 40px;
+            border: 3px solid rgba(255, 255, 255, 0.2);
+            border-top: 3px solid var(--accent-primary);
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+
+        .about-video-overlay {
+            position: absolute;
+            bottom: 24px;
+            left: 24px;
+            right: 24px;
+            background: rgba(0, 0, 0, 0.4);
+            backdrop-filter: blur(15px);
+            border-radius: 12px;
+            padding: 16px;
+            z-index: 3;
+            text-align: center;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .about-video-fallback {
+            width: 100%;
+            height: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: linear-gradient(135deg, rgba(255, 255, 255, 0.1), rgba(255, 255, 255, 0.05));
+            color: var(--text-primary);
+            text-align: center;
+            padding: 40px;
+        }
+
+        .about-stats-grid {
             display: grid;
-            grid-template-columns: 1fr 1fr;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
             gap: 20px;
         }
 
@@ -1333,12 +1397,13 @@
             .hero {
                 padding: 100px 20px 60px;
             }
-.about-video {
-	max-width: 400px;
-}
 
             .section {
                 padding: 80px 20px;
+            }
+
+            .about-video-container {
+                height: 300px;
             }
         }
 
@@ -1351,8 +1416,8 @@
                 padding: 32px 24px;
             }
 
-            .about-stats {
-                grid-template-columns: 1fr;
+            .about-stats-grid {
+                grid-template-columns: repeat(2, 1fr);
             }
         }
 
@@ -1473,7 +1538,6 @@
                     </div>
                 </video>
                 
-                <!-- Video Controls -->
                 <!-- Video Overlay -->
                 <div class="video-overlay">
                     <h2>Healthy Brunch</h2>
@@ -1587,7 +1651,6 @@
                         </div>
                     </video>
                     
-                    <!-- Video Controls -->
                     <!-- Video Overlay -->
                     <div class="about-video-overlay">
                         <h4 style="font-size: 18px; font-weight: 600; margin-bottom: 4px;">Unsere Story</h4>
@@ -1697,7 +1760,7 @@
                     <div class="info-card glass">
                         <h4>📍 Adresse</h4>
                         <p>
-                          ra’mien restaurant GmbH&nbsp; &nbsp;<br>
+                          ra'mien restaurant GmbH&nbsp; &nbsp;<br>
                           Gumpendorfer str. 9<br>
                       1060 Wien </p>
                     </div>
@@ -1766,13 +1829,13 @@
                 <h4>Öffnungszeiten</h4>
                 <p>Montag: 08:00 - 14:00</p>
                 <p>Dienstag - Sonntag: Geschlossen</p>
-                <p style="margin-top: 1rem;">📍 Hafencity, Hamburg</p>
+                <p style="margin-top: 1rem;">📍 Wien, Österreich</p>
             </div>
             
             <div class="footer-section">
                 <h4>Kontakt</h4>
-                <a href="mailto:hello@healthybrunchclub.de">hello@healthybrunchclub.de</a>
-                <a href="tel:+494012345678">+49 40 123 456 78</a>
+                <a href="mailto:hello@healthybrunchclub.at">hello@healthybrunchclub.at</a>
+                <a href="tel:+4367612345678">+43 676 123 456 78</a>
                 <p style="margin-top: 1rem;">
                     <a href="/impressum">Impressum</a> | 
                     <a href="/datenschutz">Datenschutz</a>
@@ -1781,7 +1844,7 @@
         </div>
         
         <div class="footer-bottom">
-            <p>&copy; 2025 Healthy Brunch Club. Made with 💚 in Hamburg | Powered by Netlify</p>
+            <p>&copy; 2025 Healthy Brunch Club. Made with 💚 in Wien | Powered by Netlify</p>
         </div>
     </footer>
 
@@ -1977,88 +2040,6 @@
             }
         }
 
-        function togglePlayPause() {
-            const video = document.getElementById('heroVideo');
-            const btn = document.getElementById('playPauseBtn');
-            
-            if (!video) return;
-            
-            if (video.paused) {
-                video.play();
-                btn.textContent = '⏸️';
-                btn.title = 'Pause';
-            } else {
-                video.pause();
-                btn.textContent = '▶️';
-                btn.title = 'Play';
-            }
-        }
-
-        function toggleMute() {
-            const video = document.getElementById('heroVideo');
-            const btn = document.getElementById('muteBtn');
-            
-            if (!video) return;
-            
-            if (video.muted) {
-                video.muted = false;
-                btn.textContent = '🔊';
-                btn.title = 'Mute';
-            } else {
-                video.muted = true;
-                btn.textContent = '🔇';
-                btn.title = 'Unmute';
-            }
-        }
-
-        // Initialize video
-        function initializeVideo() {
-            const video = document.getElementById('heroVideo');
-            if (!video) return;
-
-            // Set video source - replace with your actual video path
-            video.src = '/content/videos/intro.mp4'; // UPDATE THIS PATH
-            
-            // Ensure video loops smoothly
-            video.addEventListener('ended', () => {
-                video.currentTime = 0;
-                video.play();
-            });
-
-            // Handle video load events
-            video.addEventListener('loadstart', showVideoLoading);
-            video.addEventListener('canplay', hideVideoLoading);
-            video.addEventListener('error', handleVideoError);
-
-            // Auto-hide controls after hover
-            const videoContainer = video.parentElement;
-            let hideControlsTimeout;
-
-            videoContainer.addEventListener('mouseenter', () => {
-                clearTimeout(hideControlsTimeout);
-                document.querySelector('.video-controls').style.opacity = '1';
-            });
-
-            videoContainer.addEventListener('mouseleave', () => {
-                hideControlsTimeout = setTimeout(() => {
-                    document.querySelector('.video-controls').style.opacity = '0';
-                }, 2000);
-            });
-
-            // Intersection Observer for performance
-            const observer = new IntersectionObserver((entries) => {
-                entries.forEach(entry => {
-                    if (entry.isIntersecting) {
-                        video.play();
-                    } else {
-                        video.pause();
-                    }
-                });
-            }, { threshold: 0.5 });
-
-            observer.observe(video);
-        }
-
         // About Video Functions
         function showAboutVideoLoading() {
             const loading = document.getElementById('aboutVideoLoading');
@@ -2093,78 +2074,50 @@
             }
         }
 
-        function toggleAboutPlayPause() {
-            const video = document.getElementById('aboutVideo');
-            const btn = document.getElementById('aboutPlayPauseBtn');
-            
+        // Initialize videos
+        function initializeVideo() {
+            const video = document.getElementById('heroVideo');
             if (!video) return;
+
+            // Set video source - replace with your actual video path
+            video.src = '/content/videos/intro.mp4'; // UPDATE THIS PATH
             
-            if (video.paused) {
-                video.play();
-                btn.textContent = '⏸️';
-                btn.title = 'Pause';
-            } else {
-                video.pause();
-                btn.textContent = '▶️';
-                btn.title = 'Play';
-            }
+            // Handle video events
+            video.addEventListener('loadstart', showVideoLoading);
+            video.addEventListener('canplay', hideVideoLoading);
+            video.addEventListener('error', handleVideoError);
+
+            // Intersection Observer for performance
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        video.play().catch(() => {});
+                    } else {
+                        video.pause();
+                    }
+                });
+            }, { threshold: 0.5 });
+
+            observer.observe(video);
         }
 
-        function toggleAboutMute() {
-            const video = document.getElementById('aboutVideo');
-            const btn = document.getElementById('aboutMuteBtn');
-            
-            if (!video) return;
-            
-            if (video.muted) {
-                video.muted = false;
-                btn.textContent = '🔊';
-                btn.title = 'Mute';
-            } else {
-                video.muted = true;
-                btn.textContent = '🔇';
-                btn.title = 'Unmute';
-            }
-        }
-
-        // Initialize About Video
         function initializeAboutVideo() {
             const video = document.getElementById('aboutVideo');
             if (!video) return;
 
             // Set video source - replace with your actual about video path
-            video.src = '/content/videos/sarmiento.mp4'; // UPDATE THIS PATH
+            video.src = '/content/videos/about.mp4'; // UPDATE THIS PATH
             
             // Handle video events
             video.addEventListener('loadstart', showAboutVideoLoading);
             video.addEventListener('canplay', hideAboutVideoLoading);
             video.addEventListener('error', handleAboutVideoError);
 
-            // Auto-hide controls
-            const videoContainer = video.parentElement;
-            let hideControlsTimeout;
-
-            videoContainer.addEventListener('mouseenter', () => {
-                clearTimeout(hideControlsTimeout);
-                const controls = videoContainer.querySelector('.about-video-controls');
-                if (controls) controls.style.opacity = '1';
-            });
-
-            videoContainer.addEventListener('mouseleave', () => {
-                hideControlsTimeout = setTimeout(() => {
-                    const controls = videoContainer.querySelector('.about-video-controls');
-                    if (controls) controls.style.opacity = '0';
-                }, 2000);
-            });
-
             // Intersection Observer for performance
             const observer = new IntersectionObserver((entries) => {
                 entries.forEach(entry => {
                     if (entry.isIntersecting) {
-                        // Auto-play when in view (only if user has interacted)
-                        video.play().catch(() => {
-                            // Auto-play blocked, that's fine
-                        });
+                        video.play().catch(() => {});
                     } else {
                         video.pause();
                     }
@@ -2173,16 +2126,6 @@
 
             observer.observe(video);
         }
-
-        // Update initialization to include about video
-        document.addEventListener('DOMContentLoaded', () => {
-            loadMenu('all');
-            setMinDate();
-            initScrollEffects();
-            initParallax();
-            initializeVideo();
-            initializeAboutVideo(); // Add about video initialization
-        });
 
         // Menu filtering
         function filterMenu(category) {
@@ -2411,20 +2354,6 @@
             });
         }
 
-        // Initialize parallax effects
-        function initParallax() {
-            const parallaxElements = document.querySelectorAll('.hero-visual');
-            
-            window.addEventListener('scroll', () => {
-                const scrolled = window.pageYOffset;
-                const rate = scrolled * -0.5;
-                
-                parallaxElements.forEach(element => {
-                    element.style.transform = `translateY(${rate}px)`;
-                });
-            });
-        }
-
         // Smooth scroll
         document.querySelectorAll('a[href^="#"]').forEach(anchor => {
             anchor.addEventListener('click', function (e) {
@@ -2456,131 +2385,35 @@
             });
         }, observerOptions);
 
-        // Observe elements for animation
+        // Initialize everything
         document.addEventListener('DOMContentLoaded', () => {
+            loadMenu('all');
+            setMinDate();
+            initScrollEffects();
+            initializeVideo();
+            initializeAboutVideo();
+            
+            // Observe elements for animation
             document.querySelectorAll('.feature-card, .music-event, .stat-card, .info-card').forEach(el => {
                 el.style.opacity = '0';
                 el.style.transform = 'translateY(30px)';
                 el.style.transition = 'all 0.8s cubic-bezier(0.4, 0, 0.2, 1)';
                 observer.observe(el);
             });
-        });
-
-        // Form event listeners
-        document.addEventListener('DOMContentLoaded', () => {
+            
+            // Form event listeners
             const forms = document.querySelectorAll('form');
             forms.forEach(form => {
                 form.addEventListener('submit', handleFormSubmit);
             });
         });
 
-        // Add floating animation to cards
-        function addFloatingAnimation() {
-            const cards = document.querySelectorAll('.booking-card, .feature-card, .music-event');
-            
-            cards.forEach((card, index) => {
-                const delay = index * 0.1;
-                card.style.animation = `float 6s ease-in-out ${delay}s infinite`;
-            });
-        }
-
-        // CSS for floating animation
-        const floatingKeyframes = `
-            @keyframes float {
-                0%, 100% { transform: translateY(0px); }
-                50% { transform: translateY(-10px); }
-            }
-        `;
-
-        // Add keyframes to stylesheet
-        const style = document.createElement('style');
-        style.textContent = floatingKeyframes;
-        document.head.appendChild(style);
-
-        // Initialize floating animation
-        document.addEventListener('DOMContentLoaded', () => {
-            setTimeout(addFloatingAnimation, 1000);
-        });
-
-        // Add mouse trail effect
-        let mouseTrail = [];
-        const maxTrailLength = 20;
-
-        document.addEventListener('mousemove', (e) => {
-            mouseTrail.push({ x: e.clientX, y: e.clientY, time: Date.now() });
-            
-            if (mouseTrail.length > maxTrailLength) {
-                mouseTrail.shift();
-            }
-        });
-
-        // Add keyboard navigation support
+        // Keyboard navigation support
         document.addEventListener('keydown', (e) => {
             if (e.key === 'Escape') {
                 closeModal();
             }
         });
-
-        // Add touch support for mobile
-        let touchStartY = 0;
-
-        document.addEventListener('touchstart', (e) => {
-            touchStartY = e.touches[0].clientY;
-        });
-
-        document.addEventListener('touchmove', (e) => {
-            if (Math.abs(e.touches[0].clientY - touchStartY) > 10) {
-                e.preventDefault();
-            }
-        }, { passive: false });
-
-        // Performance optimization
-        let ticking = false;
-
-        function updateOnScroll() {
-            // Scroll-based animations here
-            ticking = false;
-        }
-
-        window.addEventListener('scroll', () => {
-            if (!ticking) {
-                requestAnimationFrame(updateOnScroll);
-                ticking = true;
-            }
-        });
-
-        // Error handling for images
-        document.addEventListener('error', (e) => {
-            if (e.target.tagName === 'IMG') {
-                e.target.style.display = 'none';
-            }
-        }, true);
-
-        // Preload critical resources
-        function preloadResources() {
-            const link = document.createElement('link');
-            link.rel = 'preload';
-            link.as = 'font';
-            link.href = 'https://fonts.googleapis.com/css2?family=SF+Pro+Display:wght@100;200;300;400;500;600;700;800;900&display=swap';
-            link.crossOrigin = 'anonymous';
-            document.head.appendChild(link);
-        }
-
-        // Initialize everything
-        document.addEventListener('DOMContentLoaded', preloadResources);
-
-        // Service Worker registration for PWA capabilities
-        if ('serviceWorker' in navigator) {
-            window.addEventListener('load', () => {
-                navigator.serviceWorker.register('/sw.js')
-                    .then(registration => {
-                        console.log('SW registered: ', registration);
-                    })
-                    .catch(registrationError => {
-                        console.log('SW registration failed: ', registrationError);
-                    });
-            });
-        }
     </script>
 </body>
 </html>
