@@ -1,8 +1,10 @@
 <!DOCTYPE html>
 <html lang="de">
 
+<div data-sb-object-id="content/pages/index.json">
+  <h1 data-sb-field-path="title">{page.title}</h1>
+</div>
 
-    
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -867,9 +869,9 @@
             <div class="logo">Healthy Brunch Club</div>
             <ul class="nav-links">
                 <li><a href="#home">Home</a></li>
+			  <li><a href="#about">Über uns</a></li>
                 <li><a href="#menu">Menü</a></li>
                 <li><a href="#music">Live Musik</a></li>
-                <li><a href="#about">Über uns</a></li>
                 <li><a href="#contact">Kontakt</a></li>
                 <li><a href="#" class="book-now-btn" onclick="showBookingModal('quick')">Jetzt buchen</a></li>
             </ul>
@@ -879,38 +881,43 @@
     <!-- Hero Section -->
     <section class="hero" id="home">
         <div class="hero-container">
-            <div class="hero-content">
+          <div class="hero-content">
                 <h1>Starte deinen Tag mit <span>Energie & Geschmack</span></h1>
                 <p>Erlebe die perfekte Kombination aus gesundem Essen, inspirierender Musik und positiver Atmosphäre. Dein Montag wird nie wieder derselbe sein.</p>
                 
                 <div class="booking-options">
-                    <div class="booking-card" onclick="showBookingModal('friends')">
+                  <div class="booking-card" onclick="showBookingModal('friends')">
                         <div class="booking-card-icon">👥</div>
                         <h3>Freund:innen Brunch</h3>
-                        <p>Gemeinsam genießen</p>
-                        <span class="booking-card-price">ab 29€ p.P.</span>
+                        <p>Gemeinsam genießen<br>
+                          2-4 Personen
+                        </p>
+                        <span class="booking-card-price">49€</span>
                         <button>Jetzt buchen</button>
                     </div>
                     
                     <div class="booking-card" onclick="showBookingModal('corporate')">
                         <div class="booking-card-icon">💼</div>
-                        <h3>Firmen Brunch</h3>
-                        <p>Team-Building deluxe</p>
-                        <span class="booking-card-price">ab 39€ p.P.</span>
+                        <h3>Firmen Event Brunch</h3>
+                        <p>Team-Building deluxe<br>
+                          (bis 10 Personen)&nbsp;<br>
+                          
+                        </p>
+<span class="booking-card-price">25€ p.P.</span>
                         <button>Jetzt buchen</button>
                     </div>
                     
                     <div class="booking-card" onclick="showBookingModal('feelwell')">
                         <div class="booking-card-icon">🧘‍♀️</div>
-                        <h3>Feel-Well Brunch</h3>
-                        <p>Wellness & Genuss</p>
-                        <span class="booking-card-price">ab 45€ p.P.</span>
-                        <button>Jetzt buchen</button>
+                        <h3>Romantic Brunch</h3>
+                        <p>Love is in the Air<br>
+                        (für 2 Personen)</p>
+                        <span class="booking-card-price">20€</span>
+                      <button>Jetzt buchen</button>
                     </div>
                 </div>
             </div>
-            
-            <div class="hero-image"></div>
+<div class="hero-image">&nbsp;</div>
         </div>
     </section>
 
@@ -946,19 +953,51 @@
                     <h3>Morning Yoga</h3>
                     <p>Optional: Starte mit einer 30-minütigen Yoga-Session vor dem Brunch (Feel-Well Package).</p>
                 </div>
-                
-                <div class="feature-card">
-                    <div class="feature-icon">📱</div>
-                    <h3>Digital Detox Zone</h3>
-                    <p>Handyfreie Bereiche für echte Gespräche und bewussten Genuss.</p>
-                </div>
-                
-                <div class="feature-card">
-                    <div class="feature-icon">🎨</div>
-                    <h3>Kunstvolle Atmosphäre</h3>
-                    <p>Wechselnde Kunstausstellungen lokaler Künstler schaffen ein inspirierendes Ambiente.</p>
-                </div>
+</div>
+        </div>
+    </section>
+	
+	    <!-- About Section -->
+    <section class="features" id="about" style="background: linear-gradient(135deg, rgba(44, 122, 123, 0.03) 0%, rgba(129, 230, 217, 0.03) 100%);">
+        <div class="features-container">
+          <div class="section-header">
+                <h2>Über uns</h2>
+                <p>Eine Vision von gesundem Genuss und Gemeinschaft</p>
             </div>
+<div></div>
+<h3 style="font-size: 1.8rem; margin-bottom: 1rem; color: var(--primary);">Unsere Geschichte</h3>
+<img src="../OneDrive/Desktop/p38.png" width="658" height="496" alt=""/>
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 3rem; align-items: center; margin-top: 3rem;">
+              <div>
+<p style="line-height: 1.8; color: #4a5568; margin-bottom: 1.5rem;">
+          Was einst als einfaches Geburtstagsritual begann, lebt heute in unserem Brunchlokal weiter. Drei Schwestern – eine Ärztin und zwei Flugbegleiterinnen – vereint durch die Liebe zur Familie, zum Reisen und natürlich: zum Brunchen.
+      </p>
+<p style="line-height: 1.8; color: #4a5568; margin-bottom: 1.5rem;">
+          Ob in New York, Chicago, an der Amalfiküste oder aber auch ganz einfach in unserer Heimatstadt Wien – das gemeinsame Brunchen war immer ein besonderer Moment. Und mit jedem Bissen, jedem Kaffee und jeder neuen Idee wuchs auch der Wunsch, diesen Genuss zu teilen. Unsere Wurzeln liegen auf den Philippinen – und mit ihnen eine tiefe Verbundenheit zu Gastfreundschaft, Aromenvielfalt und dem Herz für gutes Essen. Diese Einflüsse spiegeln sich heute in unserer Speisekarte genauso wider wie die Erfahrungen aus aller Welt
+      </p>
+                  <p style="line-height: 1.8; color: #4a5568;">
+                    Als bei Tina eine chronische Darmentzündung diagnostiziert wurde, wurde das Thema Ernährung für uns noch bedeutungsvoller. Seither setzen wir gezielt auf gesunde Alternativen und entzündungshemmende Zutaten – ohne auf Geschmack oder Kreativität zu verzichten. Das Ergebnis: Eine bunte Auswahl an trendigen, ausgewogenen und international inspirierten Brunchgerichten, die nicht nur sättigen, sondern glücklich machen. Kommt vorbei, bruncht mit uns
+                </p>
+              </div>
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
+                  <div style="background: white; padding: 2rem; border-radius: 15px; text-align: center; box-shadow: 0 4px 6px rgba(0,0,0,0.07);">
+                        <div style="font-size: 2.5rem; font-weight: 700; color: var(--primary);">500+</div>
+                        <div style="color: #718096;">Glückliche Stammgäste</div>
+                  </div>
+                    <div style="background: white; padding: 2rem; border-radius: 15px; text-align: center; box-shadow: 0 4px 6px rgba(0,0,0,0.07);">
+                        <div style="font-size: 2.5rem; font-weight: 700; color: var(--primary);">100%</div>
+                        <div style="color: #718096;">Bio-zertifiziert</div>
+                    </div>
+                    <div style="background: white; padding: 2rem; border-radius: 15px; text-align: center; box-shadow: 0 4px 6px rgba(0,0,0,0.07);">
+                        <div style="font-size: 2.5rem; font-weight: 700; color: var(--primary);">52</div>
+                        <div style="color: #718096;">Live-Acts pro Jahr</div>
+                    </div>
+                    <div style="background: white; padding: 2rem; border-radius: 15px; text-align: center; box-shadow: 0 4px 6px rgba(0,0,0,0.07);">
+                        <div style="font-size: 2.5rem; font-weight: 700; color: var(--primary);">4.9★</div>
+                        <div style="color: #718096;">Google Bewertung</div>
+                    </div>
+                </div>
+          </div>
         </div>
     </section>
 
@@ -994,28 +1033,22 @@
             <div class="music-schedule">
                 <div class="music-event">
                     <div class="music-date">Mo, 17. Juli</div>
-                    <div class="music-artist">Sarah & The Morning Birds</div>
-                    <div class="music-genre">Acoustic Soul</div>
+                    <div class="music-artist">McRyan Melchor</div>
+                    <div class="music-genre">90s R&amp;B</div>
                 </div>
                 
                 <div class="music-event">
                     <div class="music-date">Mo, 24. Juli</div>
-                    <div class="music-artist">Jazz Breakfast Trio</div>
-                    <div class="music-genre">Smooth Jazz</div>
+                    <div class="music-artist">Erwin Esener</div>
+                    <div class="music-genre">Smooth Guitar&nbsp;</div>
                 </div>
                 
                 <div class="music-event">
                     <div class="music-date">Mo, 31. Juli</div>
-                    <div class="music-artist">Luna's Guitar</div>
-                    <div class="music-genre">Indie Folk</div>
+                    <div class="music-artist">Mark Melchor</div>
+                    <div class="music-genre">African Triangle</div>
                 </div>
-                
-                <div class="music-event">
-                    <div class="music-date">Mo, 7. August</div>
-                    <div class="music-artist">The Sunrise Collective</div>
-                    <div class="music-genre">World Music</div>
-                </div>
-            </div>
+</div>
         </div>
     </section>
 
@@ -1064,50 +1097,9 @@
         </div>
     </section>
 
-    <!-- About Section -->
-    <section class="features" id="about" style="background: linear-gradient(135deg, rgba(44, 122, 123, 0.03) 0%, rgba(129, 230, 217, 0.03) 100%);">
-        <div class="features-container">
-            <div class="section-header">
-                <h2>Über uns</h2>
-                <p>Eine Vision von gesundem Genuss und Gemeinschaft</p>
-            </div>
-            
-            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 3rem; align-items: center; margin-top: 3rem;">
-                <div>
-                    <h3 style="font-size: 1.8rem; margin-bottom: 1rem; color: var(--primary);">Unsere Geschichte</h3>
-                    <p style="line-height: 1.8; color: #4a5568; margin-bottom: 1.5rem;">
-                        Der Healthy Brunch Club wurde 2023 von einem Team aus Ernährungsexperten, Musikern und Gastronomen gegründet. Unsere Mission: Den Montag zum schönsten Tag der Woche machen.
-                    </p>
-                    <p style="line-height: 1.8; color: #4a5568; margin-bottom: 1.5rem;">
-                        Wir glauben, dass gesunde Ernährung nicht langweilig sein muss und dass der Start in die Arbeitswoche ein Grund zur Freude sein kann. In unserem liebevoll gestalteten Raum in der Hamburger Hafencity verbinden wir Bio-Küche auf höchstem Niveau mit Live-Musik und einer Atmosphäre, die zum Verweilen einlädt.
-                    </p>
-                    <p style="line-height: 1.8; color: #4a5568;">
-                        Jeden Montag öffnen wir unsere Türen für Menschen, die bewusst genießen und sich mit Gleichgesinnten austauschen möchten. Ob Freunde, Familien oder Teams – bei uns findet jeder seinen Platz.
-                    </p>
-                </div>
-                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
-                    <div style="background: white; padding: 2rem; border-radius: 15px; text-align: center; box-shadow: 0 4px 6px rgba(0,0,0,0.07);">
-                        <div style="font-size: 2.5rem; font-weight: 700; color: var(--primary);">500+</div>
-                        <div style="color: #718096;">Glückliche Stammgäste</div>
-                    </div>
-                    <div style="background: white; padding: 2rem; border-radius: 15px; text-align: center; box-shadow: 0 4px 6px rgba(0,0,0,0.07);">
-                        <div style="font-size: 2.5rem; font-weight: 700; color: var(--primary);">100%</div>
-                        <div style="color: #718096;">Bio-zertifiziert</div>
-                    </div>
-                    <div style="background: white; padding: 2rem; border-radius: 15px; text-align: center; box-shadow: 0 4px 6px rgba(0,0,0,0.07);">
-                        <div style="font-size: 2.5rem; font-weight: 700; color: var(--primary);">52</div>
-                        <div style="color: #718096;">Live-Acts pro Jahr</div>
-                    </div>
-                    <div style="background: white; padding: 2rem; border-radius: 15px; text-align: center; box-shadow: 0 4px 6px rgba(0,0,0,0.07);">
-                        <div style="font-size: 2.5rem; font-weight: 700; color: var(--primary);">4.9★</div>
-                        <div style="color: #718096;">Google Bewertung</div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </section>
 
-    <!-- Contact Section -->
+
+<!-- Contact Section -->
     <section class="features" id="contact">
         <div class="features-container">
             <div class="section-header">
