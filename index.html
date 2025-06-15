@@ -22,13 +22,18 @@
                 }
                 
                 // Add suffixes and formatting with micro-animations
-                const statLabel = element.parentElement.querySelector('.stat-label').textContent;
-                if (statLabel.includes('Stammgäste')) {
-                    element.textContent = displayValue + '+';
-                } else if (statLabel.includes('Bio-zertifiziert')) {
-                    element.textContent = displayValue + '%';
-                } else if (statLabel.includes('Google')) {
-                    element.textContent = displayValue + '★';
+                const statLabel = element.parentElement.querySelector('.stat-label');
+                if (statLabel) {
+                    const labelText = statLabel.textContent;
+                    if (labelText.includes('Stammgäste')) {
+                        element.textContent = displayValue + '+';
+                    } else if (labelText.includes('Bio-zertifiziert')) {
+                        element.textContent = displayValue + '%';
+                    } else if (labelText.includes('Google')) {
+                        element.textContent = displayValue + '★';
+                    } else {
+                        element.textContent = displayValue;
+                    }
                 } else {
                     element.textContent = displayValue;
                 }
@@ -486,15 +491,68 @@
             animation: mobileMenuSlide 0.3s ease;
         }
 
+        /* Advanced CSS animations */
+        @keyframes heroReveal {
+            to {
+                opacity: 1;
+                transform: translateY(0) rotateX(0);
+            }
+        }
+
+        @keyframes heroVisualReveal {
+            to {
+                opacity: 1;
+                transform: translateX(0) rotateY(0);
+            }
+        }
+
+        @keyframes slideInLeft {
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+
+        @keyframes springIn {
+            0% {
+                opacity: 0;
+                transform: translateY(60px) rotateX(15deg) scale(0.8);
+            }
+            60% {
+                opacity: 1;
+                transform: translateY(-10px) rotateX(-2deg) scale(1.05);
+            }
+            100% {
+                opacity: 1;
+                transform: translateY(0) rotateX(0) scale(1);
+            }
+        }
+
+        @keyframes counterComplete {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.1); }
+            100% { transform: scale(1); }
+        }
+
         @keyframes mobileMenuSlide {
             from {
                 opacity: 0;
-                transform: translateY(-10px);
+                transform: translateY(-20px) scale(0.95);
             }
             to {
                 opacity: 1;
-                transform: translateY(0);
+                transform: translateY(0) scale(1);
             }
+        }
+
+        /* Enhanced mobile menu */
+        .mobile-menu.show {
+            display: block;
+            animation: mobileMenuSlide 0.4s var(--ease-out-expo);
+        }
+
+        .mobile-menu-toggle {
+            transition: transform 0.3s var(--ease-out-circ);
         }
 
         .mobile-menu-links {
@@ -2672,14 +2730,38 @@
                     }
                 });
             }, {
-                threshold: 0.5,
-                rootMargin: '0px 0px -100px 0px'
+                threshold: 0.3,
+                rootMargin: '0px 0px -50px 0px'
             });
 
             counterElements.forEach(element => {
                 counterObserver.observe(element);
             });
         }
+
+        // Advanced intersection observer with staggered animations
+        const observerOptions = {
+            threshold: 0.1,
+            rootMargin: '0px 0px -100px 0px'
+        };
+
+        const staggeredObserver = new IntersectionObserver((entries) => {
+            entries.forEach((entry, index) => {
+                if (entry.isIntersecting && !entry.target.classList.contains('animated')) {
+                    // Add staggered delay based on element position
+                    const delay = index * 100;
+                    
+                    setTimeout(() => {
+                        entry.target.style.opacity = '1';
+                        entry.target.style.transform = 'translateY(0) rotateX(0)';
+                        entry.target.classList.add('animated');
+                        
+                        // Add subtle spring animation
+                        entry.target.style.animation = `springIn 0.8s var(--ease-out-expo) forwards`;
+                    }, delay);
+                }
+            });
+        }, observerOptions);
 
         // Mobile menu functions
         function toggleMobileMenu() {
