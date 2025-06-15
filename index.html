@@ -1,15 +1,12 @@
 <!DOCTYPE html>
 <html lang="de">
-
-<div data-sb-object-id="content/pages/index.json">
-  <h1 data-sb-field-path="title">{page.title}</h1>
-</div>
-
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Healthy Brunch Club - Start Your Day Right</title>
     <style>
+        @import url('https://fonts.googleapis.com/css2?family=SF+Pro+Display:wght@100;200;300;400;500;600;700;800;900&display=swap');
+        
         * {
             margin: 0;
             padding: 0;
@@ -17,96 +14,194 @@
         }
 
         :root {
-            --primary: #2c7a7b;
-            --secondary: #81e6d9;
-            --accent: #f6ad55;
-            --dark: #1a202c;
-            --light: #f7fafc;
-            --success: #48bb78;
-            --error: #f56565;
+            --glass-bg: rgba(255, 255, 255, 0.05);
+            --glass-border: rgba(255, 255, 255, 0.12);
+            --glass-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
+            --accent-primary: #00D4FF;
+            --accent-secondary: #7B68EE;
+            --accent-success: #00FF88;
+            --accent-warning: #FFB800;
+            --text-primary: rgba(255, 255, 255, 0.95);
+            --text-secondary: rgba(255, 255, 255, 0.75);
+            --text-tertiary: rgba(255, 255, 255, 0.55);
+            --surface-elevated: rgba(255, 255, 255, 0.08);
+            --surface-hover: rgba(255, 255, 255, 0.12);
+            --dark-surface: rgba(15, 15, 35, 0.6);
+            --accent-gradient: linear-gradient(135deg, #00D4FF 0%, #7B68EE 100%);
         }
 
         body {
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            font-family: 'SF Pro Display', -apple-system, BlinkMacSystemFont, sans-serif;
             line-height: 1.6;
-            color: var(--dark);
-            background: var(--light);
+            color: var(--text-primary);
+            background: 
+                radial-gradient(circle at 20% 80%, rgba(120, 119, 198, 0.3) 0%, transparent 50%),
+                radial-gradient(circle at 80% 20%, rgba(255, 255, 255, 0.15) 0%, transparent 50%),
+                radial-gradient(circle at 40% 40%, rgba(120, 219, 226, 0.1) 0%, transparent 50%),
+                linear-gradient(135deg, #0f0f23 0%, #1a1a2e 25%, #16213e 50%, #0f3460 100%);
+            background-size: 100% 100%, 100% 100%, 100% 100%, 400% 400%;
+            animation: gradientShift 20s ease infinite;
             overflow-x: hidden;
+            min-height: 100vh;
+            position: relative;
+        }
+
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: 
+                linear-gradient(45deg, transparent 30%, rgba(255, 255, 255, 0.02) 31%, rgba(255, 255, 255, 0.02) 32%, transparent 33%),
+                linear-gradient(-45deg, transparent 30%, rgba(255, 255, 255, 0.02) 31%, rgba(255, 255, 255, 0.02) 32%, transparent 33%);
+            background-size: 40px 40px;
+            pointer-events: none;
+            z-index: -1;
+        }
+
+        @keyframes gradientShift {
+            0%, 100% { background-position: 0% 0%, 0% 0%, 0% 0%, 0% 50%; }
+            25% { background-position: 100% 0%, 20% 80%, 60% 20%, 25% 75%; }
+            50% { background-position: 0% 100%, 80% 20%, 40% 60%, 50% 100%; }
+            75% { background-position: 20% 60%, 40% 100%, 80% 40%, 75% 25%; }
+        }
+
+        .glass {
+            background: var(--glass-bg);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border: 1px solid var(--glass-border);
+            box-shadow: var(--glass-shadow);
+        }
+
+        .glass-elevated {
+            background: var(--surface-elevated);
+            backdrop-filter: blur(30px);
+            -webkit-backdrop-filter: blur(30px);
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            box-shadow: 
+                0 20px 40px 0 rgba(0, 0, 0, 0.6),
+                inset 0 1px 0 rgba(255, 255, 255, 0.2);
+        }
+
+        /* Add professional dark overlay patterns */
+        .hero::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: 
+                radial-gradient(circle at 25% 25%, rgba(0, 212, 255, 0.1) 0%, transparent 50%),
+                radial-gradient(circle at 75% 75%, rgba(123, 104, 238, 0.08) 0%, transparent 50%);
+            pointer-events: none;
+            z-index: 1;
+        }
+
+        .hero-container {
+            position: relative;
+            z-index: 2;
         }
 
         /* Navigation */
         .nav {
             position: fixed;
-            top: 0;
-            width: 100%;
-            background: rgba(255, 255, 255, 0.95);
-            backdrop-filter: blur(10px);
+            top: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: calc(100% - 40px);
+            max-width: 1200px;
+            padding: 16px 32px;
+            border-radius: 20px;
             z-index: 1000;
-            padding: 1rem 2rem;
-            transition: all 0.3s ease;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
         }
 
         .nav-container {
-            max-width: 1400px;
-            margin: 0 auto;
             display: flex;
             justify-content: space-between;
             align-items: center;
         }
 
         .logo {
-            font-size: 1.8rem;
+            font-size: 20px;
             font-weight: 700;
-            color: var(--primary);
+            color: var(--text-primary);
             display: flex;
             align-items: center;
-            gap: 0.5rem;
+            gap: 8px;
+            letter-spacing: -0.5px;
         }
 
         .logo::before {
             content: '🥑';
-            font-size: 2rem;
+            font-size: 24px;
+            filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.2));
         }
 
         .nav-links {
             display: flex;
             list-style: none;
-            gap: 2rem;
+            gap: 32px;
             align-items: center;
         }
 
         .nav-links a {
             text-decoration: none;
-            color: var(--dark);
+            color: var(--text-secondary);
             font-weight: 500;
-            transition: color 0.3s ease;
+            font-size: 15px;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
             position: relative;
+            padding: 8px 16px;
+            border-radius: 12px;
         }
 
         .nav-links a:hover {
-            color: var(--primary);
+            color: var(--text-primary);
+            background: rgba(255, 255, 255, 0.1);
+            transform: translateY(-1px);
         }
 
         .book-now-btn {
-            background: var(--primary);
+            background: var(--accent-gradient) !important;
             color: white !important;
-            padding: 0.75rem 1.5rem;
-            border-radius: 25px;
-            font-weight: 600;
-            transition: all 0.3s ease;
+            padding: 12px 24px !important;
+            border-radius: 16px !important;
+            font-weight: 600 !important;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1) !important;
+            box-shadow: 0 4px 20px rgba(0, 212, 255, 0.4);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .book-now-btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+            transition: left 0.5s;
+        }
+
+        .book-now-btn:hover::before {
+            left: 100%;
         }
 
         .book-now-btn:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 5px 15px rgba(44, 122, 123, 0.3);
+            transform: translateY(-2px) !important;
+            box-shadow: 0 8px 30px rgba(0, 212, 255, 0.6) !important;
         }
 
         /* Hero Section */
         .hero {
-            padding-top: 80px;
+            padding: 120px 20px 80px;
             min-height: 100vh;
-            background: linear-gradient(135deg, rgba(44, 122, 123, 0.05) 0%, rgba(129, 230, 217, 0.05) 100%);
             display: flex;
             align-items: center;
             position: relative;
@@ -115,600 +210,772 @@
         .hero-container {
             max-width: 1400px;
             margin: 0 auto;
-            padding: 2rem;
             display: grid;
             grid-template-columns: 1fr 1fr;
-            gap: 4rem;
+            gap: 80px;
             align-items: center;
+            width: 100%;
         }
 
         .hero-content h1 {
-            font-size: clamp(2.5rem, 5vw, 3.5rem);
-            font-weight: 700;
-            color: var(--dark);
-            margin-bottom: 1.5rem;
-            line-height: 1.2;
+            font-size: clamp(48px, 8vw, 72px);
+            font-weight: 800;
+            color: var(--text-primary);
+            margin-bottom: 24px;
+            line-height: 1.1;
+            letter-spacing: -2px;
+            text-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
         }
 
         .hero-content h1 span {
-            color: var(--primary);
+            background: var(--accent-gradient);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            position: relative;
+        }
+
+        .hero-content h1 span::after {
+            content: '';
+            position: absolute;
+            bottom: -4px;
+            left: 0;
+            width: 100%;
+            height: 3px;
+            background: var(--accent-gradient);
+            border-radius: 2px;
+            opacity: 0.6;
         }
 
         .hero-content p {
-            font-size: 1.25rem;
-            color: #4a5568;
-            margin-bottom: 3rem;
-            line-height: 1.8;
+            font-size: 20px;
+            color: var(--text-secondary);
+            margin-bottom: 48px;
+            line-height: 1.6;
+            max-width: 500px;
         }
 
         .booking-options {
             display: grid;
             grid-template-columns: repeat(3, 1fr);
-            gap: 1rem;
-            margin-bottom: 2rem;
+            gap: 20px;
+            margin-bottom: 40px;
         }
 
         .booking-card {
-            background: white;
-            padding: 2rem 1.5rem;
-            border-radius: 15px;
+            padding: 32px 24px;
+            border-radius: 24px;
             text-align: center;
             cursor: pointer;
-            transition: all 0.3s ease;
-            border: 2px solid transparent;
-            box-shadow: 0 4px 6px rgba(0,0,0,0.07);
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .booking-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(135deg, rgba(255, 255, 255, 0.1), rgba(255, 255, 255, 0.05));
+            opacity: 0;
+            transition: opacity 0.3s ease;
         }
 
         .booking-card:hover {
-            border-color: var(--primary);
-            transform: translateY(-5px);
-            box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+            transform: translateY(-8px) scale(1.02);
+            border-color: rgba(255, 255, 255, 0.3);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+        }
+
+        .booking-card:hover::before {
+            opacity: 1;
         }
 
         .booking-card-icon {
-            font-size: 2.5rem;
-            margin-bottom: 1rem;
+            font-size: 48px;
+            margin-bottom: 16px;
+            filter: drop-shadow(0 4px 8px rgba(0, 0, 0, 0.2));
         }
 
         .booking-card h3 {
-            font-size: 1.25rem;
-            color: var(--dark);
-            margin-bottom: 0.5rem;
+            font-size: 18px;
+            font-weight: 700;
+            color: var(--text-primary);
+            margin-bottom: 8px;
+            letter-spacing: -0.5px;
         }
 
         .booking-card p {
-            font-size: 0.9rem;
-            color: #718096;
-            margin-bottom: 1rem;
+            font-size: 14px;
+            color: var(--text-tertiary);
+            margin-bottom: 16px;
+            line-height: 1.4;
         }
 
         .booking-card-price {
-            font-size: 1.5rem;
-            font-weight: 700;
-            color: var(--primary);
+            font-size: 24px;
+            font-weight: 800;
+            background: var(--accent-gradient);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
             display: block;
-            margin-bottom: 1rem;
+            margin-bottom: 20px;
+            position: relative;
+        }
+
+        .booking-card-price::after {
+            content: '';
+            position: absolute;
+            bottom: -2px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 60%;
+            height: 2px;
+            background: var(--accent-gradient);
+            border-radius: 1px;
+            opacity: 0.4;
         }
 
         .booking-card button {
             width: 100%;
-            padding: 0.75rem;
-            background: var(--primary);
-            color: white;
-            border: none;
-            border-radius: 8px;
+            padding: 12px;
+            background: linear-gradient(135deg, rgba(255, 255, 255, 0.15), rgba(255, 255, 255, 0.1));
+            color: var(--text-primary);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 12px;
             font-weight: 600;
             cursor: pointer;
-            transition: all 0.3s ease;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            backdrop-filter: blur(10px);
         }
 
         .booking-card button:hover {
-            background: #245a5b;
+            background: linear-gradient(135deg, rgba(255, 255, 255, 0.25), rgba(255, 255, 255, 0.15));
+            border-color: rgba(255, 255, 255, 0.3);
+            transform: translateY(-2px);
         }
 
-        .hero-image {
+        .hero-visual {
             position: relative;
             height: 600px;
-            border-radius: 20px;
+            border-radius: 32px;
             overflow: hidden;
-            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
-            background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 600"><rect fill="%23f7fafc" width="800" height="600"/><g fill="%232c7a7b" opacity="0.05"><circle cx="400" cy="300" r="200"/><circle cx="200" cy="200" r="100"/><circle cx="600" cy="400" r="150"/></g><text x="400" y="300" text-anchor="middle" fill="%232c7a7b" font-size="48" font-weight="bold">Healthy Brunch</text><text x="400" y="350" text-anchor="middle" fill="%234a5568" font-size="24">Fresh • Delicious • Energizing</text></svg>');
-            background-size: cover;
-            background-position: center;
-        }
-
-        /* Features Section */
-        .features {
-            padding: 5rem 2rem;
-            background: white;
-        }
-
-        .features-container {
-            max-width: 1400px;
-            margin: 0 auto;
-        }
-
-        .features-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-            gap: 2rem;
-            margin-top: 3rem;
-        }
-
-        .feature-card {
-            text-align: center;
-            padding: 2rem;
-            background: var(--light);
-            border-radius: 15px;
-            transition: all 0.3s ease;
-        }
-
-        .feature-card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 10px 25px rgba(0,0,0,0.1);
-        }
-
-        .feature-icon {
-            width: 80px;
-            height: 80px;
-            margin: 0 auto 1.5rem;
-            background: linear-gradient(135deg, var(--primary), var(--secondary));
-            border-radius: 50%;
+            background: linear-gradient(135deg, rgba(255, 255, 255, 0.1), rgba(255, 255, 255, 0.05));
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 2rem;
+            flex-direction: column;
+            text-align: center;
         }
 
-        .feature-card h3 {
-            font-size: 1.5rem;
-            margin-bottom: 1rem;
-            color: var(--dark);
+        .hero-visual::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: conic-gradient(from 0deg, transparent, rgba(255, 255, 255, 0.1), transparent);
+            animation: rotate 20s linear infinite;
         }
 
-        .feature-card p {
-            color: #4a5568;
-            line-height: 1.8;
+        @keyframes rotate {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
         }
 
-        /* Menu Preview Section */
-        .menu-preview {
-            padding: 5rem 2rem;
-            background: linear-gradient(135deg, rgba(44, 122, 123, 0.03) 0%, rgba(129, 230, 217, 0.03) 100%);
+        .hero-visual-content {
+            position: relative;
+            z-index: 2;
         }
 
-        .menu-container {
+        .hero-visual h2 {
+            font-size: 32px;
+            font-weight: 700;
+            margin-bottom: 16px;
+            color: var(--text-primary);
+        }
+
+        .hero-visual p {
+            font-size: 18px;
+            color: var(--text-secondary);
+        }
+
+        /* Section Base */
+        .section {
+            padding: 120px 20px;
+            position: relative;
+        }
+
+        .section-container {
             max-width: 1400px;
             margin: 0 auto;
         }
 
         .section-header {
             text-align: center;
-            margin-bottom: 3rem;
+            margin-bottom: 80px;
         }
 
         .section-header h2 {
-            font-size: 2.5rem;
-            color: var(--dark);
-            margin-bottom: 1rem;
+            font-size: clamp(36px, 6vw, 48px);
+            font-weight: 800;
+            color: var(--text-primary);
+            margin-bottom: 16px;
+            letter-spacing: -1px;
         }
 
         .section-header p {
-            font-size: 1.25rem;
-            color: #4a5568;
+            font-size: 20px;
+            color: var(--text-secondary);
+            max-width: 600px;
+            margin: 0 auto;
         }
 
+        /* Features Section */
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+            gap: 32px;
+        }
+
+        .feature-card {
+            padding: 40px 32px;
+            border-radius: 24px;
+            text-align: center;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .feature-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(135deg, rgba(255, 255, 255, 0.1), rgba(255, 255, 255, 0.05));
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .feature-card:hover {
+            transform: translateY(-12px);
+        }
+
+        .feature-card:hover::before {
+            opacity: 1;
+        }
+
+        .feature-icon {
+            width: 80px;
+            height: 80px;
+            margin: 0 auto 24px;
+            background: var(--accent-gradient);
+            border-radius: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 32px;
+            position: relative;
+            z-index: 2;
+            box-shadow: 0 8px 24px rgba(0, 212, 255, 0.3);
+        }
+
+        .feature-icon::before {
+            content: '';
+            position: absolute;
+            top: -2px;
+            left: -2px;
+            right: -2px;
+            bottom: -2px;
+            background: var(--accent-gradient);
+            border-radius: 22px;
+            z-index: -1;
+            opacity: 0.3;
+            filter: blur(8px);
+        }
+
+        .feature-card h3 {
+            font-size: 24px;
+            font-weight: 700;
+            margin-bottom: 16px;
+            color: var(--text-primary);
+            position: relative;
+            z-index: 2;
+        }
+
+        .feature-card p {
+            color: var(--text-secondary);
+            line-height: 1.6;
+            position: relative;
+            z-index: 2;
+        }
+
+        /* Menu Section */
         .menu-categories {
             display: flex;
             justify-content: center;
-            gap: 1rem;
-            margin-bottom: 3rem;
+            gap: 16px;
+            margin-bottom: 48px;
+            flex-wrap: wrap;
         }
 
         .category-btn {
-            padding: 0.75rem 1.5rem;
-            background: white;
-            border: 2px solid var(--primary);
-            border-radius: 25px;
-            color: var(--primary);
+            padding: 12px 24px;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 16px;
+            color: var(--text-secondary);
             font-weight: 600;
             cursor: pointer;
-            transition: all 0.3s ease;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            backdrop-filter: blur(10px);
+            background: rgba(255, 255, 255, 0.05);
         }
 
-        .category-btn.active {
-            background: var(--primary);
+        .category-btn.active,
+        .category-btn:hover {
+            background: linear-gradient(135deg, var(--accent-primary), var(--accent-secondary));
             color: white;
+            border-color: transparent;
+            transform: translateY(-2px);
+            box-shadow: 0 8px 24px rgba(0, 122, 255, 0.3);
         }
 
         .menu-items {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
-            gap: 2rem;
+            grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+            gap: 24px;
         }
 
         .menu-item {
-            background: white;
-            padding: 2rem;
-            border-radius: 15px;
+            padding: 32px;
+            border-radius: 20px;
             display: flex;
-            gap: 1.5rem;
+            gap: 24px;
             align-items: center;
-            transition: all 0.3s ease;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .menu-item::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(135deg, rgba(255, 255, 255, 0.1), rgba(255, 255, 255, 0.05));
+            opacity: 0;
+            transition: opacity 0.3s ease;
         }
 
         .menu-item:hover {
-            transform: translateX(10px);
-            box-shadow: 0 5px 20px rgba(0,0,0,0.1);
+            transform: translateX(8px) translateY(-4px);
+        }
+
+        .menu-item:hover::before {
+            opacity: 1;
         }
 
         .menu-item-image {
             width: 80px;
             height: 80px;
-            background: var(--light);
-            border-radius: 10px;
+            background: linear-gradient(135deg, rgba(255, 255, 255, 0.15), rgba(255, 255, 255, 0.1));
+            border-radius: 16px;
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 2rem;
+            font-size: 32px;
+            flex-shrink: 0;
+            position: relative;
+            z-index: 2;
         }
 
         .menu-item-details {
             flex: 1;
+            position: relative;
+            z-index: 2;
         }
 
         .menu-item-header {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            margin-bottom: 0.5rem;
+            margin-bottom: 8px;
         }
 
         .menu-item-name {
-            font-weight: 600;
-            font-size: 1.1rem;
-            color: var(--dark);
+            font-weight: 700;
+            font-size: 18px;
+            color: var(--text-primary);
         }
 
         .menu-item-price {
-            font-weight: 700;
-            color: var(--primary);
-            font-size: 1.1rem;
+            font-weight: 800;
+            font-size: 18px;
+            background: linear-gradient(135deg, var(--accent-primary), var(--accent-secondary));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
         }
 
         .menu-item-description {
-            color: #718096;
-            font-size: 0.9rem;
-            line-height: 1.6;
+            color: var(--text-secondary);
+            font-size: 14px;
+            line-height: 1.5;
+            margin-bottom: 12px;
         }
 
         .menu-item-tags {
             display: flex;
-            gap: 0.5rem;
-            margin-top: 0.5rem;
+            gap: 8px;
+            flex-wrap: wrap;
         }
 
         .tag {
-            padding: 0.25rem 0.75rem;
-            background: rgba(44, 122, 123, 0.1);
-            color: var(--primary);
-            border-radius: 15px;
-            font-size: 0.75rem;
+            padding: 4px 12px;
+            background: rgba(0, 122, 255, 0.2);
+            color: var(--accent-secondary);
+            border-radius: 12px;
+            font-size: 12px;
             font-weight: 600;
+            border: 1px solid rgba(0, 122, 255, 0.3);
         }
 
-        /* Booking Modal */
-        .modal {
-            display: none;
-            position: fixed;
+        /* About Section */
+        .about-content {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 80px;
+            align-items: center;
+            margin-top: 48px;
+        }
+
+        .about-text {
+            space-y: 24px;
+        }
+
+        .about-text h3 {
+            font-size: 32px;
+            margin-bottom: 32px;
+            color: var(--text-primary);
+            font-weight: 700;
+        }
+
+        .about-text p {
+            line-height: 1.8;
+            color: var(--text-secondary);
+            margin-bottom: 24px;
+        }
+
+        .about-stats {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+        }
+
+        .stat-card {
+            padding: 32px;
+            border-radius: 20px;
+            text-align: center;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .stat-card:hover {
+            transform: translateY(-4px);
+        }
+
+        .stat-number {
+            font-size: 40px;
+            font-weight: 800;
+            background: linear-gradient(135deg, var(--accent-primary), var(--accent-secondary));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            display: block;
+            margin-bottom: 8px;
+        }
+
+        .stat-label {
+            color: var(--text-secondary);
+            font-size: 14px;
+            font-weight: 500;
+        }
+
+        /* Music Section */
+        .music-events {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 24px;
+            margin-top: 48px;
+        }
+
+        .music-event {
+            padding: 32px;
+            border-radius: 20px;
+            text-align: center;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .music-event::before {
+            content: '';
+            position: absolute;
             top: 0;
             left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0,0,0,0.5);
-            z-index: 2000;
-            align-items: center;
-            justify-content: center;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(135deg, rgba(255, 255, 255, 0.1), rgba(255, 255, 255, 0.05));
+            opacity: 0;
+            transition: opacity 0.3s ease;
         }
 
-        .modal.show {
-            display: flex;
+        .music-event:hover {
+            transform: translateY(-8px);
         }
 
-        .modal-content {
-            background: white;
-            padding: 3rem;
-            border-radius: 20px;
-            max-width: 500px;
-            width: 90%;
-            max-height: 90vh;
-            overflow-y: auto;
+        .music-event:hover::before {
+            opacity: 1;
+        }
+
+        .music-date {
+            color: var(--accent-secondary);
+            font-weight: 700;
+            margin-bottom: 8px;
             position: relative;
-            animation: slideIn 0.3s ease;
+            z-index: 2;
         }
 
-        @keyframes slideIn {
-            from {
-                transform: translateY(-30px);
-                opacity: 0;
-            }
-            to {
-                transform: translateY(0);
-                opacity: 1;
-            }
+        .music-artist {
+            font-size: 20px;
+            font-weight: 700;
+            margin-bottom: 8px;
+            color: var(--text-primary);
+            position: relative;
+            z-index: 2;
         }
 
-        .modal-header {
-            margin-bottom: 2rem;
+        .music-genre {
+            color: var(--text-tertiary);
+            font-size: 14px;
+            position: relative;
+            z-index: 2;
         }
 
-        .modal-header h3 {
-            font-size: 1.8rem;
-            color: var(--dark);
-            margin-bottom: 0.5rem;
+        /* Contact Section */
+        .contact-content {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 80px;
+            margin-top: 48px;
         }
 
-        .modal-header p {
-            color: #718096;
-        }
-
-        .close-modal {
-            position: absolute;
-            top: 1.5rem;
-            right: 1.5rem;
-            background: none;
-            border: none;
-            font-size: 1.5rem;
-            cursor: pointer;
-            color: #718096;
-            width: 40px;
-            height: 40px;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            transition: all 0.3s ease;
-        }
-
-        .close-modal:hover {
-            background: var(--light);
-            color: var(--dark);
+        .contact-form {
+            space-y: 24px;
         }
 
         .form-group {
-            margin-bottom: 1.5rem;
+            margin-bottom: 24px;
         }
 
         .form-group label {
             display: block;
-            margin-bottom: 0.5rem;
+            margin-bottom: 8px;
             font-weight: 600;
-            color: var(--dark);
+            color: var(--text-primary);
+            font-size: 14px;
         }
 
         .form-group input,
         .form-group select,
         .form-group textarea {
             width: 100%;
-            padding: 0.75rem 1rem;
-            border: 2px solid #e2e8f0;
-            border-radius: 8px;
-            font-size: 1rem;
-            transition: all 0.3s ease;
+            padding: 16px 20px;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 12px;
+            font-size: 16px;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(10px);
+            color: var(--text-primary);
+        }
+
+        .form-group input::placeholder,
+        .form-group textarea::placeholder {
+            color: var(--text-tertiary);
         }
 
         .form-group input:focus,
         .form-group select:focus,
         .form-group textarea:focus {
             outline: none;
-            border-color: var(--primary);
-            box-shadow: 0 0 0 3px rgba(44, 122, 123, 0.1);
+            border-color: var(--accent-primary);
+            box-shadow: 0 0 0 3px rgba(0, 122, 255, 0.2);
+            background: rgba(255, 255, 255, 0.1);
         }
 
         .form-row {
             display: grid;
             grid-template-columns: 1fr 1fr;
-            gap: 1rem;
+            gap: 20px;
         }
 
         .submit-btn {
             width: 100%;
-            padding: 1rem;
-            background: var(--primary);
+            padding: 16px;
+            background: linear-gradient(135deg, var(--accent-primary), var(--accent-secondary));
             color: white;
             border: none;
-            border-radius: 8px;
-            font-size: 1.1rem;
+            border-radius: 12px;
+            font-size: 16px;
             font-weight: 600;
             cursor: pointer;
-            transition: all 0.3s ease;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            box-shadow: 0 4px 16px rgba(0, 122, 255, 0.3);
         }
 
         .submit-btn:hover {
-            background: #245a5b;
             transform: translateY(-2px);
+            box-shadow: 0 8px 24px rgba(0, 122, 255, 0.4);
         }
 
-        /* Live Music Section */
-        .live-music {
-            padding: 5rem 2rem;
-            background: var(--dark);
-            color: white;
-            text-align: center;
+        .contact-info {
+            space-y: 32px;
         }
 
-        .music-container {
-            max-width: 1000px;
-            margin: 0 auto;
+        .info-card {
+            padding: 32px;
+            border-radius: 20px;
+            margin-bottom: 24px;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
         }
 
-        .music-schedule {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-            gap: 2rem;
-            margin-top: 3rem;
+        .info-card:hover {
+            transform: translateY(-4px);
         }
 
-        .music-event {
-            background: rgba(255,255,255,0.1);
-            backdrop-filter: blur(10px);
-            padding: 2rem;
-            border-radius: 15px;
-            transition: all 0.3s ease;
-        }
-
-        .music-event:hover {
-            transform: translateY(-5px);
-            background: rgba(255,255,255,0.15);
-        }
-
-        .music-date {
-            color: var(--secondary);
-            font-weight: 600;
-            margin-bottom: 0.5rem;
-        }
-
-        .music-artist {
-            font-size: 1.25rem;
+        .info-card h4 {
+            color: var(--accent-secondary);
+            margin-bottom: 16px;
+            font-size: 18px;
             font-weight: 700;
-            margin-bottom: 0.5rem;
         }
 
-        .music-genre {
-            color: rgba(255,255,255,0.7);
-            font-size: 0.9rem;
+        .info-card p {
+            line-height: 1.6;
+            color: var(--text-secondary);
         }
 
-        /* Testimonials */
-        .testimonials {
-            padding: 5rem 2rem;
-            background: white;
+        .info-card a {
+            color: var(--accent-secondary);
+            text-decoration: none;
+            transition: color 0.3s ease;
         }
 
-        .testimonials-container {
-            max-width: 1200px;
-            margin: 0 auto;
-        }
-
-        .testimonials-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
-            gap: 2rem;
-            margin-top: 3rem;
-        }
-
-        .testimonial {
-            background: var(--light);
-            padding: 2rem;
-            border-radius: 15px;
-            position: relative;
-        }
-
-        .testimonial::before {
-            content: '"';
-            position: absolute;
-            top: 1rem;
-            left: 1.5rem;
-            font-size: 4rem;
-            color: var(--primary);
-            opacity: 0.2;
-        }
-
-        .testimonial-text {
-            margin-bottom: 1.5rem;
-            line-height: 1.8;
-            color: #4a5568;
-            position: relative;
-            z-index: 1;
-        }
-
-        .testimonial-author {
-            display: flex;
-            align-items: center;
-            gap: 1rem;
-        }
-
-        .author-avatar {
-            width: 50px;
-            height: 50px;
-            border-radius: 50%;
-            background: var(--primary);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: white;
-            font-weight: 700;
-            font-size: 1.25rem;
-        }
-
-        .author-info h4 {
-            font-weight: 600;
-            color: var(--dark);
-        }
-
-        .author-info p {
-            color: #718096;
-            font-size: 0.9rem;
+        .info-card a:hover {
+            color: var(--text-primary);
         }
 
         /* Newsletter */
         .newsletter {
-            padding: 5rem 2rem;
-            background: linear-gradient(135deg, var(--primary), var(--secondary));
-            color: white;
+            padding: 80px 20px;
             text-align: center;
+            position: relative;
+        }
+
+        .newsletter::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(135deg, rgba(255, 255, 255, 0.1), rgba(255, 255, 255, 0.05));
         }
 
         .newsletter-container {
             max-width: 600px;
             margin: 0 auto;
+            position: relative;
+            z-index: 2;
         }
 
         .newsletter h3 {
-            font-size: 2rem;
-            margin-bottom: 1rem;
+            font-size: 32px;
+            font-weight: 700;
+            margin-bottom: 16px;
+            color: var(--text-primary);
         }
 
         .newsletter p {
-            font-size: 1.1rem;
-            margin-bottom: 2rem;
-            opacity: 0.9;
+            font-size: 18px;
+            margin-bottom: 32px;
+            color: var(--text-secondary);
         }
 
         .newsletter-form {
             display: flex;
-            gap: 1rem;
+            gap: 16px;
+            align-items: stretch;
         }
 
         .newsletter-input {
             flex: 1;
-            padding: 1rem;
-            border: none;
-            border-radius: 8px;
-            font-size: 1rem;
+            padding: 16px 20px;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 12px;
+            font-size: 16px;
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(10px);
+            color: var(--text-primary);
+        }
+
+        .newsletter-input::placeholder {
+            color: var(--text-tertiary);
         }
 
         .newsletter-btn {
-            padding: 1rem 2rem;
-            background: white;
-            color: var(--primary);
+            padding: 16px 32px;
+            background: linear-gradient(135deg, var(--accent-primary), var(--accent-secondary));
+            color: white;
             border: none;
-            border-radius: 8px;
+            border-radius: 12px;
             font-weight: 600;
             cursor: pointer;
-            transition: all 0.3s ease;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            box-shadow: 0 4px 16px rgba(0, 122, 255, 0.3);
         }
 
         .newsletter-btn:hover {
             transform: translateY(-2px);
-            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+            box-shadow: 0 8px 24px rgba(0, 122, 255, 0.4);
         }
 
         /* Footer */
         .footer {
-            background: var(--dark);
-            color: white;
-            padding: 3rem 2rem 2rem;
+            padding: 80px 20px 40px;
+            position: relative;
+        }
+
+        .footer::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(135deg, rgba(0, 0, 0, 0.2), rgba(0, 0, 0, 0.1));
         }
 
         .footer-container {
@@ -716,54 +983,149 @@
             margin: 0 auto;
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-            gap: 2rem;
-            margin-bottom: 2rem;
+            gap: 48px;
+            margin-bottom: 48px;
+            position: relative;
+            z-index: 2;
         }
 
         .footer-section h4 {
-            color: var(--secondary);
-            margin-bottom: 1rem;
+            color: var(--accent-secondary);
+            margin-bottom: 24px;
+            font-size: 18px;
+            font-weight: 700;
         }
 
         .footer-section a {
-            color: rgba(255,255,255,0.7);
+            color: var(--text-secondary);
             text-decoration: none;
             display: block;
-            margin-bottom: 0.5rem;
-            transition: color 0.3s ease;
+            margin-bottom: 12px;
+            transition: all 0.3s ease;
+            padding: 8px 0;
         }
 
         .footer-section a:hover {
-            color: white;
+            color: var(--text-primary);
+            transform: translateX(4px);
         }
 
         .social-links {
             display: flex;
-            gap: 1rem;
-            margin-top: 1rem;
+            gap: 16px;
+            margin-top: 24px;
         }
 
         .social-links a {
-            width: 40px;
-            height: 40px;
-            background: rgba(255,255,255,0.1);
-            border-radius: 50%;
+            width: 48px;
+            height: 48px;
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 12px;
             display: flex;
             align-items: center;
             justify-content: center;
-            transition: all 0.3s ease;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            backdrop-filter: blur(10px);
         }
 
         .social-links a:hover {
-            background: var(--primary);
-            transform: translateY(-3px);
+            background: linear-gradient(135deg, var(--accent-primary), var(--accent-secondary));
+            border-color: transparent;
+            transform: translateY(-2px);
+            box-shadow: 0 8px 24px rgba(0, 122, 255, 0.3);
         }
 
         .footer-bottom {
             text-align: center;
-            padding-top: 2rem;
-            border-top: 1px solid rgba(255,255,255,0.1);
-            color: rgba(255,255,255,0.5);
+            padding-top: 48px;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            color: var(--text-tertiary);
+            position: relative;
+            z-index: 2;
+        }
+
+        /* Modal */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.7);
+            backdrop-filter: blur(20px);
+            z-index: 2000;
+            align-items: center;
+            justify-content: center;
+            opacity: 0;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .modal.show {
+            display: flex;
+            opacity: 1;
+        }
+
+        .modal-content {
+            padding: 48px;
+            border-radius: 24px;
+            max-width: 560px;
+            width: calc(100% - 40px);
+            max-height: 90vh;
+            overflow-y: auto;
+            position: relative;
+            animation: modalSlide 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        @keyframes modalSlide {
+            from {
+                transform: translateY(-20px) scale(0.95);
+                opacity: 0;
+            }
+            to {
+                transform: translateY(0) scale(1);
+                opacity: 1;
+            }
+        }
+
+        .modal-header {
+            margin-bottom: 32px;
+            text-align: center;
+        }
+
+        .modal-header h3 {
+            font-size: 28px;
+            color: var(--text-primary);
+            margin-bottom: 8px;
+            font-weight: 700;
+        }
+
+        .modal-header p {
+            color: var(--text-secondary);
+        }
+
+        .close-modal {
+            position: absolute;
+            top: 24px;
+            right: 24px;
+            background: none;
+            border: none;
+            font-size: 24px;
+            cursor: pointer;
+            color: var(--text-secondary);
+            width: 40px;
+            height: 40px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .close-modal:hover {
+            background: rgba(255, 255, 255, 0.1);
+            color: var(--text-primary);
         }
 
         /* Notification */
@@ -771,39 +1133,56 @@
             position: fixed;
             top: 100px;
             right: -400px;
-            background: white;
-            padding: 1.5rem 2rem;
-            border-radius: 10px;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+            padding: 24px 32px;
+            border-radius: 16px;
             z-index: 3000;
-            transition: right 0.3s ease;
+            transition: right 0.4s cubic-bezier(0.4, 0, 0.2, 1);
             display: flex;
             align-items: center;
-            gap: 1rem;
+            gap: 16px;
+            min-width: 320px;
+            backdrop-filter: blur(20px);
         }
 
         .notification.show {
-            right: 2rem;
+            right: 32px;
         }
 
         .notification.success {
-            border-left: 4px solid var(--success);
+            background: rgba(52, 199, 89, 0.2);
+            border: 1px solid rgba(52, 199, 89, 0.3);
         }
 
         .notification.error {
-            border-left: 4px solid var(--error);
+            background: rgba(255, 59, 48, 0.2);
+            border: 1px solid rgba(255, 59, 48, 0.3);
         }
 
         .notification-icon {
-            font-size: 1.5rem;
+            font-size: 24px;
         }
 
         .notification.success .notification-icon {
-            color: var(--success);
+            color: var(--accent-success);
         }
 
         .notification.error .notification-icon {
-            color: var(--error);
+            color: #FF3B30;
+        }
+
+        .notification-content {
+            flex: 1;
+        }
+
+        .notification-title {
+            font-weight: 700;
+            color: var(--text-primary);
+            margin-bottom: 4px;
+        }
+
+        .notification-message {
+            color: var(--text-secondary);
+            font-size: 14px;
         }
 
         /* Loading */
@@ -811,7 +1190,7 @@
             display: inline-block;
             width: 20px;
             height: 20px;
-            border: 3px solid rgba(255,255,255,0.3);
+            border: 2px solid rgba(255, 255, 255, 0.3);
             border-radius: 50%;
             border-top-color: white;
             animation: spin 1s ease-in-out infinite;
@@ -822,21 +1201,17 @@
         }
 
         /* Responsive */
-        @media (max-width: 768px) {
-            .nav-links {
-                display: none;
-            }
-
-            .hero-container {
+        @media (max-width: 1024px) {
+            .hero-container,
+            .about-content,
+            .contact-content {
                 grid-template-columns: 1fr;
-            }
-
-            .hero-image {
-                height: 300px;
+                gap: 48px;
             }
 
             .booking-options {
                 grid-template-columns: 1fr;
+                gap: 16px;
             }
 
             .form-row {
@@ -850,6 +1225,67 @@
             .menu-items {
                 grid-template-columns: 1fr;
             }
+
+            .nav {
+                top: 10px;
+                width: calc(100% - 20px);
+                padding: 12px 20px;
+            }
+
+            .nav-links {
+                display: none;
+            }
+
+            .hero {
+                padding: 100px 20px 60px;
+            }
+
+            .section {
+                padding: 80px 20px;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .hero-content h1 {
+                font-size: 40px;
+            }
+
+            .modal-content {
+                padding: 32px 24px;
+            }
+
+            .about-stats {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        /* Smooth scrolling */
+        html {
+            scroll-behavior: smooth;
+        }
+
+        /* Custom scrollbar */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: rgba(255, 255, 255, 0.1);
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: linear-gradient(135deg, var(--accent-primary), var(--accent-secondary));
+            border-radius: 4px;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: linear-gradient(135deg, var(--accent-secondary), var(--accent-primary));
+        }
+
+        /* Selection */
+        ::selection {
+            background: rgba(0, 122, 255, 0.3);
+            color: var(--text-primary);
         }
     </style>
 </head>
@@ -857,19 +1293,19 @@
     <!-- Notification -->
     <div id="notification" class="notification">
         <span class="notification-icon"></span>
-        <div>
+        <div class="notification-content">
             <div class="notification-title"></div>
             <div class="notification-message"></div>
         </div>
     </div>
 
     <!-- Navigation -->
-    <nav class="nav">
+    <nav class="nav glass">
         <div class="nav-container">
             <div class="logo">Healthy Brunch Club</div>
             <ul class="nav-links">
                 <li><a href="#home">Home</a></li>
-			  <li><a href="#about">Über uns</a></li>
+                <li><a href="#about">Über uns</a></li>
                 <li><a href="#menu">Menü</a></li>
                 <li><a href="#music">Live Musik</a></li>
                 <li><a href="#contact">Kontakt</a></li>
@@ -881,87 +1317,85 @@
     <!-- Hero Section -->
     <section class="hero" id="home">
         <div class="hero-container">
-          <div class="hero-content">
+            <div class="hero-content">
                 <h1>Starte deinen Tag mit <span>Energie & Geschmack</span></h1>
                 <p>Erlebe die perfekte Kombination aus gesundem Essen, inspirierender Musik und positiver Atmosphäre. Dein Montag wird nie wieder derselbe sein.</p>
                 
                 <div class="booking-options">
-                  <div class="booking-card" onclick="showBookingModal('friends')">
+                    <div class="booking-card glass" onclick="showBookingModal('friends')">
                         <div class="booking-card-icon">👥</div>
                         <h3>Freund:innen Brunch</h3>
-                        <p>Gemeinsam genießen<br>
-                          2-4 Personen
-                        </p>
+                        <p>Gemeinsam genießen<br>2-4 Personen</p>
                         <span class="booking-card-price">49€</span>
                         <button>Jetzt buchen</button>
                     </div>
                     
-                    <div class="booking-card" onclick="showBookingModal('corporate')">
+                    <div class="booking-card glass" onclick="showBookingModal('corporate')">
                         <div class="booking-card-icon">💼</div>
                         <h3>Firmen Event Brunch</h3>
-                        <p>Team-Building deluxe<br>
-                          (bis 10 Personen)&nbsp;<br>
-                          
-                        </p>
-<span class="booking-card-price">25€ p.P.</span>
+                        <p>Team-Building deluxe<br>(bis 10 Personen)</p>
+                        <span class="booking-card-price">25€ p.P.</span>
                         <button>Jetzt buchen</button>
                     </div>
                     
-                    <div class="booking-card" onclick="showBookingModal('feelwell')">
+                    <div class="booking-card glass" onclick="showBookingModal('feelwell')">
                         <div class="booking-card-icon">🧘‍♀️</div>
                         <h3>Romantic Brunch</h3>
-                        <p>Love is in the Air<br>
-                        (für 2 Personen)</p>
+                        <p>Love is in the Air<br>(für 2 Personen)</p>
                         <span class="booking-card-price">20€</span>
-                      <button>Jetzt buchen</button>
+                        <button>Jetzt buchen</button>
                     </div>
                 </div>
             </div>
-<div class="hero-image">&nbsp;</div>
+            
+            <div class="hero-visual glass">
+                <div class="hero-visual-content">
+                    <h2>Healthy Brunch</h2>
+                    <p>Fresh • Delicious • Energizing</p>
+                </div>
+            </div>
         </div>
     </section>
 
-    <!-- Features -->
-    <section class="features">
-        <div class="features-container">
+    <!-- Features Section -->
+    <section class="section">
+        <div class="section-container">
             <div class="section-header">
                 <h2>Was macht uns besonders?</h2>
                 <p>Mehr als nur ein Brunch – ein Erlebnis für alle Sinne</p>
             </div>
             
             <div class="features-grid">
-                <div class="feature-card">
+                <div class="feature-card glass">
                     <div class="feature-icon">🌱</div>
                     <h3>100% Bio & Regional</h3>
                     <p>Alle unsere Zutaten stammen von lokalen Bio-Bauern. Frisch, nachhaltig und voller Geschmack.</p>
                 </div>
                 
-                <div class="feature-card">
+                <div class="feature-card glass">
                     <div class="feature-icon">🎵</div>
                     <h3>Live Musik</h3>
                     <p>Jeden Montag begleiten dich lokale Künstler mit sanften Klängen durch deinen Morgen.</p>
                 </div>
                 
-                <div class="feature-card">
+                <div class="feature-card glass">
                     <div class="feature-icon">☕</div>
                     <h3>Barista Kaffee</h3>
                     <p>Preisgekrönter Kaffee von unserem hauseigenen Barista-Team. Der perfekte Start in den Tag.</p>
                 </div>
                 
-                <div class="feature-card">
+                <div class="feature-card glass">
                     <div class="feature-icon">🏃‍♀️</div>
                     <h3>Morning Yoga</h3>
                     <p>Optional: Starte mit einer 30-minütigen Yoga-Session vor dem Brunch (Feel-Well Package).</p>
                 </div>
-</div>
+            </div>
         </div>
     </section>
-	
-	    <!-- About Section -->
 
-    <!-- Menu Preview -->
-    <section class="menu-preview" id="menu">
-        <div class="menu-container">
+    <!-- Menu Section -->
+    <section class="section" id="menu">
+        <div class="section-container">
             <div class="section-header">
                 <h2>Unser Menü</h2>
                 <p>Gesund, lecker und mit Liebe zubereitet</p>
@@ -979,86 +1413,88 @@
             </div>
         </div>
     </section>
-    <section class="features" id="about" style="background: linear-gradient(135deg, rgba(44, 122, 123, 0.03) 0%, rgba(129, 230, 217, 0.03) 100%);">
-      <div class="features-container">
-        <div class="section-header">
-          <h2>Über uns</h2>
-          <p>Eine Vision von gesundem Genuss und Gemeinschaft</p>
+
+    <!-- About Section -->
+    <section class="section" id="about">
+        <div class="section-container">
+            <div class="section-header">
+                <h2>Über uns</h2>
+                <p>Eine Vision von gesundem Genuss und Gemeinschaft</p>
+            </div>
+            
+            <div class="about-content">
+                <div class="about-text">
+                    <h3>Unsere Geschichte</h3>
+                    <p>Was einst als einfaches Geburtstagsritual begann, lebt heute in unserem Brunchlokal weiter. Drei Schwestern – eine Ärztin und zwei Flugbegleiterinnen – vereint durch die Liebe zur Familie, zum Reisen und natürlich: zum Brunchen.</p>
+                    <p>Ob in New York, Chicago, an der Amalfiküste oder aber auch ganz einfach in unserer Heimatstadt Wien – das gemeinsame Brunchen war immer ein besonderer Moment. Und mit jedem Bissen, jedem Kaffee und jeder neuen Idee wuchs auch der Wunsch, diesen Genuss zu teilen.</p>
+                    <p>Als bei Tina eine chronische Darmentzündung diagnostiziert wurde, wurde das Thema Ernährung für uns noch bedeutungsvoller. Seither setzen wir gezielt auf gesunde Alternativen und entzündungshemmende Zutaten – ohne auf Geschmack oder Kreativität zu verzichten.</p>
+                </div>
+                
+                <div class="about-stats">
+                    <div class="stat-card glass">
+                        <span class="stat-number">500+</span>
+                        <div class="stat-label">Glückliche Stammgäste</div>
+                    </div>
+                    <div class="stat-card glass">
+                        <span class="stat-number">100%</span>
+                        <div class="stat-label">Bio-zertifiziert</div>
+                    </div>
+                    <div class="stat-card glass">
+                        <span class="stat-number">52</span>
+                        <div class="stat-label">Live-Acts pro Jahr</div>
+                    </div>
+                    <div class="stat-card glass">
+                        <span class="stat-number">4.9★</span>
+                        <div class="stat-label">Google Bewertung</div>
+                    </div>
+                </div>
+            </div>
         </div>
-        <div></div>
-        <h3 style="font-size: 1.8rem; margin-bottom: 1rem; color: var(--primary);">Unsere Geschichte</h3>
-        <img src="../OneDrive/Desktop/p38.png" width="658" height="496" alt=""/>
-        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 3rem; align-items: center; margin-top: 3rem;">
-          <div>
-            <p style="line-height: 1.8; color: #4a5568; margin-bottom: 1.5rem;"> Was einst als einfaches Geburtstagsritual begann, lebt heute in unserem Brunchlokal weiter. Drei Schwestern – eine Ärztin und zwei Flugbegleiterinnen – vereint durch die Liebe zur Familie, zum Reisen und natürlich: zum Brunchen. </p>
-            <p style="line-height: 1.8; color: #4a5568; margin-bottom: 1.5rem;"> Ob in New York, Chicago, an der Amalfiküste oder aber auch ganz einfach in unserer Heimatstadt Wien – das gemeinsame Brunchen war immer ein besonderer Moment. Und mit jedem Bissen, jedem Kaffee und jeder neuen Idee wuchs auch der Wunsch, diesen Genuss zu teilen. Unsere Wurzeln liegen auf den Philippinen – und mit ihnen eine tiefe Verbundenheit zu Gastfreundschaft, Aromenvielfalt und dem Herz für gutes Essen. Diese Einflüsse spiegeln sich heute in unserer Speisekarte genauso wider wie die Erfahrungen aus aller Welt </p>
-            <p style="line-height: 1.8; color: #4a5568;"> Als bei Tina eine chronische Darmentzündung diagnostiziert wurde, wurde das Thema Ernährung für uns noch bedeutungsvoller. Seither setzen wir gezielt auf gesunde Alternativen und entzündungshemmende Zutaten – ohne auf Geschmack oder Kreativität zu verzichten. Das Ergebnis: Eine bunte Auswahl an trendigen, ausgewogenen und international inspirierten Brunchgerichten, die nicht nur sättigen, sondern glücklich machen. Kommt vorbei, bruncht mit uns </p>
-          </div>
-          <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
-            <div style="background: white; padding: 2rem; border-radius: 15px; text-align: center; box-shadow: 0 4px 6px rgba(0,0,0,0.07);">
-              <div style="font-size: 2.5rem; font-weight: 700; color: var(--primary);">500+</div>
-              <div style="color: #718096;">Glückliche Stammgäste</div>
-            </div>
-            <div style="background: white; padding: 2rem; border-radius: 15px; text-align: center; box-shadow: 0 4px 6px rgba(0,0,0,0.07);">
-              <div style="font-size: 2.5rem; font-weight: 700; color: var(--primary);">100%</div>
-              <div style="color: #718096;">Bio-zertifiziert</div>
-            </div>
-            <div style="background: white; padding: 2rem; border-radius: 15px; text-align: center; box-shadow: 0 4px 6px rgba(0,0,0,0.07);">
-              <div style="font-size: 2.5rem; font-weight: 700; color: var(--primary);">52</div>
-              <div style="color: #718096;">Live-Acts pro Jahr</div>
-            </div>
-            <div style="background: white; padding: 2rem; border-radius: 15px; text-align: center; box-shadow: 0 4px 6px rgba(0,0,0,0.07);">
-              <div style="font-size: 2.5rem; font-weight: 700; color: var(--primary);">4.9★</div>
-              <div style="color: #718096;">Google Bewertung</div>
-            </div>
-          </div>
-        </div>
-      </div>
     </section>
 
     <!-- Live Music Section -->
-    <section class="live-music" id="music">
-        <div class="music-container">
+    <section class="section" id="music">
+        <div class="section-container">
             <div class="section-header">
-                <h2 style="color: white;">Live Musik jeden Montag</h2>
-                <p style="color: rgba(255,255,255,0.8);">Lass dich von lokalen Künstlern in eine entspannte Stimmung versetzen</p>
+                <h2>Live Musik jeden Montag</h2>
+                <p>Lass dich von lokalen Künstlern in eine entspannte Stimmung versetzen</p>
             </div>
             
-            <div class="music-schedule">
-                <div class="music-event">
+            <div class="music-events">
+                <div class="music-event glass">
                     <div class="music-date">Mo, 17. Juli</div>
                     <div class="music-artist">McRyan Melchor</div>
-                    <div class="music-genre">90s R&amp;B</div>
+                    <div class="music-genre">90s R&B</div>
                 </div>
                 
-                <div class="music-event">
+                <div class="music-event glass">
                     <div class="music-date">Mo, 24. Juli</div>
                     <div class="music-artist">Erwin Esener</div>
-                    <div class="music-genre">Smooth Guitar&nbsp;</div>
+                    <div class="music-genre">Smooth Guitar</div>
                 </div>
                 
-                <div class="music-event">
+                <div class="music-event glass">
                     <div class="music-date">Mo, 31. Juli</div>
                     <div class="music-artist">Mark Melchor</div>
                     <div class="music-genre">African Triangle</div>
                 </div>
-</div>
+            </div>
         </div>
     </section>
 
-    <!-- Testimonials -->
-<!-- Contact Section -->
-    <section class="features" id="contact">
-        <div class="features-container">
+    <!-- Contact Section -->
+    <section class="section" id="contact">
+        <div class="section-container">
             <div class="section-header">
                 <h2>Kontakt & Anfahrt</h2>
                 <p>Wir freuen uns auf deinen Besuch!</p>
             </div>
             
-            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 3rem; margin-top: 3rem;">
-                <div>
-                    <h3 style="font-size: 1.5rem; margin-bottom: 2rem; color: var(--dark);">Kontaktformular</h3>
-                    <form netlify netlify-honeypot="bot-field" action="/success" method="POST" name="contact">
+            <div class="contact-content">
+                <div class="contact-form">
+                    <h3>Kontaktformular</h3>
+                    <form action='/success' method='POST' name='contact'>
+                        <input type='hidden' name='form-name' value='contact' />
                         <p style="display:none;">
                             <label>Don't fill this out: <input name="bot-field" /></label>
                         </p>
@@ -1082,7 +1518,7 @@
                         </div>
                         <div class="form-group">
                             <label for="message">Nachricht *</label>
-                            <textarea id="message" name="message" rows="5" required></textarea>
+                            <textarea id="message" name="message" rows="5" required placeholder="Ihre Nachricht..."></textarea>
                         </div>
                         <button type="submit" class="submit-btn">
                             <span id="contactSubmitText">Nachricht senden</span>
@@ -1091,12 +1527,10 @@
                     </form>
                 </div>
                 
-                <div>
-                    <h3 style="font-size: 1.5rem; margin-bottom: 2rem; color: var(--dark);">Hier findest du uns</h3>
-                    
-                    <div style="background: var(--light); padding: 2rem; border-radius: 15px; margin-bottom: 2rem;">
-                        <h4 style="color: var(--primary); margin-bottom: 1rem;">📍 Adresse</h4>
-                        <p style="line-height: 1.8; color: #4a5568;">
+                <div class="contact-info">
+                    <div class="info-card glass">
+                        <h4>📍 Adresse</h4>
+                        <p>
                             Healthy Brunch Club<br>
                             Am Sandtorkai 50<br>
                             20457 Hamburg<br>
@@ -1104,30 +1538,21 @@
                         </p>
                     </div>
                     
-                    <div style="background: var(--light); padding: 2rem; border-radius: 15px; margin-bottom: 2rem;">
-                        <h4 style="color: var(--primary); margin-bottom: 1rem;">🕐 Öffnungszeiten</h4>
-                        <p style="line-height: 1.8; color: #4a5568;">
+                    <div class="info-card glass">
+                        <h4>🕐 Öffnungszeiten</h4>
+                        <p>
                             <strong>Montag:</strong> 08:00 - 14:00 Uhr<br>
                             <strong>Dienstag - Sonntag:</strong> Geschlossen<br>
-                            <small style="color: #718096;">Reservierungen empfohlen</small>
+                            <small>Reservierungen empfohlen</small>
                         </p>
                     </div>
                     
-                    <div style="background: var(--light); padding: 2rem; border-radius: 15px;">
-                        <h4 style="color: var(--primary); margin-bottom: 1rem;">📞 Direkter Kontakt</h4>
-                        <p style="line-height: 1.8; color: #4a5568;">
-                            <strong>Telefon:</strong> <a href="tel:+494012345678" style="color: var(--primary); text-decoration: none;">+49 40 123 456 78</a><br>
-                            <strong>E-Mail:</strong> <a href="mailto:hello@healthybrunchclub.de" style="color: var(--primary); text-decoration: none;">hello@healthybrunchclub.de</a><br>
-                            <strong>WhatsApp:</strong> <a href="https://wa.me/4940123456789" style="color: var(--primary); text-decoration: none;">+49 40 123 456 789</a>
-                        </p>
-                    </div>
-                    
-                    <div style="margin-top: 2rem;">
-                        <h4 style="color: var(--primary); margin-bottom: 1rem;">🚇 Anfahrt</h4>
-                        <p style="line-height: 1.8; color: #4a5568;">
-                            <strong>U-Bahn:</strong> U4 Überseequartier (5 Min. Fußweg)<br>
-                            <strong>Bus:</strong> Linie 111 Magellan-Terrassen<br>
-                            <strong>Parken:</strong> Parkhaus Überseeboulevard
+                    <div class="info-card glass">
+                        <h4>📞 Direkter Kontakt</h4>
+                        <p>
+                            <strong>Telefon:</strong> <a href="tel:+494012345678">+49 40 123 456 78</a><br>
+                            <strong>E-Mail:</strong> <a href="mailto:hello@healthybrunchclub.de">hello@healthybrunchclub.de</a><br>
+                            <strong>WhatsApp:</strong> <a href="https://wa.me/4940123456789">+49 40 123 456 789</a>
                         </p>
                     </div>
                 </div>
@@ -1136,11 +1561,12 @@
     </section>
 
     <!-- Newsletter -->
-    <section class="newsletter">
+    <section class="newsletter glass">
         <div class="newsletter-container">
             <h3>Verpasse keine Updates!</h3>
             <p>Erhalte exklusive Angebote, neue Menüs und Event-Infos direkt in dein Postfach.</p>
-            <form class="newsletter-form" netlify netlify-honeypot="bot-field" action="/success" method="POST" name="newsletter">
+            <form action='/success' class='newsletter-form' method='POST' name='newsletter'>
+                <input type='hidden' name='form-name' value='newsletter' />
                 <p style="display:none;">
                     <label>Don't fill this out: <input name="bot-field" /></label>
                 </p>
@@ -1197,14 +1623,15 @@
 
     <!-- Booking Modal -->
     <div id="bookingModal" class="modal">
-        <div class="modal-content">
+        <div class="modal-content glass-elevated">
             <button class="close-modal" onclick="closeModal()">&times;</button>
             <div class="modal-header">
                 <h3 id="modalTitle">Buchung</h3>
                 <p id="modalDescription">Fülle das Formular aus um deinen Platz zu reservieren</p>
             </div>
             
-            <form netlify netlify-honeypot="bot-field" action="/success" method="POST" name="booking" id="bookingForm">
+            <form action='/success' id='bookingForm' method='POST' name='booking'>
+                <input type='hidden' name='form-name' value='booking' />
                 <p style="display:none;">
                     <label>Don't fill this out: <input name="bot-field" /></label>
                 </p>
@@ -1358,7 +1785,8 @@
         document.addEventListener('DOMContentLoaded', () => {
             loadMenu('all');
             setMinDate();
-            initNetlifyForms();
+            initScrollEffects();
+            initParallax();
         });
 
         // Menu filtering
@@ -1383,15 +1811,24 @@
                 items = menuData[category];
             }
             
-            items.forEach(item => {
+            items.forEach((item, index) => {
                 const menuItem = createMenuItem(item);
+                menuItem.style.opacity = '0';
+                menuItem.style.transform = 'translateY(30px)';
                 menuItems.appendChild(menuItem);
+                
+                // Animate in with delay
+                setTimeout(() => {
+                    menuItem.style.transition = 'all 0.6s cubic-bezier(0.4, 0, 0.2, 1)';
+                    menuItem.style.opacity = '1';
+                    menuItem.style.transform = 'translateY(0)';
+                }, index * 100);
             });
         }
 
         function createMenuItem(item) {
             const div = document.createElement('div');
-            div.className = 'menu-item';
+            div.className = 'menu-item glass';
             div.innerHTML = `
                 <div class="menu-item-image">${item.icon}</div>
                 <div class="menu-item-details">
@@ -1445,10 +1882,13 @@
             }
             
             modal.classList.add('show');
+            document.body.style.overflow = 'hidden';
         }
 
         function closeModal() {
-            document.getElementById('bookingModal').classList.remove('show');
+            const modal = document.getElementById('bookingModal');
+            modal.classList.remove('show');
+            document.body.style.overflow = '';
         }
 
         // Close modal on outside click
@@ -1497,22 +1937,13 @@
             }, 5000);
         }
 
-        // Initialize Netlify Forms
-        function initNetlifyForms() {
-            // Handle form submissions
-            const forms = document.querySelectorAll('form[netlify]');
-            forms.forEach(form => {
-                form.addEventListener('submit', handleFormSubmit);
-            });
-        }
-
         // Handle form submission
         function handleFormSubmit(e) {
             e.preventDefault();
             
             const form = e.target;
             const submitBtn = form.querySelector('.submit-btn');
-            const submitText = form.querySelector('#submitText');
+            const submitText = form.querySelector('#submitText, #contactSubmitText');
             const loading = form.querySelector('.loading');
             
             // Show loading state
@@ -1537,6 +1968,8 @@
                     closeModal();
                 } else if (form.name === 'newsletter') {
                     showNotification('Newsletter abonniert!', 'Willkommen in unserer Community! Du erhältst ab sofort alle Updates.', 'success');
+                } else if (form.name === 'contact') {
+                    showNotification('Nachricht gesendet!', 'Vielen Dank für deine Nachricht. Wir melden uns schnellstmöglich bei dir.', 'success');
                 }
                 form.reset();
             })
@@ -1553,28 +1986,63 @@
             });
         }
 
+        // Initialize scroll effects
+        function initScrollEffects() {
+            const nav = document.querySelector('.nav');
+            let lastScrollY = window.scrollY;
+
+            window.addEventListener('scroll', () => {
+                const scrollY = window.scrollY;
+                
+                // Navbar effects
+                if (scrollY > 100) {
+                    nav.style.background = 'rgba(255, 255, 255, 0.15)';
+                    nav.style.backdropFilter = 'blur(25px)';
+                    nav.style.borderColor = 'rgba(255, 255, 255, 0.25)';
+                } else {
+                    nav.style.background = 'var(--glass-bg)';
+                    nav.style.backdropFilter = 'blur(20px)';
+                    nav.style.borderColor = 'var(--glass-border)';
+                }
+                
+                // Hide/show navbar on scroll
+                if (scrollY > lastScrollY && scrollY > 200) {
+                    nav.style.transform = 'translateX(-50%) translateY(-100%)';
+                } else {
+                    nav.style.transform = 'translateX(-50%) translateY(0)';
+                }
+                
+                lastScrollY = scrollY;
+            });
+        }
+
+        // Initialize parallax effects
+        function initParallax() {
+            const parallaxElements = document.querySelectorAll('.hero-visual');
+            
+            window.addEventListener('scroll', () => {
+                const scrolled = window.pageYOffset;
+                const rate = scrolled * -0.5;
+                
+                parallaxElements.forEach(element => {
+                    element.style.transform = `translateY(${rate}px)`;
+                });
+            });
+        }
+
         // Smooth scroll
         document.querySelectorAll('a[href^="#"]').forEach(anchor => {
             anchor.addEventListener('click', function (e) {
                 e.preventDefault();
                 const target = document.querySelector(this.getAttribute('href'));
                 if (target) {
-                    target.scrollIntoView({
-                        behavior: 'smooth',
-                        block: 'start'
+                    const offsetTop = target.offsetTop - 100;
+                    window.scrollTo({
+                        top: offsetTop,
+                        behavior: 'smooth'
                     });
                 }
             });
-        });
-
-        // Navbar scroll effect
-        window.addEventListener('scroll', () => {
-            const nav = document.querySelector('.nav');
-            if (window.scrollY > 50) {
-                nav.style.boxShadow = '0 2px 10px rgba(0,0,0,0.1)';
-            } else {
-                nav.style.boxShadow = '0 2px 4px rgba(0,0,0,0.1)';
-            }
         });
 
         // Intersection Observer for animations
@@ -1588,17 +2056,136 @@
                 if (entry.isIntersecting) {
                     entry.target.style.opacity = '1';
                     entry.target.style.transform = 'translateY(0)';
+                    entry.target.classList.add('animated');
                 }
             });
         }, observerOptions);
 
-        // Observe elements
-        document.querySelectorAll('.feature-card, .menu-item, .testimonial').forEach(el => {
-            el.style.opacity = '0';
-            el.style.transform = 'translateY(20px)';
-            el.style.transition = 'all 0.6s ease';
-            observer.observe(el);
+        // Observe elements for animation
+        document.addEventListener('DOMContentLoaded', () => {
+            document.querySelectorAll('.feature-card, .music-event, .stat-card, .info-card').forEach(el => {
+                el.style.opacity = '0';
+                el.style.transform = 'translateY(30px)';
+                el.style.transition = 'all 0.8s cubic-bezier(0.4, 0, 0.2, 1)';
+                observer.observe(el);
+            });
         });
+
+        // Form event listeners
+        document.addEventListener('DOMContentLoaded', () => {
+            const forms = document.querySelectorAll('form');
+            forms.forEach(form => {
+                form.addEventListener('submit', handleFormSubmit);
+            });
+        });
+
+        // Add floating animation to cards
+        function addFloatingAnimation() {
+            const cards = document.querySelectorAll('.booking-card, .feature-card, .music-event');
+            
+            cards.forEach((card, index) => {
+                const delay = index * 0.1;
+                card.style.animation = `float 6s ease-in-out ${delay}s infinite`;
+            });
+        }
+
+        // CSS for floating animation
+        const floatingKeyframes = `
+            @keyframes float {
+                0%, 100% { transform: translateY(0px); }
+                50% { transform: translateY(-10px); }
+            }
+        `;
+
+        // Add keyframes to stylesheet
+        const style = document.createElement('style');
+        style.textContent = floatingKeyframes;
+        document.head.appendChild(style);
+
+        // Initialize floating animation
+        document.addEventListener('DOMContentLoaded', () => {
+            setTimeout(addFloatingAnimation, 1000);
+        });
+
+        // Add mouse trail effect
+        let mouseTrail = [];
+        const maxTrailLength = 20;
+
+        document.addEventListener('mousemove', (e) => {
+            mouseTrail.push({ x: e.clientX, y: e.clientY, time: Date.now() });
+            
+            if (mouseTrail.length > maxTrailLength) {
+                mouseTrail.shift();
+            }
+        });
+
+        // Add keyboard navigation support
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape') {
+                closeModal();
+            }
+        });
+
+        // Add touch support for mobile
+        let touchStartY = 0;
+
+        document.addEventListener('touchstart', (e) => {
+            touchStartY = e.touches[0].clientY;
+        });
+
+        document.addEventListener('touchmove', (e) => {
+            if (Math.abs(e.touches[0].clientY - touchStartY) > 10) {
+                e.preventDefault();
+            }
+        }, { passive: false });
+
+        // Performance optimization
+        let ticking = false;
+
+        function updateOnScroll() {
+            // Scroll-based animations here
+            ticking = false;
+        }
+
+        window.addEventListener('scroll', () => {
+            if (!ticking) {
+                requestAnimationFrame(updateOnScroll);
+                ticking = true;
+            }
+        });
+
+        // Error handling for images
+        document.addEventListener('error', (e) => {
+            if (e.target.tagName === 'IMG') {
+                e.target.style.display = 'none';
+            }
+        }, true);
+
+        // Preload critical resources
+        function preloadResources() {
+            const link = document.createElement('link');
+            link.rel = 'preload';
+            link.as = 'font';
+            link.href = 'https://fonts.googleapis.com/css2?family=SF+Pro+Display:wght@100;200;300;400;500;600;700;800;900&display=swap';
+            link.crossOrigin = 'anonymous';
+            document.head.appendChild(link);
+        }
+
+        // Initialize everything
+        document.addEventListener('DOMContentLoaded', preloadResources);
+
+        // Service Worker registration for PWA capabilities
+        if ('serviceWorker' in navigator) {
+            window.addEventListener('load', () => {
+                navigator.serviceWorker.register('/sw.js')
+                    .then(registration => {
+                        console.log('SW registered: ', registration);
+                    })
+                    .catch(registrationError => {
+                        console.log('SW registration failed: ', registrationError);
+                    });
+            });
+        }
     </script>
 </body>
 </html>
