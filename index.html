@@ -1,4 +1,253 @@
-<!DOCTYPE html>
+// Advanced counter with easing and sound-like feedback
+        function animateCounter(element, target, duration = 2500, decimals = 0) {
+            let start = 0;
+            const startTime = performance.now();
+            
+            function easeOutExpo(t) {
+                return t === 1 ? 1 : 1 - Math.pow(2, -10 * t);
+            }
+            
+            function animate(currentTime) {
+                const elapsed = currentTime - startTime;
+                const progress = Math.min(elapsed / duration, 1);
+                const easedProgress = easeOutExpo(progress);
+                
+                let current = start + (target * easedProgress);
+                
+                let displayValue;
+                if (decimals > 0) {
+                    displayValue = current.toFixed(decimals);
+                } else {
+                    displayValue = Math.floor(current);
+                }
+                
+                // Add suffixes and formatting with micro-animations
+                const statLabel = element.parentElement.querySelector('.stat-label').textContent;
+                if (statLabel.includes('Stammgäste')) {
+                    element.textContent = displayValue + '+';
+                } else if (statLabel.includes('Bio-zertifiziert')) {
+                    element.textContent = displayValue + '%';
+                } else if (statLabel.includes('Google')) {
+                    element.textContent = displayValue + '★';
+                } else {
+                    element.textContent = displayValue;
+                }
+                
+                // Add subtle pulse effect during counting
+                if (progress < 1) {
+                    const scale = 1 + (Math.sin(progress * Math.PI * 10) * 0.02);
+                    element.style.transform = `scale(${scale})`;
+                    requestAnimationFrame(animate);
+                } else {
+                    element.style.transform = 'scale(1)';
+                    // Final celebration micro-animation
+                    element.style.animation = 'counterComplete 0.4s var(--ease-out-expo)';
+                }
+            }
+            
+            requestAnimationFrame(animate);
+        }
+
+        // Advanced scroll effects with momentum
+        function initScrollEffects() {
+            const nav = document.querySelector('.nav');
+            let lastScrollY = window.scrollY;
+            let ticking = false;
+
+            function updateNav() {
+                const scrollY = window.scrollY;
+                const scrollDelta = scrollY - lastScrollY;
+                
+                // Close mobile menu on scroll
+                if (document.getElementById('mobileMenu').classList.contains('show')) {
+                    closeMobileMenu();
+                }
+                
+                // Advanced navbar morphing
+                if (scrollY > 100) {
+                    nav.style.background = 'rgba(247, 244, 240, 0.95)';
+                    nav.style.backdropFilter = 'blur(25px)';
+                    nav.style.borderColor = 'rgba(139, 157, 131, 0.3)';
+                    nav.style.boxShadow = '0 8px 40px rgba(45, 62, 42, 0.1)';
+                } else {
+                    nav.style.background = 'rgba(247, 244, 240, 0.9)';
+                    nav.style.backdropFilter = 'blur(20px)';
+                    nav.style.borderColor = 'rgba(139, 157, 131, 0.2)';
+                    nav.style.boxShadow = '0 4px 20px rgba(45, 62, 42, 0.05)';
+                }
+                
+                // Intelligent hide/show with momentum
+                if (window.innerWidth > 768) {
+                    if (scrollDelta > 5 && scrollY > 200) {
+                        nav.style.transform = 'translateX(-50%) translateY(-120%)';
+                        nav.style.opacity = '0.8';
+                    } else if (scrollDelta < -5 || scrollY <= 200) {
+                        nav.style.transform = 'translateX(-50%) translateY(0)';
+                        nav.style.opacity = '1';
+                    }
+                }
+                
+                lastScrollY = scrollY;
+                ticking = false;
+            }
+
+            window.addEventListener('scroll', () => {
+                if (!ticking) {
+                    requestAnimationFrame(updateNav);
+                    ticking = true;
+                }
+            });
+        }
+
+        // Advanced parallax effects for hero section
+        function initParallaxEffects() {
+            const heroSection = document.querySelector('.hero');
+            const heroContent = document.querySelector('.hero-content');
+            const heroVisual = document.querySelector('.hero-visual');
+            
+            if (!heroSection) return;
+            
+            let ticking = false;
+            
+            function updateParallax() {
+                const scrolled = window.pageYOffset;
+                const heroHeight = heroSection.offsetHeight;
+                const scrollProgress = scrolled / heroHeight;
+                
+                if (scrollProgress <= 1) {
+                    // Subtle parallax for content
+                    if (heroContent) {
+                        const translateY = scrolled * 0.2;
+                        heroContent.style.transform = `translateY(${translateY}px)`;
+                    }
+                    
+                    // Slower parallax for visual
+                    if (heroVisual) {
+                        const translateY = scrolled * 0.1;
+                        const scale = 1 + (scrollProgress * 0.05);
+                        heroVisual.style.transform = `translateY(${translateY}px) scale(${scale})`;
+                    }
+                }
+                
+                ticking = false;
+            }
+            
+            window.addEventListener('scroll', () => {
+                if (!ticking) {
+                    requestAnimationFrame(updateParallax);
+                    ticking = true;
+                }
+            });
+        }
+
+        // Advanced page reveal animation
+        function initPageReveal() {
+            // Hero content staggered reveal
+            const heroElements = [
+                '.hero-content h1',
+                '.hero-subtitle', 
+                '.hero-event-info',
+                '.booking-options'
+            ];
+            
+            heroElements.forEach((selector, index) => {
+                const element = document.querySelector(selector);
+                if (element) {
+                    element.style.opacity = '0';
+                    element.style.transform = 'translateY(60px) rotateX(15deg)';
+                    element.style.animation = `heroReveal 1s var(--ease-out-expo) ${0.2 + index * 0.15}s forwards`;
+                }
+            });
+            
+            // Hero visual reveal
+            const heroVisual = document.querySelector('.hero-visual');
+            if (heroVisual) {
+                heroVisual.style.opacity = '0';
+                heroVisual.style.transform = 'translateX(60px) rotateY(-15deg)';
+                heroVisual.style.animation = 'heroVisualReveal 1.2s var(--ease-out-expo) 0.8s forwards';
+            }
+        }
+
+        // Advanced mobile menu with physics
+        function toggleMobileMenu() {
+            const mobileMenu = document.getElementById('mobileMenu');
+            const menuIcon = document.getElementById('mobileMenuIcon');
+            
+            if (mobileMenu.classList.contains('show')) {
+                closeMobileMenu();
+            } else {
+                mobileMenu.classList.add('show');
+                menuIcon.textContent = '✕';
+                menuIcon.style.transform = 'rotate(180deg)';
+                
+                // Stagger menu items animation
+                const menuItems = mobileMenu.querySelectorAll('.mobile-menu-links a');
+                menuItems.forEach((item, index) => {
+                    item.style.opacity = '0';
+                    item.style.transform = 'translateX(-20px)';
+                    item.style.animation = `slideInLeft 0.4s var(--ease-out-expo) ${index * 0.05}s forwards`;
+                });
+            }
+        }
+
+        function closeMobileMenu() {
+            const mobileMenu = document.getElementById('mobileMenu');
+            const menuIcon = document.getElementById('mobileMenuIcon');
+            
+            mobileMenu.classList.remove('show');
+            menuIcon.textContent = '☰';
+            menuIcon.style.transform = 'rotate(0deg)';
+        }
+
+        // Enhanced video initialization with smooth loading
+        function initializeVideos() {
+            const videos = document.querySelectorAll('video');
+            
+            const videoObserver = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    const video = entry.target;
+                    if (entry.isIntersecting) {
+                        video.style.filter = 'blur(0px)';
+                        video.play().catch(e => {
+                            console.log('Video autoplay prevented:', e);
+                        });
+                    } else {
+                        video.pause();
+                        video.style.filter = 'blur(2px)';
+                    }
+                });
+            }, { 
+                threshold: 0.3,
+                rootMargin: '50px'
+            });
+
+            videos.forEach(video => {
+                video.setAttribute('autoplay', '');
+                video.setAttribute('muted', '');
+                video.setAttribute('loop', '');
+                video.setAttribute('playsinline', '');
+                video.removeAttribute('controls');
+                video.controls = false;
+                
+                // Initial subtle blur
+                video.style.filter = 'blur(1px)';
+                video.style.transition = 'filter 0.6s var(--ease-out-circ)';
+                
+                videoObserver.observe(video);
+                
+                video.addEventListener('loadeddata', () => {
+                    video.style.filter = 'blur(0px)';
+                    video.play().catch(e => {
+                        console.log('Video autoplay prevented:', e);
+                    });
+                });
+                
+                video.addEventListener('error', (e) => {
+                    console.log('Video error:', e);
+                    video.style.display = 'none';
+                });
+            });
+        }<!DOCTYPE html>
 <html lang="de">
 <head>
     <meta charset="UTF-8">
@@ -46,6 +295,12 @@
             --gradient-sage: linear-gradient(135deg, var(--sage-green) 0%, var(--mint-fresh) 100%);
             --gradient-earth: linear-gradient(135deg, var(--earth-tone) 0%, var(--natural-brown) 100%);
             --gradient-cream: linear-gradient(135deg, var(--warm-cream) 0%, var(--soft-beige) 100%);
+            
+            /* Animation Easing */
+            --ease-out-expo: cubic-bezier(0.16, 1, 0.3, 1);
+            --ease-out-circ: cubic-bezier(0.08, 0.82, 0.17, 1);
+            --ease-out-quint: cubic-bezier(0.23, 1, 0.32, 1);
+            --ease-in-out-quart: cubic-bezier(0.77, 0, 0.175, 1);
         }
 
         body {
@@ -61,7 +316,7 @@
             min-height: 100vh;
         }
 
-        /* Natural texture overlay */
+        /* Advanced parallax texture overlay */
         body::before {
             content: '';
             position: fixed;
@@ -74,15 +329,40 @@
             pointer-events: none;
             z-index: 0;
             opacity: 0.6;
+            animation: floatTexture 20s ease-in-out infinite;
         }
 
-        /* Glass morphism effect */
+        @keyframes floatTexture {
+            0%, 100% { transform: translateX(0) translateY(0); }
+            25% { transform: translateX(-5px) translateY(-10px); }
+            50% { transform: translateX(10px) translateY(-5px); }
+            75% { transform: translateX(-3px) translateY(8px); }
+        }
+
+        /* Advanced glass morphism with micro-interactions */
         .glass {
             background: var(--surface-glass);
             backdrop-filter: blur(20px);
             -webkit-backdrop-filter: blur(20px);
             border: 1px solid rgba(255, 255, 255, 0.25);
             box-shadow: var(--shadow-soft);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .glass::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.1), transparent);
+            transition: left 0.6s var(--ease-out-quint);
+        }
+
+        .glass:hover::before {
+            left: 100%;
         }
 
         .glass-elevated {
@@ -91,6 +371,7 @@
             -webkit-backdrop-filter: blur(25px);
             border: 1px solid rgba(255, 255, 255, 0.3);
             box-shadow: var(--shadow-medium);
+            transform: translateZ(0);
         }
 
         /* Navigation */
@@ -308,6 +589,7 @@
             width: 100%;
         }
 
+        /* Hero section with advanced animations */
         .hero-content h1 {
             font-family: 'Playfair Display', serif;
             font-size: clamp(42px, 7vw, 64px);
@@ -316,11 +598,22 @@
             margin-bottom: 24px;
             line-height: 1.1;
             letter-spacing: -1px;
+            opacity: 0;
+            transform: translateY(60px) rotateX(15deg);
+            animation: heroTitleReveal 1.2s var(--ease-out-expo) 0.3s forwards;
+        }
+
+        @keyframes heroTitleReveal {
+            to {
+                opacity: 1;
+                transform: translateY(0) rotateX(0deg);
+            }
         }
 
         .hero-content h1 .highlight {
             color: var(--sage-green);
             position: relative;
+            display: inline-block;
         }
 
         .hero-content h1 .highlight::after {
@@ -328,11 +621,16 @@
             position: absolute;
             bottom: -4px;
             left: 0;
-            width: 100%;
+            width: 0;
             height: 3px;
             background: var(--gradient-sage);
             border-radius: 2px;
             opacity: 0.6;
+            animation: underlineGrow 0.8s var(--ease-out-expo) 1.5s forwards;
+        }
+
+        @keyframes underlineGrow {
+            to { width: 100%; }
         }
 
         .hero-subtitle {
@@ -341,6 +639,16 @@
             margin-bottom: 32px;
             line-height: 1.6;
             max-width: 500px;
+            opacity: 0;
+            transform: translateY(40px);
+            animation: fadeInUp 0.8s var(--ease-out-circ) 0.8s forwards;
+        }
+
+        @keyframes fadeInUp {
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
         }
 
         .hero-event-info {
@@ -396,16 +704,19 @@
             margin-bottom: 40px;
         }
 
+        /* Advanced booking cards with magnetic hover */
         .booking-card {
             background: var(--surface-light);
             padding: 32px 24px;
             border-radius: 20px;
             text-align: center;
             cursor: pointer;
-            transition: all 0.4s ease;
+            transition: all 0.4s var(--ease-out-expo);
             border: 1px solid rgba(139, 157, 131, 0.15);
             position: relative;
             overflow: hidden;
+            transform-style: preserve-3d;
+            will-change: transform;
         }
 
         .booking-card::before {
@@ -417,16 +728,44 @@
             bottom: 0;
             background: var(--gradient-sage);
             opacity: 0;
-            transition: opacity 0.3s ease;
+            transition: opacity 0.4s var(--ease-out-circ);
+            z-index: 0;
+        }
+
+        .booking-card::after {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 0;
+            height: 0;
+            background: radial-gradient(circle, rgba(255, 255, 255, 0.3) 0%, transparent 70%);
+            transform: translate(-50%, -50%);
+            transition: all 0.6s var(--ease-out-expo);
+            border-radius: 50%;
+            pointer-events: none;
+            z-index: 1;
         }
 
         .booking-card:hover {
-            transform: translateY(-8px) scale(1.02);
-            box-shadow: var(--shadow-medium);
+            transform: translateY(-12px) rotateX(5deg) scale(1.02);
+            box-shadow: 
+                0 20px 60px rgba(45, 62, 42, 0.15),
+                0 0 0 1px rgba(139, 157, 131, 0.2);
         }
 
         .booking-card:hover::before {
-            opacity: 0.05;
+            opacity: 0.08;
+        }
+
+        .booking-card:hover::after {
+            width: 200px;
+            height: 200px;
+        }
+
+        .booking-card > * {
+            position: relative;
+            z-index: 2;
         }
 
         .booking-card-icon {
@@ -599,18 +938,45 @@
             gap: 32px;
         }
 
+        /* Advanced feature cards with staggered reveal */
         .feature-card {
             background: var(--surface-light);
             padding: 40px 32px;
             border-radius: 20px;
             text-align: center;
-            transition: all 0.4s ease;
+            transition: all 0.6s var(--ease-out-expo);
             border: 1px solid rgba(139, 157, 131, 0.15);
+            position: relative;
+            overflow: hidden;
+            transform-style: preserve-3d;
+        }
+
+        .feature-card::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: conic-gradient(from 0deg, transparent 340deg, rgba(139, 157, 131, 0.1) 360deg);
+            opacity: 0;
+            transition: all 0.8s var(--ease-out-circ);
+            animation: rotateGlow 10s linear infinite;
+        }
+
+        @keyframes rotateGlow {
+            to { transform: rotate(360deg); }
         }
 
         .feature-card:hover {
-            transform: translateY(-8px);
-            box-shadow: var(--shadow-medium);
+            transform: translateY(-12px) rotateX(8deg);
+            box-shadow: 
+                0 25px 80px rgba(45, 62, 42, 0.2),
+                0 0 0 1px rgba(139, 157, 131, 0.3);
+        }
+
+        .feature-card:hover::before {
+            opacity: 1;
         }
 
         .feature-icon {
@@ -624,6 +990,14 @@
             justify-content: center;
             font-size: 32px;
             box-shadow: var(--shadow-soft);
+            position: relative;
+            z-index: 2;
+            transition: all 0.4s var(--ease-out-expo);
+        }
+
+        .feature-card:hover .feature-icon {
+            transform: translateY(-4px) rotateY(10deg) scale(1.1);
+            box-shadow: 0 12px 40px rgba(139, 157, 131, 0.4);
         }
 
         .feature-card h3 {
