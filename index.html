@@ -1,258 +1,4 @@
-// Advanced counter with easing and sound-like feedback
-        function animateCounter(element, target, duration = 2500, decimals = 0) {
-            let start = 0;
-            const startTime = performance.now();
-            
-            function easeOutExpo(t) {
-                return t === 1 ? 1 : 1 - Math.pow(2, -10 * t);
-            }
-            
-            function animate(currentTime) {
-                const elapsed = currentTime - startTime;
-                const progress = Math.min(elapsed / duration, 1);
-                const easedProgress = easeOutExpo(progress);
-                
-                let current = start + (target * easedProgress);
-                
-                let displayValue;
-                if (decimals > 0) {
-                    displayValue = current.toFixed(decimals);
-                } else {
-                    displayValue = Math.floor(current);
-                }
-                
-                // Add suffixes and formatting with micro-animations
-                const statLabel = element.parentElement.querySelector('.stat-label');
-                if (statLabel) {
-                    const labelText = statLabel.textContent;
-                    if (labelText.includes('Stammgäste')) {
-                        element.textContent = displayValue + '+';
-                    } else if (labelText.includes('Bio-zertifiziert')) {
-                        element.textContent = displayValue + '%';
-                    } else if (labelText.includes('Google')) {
-                        element.textContent = displayValue + '★';
-                    } else {
-                        element.textContent = displayValue;
-                    }
-                } else {
-                    element.textContent = displayValue;
-                }
-                
-                // Add subtle pulse effect during counting
-                if (progress < 1) {
-                    const scale = 1 + (Math.sin(progress * Math.PI * 10) * 0.02);
-                    element.style.transform = `scale(${scale})`;
-                    requestAnimationFrame(animate);
-                } else {
-                    element.style.transform = 'scale(1)';
-                    // Final celebration micro-animation
-                    element.style.animation = 'counterComplete 0.4s var(--ease-out-expo)';
-                }
-            }
-            
-            requestAnimationFrame(animate);
-        }
-
-        // Advanced scroll effects with momentum
-        function initScrollEffects() {
-            const nav = document.querySelector('.nav');
-            let lastScrollY = window.scrollY;
-            let ticking = false;
-
-            function updateNav() {
-                const scrollY = window.scrollY;
-                const scrollDelta = scrollY - lastScrollY;
-                
-                // Close mobile menu on scroll
-                if (document.getElementById('mobileMenu').classList.contains('show')) {
-                    closeMobileMenu();
-                }
-                
-                // Advanced navbar morphing
-                if (scrollY > 100) {
-                    nav.style.background = 'rgba(247, 244, 240, 0.95)';
-                    nav.style.backdropFilter = 'blur(25px)';
-                    nav.style.borderColor = 'rgba(139, 157, 131, 0.3)';
-                    nav.style.boxShadow = '0 8px 40px rgba(45, 62, 42, 0.1)';
-                } else {
-                    nav.style.background = 'rgba(247, 244, 240, 0.9)';
-                    nav.style.backdropFilter = 'blur(20px)';
-                    nav.style.borderColor = 'rgba(139, 157, 131, 0.2)';
-                    nav.style.boxShadow = '0 4px 20px rgba(45, 62, 42, 0.05)';
-                }
-                
-                // Intelligent hide/show with momentum
-                if (window.innerWidth > 768) {
-                    if (scrollDelta > 5 && scrollY > 200) {
-                        nav.style.transform = 'translateX(-50%) translateY(-120%)';
-                        nav.style.opacity = '0.8';
-                    } else if (scrollDelta < -5 || scrollY <= 200) {
-                        nav.style.transform = 'translateX(-50%) translateY(0)';
-                        nav.style.opacity = '1';
-                    }
-                }
-                
-                lastScrollY = scrollY;
-                ticking = false;
-            }
-
-            window.addEventListener('scroll', () => {
-                if (!ticking) {
-                    requestAnimationFrame(updateNav);
-                    ticking = true;
-                }
-            });
-        }
-
-        // Advanced parallax effects for hero section
-        function initParallaxEffects() {
-            const heroSection = document.querySelector('.hero');
-            const heroContent = document.querySelector('.hero-content');
-            const heroVisual = document.querySelector('.hero-visual');
-            
-            if (!heroSection) return;
-            
-            let ticking = false;
-            
-            function updateParallax() {
-                const scrolled = window.pageYOffset;
-                const heroHeight = heroSection.offsetHeight;
-                const scrollProgress = scrolled / heroHeight;
-                
-                if (scrollProgress <= 1) {
-                    // Subtle parallax for content
-                    if (heroContent) {
-                        const translateY = scrolled * 0.2;
-                        heroContent.style.transform = `translateY(${translateY}px)`;
-                    }
-                    
-                    // Slower parallax for visual
-                    if (heroVisual) {
-                        const translateY = scrolled * 0.1;
-                        const scale = 1 + (scrollProgress * 0.05);
-                        heroVisual.style.transform = `translateY(${translateY}px) scale(${scale})`;
-                    }
-                }
-                
-                ticking = false;
-            }
-            
-            window.addEventListener('scroll', () => {
-                if (!ticking) {
-                    requestAnimationFrame(updateParallax);
-                    ticking = true;
-                }
-            });
-        }
-
-        // Advanced page reveal animation
-        function initPageReveal() {
-            // Hero content staggered reveal
-            const heroElements = [
-                '.hero-content h1',
-                '.hero-subtitle', 
-                '.hero-event-info',
-                '.booking-options'
-            ];
-            
-            heroElements.forEach((selector, index) => {
-                const element = document.querySelector(selector);
-                if (element) {
-                    element.style.opacity = '0';
-                    element.style.transform = 'translateY(60px) rotateX(15deg)';
-                    element.style.animation = `heroReveal 1s var(--ease-out-expo) ${0.2 + index * 0.15}s forwards`;
-                }
-            });
-            
-            // Hero visual reveal
-            const heroVisual = document.querySelector('.hero-visual');
-            if (heroVisual) {
-                heroVisual.style.opacity = '0';
-                heroVisual.style.transform = 'translateX(60px) rotateY(-15deg)';
-                heroVisual.style.animation = 'heroVisualReveal 1.2s var(--ease-out-expo) 0.8s forwards';
-            }
-        }
-
-        // Advanced mobile menu with physics
-        function toggleMobileMenu() {
-            const mobileMenu = document.getElementById('mobileMenu');
-            const menuIcon = document.getElementById('mobileMenuIcon');
-            
-            if (mobileMenu.classList.contains('show')) {
-                closeMobileMenu();
-            } else {
-                mobileMenu.classList.add('show');
-                menuIcon.textContent = '✕';
-                menuIcon.style.transform = 'rotate(180deg)';
-                
-                // Stagger menu items animation
-                const menuItems = mobileMenu.querySelectorAll('.mobile-menu-links a');
-                menuItems.forEach((item, index) => {
-                    item.style.opacity = '0';
-                    item.style.transform = 'translateX(-20px)';
-                    item.style.animation = `slideInLeft 0.4s var(--ease-out-expo) ${index * 0.05}s forwards`;
-                });
-            }
-        }
-
-        function closeMobileMenu() {
-            const mobileMenu = document.getElementById('mobileMenu');
-            const menuIcon = document.getElementById('mobileMenuIcon');
-            
-            mobileMenu.classList.remove('show');
-            menuIcon.textContent = '☰';
-            menuIcon.style.transform = 'rotate(0deg)';
-        }
-
-        // Enhanced video initialization with smooth loading
-        function initializeVideos() {
-            const videos = document.querySelectorAll('video');
-            
-            const videoObserver = new IntersectionObserver((entries) => {
-                entries.forEach(entry => {
-                    const video = entry.target;
-                    if (entry.isIntersecting) {
-                        video.style.filter = 'blur(0px)';
-                        video.play().catch(e => {
-                            console.log('Video autoplay prevented:', e);
-                        });
-                    } else {
-                        video.pause();
-                        video.style.filter = 'blur(2px)';
-                    }
-                });
-            }, { 
-                threshold: 0.3,
-                rootMargin: '50px'
-            });
-
-            videos.forEach(video => {
-                video.setAttribute('autoplay', '');
-                video.setAttribute('muted', '');
-                video.setAttribute('loop', '');
-                video.setAttribute('playsinline', '');
-                video.removeAttribute('controls');
-                video.controls = false;
-                
-                // Initial subtle blur
-                video.style.filter = 'blur(1px)';
-                video.style.transition = 'filter 0.6s var(--ease-out-circ)';
-                
-                videoObserver.observe(video);
-                
-                video.addEventListener('loadeddata', () => {
-                    video.style.filter = 'blur(0px)';
-                    video.play().catch(e => {
-                        console.log('Video autoplay prevented:', e);
-                    });
-                });
-                
-                video.addEventListener('error', (e) => {
-                    console.log('Video error:', e);
-                    video.style.display = 'none';
-                });
-            });
-        }<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="de">
 <head>
     <meta charset="UTF-8">
@@ -268,7 +14,6 @@
         }
 
         :root {
-            /* Natural Color Palette inspired by the flyer */
             --sage-green: #8B9D83;
             --forest-green: #6B7C63;
             --warm-cream: #F7F4F0;
@@ -277,31 +22,21 @@
             --deep-sage: #5A6B52;
             --mint-fresh: #A8B5A0;
             --earth-tone: #9B8B7A;
-            
-            /* Typography Colors */
             --text-dark: #2D3E2A;
             --text-medium: #4A5A47;
             --text-light: #6B7C68;
             --text-white: #FFFFFF;
             --text-cream: #F7F4F0;
-            
-            /* Surface Colors */
             --surface-light: rgba(247, 244, 240, 0.95);
             --surface-glass: rgba(255, 255, 255, 0.15);
             --surface-hover: rgba(139, 157, 131, 0.1);
             --surface-active: rgba(139, 157, 131, 0.2);
-            
-            /* Shadows */
             --shadow-soft: 0 4px 20px rgba(45, 62, 42, 0.1);
             --shadow-medium: 0 8px 30px rgba(45, 62, 42, 0.15);
             --shadow-strong: 0 12px 40px rgba(45, 62, 42, 0.2);
-            
-            /* Gradients */
             --gradient-sage: linear-gradient(135deg, var(--sage-green) 0%, var(--mint-fresh) 100%);
             --gradient-earth: linear-gradient(135deg, var(--earth-tone) 0%, var(--natural-brown) 100%);
             --gradient-cream: linear-gradient(135deg, var(--warm-cream) 0%, var(--soft-beige) 100%);
-            
-            /* Animation Easing */
             --ease-out-expo: cubic-bezier(0.16, 1, 0.3, 1);
             --ease-out-circ: cubic-bezier(0.08, 0.82, 0.17, 1);
             --ease-out-quint: cubic-bezier(0.23, 1, 0.32, 1);
@@ -321,7 +56,6 @@
             min-height: 100vh;
         }
 
-        /* Advanced parallax texture overlay */
         body::before {
             content: '';
             position: fixed;
@@ -344,7 +78,6 @@
             75% { transform: translateX(-3px) translateY(8px); }
         }
 
-        /* Advanced glass morphism with micro-interactions */
         .glass {
             background: var(--surface-glass);
             backdrop-filter: blur(20px);
@@ -379,7 +112,6 @@
             transform: translateZ(0);
         }
 
-        /* Navigation */
         .nav {
             position: fixed;
             top: 20px;
@@ -491,7 +223,6 @@
             animation: mobileMenuSlide 0.3s ease;
         }
 
-        /* Hide elements initially for smooth reveal */
         .hero-content h1,
         .hero-subtitle,
         .hero-event-info,
@@ -500,7 +231,6 @@
             opacity: 0;
         }
 
-        /* Advanced CSS animations */
         @keyframes heroReveal {
             to {
                 opacity: 1;
@@ -554,7 +284,6 @@
             }
         }
 
-        /* Enhanced mobile menu */
         .mobile-menu.show {
             display: block;
             animation: mobileMenuSlide 0.4s var(--ease-out-expo);
@@ -636,7 +365,6 @@
             box-shadow: var(--shadow-medium) !important;
         }
 
-        /* Hero Section */
         .hero {
             padding: 120px 20px 80px;
             min-height: 100vh;
@@ -656,7 +384,6 @@
             width: 100%;
         }
 
-        /* Hero section with advanced animations */
         .hero-content h1 {
             font-family: 'Playfair Display', serif;
             font-size: clamp(42px, 7vw, 64px);
@@ -665,16 +392,6 @@
             margin-bottom: 24px;
             line-height: 1.1;
             letter-spacing: -1px;
-            opacity: 0;
-            transform: translateY(60px) rotateX(15deg);
-            animation: heroTitleReveal 1.2s var(--ease-out-expo) 0.3s forwards;
-        }
-
-        @keyframes heroTitleReveal {
-            to {
-                opacity: 1;
-                transform: translateY(0) rotateX(0deg);
-            }
         }
 
         .hero-content h1 .highlight {
@@ -706,16 +423,6 @@
             margin-bottom: 32px;
             line-height: 1.6;
             max-width: 500px;
-            opacity: 0;
-            transform: translateY(40px);
-            animation: fadeInUp 0.8s var(--ease-out-circ) 0.8s forwards;
-        }
-
-        @keyframes fadeInUp {
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
         }
 
         .hero-event-info {
@@ -771,7 +478,6 @@
             margin-bottom: 40px;
         }
 
-        /* Advanced booking cards with magnetic hover */
         .booking-card {
             background: var(--surface-light);
             padding: 32px 24px;
@@ -890,7 +596,6 @@
             box-shadow: var(--shadow-medium);
         }
 
-        /* Video styling */
         .hero-image,
         .about-image {
             width: 100%;
@@ -899,7 +604,6 @@
             border-radius: 24px;
         }
 
-        /* Ensure videos autoplay and are optimized */
         video {
             width: 100%;
             height: 100%;
@@ -907,19 +611,9 @@
             border-radius: 24px;
         }
 
-        /* Hide video controls completely */
-        video::-webkit-media-controls {
-            display: none !important;
-        }
-
-        video::-webkit-media-controls-panel {
-            display: none !important;
-        }
-
-        video::-webkit-media-controls-play-button {
-            display: none !important;
-        }
-
+        video::-webkit-media-controls,
+        video::-webkit-media-controls-panel,
+        video::-webkit-media-controls-play-button,
         video::-webkit-media-controls-start-playback-button {
             display: none !important;
         }
@@ -963,7 +657,6 @@
             color: var(--text-medium);
         }
 
-        /* Section Base */
         .section {
             padding: 100px 20px;
             position: relative;
@@ -998,14 +691,12 @@
             margin: 0 auto;
         }
 
-        /* Features Section */
         .features-grid {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
             gap: 32px;
         }
 
-        /* Advanced feature cards with staggered reveal */
         .feature-card {
             background: var(--surface-light);
             padding: 40px 32px;
@@ -1079,7 +770,6 @@
             line-height: 1.6;
         }
 
-        /* Menu Section */
         .menu-categories {
             display: flex;
             justify-content: center;
@@ -1186,7 +876,6 @@
             font-weight: 600;
         }
 
-        /* About Section */
         .about-content {
             display: grid;
             grid-template-columns: 1fr 1fr;
@@ -1251,8 +940,8 @@
             color: var(--sage-green);
             display: block;
             margin-bottom: 8px;
-            font-feature-settings: 'tnum' 1; /* Tabular numbers for consistent spacing */
-            min-height: 44px; /* Prevent layout shift during counting */
+            font-feature-settings: 'tnum' 1;
+            min-height: 44px;
         }
 
         .stat-label {
@@ -1261,7 +950,6 @@
             font-weight: 500;
         }
 
-        /* Music Section */
         .music-events {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
@@ -1324,7 +1012,6 @@
             font-size: 14px;
         }
 
-        /* Contact Section */
         .contact-content {
             display: grid;
             grid-template-columns: 1fr 1fr;
@@ -1443,7 +1130,6 @@
             color: var(--text-dark);
         }
 
-        /* Newsletter */
         .newsletter {
             background: var(--gradient-cream);
             padding: 80px 20px;
@@ -1507,7 +1193,6 @@
             box-shadow: var(--shadow-medium);
         }
 
-        /* Footer */
         .footer {
             background: var(--text-dark);
             color: var(--text-cream);
@@ -1586,7 +1271,6 @@
             opacity: 0.6;
         }
 
-        /* Modal */
         .modal {
             display: none;
             position: fixed;
@@ -1671,7 +1355,6 @@
             color: var(--text-dark);
         }
 
-        /* Notification */
         .notification {
             position: fixed;
             top: 100px;
@@ -1728,7 +1411,6 @@
             font-size: 14px;
         }
 
-        /* Loading */
         .loading {
             display: inline-block;
             width: 20px;
@@ -1743,7 +1425,6 @@
             to { transform: rotate(360deg); }
         }
 
-        /* Responsive */
         @media (max-width: 768px) {
             .hero-container,
             .about-content,
@@ -1820,12 +1501,10 @@
             }
         }
 
-        /* Smooth scrolling */
         html {
             scroll-behavior: smooth;
         }
 
-        /* Custom scrollbar */
         ::-webkit-scrollbar {
             width: 8px;
         }
@@ -1843,7 +1522,6 @@
             background: var(--sage-green);
         }
 
-        /* Selection */
         ::selection {
             background: rgba(139, 157, 131, 0.3);
             color: var(--text-dark);
@@ -1871,7 +1549,6 @@
                 </div>
             </div>
             
-            <!-- Desktop Navigation -->
             <ul class="nav-links">
                 <li><a href="#home">Home</a></li>
                 <li><a href="#about">Über uns</a></li>
@@ -1881,12 +1558,10 @@
                 <li><a href="#" class="book-now-btn" onclick="showBookingModal('quick')">Jetzt buchen</a></li>
             </ul>
             
-            <!-- Mobile Menu Toggle -->
             <button class="mobile-menu-toggle" onclick="toggleMobileMenu()" aria-label="Menu">
                 <span id="mobileMenuIcon">☰</span>
             </button>
             
-            <!-- Mobile Menu -->
             <div class="mobile-menu" id="mobileMenu">
                 <ul class="mobile-menu-links">
                     <li><a href="#home" onclick="closeMobileMenu()">Home</a></li>
@@ -1905,7 +1580,7 @@
         <div class="hero-container">
             <div class="hero-content">
                 <h1>START YOUR <span class="highlight">MONDAY RIGHT</span></h1>
-                <p class="hero-subtitle">Erlebe die perfekte Kombination aus gesundem Essen, inspirierender Musik und positiver Atmosphäre. Dein Montag wird nie wieder derselbe sein.</p>
+                <p class="hero-subtitle">Erlebe die perfekte Kombination aus gesundem Essen, inspirierender Musik und positiver Atmosphäre.</p>
                 
                 <div class="hero-event-info">
                     <div class="event-badge">Featured Event</div>
@@ -1957,7 +1632,6 @@
             </div>
             
             <div class="hero-visual">
-                <!-- Hero Video -->
                 <video 
                     autoplay 
                     loop 
@@ -1965,14 +1639,11 @@
                     playsinline
                     poster="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 800 600'%3E%3Cdefs%3E%3ClinearGradient id='grad1' x1='0%25' y1='0%25' x2='100%25' y2='100%25'%3E%3Cstop offset='0%25' style='stop-color:%23F7F4F0;stop-opacity:1' /%3E%3Cstop offset='100%25' style='stop-color:%23EDE8E0;stop-opacity:1' /%3E%3C/linearGradient%3E%3C/defs%3E%3Crect fill='url(%23grad1)' width='800' height='600'/%3E%3Ctext x='400' y='280' text-anchor='middle' fill='%238B9D83' font-family='Arial, sans-serif' font-size='32' font-weight='bold'%3EHealthy Brunch%3C/text%3E%3Ctext x='400' y='320' text-anchor='middle' fill='%236B7C63' font-family='Arial, sans-serif' font-size='18'%3EFresh • Organic • Delicious%3C/text%3E%3Ctext x='400' y='360' text-anchor='middle' fill='%238B9D83' font-family='Arial, sans-serif' font-size='48'%3E🥗🥑🍳%3C/text%3E%3C/svg%3E"
                     class="hero-image"
-                    style="object-fit: cover;"
                 >
                     <source src="/content/videos/event.mp4" type="video/mp4">
-                    <!-- Fallback content -->
                     Your browser does not support the video tag.
                 </video>
                 
-                <!-- Image Overlay -->
                 <div class="image-overlay">
                     <h2>ra'mien restaurant</h2>
                     <p>Gumpendorferstraße 9, 1060 Wien • Donations appreciated</p>
@@ -1993,25 +1664,25 @@
                 <div class="feature-card">
                     <div class="feature-icon">🌱</div>
                     <h3>100% Bio & Regional</h3>
-                    <p>Alle unsere Zutaten stammen von lokalen Bio-Bauern. Frisch, nachhaltig und voller Geschmack für einen energievollen Start in die Woche.</p>
+                    <p>Alle unsere Zutaten stammen von lokalen Bio-Bauern.</p>
                 </div>
                 
                 <div class="feature-card">
                     <div class="feature-icon">🎵</div>
                     <h3>Live Musik Atmosphäre</h3>
-                    <p>Jeden Montag begleiten dich talentierte DJs und Künstler mit sanften Klängen durch deinen Morgen. Heute feat. DJ OSIVE.</p>
+                    <p>Jeden Montag begleiten dich talentierte DJs und Künstler.</p>
                 </div>
                 
                 <div class="feature-card">
                     <div class="feature-icon">☕</div>
                     <h3>Premium Kaffee</h3>
-                    <p>Handverlesene Bohnen und perfekte Zubereitung von unserem erfahrenen Barista-Team. Der ideale Begleiter zu deinem Brunch.</p>
+                    <p>Handverlesene Bohnen und perfekte Zubereitung.</p>
                 </div>
                 
                 <div class="feature-card">
                     <div class="feature-icon">🤝</div>
                     <h3>Community Gefühl</h3>
-                    <p>Triff Gleichgesinnte, knüpfe neue Kontakte und starte gemeinsam positiv in die Woche. Free Entry, donations appreciated.</p>
+                    <p>Triff Gleichgesinnte und starte gemeinsam positiv.</p>
                 </div>
             </div>
         </div>
@@ -2032,9 +1703,7 @@
                 <button class="category-btn" onclick="filterMenu('drinks')">Getränke</button>
             </div>
             
-            <div class="menu-items" id="menuItems">
-                <!-- Menu items will be loaded dynamically -->
-            </div>
+            <div class="menu-items" id="menuItems"></div>
         </div>
     </section>
 
@@ -2049,24 +1718,19 @@
             <div class="about-content">
                 <div class="about-text">
                     <h3>Unsere Geschichte</h3>
-                    <p>Was einst als einfaches Geburtstagsritual begann, lebt heute in unserem Brunchlokal weiter. Drei Schwestern – eine Ärztin und zwei Flugbegleiterinnen – vereint durch die Liebe zur Familie, zum Reisen und natürlich: zum Brunchen.</p>
-                    <p>Ob in New York, Chicago, an der Amalfiküste oder ganz einfach in unserer Heimatstadt Wien – das gemeinsame Brunchen war immer ein besonderer Moment. Mit jedem Bissen, jedem Kaffee und jeder neuen Idee wuchs auch der Wunsch, diesen Genuss zu teilen.</p>
-                    <p>Als bei Tina eine chronische Darmentzündung diagnostiziert wurde, wurde das Thema Ernährung für uns noch bedeutungsvoller. Seither setzen wir gezielt auf gesunde Alternativen und entzündungshemmende Zutaten – ohne auf Geschmack oder Kreativität zu verzichten.</p>
+                    <p>Was einst als Geburtstagsritual begann, lebt heute in unserem Brunchlokal weiter.</p>
                 </div>
                 
                 <div class="about-image-container">
-                    <!-- About Video -->
                     <video 
                         autoplay 
                         loop 
                         muted
                         playsinline
-                        poster="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 600 400'%3E%3Cdefs%3E%3ClinearGradient id='grad2' x1='0%25' y1='0%25' x2='100%25' y2='100%25'%3E%3Cstop offset='0%25' style='stop-color:%23F7F4F0;stop-opacity:1' /%3E%3Cstop offset='100%25' style='stop-color:%23EDE8E0;stop-opacity:1' /%3E%3C/linearGradient%3E%3C/defs%3E%3Crect fill='url(%23grad2)' width='600' height='400'/%3E%3Ctext x='300' y='180' text-anchor='middle' fill='%238B9D83' font-family='Arial, sans-serif' font-size='24' font-weight='bold'%3EDrei Schwestern%3C/text%3E%3Ctext x='300' y='210' text-anchor='middle' fill='%236B7C63' font-family='Arial, sans-serif' font-size='16'%3EEine Geschichte von Familie,%3C/text%3E%3Ctext x='300' y='230' text-anchor='middle' fill='%236B7C63' font-family='Arial, sans-serif' font-size='16'%3EReisen und Leidenschaft%3C/text%3E%3Ctext x='300' y='270' text-anchor='middle' fill='%238B9D83' font-family='Arial, sans-serif' font-size='32'%3E👭👩‍⚕️✈️%3C/text%3E%3C/svg%3E"
+                        poster="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 600 400'%3E%3Cdefs%3E%3ClinearGradient id='grad2' x1='0%25' y1='0%25' x2='100%25' y2='100%25'%3E%3Cstop offset='0%25' style='stop-color:%23F7F4F0;stop-opacity:1' /%3E%3Cstop offset='100%25' style='stop-color:%23EDE8E0;stop-opacity:1' /%3E%3C/linearGradient%3E%3C/defs%3E%3Crect fill='url(%23grad2)' width='600' height='400'/%3E%3Ctext x='300' y='180' text-anchor='middle' fill='%238B9D83' font-family='Arial, sans-serif' font-size='24' font-weight='bold'%3EDrei Schwestern%3C/text%3E%3Ctext x='300' y='210' text-anchor='middle' fill='%236B7C63' font-family='Arial, sans-serif' font-size='16'%3EEine Geschichte von Familie%3C/text%3E%3C/svg%3E"
                         class="about-image"
-                        style="object-fit: cover;"
                     >
                         <source src="/content/videos/sarmiento.mp4" type="video/mp4">
-                        <!-- Fallback content -->
                         Your browser does not support the video tag.
                     </video>
                 </div>
@@ -2098,7 +1762,7 @@
         <div class="section-container">
             <div class="section-header">
                 <h2>Live Musik jeden Montag</h2>
-                <p>Lass dich von talentierten Künstlern in eine entspannte Stimmung versetzen</p>
+                <p>Lass dich von talentierten Künstlern inspirieren</p>
             </div>
             
             <div class="music-events">
@@ -2171,29 +1835,17 @@
                 <div class="contact-info">
                     <div class="info-card">
                         <h4>📍 Adresse</h4>
-                        <p>
-                            ra'mien restaurant<br>
-                            Gumpendorferstraße 9<br>
-                            1060 Wien, Österreich
-                        </p>
+                        <p>ra'mien restaurant<br>Gumpendorferstraße 9<br>1060 Wien</p>
                     </div>
                     
                     <div class="info-card">
                         <h4>🕐 Öffnungszeiten</h4>
-                        <p>
-                            <strong>Montag:</strong> 09:00 - 12:00 Uhr<br>
-                            <strong>Dienstag - Sonntag:</strong> Geschlossen<br>
-                            <small>Free Entry • Donations appreciated</small>
-                        </p>
+                        <p><strong>Montag:</strong> 09:00 - 12:00 Uhr<br><strong>Di-So:</strong> Geschlossen</p>
                     </div>
                     
                     <div class="info-card">
                         <h4>📞 Direkter Kontakt</h4>
-                        <p>
-                            <strong>E-Mail:</strong> <a href="mailto:hello@healthybrunchclub.at">hello@healthybrunchclub.at</a><br>
-                            <strong>Instagram:</strong> <a href="https://instagram.com/healthybrunchclub">@healthybrunchclub</a><br>
-                            <strong>Reservierung:</strong> <a href="#" onclick="showBookingModal('quick')">Online buchen</a>
-                        </p>
+                        <p><a href="mailto:hello@healthybrunchclub.at">hello@healthybrunchclub.at</a></p>
                     </div>
                 </div>
             </div>
@@ -2204,13 +1856,13 @@
     <section class="newsletter">
         <div class="newsletter-container">
             <h3>Verpasse keine Updates!</h3>
-            <p>Erhalte exklusive Angebote, neue Menüs und Event-Infos direkt in dein Postfach.</p>
+            <p>Erhalte exklusive Angebote und Event-Infos.</p>
             <form action='/success' class='newsletter-form' method='POST' name='newsletter'>
                 <input type='hidden' name='form-name' value='newsletter' />
                 <p style="display:none;">
                     <label>Don't fill this out: <input name="bot-field" /></label>
                 </p>
-                <input type="email" name="email" class="newsletter-input" placeholder="Deine E-Mail Adresse" required>
+                <input type="email" name="email" class="newsletter-input" placeholder="Deine E-Mail" required>
                 <button type="submit" class="newsletter-btn">Anmelden</button>
             </form>
         </div>
@@ -2221,55 +1873,32 @@
         <div class="footer-container">
             <div class="footer-section">
                 <h4>Healthy Brunch Club</h4>
-                <p>Start your Monday right with healthy food, good music, and positive vibes. Eine Initiative von drei Schwestern mit Leidenschaft für gesunde Ernährung und Gemeinschaft.</p>
-                <div class="social-links">
-                    <a href="#" aria-label="Instagram">📸</a>
-                    <a href="#" aria-label="Facebook">👍</a>
-                    <a href="#" aria-label="Spotify">🎵</a>
-                    <a href="#" aria-label="TikTok">🎬</a>
-                </div>
+                <p>Start your Monday right with healthy food and good vibes.</p>
             </div>
-            
             <div class="footer-section">
                 <h4>Quick Links</h4>
                 <a href="#menu">Menü</a>
                 <a href="#music">Live Musik</a>
-                <a href="#" onclick="showBookingModal('quick')">Reservierung</a>
                 <a href="#about">Über uns</a>
                 <a href="#contact">Kontakt</a>
             </div>
-            
             <div class="footer-section">
                 <h4>Event Info</h4>
                 <p><strong>Jeden Montag:</strong> 09:00 - 12:00</p>
-                <p><strong>Location:</strong> ra'mien restaurant</p>
-                <p><strong>Adresse:</strong> Gumpendorferstraße 9, 1060 Wien</p>
-                <p><strong>Eintritt:</strong> Free Entry, Donations appreciated</p>
-            </div>
-            
-            <div class="footer-section">
-                <h4>Kontakt</h4>
-                <a href="mailto:hello@healthybrunchclub.at">hello@healthybrunchclub.at</a>
-                <a href="https://instagram.com/healthybrunchclub">Instagram</a>
-                <p style="margin-top: 1rem;">
-                    <a href="/impressum">Impressum</a> | 
-                    <a href="/datenschutz">Datenschutz</a>
-                </p>
             </div>
         </div>
-        
         <div class="footer-bottom">
-            <p>&copy; 2025 Healthy Brunch Club. Made with 💚 in Wien | Free Entry, Donations appreciated</p>
+            <p>© 2025 Healthy Brunch Club. Made with 💚 in Wien</p>
         </div>
     </footer>
 
     <!-- Booking Modal -->
     <div id="bookingModal" class="modal">
         <div class="modal-content">
-            <button class="close-modal" onclick="closeModal()">&times;</button>
+            <button class="close-modal" onclick="closeModal()">×</button>
             <div class="modal-header">
                 <h3 id="modalTitle">Tisch reservieren</h3>
-                <p id="modalDescription">Sichere dir deinen Platz für ein unvergessliches Brunch-Erlebnis</p>
+                <p id="modalDescription">Sichere dir deinen Platz</p>
             </div>
             
             <form action='/success' id='bookingForm' method='POST' name='booking'>
@@ -2284,7 +1913,6 @@
                         <label for="firstName">Vorname *</label>
                         <input type="text" id="firstName" name="firstName" required>
                     </div>
-                    
                     <div class="form-group">
                         <label for="lastName">Nachname *</label>
                         <input type="text" id="lastName" name="lastName" required>
@@ -2306,7 +1934,6 @@
                         <label for="date">Datum *</label>
                         <input type="date" id="date" name="date" required>
                     </div>
-                    
                     <div class="form-group">
                         <label for="guests">Anzahl Personen *</label>
                         <select id="guests" name="guests" required>
@@ -2327,7 +1954,7 @@
                 
                 <div class="form-group">
                     <label for="allergies">Allergien / Unverträglichkeiten</label>
-                    <textarea id="allergies" name="allergies" rows="3" placeholder="Bitte teile uns eventuelle Allergien oder Unverträglichkeiten mit"></textarea>
+                    <textarea id="allergies" name="allergies" rows="3" placeholder="Eventuelle Allergien"></textarea>
                 </div>
                 
                 <div class="form-group" id="corporateFields" style="display: none;">
@@ -2337,7 +1964,7 @@
                 
                 <div class="form-group" id="feelwellFields" style="display: none;">
                     <label>
-                        <input type="checkbox" name="yoga" value="yes"> Ich möchte zusätzliche Wellness-Optionen (+10€)
+                        <input type="checkbox" name="yoga" value="yes"> Wellness-Optionen (+10€)
                     </label>
                 </div>
                 
@@ -2350,427 +1977,164 @@
     </div>
 
     <script>
-        // Menu data
-        const menuData = {
-            bowls: [
-                {
-                    name: 'Power Morning Bowl',
-                    description: 'Quinoa, Avocado, pochiertes Bio-Ei, geröstete Nüsse, Tahini-Dressing',
-                    price: '16,50€',
-                    tags: ['Bio', 'Proteinreich'],
-                    icon: '🥗'
-                },
-                {
-                    name: 'Acai Energy Bowl',
-                    description: 'Acai-Püree, Banane, Beeren-Mix, hausgemachtes Granola, Kokosflocken',
-                    price: '14,90€',
-                    tags: ['Vegan', 'Superfood'],
-                    icon: '🫐'
-                },
-                {
-                    name: 'Green Goddess Bowl',
-                    description: 'Babyspinat, Grünkohl, Edamame, Gurke, Sprossen, Limetten-Ingwer-Dressing',
-                    price: '15,90€',
-                    tags: ['Vegan', 'Detox'],
-                    icon: '🥬'
-                }
-            ],
-            classics: [
-                {
-                    name: 'Eggs Benedict Deluxe',
-                    description: 'Bio-Eier, geräucherter Lachs, Spinat, hausgemachte Hollandaise, Sauerteigbrot',
-                    price: '18,90€',
-                    tags: ['Bestseller', 'Premium'],
-                    icon: '🍳'
-                },
-                {
-                    name: 'French Toast Heaven',
-                    description: 'Brioche, Ahornsirup, frische Beeren, Vanillecreme, geröstete Mandeln',
-                    price: '13,90€',
-                    tags: ['Süß', 'Comfort Food'],
-                    icon: '🍞'
-                },
-                {
-                    name: 'Avocado Toast Premium',
-                    description: 'Sauerteigbrot, Avocado-Creme, Burrata, Kirschtomaten, Rucola, Balsamico-Glaze',
-                    price: '12,90€',
-                    tags: ['Vegetarisch', 'Instagram-worthy'],
-                    icon: '🥑'
-                }
-            ],
-            drinks: [
-                {
-                    name: 'Immunity Boost Shot',
-                    description: 'Ingwer, Kurkuma, Orange, Karotte, Zitrone, Cayenne-Pfeffer',
-                    price: '7,90€',
-                    tags: ['Detox', 'Vitamin-C'],
-                    icon: '🥤'
-                },
-                {
-                    name: 'Signature Flat White',
-                    description: 'Double Shot Espresso, samtiger Milchschaum, kunstvolle Latte Art',
-                    price: '5,50€',
-                    tags: ['Koffein', 'Barista-Qualität'],
-                    icon: '☕'
-                },
-                {
-                    name: 'Golden Matcha Latte',
-                    description: 'Zeremonieller Matcha, Hafermilch, Kurkuma, Agavensirup, Zimt',
-                    price: '6,90€',
-                    tags: ['Energizing', 'Vegan'],
-                    icon: '🍵'
-                }
-            ]
-        };
-
-        // Menu filtering
-        function filterMenu(category) {
-            // Update active button
-            document.querySelectorAll('.category-btn').forEach(btn => {
-                btn.classList.remove('active');
-            });
-            event.target.classList.add('active');
+        // Advanced counter with easing
+        function animateCounter(element, target, duration = 2500, decimals = 0) {
+            let start = 0;
+            const startTime = performance.now();
             
-            loadMenu(category);
-        }
-
-        function loadMenu(category) {
-            const menuItems = document.getElementById('menuItems');
-            menuItems.innerHTML = '';
-            
-            let items = [];
-            if (category === 'all') {
-                items = [...menuData.bowls, ...menuData.classics, ...menuData.drinks];
-            } else if (menuData[category]) {
-                items = menuData[category];
+            function easeOutExpo(t) {
+                return t === 1 ? 1 : 1 - Math.pow(2, -10 * t);
             }
             
-            items.forEach((item, index) => {
-                const menuItem = createMenuItem(item);
-                menuItem.style.opacity = '0';
-                menuItem.style.transform = 'translateY(30px)';
-                menuItems.appendChild(menuItem);
+            function animate(currentTime) {
+                const elapsed = currentTime - startTime;
+                const progress = Math.min(elapsed / duration, 1);
+                const easedProgress = easeOutExpo(progress);
                 
-                // Animate in with delay
-                setTimeout(() => {
-                    menuItem.style.transition = 'all 0.6s ease';
-                    menuItem.style.opacity = '1';
-                    menuItem.style.transform = 'translateY(0)';
-                }, index * 100);
-            });
-        }
-
-        function createMenuItem(item) {
-            const div = document.createElement('div');
-            div.className = 'menu-item';
-            div.innerHTML = `
-                <div class="menu-item-image">${item.icon}</div>
-                <div class="menu-item-details">
-                    <div class="menu-item-header">
-                        <span class="menu-item-name">${item.name}</span>
-                        <span class="menu-item-price">${item.price}</span>
-                    </div>
-                    <p class="menu-item-description">${item.description}</p>
-                    <div class="menu-item-tags">
-                        ${item.tags.map(tag => `<span class="tag">${tag}</span>`).join('')}
-                    </div>
-                </div>
-            `;
-            return div;
-        }
-
-        // Booking Modal
-        function showBookingModal(type) {
-            const modal = document.getElementById('bookingModal');
-            const modalTitle = document.getElementById('modalTitle');
-            const modalDescription = document.getElementById('modalDescription');
-            const bookingType = document.getElementById('bookingType');
-            const corporateFields = document.getElementById('corporateFields');
-            const feelwellFields = document.getElementById('feelwellFields');
-            
-            // Reset fields
-            corporateFields.style.display = 'none';
-            feelwellFields.style.display = 'none';
-            
-            // Set content based on type
-            bookingType.value = type;
-            
-            switch(type) {
-                case 'friends':
-                    modalTitle.textContent = 'Freund:innen Brunch';
-                    modalDescription.textContent = 'Perfekt für gemeinsame Momente mit deinen Liebsten';
-                    break;
-                case 'corporate':
-                    modalTitle.textContent = 'Firmen Event';
-                    modalDescription.textContent = 'Stärke dein Team mit einem gesunden Start in die Woche';
-                    corporateFields.style.display = 'block';
-                    break;
-                case 'feelwell':
-                    modalTitle.textContent = 'Romantischer Brunch';
-                    modalDescription.textContent = 'Wellness und Genuss in perfekter Harmonie';
-                    feelwellFields.style.display = 'block';
-                    break;
-                default:
-                    modalTitle.textContent = 'Tisch reservieren';
-                    modalDescription.textContent = 'Sichere dir deinen Platz für ein unvergessliches Brunch-Erlebnis';
-            }
-            
-            modal.classList.add('show');
-            document.body.style.overflow = 'hidden';
-        }
-
-        function closeModal() {
-            const modal = document.getElementById('bookingModal');
-            modal.classList.remove('show');
-            document.body.style.overflow = '';
-        }
-
-        // Close modal on outside click
-        window.onclick = function(event) {
-            const modal = document.getElementById('bookingModal');
-            if (event.target == modal) {
-                closeModal();
-            }
-        }
-
-        // Set minimum date to next Monday
-        function setMinDate() {
-            const dateInput = document.getElementById('date');
-            const today = new Date();
-            const nextMonday = new Date(today);
-            
-            // Calculate days until next Monday
-            const daysUntilMonday = (8 - today.getDay()) % 7 || 7;
-            nextMonday.setDate(today.getDate() + daysUntilMonday);
-            
-            // Format date for input
-            const year = nextMonday.getFullYear();
-            const month = String(nextMonday.getMonth() + 1).padStart(2, '0');
-            const day = String(nextMonday.getDate()).padStart(2, '0');
-            
-            dateInput.min = `${year}-${month}-${day}`;
-            dateInput.value = `${year}-${month}-${day}`;
-        }
-
-        // Notification system
-        function showNotification(title, message, type = 'success') {
-            const notification = document.getElementById('notification');
-            const icon = notification.querySelector('.notification-icon');
-            const titleEl = notification.querySelector('.notification-title');
-            const messageEl = notification.querySelector('.notification-message');
-            
-            notification.className = `notification ${type}`;
-            icon.textContent = type === 'success' ? '✅' : '❌';
-            titleEl.textContent = title;
-            messageEl.textContent = message;
-            
-            notification.classList.add('show');
-            
-            setTimeout(() => {
-                notification.classList.remove('show');
-            }, 5000);
-        }
-
-        // Handle form submission
-        function handleFormSubmit(e) {
-            e.preventDefault();
-            
-            const form = e.target;
-            const submitBtn = form.querySelector('.submit-btn');
-            const submitText = form.querySelector('#submitText, #contactSubmitText');
-            const loading = form.querySelector('.loading');
-            
-            // Show loading state
-            if (submitText && loading) {
-                submitText.style.display = 'none';
-                loading.style.display = 'inline-block';
-            }
-            
-            // Collect form data
-            const formData = new FormData(form);
-            
-            // Submit to Netlify
-            fetch('/', {
-                method: 'POST',
-                headers: { "Content-Type": "application/x-www-form-urlencoded" },
-                body: new URLSearchParams(formData).toString()
-            })
-            .then(() => {
-                // Success
-                if (form.name === 'booking') {
-                    showNotification('Reservierung erfolgreich!', 'Wir haben deine Buchung erhalten und senden dir eine Bestätigung per E-Mail.', 'success');
-                    closeModal();
-                } else if (form.name === 'newsletter') {
-                    showNotification('Newsletter abonniert!', 'Willkommen in unserer Community! Du erhältst ab sofort alle Updates.', 'success');
-                } else if (form.name === 'contact') {
-                    showNotification('Nachricht gesendet!', 'Vielen Dank für deine Nachricht. Wir melden uns schnellstmöglich bei dir.', 'success');
+                let current = start + (target * easedProgress);
+                let displayValue = decimals > 0 ? current.toFixed(decimals) : Math.floor(current);
+                
+                const statLabel = element.parentElement.querySelector('.stat-label');
+                if (statLabel) {
+                    const labelText = statLabel.textContent;
+                    if (labelText.includes('Stammgäste')) {
+                        element.textContent = displayValue + '+';
+                    } else if (labelText.includes('Bio-zertifiziert')) {
+                        element.textContent = displayValue + '%';
+                    } else if (labelText.includes('Google')) {
+                        element.textContent = displayValue + '★';
+                    } else {
+                        element.textContent = displayValue;
+                    }
+                } else {
+                    element.textContent = displayValue;
                 }
-                form.reset();
-            })
-            .catch(() => {
-                // Error
-                showNotification('Fehler', 'Etwas ist schief gelaufen. Bitte versuche es später erneut.', 'error');
-            })
-            .finally(() => {
-                // Reset loading state
-                if (submitText && loading) {
-                    submitText.style.display = 'inline';
-                    loading.style.display = 'none';
+                
+                if (progress < 1) {
+                    const scale = 1 + (Math.sin(progress * Math.PI * 10) * 0.02);
+                    element.style.transform = `scale(${scale})`;
+                    requestAnimationFrame(animate);
+                } else {
+                    element.style.transform = 'scale(1)';
+                    element.style.animation = 'counterComplete 0.4s var(--ease-out-expo)';
                 }
-            });
+            }
+            
+            requestAnimationFrame(animate);
         }
 
-        // Initialize scroll effects
+        // Advanced scroll effects
         function initScrollEffects() {
             const nav = document.querySelector('.nav');
             let lastScrollY = window.scrollY;
+            let ticking = false;
 
-            window.addEventListener('scroll', () => {
+            function updateNav() {
                 const scrollY = window.scrollY;
+                const scrollDelta = scrollY - lastScrollY;
                 
-                // Close mobile menu on scroll
                 if (document.getElementById('mobileMenu').classList.contains('show')) {
                     closeMobileMenu();
                 }
                 
-                // Navbar effects
                 if (scrollY > 100) {
                     nav.style.background = 'rgba(247, 244, 240, 0.95)';
                     nav.style.backdropFilter = 'blur(25px)';
                     nav.style.borderColor = 'rgba(139, 157, 131, 0.3)';
+                    nav.style.boxShadow = '0 8px 40px rgba(45, 62, 42, 0.1)';
                 } else {
                     nav.style.background = 'rgba(247, 244, 240, 0.9)';
                     nav.style.backdropFilter = 'blur(20px)';
                     nav.style.borderColor = 'rgba(139, 157, 131, 0.2)';
+                    nav.style.boxShadow = '0 4px 20px rgba(45, 62, 42, 0.05)';
                 }
                 
-                // Hide/show navbar on scroll (only on desktop)
                 if (window.innerWidth > 768) {
-                    if (scrollY > lastScrollY && scrollY > 200) {
-                        nav.style.transform = 'translateX(-50%) translateY(-100%)';
-                    } else {
+                    if (scrollDelta > 5 && scrollY > 200) {
+                        nav.style.transform = 'translateX(-50%) translateY(-120%)';
+                        nav.style.opacity = '0.8';
+                    } else if (scrollDelta < -5 || scrollY <= 200) {
                         nav.style.transform = 'translateX(-50%) translateY(0)';
+                        nav.style.opacity = '1';
                     }
                 }
                 
                 lastScrollY = scrollY;
+                ticking = false;
+            }
+
+            window.addEventListener('scroll', () => {
+                if (!ticking) {
+                    requestAnimationFrame(updateNav);
+                    ticking = true;
+                }
             });
         }
 
-        // Smooth scroll for navigation links
-        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
-            anchor.addEventListener('click', function (e) {
-                e.preventDefault();
-                const target = document.querySelector(this.getAttribute('href'));
-                if (target) {
-                    const offsetTop = target.offsetTop - 100;
-                    window.scrollTo({
-                        top: offsetTop,
-                        behavior: 'smooth'
-                    });
-                }
-            });
-        });
-
-        // Intersection Observer for animations
-        const observerOptions = {
-            threshold: 0.1,
-            rootMargin: '0px 0px -50px 0px'
-        };
-
-        const observer = new IntersectionObserver((entries) => {
-            entries.forEach(entry => {
-                if (entry.isIntersecting) {
-                    entry.target.style.opacity = '1';
-                    entry.target.style.transform = 'translateY(0)';
-                    entry.target.classList.add('animated');
-                }
-            });
-        }, observerOptions);
-
-        // Counter animation function
-        function animateCounter(element, target, duration = 2000, decimals = 0) {
-            let start = 0;
-            const increment = target / (duration / 16); // 60fps
-            let current = start;
+        // Parallax effects for hero section
+        function initParallaxEffects() {
+            const heroSection = document.querySelector('.hero');
+            const heroContent = document.querySelector('.hero-content');
+            const heroVisual = document.querySelector('.hero-visual');
             
-            const timer = setInterval(() => {
-                current += increment;
-                if (current >= target) {
-                    current = target;
-                    clearInterval(timer);
-                }
-                
-                let displayValue;
-                if (decimals > 0) {
-                    displayValue = current.toFixed(decimals);
-                } else {
-                    displayValue = Math.floor(current);
-                }
-                
-                // Add suffixes and formatting
-                if (element.parentElement.querySelector('.stat-label').textContent.includes('Stammgäste')) {
-                    element.textContent = displayValue + '+';
-                } else if (element.parentElement.querySelector('.stat-label').textContent.includes('Bio-zertifiziert')) {
-                    element.textContent = displayValue + '%';
-                } else if (element.parentElement.querySelector('.stat-label').textContent.includes('Google')) {
-                    element.textContent = displayValue + '★';
-                } else {
-                    element.textContent = displayValue;
-                }
-            }, 16);
-        }
-
-        // Initialize counter animations
-        function initializeCounters() {
-            const counterElements = document.querySelectorAll('.stat-number[data-target]');
+            if (!heroSection) return;
             
-            const counterObserver = new IntersectionObserver((entries) => {
-                entries.forEach(entry => {
-                    if (entry.isIntersecting && !entry.target.classList.contains('counted')) {
-                        const target = parseFloat(entry.target.getAttribute('data-target'));
-                        const decimals = parseInt(entry.target.getAttribute('data-decimal')) || 0;
-                        
-                        // Mark as counted to prevent re-animation
-                        entry.target.classList.add('counted');
-                        
-                        // Start the counter animation
-                        animateCounter(entry.target, target, 2500, decimals);
+            let ticking = false;
+            
+            function updateParallax() {
+                const scrolled = window.pageYOffset;
+                const heroHeight = heroSection.offsetHeight;
+                const scrollProgress = scrolled / heroHeight;
+                
+                if (scrollProgress <= 1) {
+                    if (heroContent) {
+                        const translateY = scrolled * 0.2;
+                        heroContent.style.transform = `translateY(${translateY}px)`;
                     }
-                });
-            }, {
-                threshold: 0.3,
-                rootMargin: '0px 0px -50px 0px'
-            });
-
-            counterElements.forEach(element => {
-                counterObserver.observe(element);
+                    
+                    if (heroVisual) {
+                        const translateY = scrolled * 0.1;
+                        const scale = 1 + (scrollProgress * 0.05);
+                        heroVisual.style.transform = `translateY(${translateY}px) scale(${scale})`;
+                    }
+                }
+                
+                ticking = false;
+            }
+            
+            window.addEventListener('scroll', () => {
+                if (!ticking) {
+                    requestAnimationFrame(updateParallax);
+                    ticking = true;
+                }
             });
         }
 
-        // Advanced intersection observer with staggered animations
-        const observerOptions = {
-            threshold: 0.1,
-            rootMargin: '0px 0px -100px 0px'
-        };
-
-        const staggeredObserver = new IntersectionObserver((entries) => {
-            entries.forEach((entry, index) => {
-                if (entry.isIntersecting && !entry.target.classList.contains('animated')) {
-                    // Add staggered delay based on element position
-                    const delay = index * 100;
-                    
-                    setTimeout(() => {
-                        entry.target.style.opacity = '1';
-                        entry.target.style.transform = 'translateY(0) rotateX(0)';
-                        entry.target.classList.add('animated');
-                        
-                        // Add subtle spring animation
-                        entry.target.style.animation = `springIn 0.8s var(--ease-out-expo) forwards`;
-                    }, delay);
+        // Page reveal animation
+        function initPageReveal() {
+            const heroElements = [
+                '.hero-content h1',
+                '.hero-subtitle', 
+                '.hero-event-info',
+                '.booking-options'
+            ];
+            
+            heroElements.forEach((selector, index) => {
+                const element = document.querySelector(selector);
+                if (element) {
+                    element.style.opacity = '0';
+                    element.style.transform = 'translateY(60px) rotateX(15deg)';
+                    element.style.animation = `heroReveal 1s var(--ease-out-expo) ${0.2 + index * 0.15}s forwards`;
                 }
             });
-        }, observerOptions);
+            
+            const heroVisual = document.querySelector('.hero-visual');
+            if (heroVisual) {
+                heroVisual.style.opacity = '0';
+                heroVisual.style.transform = 'translateX(60px) rotateY(-15deg)';
+                heroVisual.style.animation = 'heroVisualReveal 1.2s var(--ease-out-expo) 0.8s forwards';
+            }
+        }
 
         // Mobile menu functions
         function toggleMobileMenu() {
@@ -2782,6 +2146,14 @@
             } else {
                 mobileMenu.classList.add('show');
                 menuIcon.textContent = '✕';
+                menuIcon.style.transform = 'rotate(180deg)';
+                
+                const menuItems = mobileMenu.querySelectorAll('.mobile-menu-links a');
+                menuItems.forEach((item, index) => {
+                    item.style.opacity = '0';
+                    item.style.transform = 'translateX(-20px)';
+                    item.style.animation = `slideInLeft 0.4s var(--ease-out-expo) ${index * 0.05}s forwards`;
+                });
             }
         }
 
@@ -2791,35 +2163,22 @@
             
             mobileMenu.classList.remove('show');
             menuIcon.textContent = '☰';
+            menuIcon.style.transform = 'rotate(0deg)';
         }
 
-        // Close mobile menu when clicking outside
-        document.addEventListener('click', function(event) {
-            const nav = document.querySelector('.nav');
-            const mobileMenu = document.getElementById('mobileMenu');
-            const menuToggle = document.querySelector('.mobile-menu-toggle');
-            
-            if (!nav.contains(event.target) && mobileMenu.classList.contains('show')) {
-                closeMobileMenu();
-            }
-        });
-
-        // Initialize videos with intersection observer for performance
+        // Video initialization
         function initializeVideos() {
             const videos = document.querySelectorAll('video');
             
-            // Intersection Observer for video performance
             const videoObserver = new IntersectionObserver((entries) => {
                 entries.forEach(entry => {
                     const video = entry.target;
                     if (entry.isIntersecting) {
-                        // Start playing when video comes into view
-                        video.play().catch(e => {
-                            console.log('Video autoplay prevented:', e);
-                        });
+                        video.style.filter = 'blur(0px)';
+                        video.play().catch(e => console.log('Video autoplay prevented:', e));
                     } else {
-                        // Pause when out of view to save resources
                         video.pause();
+                        video.style.filter = 'blur(2px)';
                     }
                 });
             }, { 
@@ -2828,59 +2187,255 @@
             });
 
             videos.forEach(video => {
-                // Ensure video properties are set
                 video.setAttribute('autoplay', '');
                 video.setAttribute('muted', '');
                 video.setAttribute('loop', '');
                 video.setAttribute('playsinline', '');
-                
-                // Remove any controls
                 video.removeAttribute('controls');
                 video.controls = false;
                 
-                // Observe for performance
+                video.style.filter = 'blur(1px)';
+                video.style.transition = 'filter 0.6s var(--ease-out-circ)';
+                
                 videoObserver.observe(video);
                 
-                // Handle video load events
                 video.addEventListener('loadeddata', () => {
-                    video.play().catch(e => {
-                        console.log('Video autoplay prevented:', e);
-                    });
+                    video.style.filter = 'blur(0px)';
+                    video.play().catch(e => console.log('Video autoplay prevented:', e));
                 });
                 
-                // Handle errors gracefully
                 video.addEventListener('error', (e) => {
                     console.log('Video error:', e);
-                    // Hide video on error to show fallback poster
                     video.style.display = 'none';
                 });
             });
         }
+
+        // Menu data
+        const menuData = {
+            bowls: [
+                { name: 'Power Morning Bowl', description: 'Quinoa, Avocado, Bio-Ei', price: '16,50€', tags: ['Bio'], icon: '🥗' },
+                { name: 'Acai Energy Bowl', description: 'Acai-Püree, Banane', price: '14,90€', tags: ['Vegan'], icon: '🫐' }
+            ],
+            classics: [
+                { name: 'Eggs Benedict Deluxe', description: 'Bio-Eier, Lachs', price: '18,90€', tags: ['Bestseller'], icon: '🍳' }
+            ],
+            drinks: [
+                { name: 'Signature Flat White', description: 'Espresso, Milchschaum', price: '5,50€', tags: ['Koffein'], icon: '☕' }
+            ]
+        };
+
+        function filterMenu(category) {
+            document.querySelectorAll('.category-btn').forEach(btn => btn.classList.remove('active'));
+            event.target.classList.add('active');
+            loadMenu(category);
+        }
+
+        function loadMenu(category) {
+            const menuItems = document.getElementById('menuItems');
+            menuItems.innerHTML = '';
+            
+            let items = category === 'all' ? 
+                [...menuData.bowls, ...menuData.classics, ...menuData.drinks] : 
+                menuData[category] || [];
+            
+            items.forEach((item, index) => {
+                const menuItem = document.createElement('div');
+                menuItem.className = 'menu-item';
+                menuItem.innerHTML = `
+                    <div class="menu-item-image">${item.icon}</div>
+                    <div class="menu-item-details">
+                        <div class="menu-item-header">
+                            <span class="menu-item-name">${item.name}</span>
+                            <span class="menu-item-price">${item.price}</span>
+                        </div>
+                        <p class="menu-item-description">${item.description}</p>
+                        <div class="menu-item-tags">${item.tags.map(tag => `<span class="tag">${tag}</span>`).join('')}</div>
+                    </div>
+                `;
+                menuItem.style.opacity = '0';
+                menuItem.style.transform = 'translateY(30px)';
+                menuItems.appendChild(menuItem);
+                
+                setTimeout(() => {
+                    menuItem.style.transition = 'all 0.6s ease';
+                    menuItem.style.opacity = '1';
+                    menuItem.style.transform = 'translateY(0)';
+                }, index * 100);
+            });
+        }
+
+        // Booking Modal
+        function showBookingModal(type) {
+            const modal = document.getElementById('bookingModal');
+            const modalTitle = document.getElementById('modalTitle');
+            const modalDescription = document.getElementById('modalDescription');
+            const bookingType = document.getElementById('bookingType');
+            const corporateFields = document.getElementById('corporateFields');
+            const feelwellFields = document.getElementById('feelwellFields');
+            
+            corporateFields.style.display = 'none';
+            feelwellFields.style.display = 'none';
+            
+            bookingType.value = type;
+            switch(type) {
+                case 'friends':
+                    modalTitle.textContent = 'Freund:innen Brunch';
+                    modalDescription.textContent = 'Perfekt für gemeinsame Momente';
+                    break;
+                case 'corporate':
+                    modalTitle.textContent = 'Firmen Event';
+                    modalDescription.textContent = 'Stärke dein Team';
+                    corporateFields.style.display = 'block';
+                    break;
+                case 'feelwell':
+                    modalTitle.textContent = 'Romantischer Brunch';
+                    modalDescription.textContent = 'Wellness und Genuss';
+                    feelwellFields.style.display = 'block';
+                    break;
+                default:
+                    modalTitle.textContent = 'Tisch reservieren';
+                    modalDescription.textContent = 'Sichere dir deinen Platz';
+            }
+            
+            modal.classList.add('show');
+            document.body.style.overflow = 'hidden';
+        }
+
+        function closeModal() {
+            document.getElementById('bookingModal').classList.remove('show');
+            document.body.style.overflow = '';
+        }
+
+        window.onclick = function(event) {
+            const modal = document.getElementById('bookingModal');
+            if (event.target === modal) closeModal();
+        };
+
+        function setMinDate() {
+            const dateInput = document.getElementById('date');
+            const today = new Date();
+            const nextMonday = new Date(today);
+            const daysUntilMonday = (8 - today.getDay()) % 7 || 7;
+            nextMonday.setDate(today.getDate() + daysUntilMonday);
+            
+            const year = nextMonday.getFullYear();
+            const month = String(nextMonday.getMonth() + 1).padStart(2, '0');
+            const day = String(nextMonday.getDate()).padStart(2, '0');
+            
+            dateInput.min = `${year}-${month}-${day}`;
+            dateInput.value = `${year}-${month}-${day}`;
+        }
+
+        function showNotification(title, message, type = 'success') {
+            const notification = document.getElementById('notification');
+            notification.className = `notification ${type}`;
+            notification.querySelector('.notification-icon').textContent = type === 'success' ? '✅' : '❌';
+            notification.querySelector('.notification-title').textContent = title;
+            notification.querySelector('.notification-message').textContent = message;
+            
+            notification.classList.add('show');
+            setTimeout(() => notification.classList.remove('show'), 5000);
+        }
+
+        function handleFormSubmit(e) {
+            e.preventDefault();
+            const form = e.target;
+            const submitBtn = form.querySelector('.submit-btn');
+            const submitText = form.querySelector('#submitText, #contactSubmitText');
+            const loading = form.querySelector('.loading');
+            
+            if (submitText && loading) {
+                submitText.style.display = 'none';
+                loading.style.display = 'inline-block';
+            }
+            
+            const formData = new FormData(form);
+            fetch('/', {
+                method: 'POST',
+                headers: { "Content-Type": "application/x-www-form-urlencoded" },
+                body: new URLSearchParams(formData).toString()
+            })
+            .then(() => {
+                if (form.name === 'booking') {
+                    showNotification('Reservierung erfolgreich!', 'Bestätigung kommt per E-Mail.');
+                    closeModal();
+                } else if (form.name === 'newsletter') {
+                    showNotification('Newsletter abonniert!', 'Willkommen in unserer Community!');
+                } else if (form.name === 'contact') {
+                    showNotification('Nachricht gesendet!', 'Wir melden uns bald.');
+                }
+                form.reset();
+            })
+            .catch(() => showNotification('Fehler', 'Bitte später erneut versuchen.', 'error'))
+            .finally(() => {
+                if (submitText && loading) {
+                    submitText.style.display = 'inline';
+                    loading.style.display = 'none';
+                }
+            });
+        }
+
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function(e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    window.scrollTo({
+                        top: target.offsetTop - 100,
+                        behavior: 'smooth'
+                    });
+                }
+            });
+        });
+
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.style.opacity = '1';
+                    entry.target.style.transform = 'translateY(0)';
+                }
+            });
+        }, { threshold: 0.1, rootMargin: '0px 0px -50px 0px' });
+
+        function initializeCounters() {
+            const counterElements = document.querySelectorAll('.stat-number[data-target]');
+            const counterObserver = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting && !entry.target.classList.contains('counted')) {
+                        const target = parseFloat(entry.target.getAttribute('data-target'));
+                        const decimals = parseInt(entry.target.getAttribute('data-decimal')) || 0;
+                        entry.target.classList.add('counted');
+                        animateCounter(entry.target, target, 2500, decimals);
+                    }
+                });
+            }, { threshold: 0.3 });
+
+            counterElements.forEach(element => counterObserver.observe(element));
+        }
+
         document.addEventListener('DOMContentLoaded', () => {
+            initPageReveal();
+            initScrollEffects();
+            initParallaxEffects();
+            initializeVideos();
             loadMenu('all');
             setMinDate();
-            initScrollEffects();
+            initializeCounters();
             
-            // Observe elements for animation
-            document.querySelectorAll('.feature-card, .music-event, .stat-card, .info-card').forEach(el => {
+            document.querySelectorAll('.feature-card, .music-event, .stat-card').forEach(el => {
                 el.style.opacity = '0';
                 el.style.transform = 'translateY(30px)';
-                el.style.transition = 'all 0.8s ease';
                 observer.observe(el);
             });
             
-            // Form event listeners
-            const forms = document.querySelectorAll('form');
-            forms.forEach(form => {
+            document.querySelectorAll('form').forEach(form => {
                 form.addEventListener('submit', handleFormSubmit);
             });
         });
 
-        // Keyboard navigation support
         document.addEventListener('keydown', (e) => {
-            if (e.key === 'Escape') {
-                closeModal();
-            }
+            if (e.key === 'Escape') closeModal();
         });
     </script>
 </body>
