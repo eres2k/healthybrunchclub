@@ -365,14 +365,16 @@
             height: 600px;
             border-radius: 32px;
             overflow: hidden;
-            background: linear-gradient(135deg, rgba(255, 255, 255, 0.1), rgba(255, 255, 255, 0.05));
             backdrop-filter: blur(20px);
             border: 1px solid rgba(255, 255, 255, 0.2);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            flex-direction: column;
-            text-align: center;
+            background: linear-gradient(135deg, rgba(255, 255, 255, 0.05), rgba(255, 255, 255, 0.02));
+        }
+
+        .hero-video {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            border-radius: 32px;
         }
 
         .hero-visual::before {
@@ -382,8 +384,24 @@
             left: -50%;
             width: 200%;
             height: 200%;
-            background: conic-gradient(from 0deg, transparent, rgba(255, 255, 255, 0.1), transparent);
-            animation: rotate 20s linear infinite;
+            background: conic-gradient(from 0deg, transparent, rgba(255, 255, 255, 0.08), transparent);
+            animation: rotate 25s linear infinite;
+            z-index: 1;
+            pointer-events: none;
+        }
+
+        .hero-visual::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(135deg, rgba(0, 212, 255, 0.1), rgba(123, 104, 238, 0.08));
+            border-radius: 32px;
+            z-index: 2;
+            pointer-events: none;
+            opacity: 0.6;
         }
 
         @keyframes rotate {
@@ -391,21 +409,95 @@
             to { transform: rotate(360deg); }
         }
 
-        .hero-visual-content {
-            position: relative;
-            z-index: 2;
+        .video-overlay {
+            position: absolute;
+            bottom: 32px;
+            left: 32px;
+            right: 32px;
+            background: rgba(0, 0, 0, 0.4);
+            backdrop-filter: blur(15px);
+            border-radius: 16px;
+            padding: 20px;
+            z-index: 3;
+            text-align: center;
+            border: 1px solid rgba(255, 255, 255, 0.1);
         }
 
-        .hero-visual h2 {
-            font-size: 32px;
+        .video-overlay h2 {
+            font-size: 28px;
             font-weight: 700;
-            margin-bottom: 16px;
+            margin-bottom: 8px;
             color: var(--text-primary);
+            text-shadow: 0 2px 8px rgba(0, 0, 0, 0.5);
         }
 
-        .hero-visual p {
-            font-size: 18px;
+        .video-overlay p {
+            font-size: 16px;
             color: var(--text-secondary);
+            text-shadow: 0 1px 4px rgba(0, 0, 0, 0.5);
+        }
+
+        .video-controls {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            z-index: 4;
+            display: flex;
+            gap: 12px;
+        }
+
+        .video-btn {
+            width: 44px;
+            height: 44px;
+            border-radius: 12px;
+            background: rgba(0, 0, 0, 0.4);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            color: var(--text-primary);
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 16px;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .video-btn:hover {
+            background: rgba(0, 0, 0, 0.6);
+            border-color: rgba(255, 255, 255, 0.3);
+            transform: scale(1.05);
+        }
+
+        .hero-visual:hover .video-controls {
+            opacity: 1;
+        }
+
+        .video-controls {
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        /* Video loading state */
+        .video-loading {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            z-index: 2;
+            color: var(--text-secondary);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 16px;
+        }
+
+        .video-loading-spinner {
+            width: 40px;
+            height: 40px;
+            border: 3px solid rgba(255, 255, 255, 0.2);
+            border-top: 3px solid var(--accent-primary);
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
         }
 
         /* Section Base */
@@ -1349,7 +1441,45 @@
             </div>
             
             <div class="hero-visual glass">
-                <div class="hero-visual-content">
+                <!-- Video Loading State -->
+                <div class="video-loading" id="videoLoading">
+                    <div class="video-loading-spinner"></div>
+                    <p>Loading video...</p>
+                </div>
+                
+                <!-- Main Video -->
+                <video 
+                    class="hero-video" 
+                    id="heroVideo"
+                    autoplay 
+                    muted 
+                    loop 
+                    playsinline
+                    poster="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 800 600'%3E%3Crect fill='%23000' width='800' height='600'/%3E%3C/svg%3E"
+                    onloadstart="showVideoLoading()"
+                    oncanplay="hideVideoLoading()"
+                    onerror="handleVideoError()"
+                >
+                    <source src="/path-to-your-video.mp4" type="video/mp4">
+                    <!-- Fallback for unsupported video -->
+                    <div class="video-fallback">
+                        <h2>Healthy Brunch</h2>
+                        <p>Fresh • Delicious • Energizing</p>
+                    </div>
+                </video>
+                
+                <!-- Video Controls -->
+                <div class="video-controls">
+                    <button class="video-btn" onclick="togglePlayPause()" id="playPauseBtn" title="Play/Pause">
+                        ⏸️
+                    </button>
+                    <button class="video-btn" onclick="toggleMute()" id="muteBtn" title="Mute/Unmute">
+                        🔇
+                    </button>
+                </div>
+                
+                <!-- Video Overlay -->
+                <div class="video-overlay">
                     <h2>Healthy Brunch</h2>
                     <p>Fresh • Delicious • Energizing</p>
                 </div>
@@ -1781,12 +1911,127 @@
             ]
         };
 
-        // Initialize
+        // Video control functions
+        function showVideoLoading() {
+            const loading = document.getElementById('videoLoading');
+            if (loading) loading.style.display = 'flex';
+        }
+
+        function hideVideoLoading() {
+            const loading = document.getElementById('videoLoading');
+            if (loading) loading.style.display = 'none';
+        }
+
+        function handleVideoError() {
+            const video = document.getElementById('heroVideo');
+            const loading = document.getElementById('videoLoading');
+            
+            if (loading) loading.style.display = 'none';
+            
+            // Show fallback content
+            if (video) {
+                video.style.display = 'none';
+                const fallback = document.createElement('div');
+                fallback.className = 'video-fallback';
+                fallback.innerHTML = `
+                    <div style="display: flex; align-items: center; justify-content: center; height: 100%; flex-direction: column; text-align: center;">
+                        <h2 style="font-size: 32px; font-weight: 700; margin-bottom: 16px; color: var(--text-primary);">Healthy Brunch</h2>
+                        <p style="font-size: 18px; color: var(--text-secondary);">Fresh • Delicious • Energizing</p>
+                    </div>
+                `;
+                video.parentNode.appendChild(fallback);
+            }
+        }
+
+        function togglePlayPause() {
+            const video = document.getElementById('heroVideo');
+            const btn = document.getElementById('playPauseBtn');
+            
+            if (!video) return;
+            
+            if (video.paused) {
+                video.play();
+                btn.textContent = '⏸️';
+                btn.title = 'Pause';
+            } else {
+                video.pause();
+                btn.textContent = '▶️';
+                btn.title = 'Play';
+            }
+        }
+
+        function toggleMute() {
+            const video = document.getElementById('heroVideo');
+            const btn = document.getElementById('muteBtn');
+            
+            if (!video) return;
+            
+            if (video.muted) {
+                video.muted = false;
+                btn.textContent = '🔊';
+                btn.title = 'Mute';
+            } else {
+                video.muted = true;
+                btn.textContent = '🔇';
+                btn.title = 'Unmute';
+            }
+        }
+
+        // Initialize video
+        function initializeVideo() {
+            const video = document.getElementById('heroVideo');
+            if (!video) return;
+
+            // Set video source - replace with your actual video path
+            video.src = '/content/videos/sarmiento.mp4'; // UPDATE THIS PATH
+            
+            // Ensure video loops smoothly
+            video.addEventListener('ended', () => {
+                video.currentTime = 0;
+                video.play();
+            });
+
+            // Handle video load events
+            video.addEventListener('loadstart', showVideoLoading);
+            video.addEventListener('canplay', hideVideoLoading);
+            video.addEventListener('error', handleVideoError);
+
+            // Auto-hide controls after hover
+            const videoContainer = video.parentElement;
+            let hideControlsTimeout;
+
+            videoContainer.addEventListener('mouseenter', () => {
+                clearTimeout(hideControlsTimeout);
+                document.querySelector('.video-controls').style.opacity = '1';
+            });
+
+            videoContainer.addEventListener('mouseleave', () => {
+                hideControlsTimeout = setTimeout(() => {
+                    document.querySelector('.video-controls').style.opacity = '0';
+                }, 2000);
+            });
+
+            // Intersection Observer for performance
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        video.play();
+                    } else {
+                        video.pause();
+                    }
+                });
+            }, { threshold: 0.5 });
+
+            observer.observe(video);
+        }
+
+        // Update initialization
         document.addEventListener('DOMContentLoaded', () => {
             loadMenu('all');
             setMinDate();
             initScrollEffects();
             initParallax();
+            initializeVideo(); // Add video initialization
         });
 
         // Menu filtering
