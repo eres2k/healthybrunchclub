@@ -1460,7 +1460,7 @@
                     oncanplay="hideVideoLoading()"
                     onerror="handleVideoError()"
                 >
-                    <source src="/content/videos/intro.mp4" type="video/mp4">
+                    <source src="/path-to-your-video.mp4" type="video/mp4">
                     <!-- Fallback for unsupported video -->
                     <div class="video-fallback">
                         <h2>Healthy Brunch</h2>
@@ -1579,7 +1579,7 @@
                         oncanplay="hideAboutVideoLoading()"
                         onerror="handleAboutVideoError()"
                     >
-                        <source src="/content/video/sarmiento.mp4" type="video/mp4">
+                        <source src="/path-to-your-video.mp4" type="video/mp4">
                         <!-- Fallback -->
                         <div class="about-video-fallback">
                             <div style="display: flex; align-items: center; justify-content: center; height: 100%; background: linear-gradient(135deg, rgba(255, 255, 255, 0.1), rgba(255, 255, 255, 0.05)); color: var(--text-primary); text-align: center; padding: 40px;">
@@ -2032,7 +2032,7 @@
             if (!video) return;
 
             // Set video source - replace with your actual video path
-            video.src = '/your-brunch-video.mp4'; // UPDATE THIS PATH
+            video.src = '/content/videos/intro.mp4'; // UPDATE THIS PATH
             
             // Ensure video loops smoothly
             video.addEventListener('ended', () => {
@@ -2148,7 +2148,7 @@
             if (!video) return;
 
             // Set video source - replace with your actual about video path
-            video.src = '/your-about-video.mp4'; // UPDATE THIS PATH
+            video.src = '/content/videos/sarmiento.mp4'; // UPDATE THIS PATH
             
             // Handle video events
             video.addEventListener('loadstart', showAboutVideoLoading);
