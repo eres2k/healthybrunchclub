@@ -169,6 +169,91 @@
             align-items: center;
         }
 
+        .mobile-menu-toggle {
+            display: none;
+            background: none;
+            border: none;
+            font-size: 24px;
+            color: var(--text-dark);
+            cursor: pointer;
+            padding: 8px;
+            border-radius: 8px;
+            transition: all 0.3s ease;
+        }
+
+        .mobile-menu-toggle:hover {
+            background: var(--surface-hover);
+        }
+
+        .mobile-menu {
+            display: none;
+            position: absolute;
+            top: 100%;
+            left: 0;
+            right: 0;
+            background: var(--surface-light);
+            backdrop-filter: blur(25px);
+            border: 1px solid rgba(139, 157, 131, 0.2);
+            border-radius: 20px;
+            margin-top: 8px;
+            padding: 20px;
+            box-shadow: var(--shadow-medium);
+        }
+
+        .mobile-menu.show {
+            display: block;
+            animation: mobileMenuSlide 0.3s ease;
+        }
+
+        @keyframes mobileMenuSlide {
+            from {
+                opacity: 0;
+                transform: translateY(-10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .mobile-menu-links {
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+            list-style: none;
+            margin: 0;
+            padding: 0;
+        }
+
+        .mobile-menu-links a {
+            text-decoration: none;
+            color: var(--text-medium);
+            font-weight: 500;
+            font-size: 16px;
+            padding: 12px 16px;
+            border-radius: 12px;
+            transition: all 0.3s ease;
+            display: block;
+        }
+
+        .mobile-menu-links a:hover {
+            color: var(--text-dark);
+            background: var(--surface-hover);
+        }
+
+        .mobile-book-btn {
+            background: var(--gradient-sage) !important;
+            color: var(--text-white) !important;
+            font-weight: 600 !important;
+            text-align: center;
+            margin-top: 8px;
+        }
+
+        .mobile-book-btn:hover {
+            color: var(--text-white) !important;
+            background: var(--sage-green) !important;
+        }
+
         .nav-links a {
             text-decoration: none;
             color: var(--text-medium);
@@ -1245,10 +1330,15 @@
                 top: 10px;
                 width: calc(100% - 20px);
                 padding: 12px 20px;
+                position: relative;
             }
 
             .nav-links {
                 display: none;
+            }
+
+            .mobile-menu-toggle {
+                display: block;
             }
 
             .hero {
@@ -1337,6 +1427,8 @@
                     <span class="logo-sub">BRUNCHCLUB</span>
                 </div>
             </div>
+            
+            <!-- Desktop Navigation -->
             <ul class="nav-links">
                 <li><a href="#home">Home</a></li>
                 <li><a href="#about">Über uns</a></li>
@@ -1345,6 +1437,23 @@
                 <li><a href="#contact">Kontakt</a></li>
                 <li><a href="#" class="book-now-btn" onclick="showBookingModal('quick')">Jetzt buchen</a></li>
             </ul>
+            
+            <!-- Mobile Menu Toggle -->
+            <button class="mobile-menu-toggle" onclick="toggleMobileMenu()" aria-label="Menu">
+                <span id="mobileMenuIcon">☰</span>
+            </button>
+            
+            <!-- Mobile Menu -->
+            <div class="mobile-menu" id="mobileMenu">
+                <ul class="mobile-menu-links">
+                    <li><a href="#home" onclick="closeMobileMenu()">Home</a></li>
+                    <li><a href="#about" onclick="closeMobileMenu()">Über uns</a></li>
+                    <li><a href="#menu" onclick="closeMobileMenu()">Menü</a></li>
+                    <li><a href="#music" onclick="closeMobileMenu()">Live Musik</a></li>
+                    <li><a href="#contact" onclick="closeMobileMenu()">Kontakt</a></li>
+                    <li><a href="#" class="mobile-book-btn" onclick="showBookingModal('quick'); closeMobileMenu();">Jetzt buchen</a></li>
+                </ul>
+            </div>
         </div>
     </nav>
 
@@ -2076,6 +2185,11 @@
             window.addEventListener('scroll', () => {
                 const scrollY = window.scrollY;
                 
+                // Close mobile menu on scroll
+                if (document.getElementById('mobileMenu').classList.contains('show')) {
+                    closeMobileMenu();
+                }
+                
                 // Navbar effects
                 if (scrollY > 100) {
                     nav.style.background = 'rgba(247, 244, 240, 0.95)';
@@ -2087,11 +2201,13 @@
                     nav.style.borderColor = 'rgba(139, 157, 131, 0.2)';
                 }
                 
-                // Hide/show navbar on scroll
-                if (scrollY > lastScrollY && scrollY > 200) {
-                    nav.style.transform = 'translateX(-50%) translateY(-100%)';
-                } else {
-                    nav.style.transform = 'translateX(-50%) translateY(0)';
+                // Hide/show navbar on scroll (only on desktop)
+                if (window.innerWidth > 768) {
+                    if (scrollY > lastScrollY && scrollY > 200) {
+                        nav.style.transform = 'translateX(-50%) translateY(-100%)';
+                    } else {
+                        nav.style.transform = 'translateX(-50%) translateY(0)';
+                    }
                 }
                 
                 lastScrollY = scrollY;
@@ -2128,6 +2244,38 @@
                 }
             });
         }, observerOptions);
+
+        // Mobile menu functions
+        function toggleMobileMenu() {
+            const mobileMenu = document.getElementById('mobileMenu');
+            const menuIcon = document.getElementById('mobileMenuIcon');
+            
+            if (mobileMenu.classList.contains('show')) {
+                closeMobileMenu();
+            } else {
+                mobileMenu.classList.add('show');
+                menuIcon.textContent = '✕';
+            }
+        }
+
+        function closeMobileMenu() {
+            const mobileMenu = document.getElementById('mobileMenu');
+            const menuIcon = document.getElementById('mobileMenuIcon');
+            
+            mobileMenu.classList.remove('show');
+            menuIcon.textContent = '☰';
+        }
+
+        // Close mobile menu when clicking outside
+        document.addEventListener('click', function(event) {
+            const nav = document.querySelector('.nav');
+            const mobileMenu = document.getElementById('mobileMenu');
+            const menuToggle = document.querySelector('.mobile-menu-toggle');
+            
+            if (!nav.contains(event.target) && mobileMenu.classList.contains('show')) {
+                closeMobileMenu();
+            }
+        });
 
         // Initialize videos with intersection observer for performance
         function initializeVideos() {
