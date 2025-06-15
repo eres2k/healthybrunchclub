@@ -1460,7 +1460,7 @@
                     oncanplay="hideVideoLoading()"
                     onerror="handleVideoError()"
                 >
-                    <source src="/path-to-your-video.mp4" type="video/mp4">
+                    <source src="content/videos/sarmiento.mp4" type="video/mp4">
                     <!-- Fallback for unsupported video -->
                     <div class="video-fallback">
                         <h2>Healthy Brunch</h2>
@@ -1983,7 +1983,7 @@
             if (!video) return;
 
             // Set video source - replace with your actual video path
-            video.src = '/content/videos/sarmiento.mp4'; // UPDATE THIS PATH
+            video.src = 'content/videos/sarmiento.mp4'; // UPDATE THIS PATH
             
             // Ensure video loops smoothly
             video.addEventListener('ended', () => {
