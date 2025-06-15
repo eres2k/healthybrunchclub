@@ -810,6 +810,8 @@
             color: var(--sage-green);
             display: block;
             margin-bottom: 8px;
+            font-feature-settings: 'tnum' 1; /* Tabular numbers for consistent spacing */
+            min-height: 44px; /* Prevent layout shift during counting */
         }
 
         .stat-label {
@@ -1433,7 +1435,7 @@
                 <li><a href="#home">Home</a></li>
                 <li><a href="#about">Über uns</a></li>
                 <li><a href="#menu">Menü</a></li>
-                <li><a href="#music">Live DJ</a></li>
+                <li><a href="#music">Live Musik</a></li>
                 <li><a href="#contact">Kontakt</a></li>
                 <li><a href="#" class="book-now-btn" onclick="showBookingModal('quick')">Jetzt buchen</a></li>
             </ul>
@@ -1449,7 +1451,7 @@
                     <li><a href="#home" onclick="closeMobileMenu()">Home</a></li>
                     <li><a href="#about" onclick="closeMobileMenu()">Über uns</a></li>
                     <li><a href="#menu" onclick="closeMobileMenu()">Menü</a></li>
-                    <li><a href="#music" onclick="closeMobileMenu()">Live DJ</a></li>
+                    <li><a href="#music" onclick="closeMobileMenu()">Live Musik</a></li>
                     <li><a href="#contact" onclick="closeMobileMenu()">Kontakt</a></li>
                     <li><a href="#" class="mobile-book-btn" onclick="showBookingModal('quick'); closeMobileMenu();">Jetzt buchen</a></li>
                 </ul>
@@ -1555,7 +1557,7 @@
                 
                 <div class="feature-card">
                     <div class="feature-icon">🎵</div>
-                    <h3>Live DJ Atmosphäre</h3>
+                    <h3>Live Musik Atmosphäre</h3>
                     <p>Jeden Montag begleiten dich talentierte DJs und Künstler mit sanften Klängen durch deinen Morgen. Heute feat. DJ OSIVE.</p>
                 </div>
                 
@@ -1631,19 +1633,19 @@
             
             <div class="about-stats-grid">
                 <div class="stat-card">
-                    <span class="stat-number">500+</span>
+                    <span class="stat-number" data-target="500">0</span>
                     <div class="stat-label">Glückliche Stammgäste</div>
                 </div>
                 <div class="stat-card">
-                    <span class="stat-number">100%</span>
+                    <span class="stat-number" data-target="100">0</span>
                     <div class="stat-label">Bio-zertifiziert</div>
                 </div>
                 <div class="stat-card">
-                    <span class="stat-number">52</span>
+                    <span class="stat-number" data-target="52">0</span>
                     <div class="stat-label">Events pro Jahr</div>
                 </div>
                 <div class="stat-card">
-                    <span class="stat-number">4.9★</span>
+                    <span class="stat-number" data-target="4.9" data-decimal="1">0</span>
                     <div class="stat-label">Google Bewertung</div>
                 </div>
             </div>
@@ -1654,7 +1656,7 @@
     <section class="section" id="music">
         <div class="section-container">
             <div class="section-header">
-                <h2>Live DJ jeden Montag</h2>
+                <h2>Live Musik jeden Montag</h2>
                 <p>Lass dich von talentierten Künstlern in eine entspannte Stimmung versetzen</p>
             </div>
             
@@ -1790,7 +1792,7 @@
             <div class="footer-section">
                 <h4>Quick Links</h4>
                 <a href="#menu">Menü</a>
-                <a href="#music">Live DJ</a>
+                <a href="#music">Live Musik</a>
                 <a href="#" onclick="showBookingModal('quick')">Reservierung</a>
                 <a href="#about">Über uns</a>
                 <a href="#contact">Kontakt</a>
@@ -2244,6 +2246,66 @@
                 }
             });
         }, observerOptions);
+
+        // Counter animation function
+        function animateCounter(element, target, duration = 2000, decimals = 0) {
+            let start = 0;
+            const increment = target / (duration / 16); // 60fps
+            let current = start;
+            
+            const timer = setInterval(() => {
+                current += increment;
+                if (current >= target) {
+                    current = target;
+                    clearInterval(timer);
+                }
+                
+                let displayValue;
+                if (decimals > 0) {
+                    displayValue = current.toFixed(decimals);
+                } else {
+                    displayValue = Math.floor(current);
+                }
+                
+                // Add suffixes and formatting
+                if (element.parentElement.querySelector('.stat-label').textContent.includes('Stammgäste')) {
+                    element.textContent = displayValue + '+';
+                } else if (element.parentElement.querySelector('.stat-label').textContent.includes('Bio-zertifiziert')) {
+                    element.textContent = displayValue + '%';
+                } else if (element.parentElement.querySelector('.stat-label').textContent.includes('Google')) {
+                    element.textContent = displayValue + '★';
+                } else {
+                    element.textContent = displayValue;
+                }
+            }, 16);
+        }
+
+        // Initialize counter animations
+        function initializeCounters() {
+            const counterElements = document.querySelectorAll('.stat-number[data-target]');
+            
+            const counterObserver = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting && !entry.target.classList.contains('counted')) {
+                        const target = parseFloat(entry.target.getAttribute('data-target'));
+                        const decimals = parseInt(entry.target.getAttribute('data-decimal')) || 0;
+                        
+                        // Mark as counted to prevent re-animation
+                        entry.target.classList.add('counted');
+                        
+                        // Start the counter animation
+                        animateCounter(entry.target, target, 2500, decimals);
+                    }
+                });
+            }, {
+                threshold: 0.5,
+                rootMargin: '0px 0px -100px 0px'
+            });
+
+            counterElements.forEach(element => {
+                counterObserver.observe(element);
+            });
+        }
 
         // Mobile menu functions
         function toggleMobileMenu() {
