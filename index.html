@@ -399,11 +399,38 @@
             box-shadow: var(--shadow-medium);
         }
 
-        .hero-image {
+        /* Video styling */
+        .hero-image,
+        .about-image {
             width: 100%;
             height: 100%;
             object-fit: cover;
             border-radius: 24px;
+        }
+
+        /* Ensure videos autoplay and are optimized */
+        video {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            border-radius: 24px;
+        }
+
+        /* Hide video controls completely */
+        video::-webkit-media-controls {
+            display: none !important;
+        }
+
+        video::-webkit-media-controls-panel {
+            display: none !important;
+        }
+
+        video::-webkit-media-controls-play-button {
+            display: none !important;
+        }
+
+        video::-webkit-media-controls-start-playback-button {
+            display: none !important;
         }
 
         .hero-visual::after {
@@ -1378,12 +1405,20 @@
             </div>
             
             <div class="hero-visual">
-                <!-- Placeholder for actual food image -->
-                <img 
-                    src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 800 600'%3E%3Cdefs%3E%3ClinearGradient id='grad1' x1='0%25' y1='0%25' x2='100%25' y2='100%25'%3E%3Cstop offset='0%25' style='stop-color:%23F7F4F0;stop-opacity:1' /%3E%3Cstop offset='100%25' style='stop-color:%23EDE8E0;stop-opacity:1' /%3E%3C/linearGradient%3E%3C/defs%3E%3Crect fill='url(%23grad1)' width='800' height='600'/%3E%3Ctext x='400' y='280' text-anchor='middle' fill='%238B9D83' font-family='Arial, sans-serif' font-size='32' font-weight='bold'%3EHealthy Brunch%3C/text%3E%3Ctext x='400' y='320' text-anchor='middle' fill='%236B7C63' font-family='Arial, sans-serif' font-size='18'%3EFresh • Organic • Delicious%3C/text%3E%3Ctext x='400' y='360' text-anchor='middle' fill='%238B9D83' font-family='Arial, sans-serif' font-size='48'%3E🥗🥑🍳%3C/text%3E%3C/svg%3E" 
-                    alt="Healthy Brunch Food"
+                <!-- Hero Video -->
+                <video 
+                    autoplay 
+                    loop 
+                    muted
+                    playsinline
+                    poster="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 800 600'%3E%3Cdefs%3E%3ClinearGradient id='grad1' x1='0%25' y1='0%25' x2='100%25' y2='100%25'%3E%3Cstop offset='0%25' style='stop-color:%23F7F4F0;stop-opacity:1' /%3E%3Cstop offset='100%25' style='stop-color:%23EDE8E0;stop-opacity:1' /%3E%3C/linearGradient%3E%3C/defs%3E%3Crect fill='url(%23grad1)' width='800' height='600'/%3E%3Ctext x='400' y='280' text-anchor='middle' fill='%238B9D83' font-family='Arial, sans-serif' font-size='32' font-weight='bold'%3EHealthy Brunch%3C/text%3E%3Ctext x='400' y='320' text-anchor='middle' fill='%236B7C63' font-family='Arial, sans-serif' font-size='18'%3EFresh • Organic • Delicious%3C/text%3E%3Ctext x='400' y='360' text-anchor='middle' fill='%238B9D83' font-family='Arial, sans-serif' font-size='48'%3E🥗🥑🍳%3C/text%3E%3C/svg%3E"
                     class="hero-image"
-                />
+                    style="object-fit: cover;"
+                >
+                    <source src="/content/videos/event.mp4" type="video/mp4">
+                    <!-- Fallback content -->
+                    Your browser does not support the video tag.
+                </video>
                 
                 <!-- Image Overlay -->
                 <div class="image-overlay">
@@ -1468,11 +1503,20 @@
                 </div>
                 
                 <div class="about-image-container">
-                    <img 
-                        src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 600 400'%3E%3Cdefs%3E%3ClinearGradient id='grad2' x1='0%25' y1='0%25' x2='100%25' y2='100%25'%3E%3Cstop offset='0%25' style='stop-color:%23F7F4F0;stop-opacity:1' /%3E%3Cstop offset='100%25' style='stop-color:%23EDE8E0;stop-opacity:1' /%3E%3C/linearGradient%3E%3C/defs%3E%3Crect fill='url(%23grad2)' width='600' height='400'/%3E%3Ctext x='300' y='180' text-anchor='middle' fill='%238B9D83' font-family='Arial, sans-serif' font-size='24' font-weight='bold'%3EDrei Schwestern%3C/text%3E%3Ctext x='300' y='210' text-anchor='middle' fill='%236B7C63' font-family='Arial, sans-serif' font-size='16'%3EEine Geschichte von Familie,%3C/text%3E%3Ctext x='300' y='230' text-anchor='middle' fill='%236B7C63' font-family='Arial, sans-serif' font-size='16'%3EReisen und Leidenschaft%3C/text%3E%3Ctext x='300' y='270' text-anchor='middle' fill='%238B9D83' font-family='Arial, sans-serif' font-size='32'%3E👭👩‍⚕️✈️%3C/text%3E%3C/svg%3E" 
-                        alt="Drei Schwestern - Gründerinnen"
+                    <!-- About Video -->
+                    <video 
+                        autoplay 
+                        loop 
+                        muted
+                        playsinline
+                        poster="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 600 400'%3E%3Cdefs%3E%3ClinearGradient id='grad2' x1='0%25' y1='0%25' x2='100%25' y2='100%25'%3E%3Cstop offset='0%25' style='stop-color:%23F7F4F0;stop-opacity:1' /%3E%3Cstop offset='100%25' style='stop-color:%23EDE8E0;stop-opacity:1' /%3E%3C/linearGradient%3E%3C/defs%3E%3Crect fill='url(%23grad2)' width='600' height='400'/%3E%3Ctext x='300' y='180' text-anchor='middle' fill='%238B9D83' font-family='Arial, sans-serif' font-size='24' font-weight='bold'%3EDrei Schwestern%3C/text%3E%3Ctext x='300' y='210' text-anchor='middle' fill='%236B7C63' font-family='Arial, sans-serif' font-size='16'%3EEine Geschichte von Familie,%3C/text%3E%3Ctext x='300' y='230' text-anchor='middle' fill='%236B7C63' font-family='Arial, sans-serif' font-size='16'%3EReisen und Leidenschaft%3C/text%3E%3Ctext x='300' y='270' text-anchor='middle' fill='%238B9D83' font-family='Arial, sans-serif' font-size='32'%3E👭👩‍⚕️✈️%3C/text%3E%3C/svg%3E"
                         class="about-image"
-                    />
+                        style="object-fit: cover;"
+                    >
+                        <source src="/content/videos/sarmiento.mp4" type="video/mp4">
+                        <!-- Fallback content -->
+                        Your browser does not support the video tag.
+                    </video>
                 </div>
             </div>
             
@@ -2085,7 +2129,58 @@
             });
         }, observerOptions);
 
-        // Initialize everything
+        // Initialize videos with intersection observer for performance
+        function initializeVideos() {
+            const videos = document.querySelectorAll('video');
+            
+            // Intersection Observer for video performance
+            const videoObserver = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    const video = entry.target;
+                    if (entry.isIntersecting) {
+                        // Start playing when video comes into view
+                        video.play().catch(e => {
+                            console.log('Video autoplay prevented:', e);
+                        });
+                    } else {
+                        // Pause when out of view to save resources
+                        video.pause();
+                    }
+                });
+            }, { 
+                threshold: 0.3,
+                rootMargin: '50px'
+            });
+
+            videos.forEach(video => {
+                // Ensure video properties are set
+                video.setAttribute('autoplay', '');
+                video.setAttribute('muted', '');
+                video.setAttribute('loop', '');
+                video.setAttribute('playsinline', '');
+                
+                // Remove any controls
+                video.removeAttribute('controls');
+                video.controls = false;
+                
+                // Observe for performance
+                videoObserver.observe(video);
+                
+                // Handle video load events
+                video.addEventListener('loadeddata', () => {
+                    video.play().catch(e => {
+                        console.log('Video autoplay prevented:', e);
+                    });
+                });
+                
+                // Handle errors gracefully
+                video.addEventListener('error', (e) => {
+                    console.log('Video error:', e);
+                    // Hide video on error to show fallback poster
+                    video.style.display = 'none';
+                });
+            });
+        }
         document.addEventListener('DOMContentLoaded', () => {
             loadMenu('all');
             setMinDate();
