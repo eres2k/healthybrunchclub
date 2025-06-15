@@ -491,6 +491,15 @@
             animation: mobileMenuSlide 0.3s ease;
         }
 
+        /* Hide elements initially for smooth reveal */
+        .hero-content h1,
+        .hero-subtitle,
+        .hero-event-info,
+        .booking-options,
+        .hero-visual {
+            opacity: 0;
+        }
+
         /* Advanced CSS animations */
         @keyframes heroReveal {
             to {
@@ -530,7 +539,7 @@
 
         @keyframes counterComplete {
             0% { transform: scale(1); }
-            50% { transform: scale(1.1); }
+            50% { transform: scale(1.15); }
             100% { transform: scale(1); }
         }
 
