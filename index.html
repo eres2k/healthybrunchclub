@@ -1432,7 +1432,7 @@
                     
                     <div class="booking-card glass" onclick="showBookingModal('feelwell')">
                         <div class="booking-card-icon">🧘‍♀️</div>
-                        <h3>Romantic Brunch</h3>
+                        <h3>Romantischer Brunch</h3>
                         <p>Love is in the Air<br>(für 2 Personen)</p>
                         <span class="booking-card-price">20€</span>
                         <button>Jetzt buchen</button>
@@ -1448,17 +1448,17 @@
                 </div>
                 
                 <!-- Main Video -->
-                <video 
-                    class="hero-video" 
-                    id="heroVideo"
+                <video
                     autoplay 
-                    muted 
                     loop 
-                    playsinline
-                    poster="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 800 600'%3E%3Crect fill='%23000' width='800' height='600'/%3E%3C/svg%3E"
-                    onloadstart="showVideoLoading()"
+                    muted
+                    poster="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 800 600'%3E%3Crect fill='%23000' width='800' height='600'/%3E%3C/svg%3E" 
+                    class="hero-video glass" 
+                    id="heroVideo"
                     oncanplay="hideVideoLoading()"
                     onerror="handleVideoError()"
+                    onloadstart="showVideoLoading()" 
+                    playsinline
                 >
                     <source src="/path-to-your-video.mp4" type="video/mp4">
                     <!-- Fallback for unsupported video -->
@@ -1469,15 +1469,6 @@
                 </video>
                 
                 <!-- Video Controls -->
-                <div class="video-controls">
-                    <button class="video-btn" onclick="togglePlayPause()" id="playPauseBtn" title="Play/Pause">
-                        ⏸️
-                    </button>
-                    <button class="video-btn" onclick="toggleMute()" id="muteBtn" title="Mute/Unmute">
-                        🔇
-                    </button>
-                </div>
-                
                 <!-- Video Overlay -->
                 <div class="video-overlay">
                     <h2>Healthy Brunch</h2>
@@ -1592,15 +1583,6 @@
                     </video>
                     
                     <!-- Video Controls -->
-                    <div class="about-video-controls">
-                        <button class="about-video-btn" onclick="toggleAboutPlayPause()" id="aboutPlayPauseBtn" title="Play/Pause">
-                            ▶️
-                        </button>
-                        <button class="about-video-btn" onclick="toggleAboutMute()" id="aboutMuteBtn" title="Mute/Unmute">
-                            🔇
-                        </button>
-                    </div>
-                    
                     <!-- Video Overlay -->
                     <div class="about-video-overlay">
                         <h4 style="font-size: 18px; font-weight: 600; margin-bottom: 4px;">Unsere Story</h4>
