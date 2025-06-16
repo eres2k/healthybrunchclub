@@ -1484,28 +1484,7 @@
             .hero-visual {
                 height: 400px;
             }
-        }
-
-        @media (max-width: 480px) {
-            .hero-content h1 {
-                font-size: 32px;
-            }
-
-            .modal-content {
-                padding: 32px 24px;
-            }
-
-            .about-stats-grid {
-                grid-template-columns: repeat(2, 1fr);
-            }
-
-            .event-details {
-                grid-template-columns: 1fr;
-                gap: 12px;
-            }
-        }
-		@media (max-width: 768px) {
-    .menu-icon {
+			   .menu-icon {
         position: fixed;
         top: 10px;
         right: 10px;
@@ -1528,7 +1507,27 @@
     .mobile-menu {
         display: block; /* Ensures mobile menu is available */
     }
-}
+        }
+
+        @media (max-width: 480px) {
+            .hero-content h1 {
+                font-size: 32px;
+            }
+
+            .modal-content {
+                padding: 32px 24px;
+            }
+
+            .about-stats-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .event-details {
+                grid-template-columns: 1fr;
+                gap: 12px;
+            }
+        }
+
 
 
         html {
