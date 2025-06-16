@@ -165,11 +165,13 @@
         }
 
         .logo-main {
-            font-family: 'Playfair Display', serif;
-            font-size: 20px;
-            font-weight: 600;
-            color: var(--text-dark);
-            letter-spacing: -0.5px;
+	font-family: 'Playfair Display', serif;
+	font-size: 20px;
+	font-weight: 600;
+	color: var(--text-dark);
+	letter-spacing: -0.5px;
+	max-width: 80px;
+	max-height: 50px;
         }
 
         .logo-sub {
@@ -631,17 +633,18 @@
         }
 
         .image-overlay {
-            position: absolute;
-            bottom: 32px;
-            left: 32px;
-            right: 32px;
-            background: rgba(247, 244, 240, 0.95);
-            backdrop-filter: blur(15px);
-            border-radius: 16px;
-            padding: 20px;
-            z-index: 3;
-            text-align: center;
-            border: 1px solid rgba(139, 157, 131, 0.2);
+	position: absolute;
+	bottom: 32px;
+	left: 32px;
+	right: 32px;
+	background: rgba(247, 244, 240, 0.95);
+	backdrop-filter: blur(15px);
+	border-radius: 16px;
+	padding: 20px;
+	z-index: 3;
+	text-align: center;
+	border: 1px solid rgba(139, 157, 131, 0.2);
+	opacity: 60%;
         }
 
         .image-overlay h2 {
@@ -1544,8 +1547,7 @@
             <div class="logo">
                 <div class="logo-icon"></div>
                 <div class="logo-text">
-                    <span class="logo-main">healthy</span>
-                    <span class="logo-sub">BRUNCHCLUB</span>
+                    <span class="logo-main"><img src="../../../../../healthybrunchclub/content/images/logo.png" alt="" width="356" height="194" class="logo-main"/></span>
                 </div>
             </div>
             
@@ -1553,7 +1555,7 @@
                 <li><a href="#home">Home</a></li>
                 <li><a href="#about">Über uns</a></li>
                 <li><a href="#menu">Menü</a></li>
-                <li><a href="#music">Live Musik</a></li>
+                <li><a href="#music">Live DJ</a></li>
                 <li><a href="#contact">Kontakt</a></li>
                 <li><a href="#" class="book-now-btn" onclick="showBookingModal('quick')">Jetzt buchen</a></li>
             </ul>
@@ -1567,7 +1569,7 @@
                     <li><a href="#home" onclick="closeMobileMenu()">Home</a></li>
                     <li><a href="#about" onclick="closeMobileMenu()">Über uns</a></li>
                     <li><a href="#menu" onclick="closeMobileMenu()">Menü</a></li>
-                    <li><a href="#music" onclick="closeMobileMenu()">Live Musik</a></li>
+                    <li><a href="#music" onclick="closeMobileMenu()">Live DJ</a></li>
                     <li><a href="#contact" onclick="closeMobileMenu()">Kontakt</a></li>
                     <li><a href="#" class="mobile-book-btn" onclick="showBookingModal('quick'); closeMobileMenu();">Jetzt buchen</a></li>
                 </ul>
@@ -1609,7 +1611,7 @@
                         <div class="booking-card-icon">👥</div>
                         <h3>Freund:innen Brunch</h3>
                         <p>Gemeinsam genießen<br>2-4 Personen</p>
-                        <span class="booking-card-price">ab 15€ p.P.</span>
+                        <span class="booking-card-price">15€ p.P.</span>
                         <button>Reservieren</button>
                     </div>
                     
@@ -1617,7 +1619,7 @@
                         <div class="booking-card-icon">💼</div>
                         <h3>Firmen Event</h3>
                         <p>Team-Building deluxe<br>bis 10 Personen</p>
-                        <span class="booking-card-price">ab 20€ p.P.</span>
+                        <span class="booking-card-price">20€ p.P.</span>
                         <button>Reservieren</button>
                     </div>
                     
@@ -1625,9 +1627,18 @@
                         <div class="booking-card-icon">🧘‍♀️</div>
                         <h3>Romantischer Brunch</h3>
                         <p>Love is in the Air<br>für 2 Personen</p>
-                        <span class="booking-card-price">ab 18€ p.P.</span>
+                        <span class="booking-card-price">25€</span>
                         <button>Reservieren</button>
                     </div>
+					
+					  <div class="booking-card" onclick="showBookingModal('feelwell')">
+                        <div class="booking-card-icon">🧘‍♀️</div>
+                        <h3>Luxus Brunch</h3>
+                        <p>I want it all<br>bis 4 Personen</p>
+                        <span class="booking-card-price">25€ p.P.</span>
+                        <button>Reservieren</button>
+                    </div>
+					
                 </div>
             </div>
             
@@ -1669,7 +1680,7 @@
                 
                 <div class="feature-card">
                     <div class="feature-icon">🎵</div>
-                    <h3>Live Musik Atmosphäre</h3>
+                    <h3>Live DJ Atmosphäre</h3>
                     <p>Jeden Montag begleiten dich talentierte DJs und Künstler.</p>
                 </div>
                 
@@ -1718,7 +1729,7 @@
             <div class="about-content">
                 <div class="about-text">
                     <h3>Unsere Geschichte</h3>
-                    <p>Was einst als Geburtstagsritual begann, lebt heute in unserem Brunchlokal weiter.</p>
+                    <p>Was einst als einfaches Geburtstagsritual begann, lebt heute in unserem Brunchlokal weiter. Drei Schwestern – eine Ärztin und zwei Flugbegleiterinnen – vereint durch die Liebe zur Familie, zum Reisen und natürlich: zum Brunchen.Ob in New York, Chicago, an der Amalfiküste oder aber auch ganz einfach in unserer Heimatstadt Wien – das gemeinsame Brunchen war immer ein besonderer Moment. Und mit jedem Bissen, jedem Kaffee und jeder neuen Idee wuchs auch der Wunsch, diesen Genuss zu teilen.Unsere Wurzeln liegen auf den Philippinen – und mit ihnen eine tiefe Verbundenheit zu Gastfreundschaft, Aromenvielfalt und dem Herz für gutes Essen. Diese Einflüsse spiegeln sich heute in unserer Speisekarte genauso wider wie die Erfahrungen aus aller Welt.Als bei Tina eine chronische Darmentzündung diagnostiziert wurde, wurde das Thema Ernährung für uns noch bedeutungsvoller. Seither setzen wir gezielt auf gesunde Alternativen und entzündungshemmende Zutaten – ohne auf Geschmack oder Kreativität zu verzichten.Das Ergebnis: Eine bunte Auswahl an trendigen, ausgewogenen und international inspirierten Brunchgerichten, die nicht nur sättigen, sondern glücklich machen.Kommt vorbei, bruncht mit uns</p>
                 </div>
                 
                 <div class="about-image-container">
@@ -1761,7 +1772,7 @@
     <section class="section" id="music">
         <div class="section-container">
             <div class="section-header">
-                <h2>Live Musik jeden Montag</h2>
+                <h2>Live DJ jeden Montag</h2>
                 <p>Lass dich von talentierten Künstlern inspirieren</p>
             </div>
             
@@ -1878,7 +1889,7 @@
             <div class="footer-section">
                 <h4>Quick Links</h4>
                 <a href="#menu">Menü</a>
-                <a href="#music">Live Musik</a>
+                <a href="#music">Live DJ</a>
                 <a href="#about">Über uns</a>
                 <a href="#contact">Kontakt</a>
             </div>
