@@ -71,32 +71,7 @@
             animation: floatTexture 20s ease-in-out infinite;
         }
 		
-		@media (max-width: 768px) {
-    .menu-icon {
-        position: fixed;
-        top: 10px;
-        right: 10px;
-        z-index: 1000;
-    }
-
-    .hero {
-        margin-top: 0;
-        min-height: 100vh;
-    }
-
-    .header {
-        height: 50px; /* Keeps header slim; adjust as needed */
-    }
-
-    .header nav {
-        display: none; /* Hides regular nav on mobile, assuming mobile-menu takes over */
-    }
-
-    .mobile-menu {
-        display: block; /* Ensures mobile menu is available */
-    }
-}
-
+		
         @keyframes floatTexture {
             0%, 100% { transform: translateX(0) translateY(0); }
             25% { transform: translateX(-5px) translateY(-10px); }
@@ -1529,6 +1504,32 @@
                 gap: 12px;
             }
         }
+		@media (max-width: 768px) {
+    .menu-icon {
+        position: fixed;
+        top: 10px;
+        right: 10px;
+        z-index: 1000;
+    }
+
+    .hero {
+        margin-top: 0;
+        min-height: 100vh;
+    }
+
+    .header {
+        height: 50px; /* Keeps header slim; adjust as needed */
+    }
+
+    .header nav {
+        display: none; /* Hides regular nav on mobile, assuming mobile-menu takes over */
+    }
+
+    .mobile-menu {
+        display: block; /* Ensures mobile menu is available */
+    }
+}
+
 
         html {
             scroll-behavior: smooth;
