@@ -165,13 +165,13 @@
         }
 
         .logo-main {
-	font-family: 'Playfair Display', serif;
-	font-size: 20px;
-	font-weight: 600;
-	color: var(--text-dark);
-	letter-spacing: -0.5px;
-	max-width: 80px;
-	max-height: 50px;
+            font-family: 'Playfair Display', serif;
+            font-size: 20px;
+            font-weight: 600;
+            color: var(--text-dark);
+            letter-spacing: -0.5px;
+            max-width: 80px;
+            max-height: 50px;
         }
 
         .logo-sub {
@@ -278,7 +278,7 @@
         @keyframes mobileMenuSlide {
             from {
                 opacity: 0;
-                transform: translateY(-20px) scale(0.95);
+                transform: translateY(- radius20px) scale(0.95);
             }
             to {
                 opacity: 1;
@@ -633,18 +633,18 @@
         }
 
         .image-overlay {
-	position: absolute;
-	bottom: 32px;
-	left: 32px;
-	right: 32px;
-	background: rgba(247, 244, 240, 0.95);
-	backdrop-filter: blur(15px);
-	border-radius: 16px;
-	padding: 20px;
-	z-index: 3;
-	text-align: center;
-	border: 1px solid rgba(139, 157, 131, 0.2);
-	opacity: 60%;
+            position: absolute;
+            bottom: 32px;
+            left: 32px;
+            right: 32px;
+            background: rgba(247, 244, 240, 0.95);
+            backdrop-filter: blur(15px);
+            border-radius: 16px;
+            padding: 20px;
+            z-index: 3;
+            text-align: center;
+            border: 1px solid rgba(139, 157, 131, 0.2);
+            opacity: 60%;
         }
 
         .image-overlay h2 {
@@ -1454,10 +1454,12 @@
             }
 
             .nav {
+                position: fixed;
                 top: 10px;
+                left: 50%;
+                transform: translateX(-50%);
                 width: calc(100% - 20px);
                 padding: 12px 20px;
-                position: relative;
             }
 
             .nav-links {
@@ -1631,7 +1633,7 @@
                         <button>Reservieren</button>
                     </div>
 					
-					  <div class="booking-card" onclick="showBookingModal('feelwell')">
+                    <div class="booking-card" onclick="showBookingModal('feelwell')">
                         <div class="booking-card-icon">🧘‍♀️</div>
                         <h3>Luxus Brunch</h3>
                         <p>I want it all<br>bis 4 Personen</p>
