@@ -469,9 +469,9 @@
         }
 
         .event-detail-value {
-            font-size: 16px;
-            font-weight: 600;
-            color: var(--text-dark);
+	font-size: 16px;
+	font-weight: 600;
+	color: var(--text-dark);
         }
 
         .booking-options {
@@ -1424,6 +1424,8 @@
             border-top-color: var(--sage-green);
             animation: spin 1s ease-in-out infinite;
         }
+.event-details .event-detail .event-detail-value {
+}
 
         @keyframes spin {
             to { transform: rotate(360deg); }
@@ -1720,6 +1722,10 @@ nav a {
 }
 
 
+    .player {
+	width: 300px;
+	visibility: hidden;
+}
     </style>
 </head>
 <body>
@@ -1775,7 +1781,7 @@ nav a {
                 <h1>START YOUR <span class="highlight">MONDAY RIGHT</span></h1>
                 <p class="hero-subtitle">Erlebe die perfekte Kombination aus gesundem Essen, inspirierender Musik und positiver Atmosphäre.</p>
                 
-                <div class="hero-event-info">
+              <<div class="hero-event-info">
                     <div class="event-badge">Featured Event</div>
                     <div class="event-details">
                         <div class="event-detail">
@@ -1794,6 +1800,14 @@ nav a {
                             <div class="event-detail-label">Eintritt</div>
                             <div class="event-detail-value">Free Entry</div>
                         </div>
+                        <div class="event-detail-label" id="player">
+						<div class="event-detail-value">
+                <audio controls>
+                                    <source src="content/audio/artist1.mp3" type="audio/mpeg">
+                                    Dein Browser unterstützt das Audio-Element nicht.
+              </audio>
+                          </div>
+                      </div>
                     </div>
                 </div>
                 
