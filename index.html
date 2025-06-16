@@ -590,12 +590,12 @@
         }
 
         .hero-visual {
-            position: relative;
-            height: 600px;
-            border-radius: 24px;
-            overflow: hidden;
-            background: var(--gradient-cream);
-            box-shadow: var(--shadow-medium);
+	position: relative;
+	height: 720px;
+	border-radius: 24px;
+	overflow: hidden;
+	background: var(--gradient-cream);
+	box-shadow: var(--shadow-medium);
         }
 
         .hero-image,
@@ -1546,11 +1546,7 @@
         <div class="nav-container">
             <div class="logo">
                 <div class="logo-icon"></div>
-                <div class="logo-text">
-                    <span class="logo-main">healthy</span>
-                    <span class="logo-sub">BRUNCHCLUB</span>
-                </div>
-            </div>
+          <img src="content/images/logo.png" alt="" width="356" height="194" class="logo-main"/>            </div>
             
             <ul class="nav-links">
                 <li><a href="#home">Home</a></li>
@@ -1613,7 +1609,7 @@
                     </div>
                 </div>
                 
-                <div class="booking-options">
+              <div class="booking-options">
                     <div class="booking-card" onclick="showBookingModal('friends')">
                         <div class="booking-card-icon">👥</div>
                         <h3>Freund:innen Brunch</h3>
@@ -1637,7 +1633,15 @@
                         <span class="booking-card-price">25€</span>
                         <button>Reservieren</button>
                     </div>
+				    <div class="booking-card" onclick="showBookingModal('feelwell')">
+                        <div class="booking-card-icon">🧘‍♀️</div>
+                        <h3>Luxus Brunch</h3>
+                        <p>man gönnt sich ja sonst nichts<br>bis 4 Personen</p>
+                        <span class="booking-card-price">30€ p.P.</span>
+                        <button>Reservieren</button>
+                    </div>
                 </div>
+				
             </div>
             
             <div class="hero-visual">
