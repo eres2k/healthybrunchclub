@@ -166,13 +166,13 @@
         }
 
         .logo-main {
-	font-family: 'Playfair Display', serif;
-	font-size: 20px;
-	font-weight: 600;
-	color: var(--text-dark);
-	letter-spacing: -0.5px;
-	max-width: 80px;
-	max-height: 50px;
+            font-family: 'Playfair Display', serif;
+            font-size: 20px;
+            font-weight: 600;
+            color: var(--text-dark);
+            letter-spacing: -0.5px;
+            max-width: 80px;
+            max-height: 50px;
         }
 
         .logo-sub {
@@ -429,13 +429,12 @@
         }
 
         .hero-event-info {
-	background: var(--surface-light);
-	padding: 24px;
-	border-radius: 20px;
-	margin-bottom: 40px;
-	border: 1px solid rgba(139, 157, 131, 0.2);
-	box-shadow: var( --shadow-soft ) #AC938A;
-	-webkit-box-shadow: var( --shadow-soft ) #AC938A;
+            background: var(--surface-light);
+            padding: 24px;
+            border-radius: 20px;
+            margin-bottom: 40px;
+            border: 1px solid rgba(139, 157, 131, 0.2);
+            box-shadow: var(--shadow-soft);
         }
 
         .event-badge {
@@ -470,9 +469,9 @@
         }
 
         .event-detail-value {
-	font-size: 16px;
-	font-weight: 600;
-	color: var(--text-dark);
+            font-size: 16px;
+            font-weight: 600;
+            color: var(--text-dark);
         }
 
         .booking-options {
@@ -598,6 +597,7 @@
             overflow: hidden;
             background: var(--gradient-cream);
             box-shadow: var(--shadow-medium);
+            width: 100%;
         }
 
         .hero-image,
@@ -635,18 +635,18 @@
         }
 
         .image-overlay {
-	position: absolute;
-	bottom: 32px;
-	left: 32px;
-	right: 32px;
-	background: rgba(247, 244, 240, 0.95);
-	backdrop-filter: blur(15px);
-	border-radius: 16px;
-	padding: 20px;
-	z-index: 3;
-	text-align: center;
-	border: 1px solid rgba(139, 157, 131, 0.2);
-	opacity: 60%;
+            position: absolute;
+            bottom: 32px;
+            left: 32px;
+            right: 32px;
+            background: rgba(247, 244, 240, 0.95);
+            backdrop-filter: blur(15px);
+            border-radius: 16px;
+            padding: 20px;
+            z-index: 3;
+            text-align: center;
+            border: 1px solid rgba(139, 157, 131, 0.2);
+            opacity: 0.9;
         }
 
         .image-overlay h2 {
@@ -1425,8 +1425,8 @@
             border-top-color: var(--sage-green);
             animation: spin 1s ease-in-out infinite;
         }
-.event-details .event-detail .event-detail-value {
-}
+        .event-details .event-detail .event-detail-value {
+        }
 
         @keyframes spin {
             to { transform: rotate(360deg); }
@@ -1493,7 +1493,7 @@
             .hero-visual {
                 order: 2;
                 height: 300px;
-                margin-top: -20px;
+                margin-top: 40px; /* Changed from -20px to 40px to fix overlapping */
                 margin-bottom: 40px;
             }
 
@@ -1519,9 +1519,6 @@
                 margin-bottom: 24px;
             }
 
-            .hero-event-info {
-            }
-
             .booking-card {
                 padding: 24px 20px;
             }
@@ -1545,14 +1542,15 @@
             .image-overlay p {
                 font-size: 12px;
             }
-			  
+              
         }
+        
         @media (max-width: 480px) {
-              .hero-container,
+            .hero-container,
             .about-content,
             .contact-content {
                 grid-template-columns: 1fr;
-                gap: 48px;
+                gap: 32px; /* Reduced from 48px to 32px for smaller screens */
             }
 
             .booking-options {
@@ -1592,7 +1590,7 @@
             }
 
             .hero {
-                padding: 80px 20px 60px;
+                padding: 80px 20px 40px; /* Reduced bottom padding from 60px to 40px */
                 min-height: auto;
             }
 
@@ -1607,9 +1605,9 @@
 
             .hero-visual {
                 order: 2;
-                height: 300px;
-                margin-top: -20px;
-                margin-bottom: 40px;
+                height: 250px; /* Reduced from 300px to 250px for smaller screens */
+                margin-top: 30px;
+                margin-bottom: 30px;
             }
 
             .booking-options {
@@ -1617,50 +1615,47 @@
             }
 
             .section {
-                padding: 60px 20px;
+                padding: 40px 20px; /* Reduced from 60px to 40px for smaller screens */
             }
 
             .about-image-container {
-                height: 300px;
+                height: 250px; /* Reduced from 300px for better mobile view */
             }
 
             .hero-content h1 {
-                font-size: 36px;
+                font-size: 32px; /* Reduced from 36px */
                 margin-bottom: 16px;
             }
 
             .hero-subtitle {
-                font-size: 16px;
-                margin-bottom: 24px;
-            }
-
-            .hero-event-info {
+                font-size: 15px; /* Reduced from 16px */
+                margin-bottom: 20px; /* Reduced from 24px */
             }
 
             .booking-card {
-                padding: 24px 20px;
+                padding: 20px 16px; /* Reduced padding */
             }
 
             .booking-card-icon {
-                font-size: 36px;
-                margin-bottom: 12px;
+                font-size: 32px; /* Reduced from 36px */
+                margin-bottom: 10px; /* Reduced from 12px */
             }
 
             .image-overlay {
-                padding: 16px;
-                bottom: 20px;
-                left: 20px;
-                right: 20px;
+                padding: 12px; /* Reduced from 16px */
+                bottom: 16px;
+                left: 16px;
+                right: 16px;
             }
 
             .image-overlay h2 {
-                font-size: 20px;
+                font-size: 18px; /* Reduced from 20px */
             }
 
             .image-overlay p {
-                font-size: 12px;
+                font-size: 11px; /* Reduced from 12px */
+            }
         }
-}
 
         html {
             scroll-behavior: smooth;
@@ -1689,967 +1684,38 @@
         }
 		
 		/* Reset default margins and ensure box-sizing */
-* {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-}
-
-/* Base styles for desktop */
-body {
-    font-family: Arial, sans-serif;
-    line-height: 1.6;
-    color: #333;
-}
-
-nav {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 20px;
-    background: #fff;
-}
-
-nav a {
-    text-decoration: none;
-    color: #333;
-    margin: 0 15px;
-}
-
-.hamburger, .mobile-nav {
-    display: none;
-}
-
-
-    .player {
-	width: 300px;
-	visibility: hidden;
-}
-    </style>
-</head>
-<body>
-    <!-- Notification -->
-    <div id="notification" class="notification">
-        <span class="notification-icon"></span>
-        <div class="notification-content">
-            <div class="notification-title"></div>
-            <div class="notification-message"></div>
-        </div>
-    </div>
-
-    <!-- Navigation -->
-    <nav class="nav">
-        <div class="nav-container">
-            <div class="logo">
-                <div class="logo-icon"></div>
-                <div class="logo-text">
-                    <span class="logo-main"><img src="/content/images/logo.png" alt="" width="356" height="194" class="logo-main"/></span>
-                </div>
-            </div>
-            
-            <ul class="nav-links">
-                <li><a href="#home">Home</a></li>
-				<li><a href="#menu">Speisen & Getränke</a></li>
-                <li><a href="#about">Über uns</a></li>
-				<li><a href="#music">Live DJ</a></li>
-                <li><a href="#contact">Kontakt</a></li>
-                <li><a href="#" class="book-now-btn" onclick="showBookingModal('quick')">Jetzt buchen</a></li>
-            </ul>
-            
-            <button class="mobile-menu-toggle" onclick="toggleMobileMenu()" aria-label="Menu">
-                <span id="mobileMenuIcon">☰</span>
-            </button>
-            
-            <div class="mobile-menu" id="mobileMenu">
-                <ul class="mobile-menu-links">
-                    <li><a href="#home" onclick="closeMobileMenu()">Home</a></li>
-                    <li><a href="#about" onclick="closeMobileMenu()">Über uns</a></li>
-                    <li><a href="#menu" onclick="closeMobileMenu()">Menü</a></li>
-                    <li><a href="#music" onclick="closeMobileMenu()">Live DJ</a></li>
-                    <li><a href="#contact" onclick="closeMobileMenu()">Kontakt</a></li>
-                    <li><a href="#" class="mobile-book-btn" onclick="showBookingModal('quick'); closeMobileMenu();">Jetzt buchen</a></li>
-                </ul>
-            </div>
-        </div>
-    </nav>
-
-    <!-- Hero Section -->
-    <section class="hero" id="home">
-        <div class="hero-container">
-            <div class="hero-content">
-                <h1>START YOUR <span class="highlight">MONDAY RIGHT</span></h1>
-                <p class="hero-subtitle">Erlebe die perfekte Kombination aus gesundem Essen, inspirierender Musik und positiver Atmosphäre.</p>
-                 <div class="hero-visual">
-                <video 
-                    autoplay 
-                    loop 
-                    muted
-                    playsinline
-                    poster="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 800 600'%3E%3Cdefs%3E%3ClinearGradient id='grad1' x1='0%25' y1='0%25' x2='100%25' y2='100%25'%3E%3Cstop offset='0%25' style='stop-color:%23F7F4F0;stop-opacity:1' /%3E%3Cstop offset='100%25' style='stop-color:%23EDE8E0;stop-opacity:1' /%3E%3C/linearGradient%3E%3C/defs%3E%3Crect fill='url(%23grad1)' width='800' height='600'/%3E%3Ctext x='400' y='280' text-anchor='middle' fill='%238B9D83' font-family='Arial, sans-serif' font-size='32' font-weight='bold'%3EHealthy Brunch%3C/text%3E%3Ctext x='400' y='320' text-anchor='middle' fill='%236B7C63' font-family='Arial, sans-serif' font-size='18'%3EFresh • Organic • Delicious%3C/text%3E%3Ctext x='400' y='360' text-anchor='middle' fill='%238B9D83' font-family='Arial, sans-serif' font-size='48'%3E🥗🥑🍳%3C/text%3E%3C/svg%3E"
-                    class="hero-image"
-                >
-                    <source src="/content/videos/event.mp4" type="video/mp4">
-                    Your browser does not support the video tag.
-                </video>
-                
-                <div class="image-overlay">
-                    <h2>ra'mien restaurant</h2>
-                    <p>Gumpendorferstraße 9, 1060 Wien • Donations appreciated</p>
-                </div>
-            </div>
-				
-              <div class="hero-event-info event-highlight">
-<div class="event-details">
-            <div class="event-detail">
-                            <div class="event-detail-label">Datum</div>
-                            <div class="event-detail-value">Montag, 30. Juni</div>
-                        </div>
-                        <div class="event-detail">
-                            <div class="event-detail-label">Zeit</div>
-                            <div class="event-detail-value">9:00 AM - 12:00 PM</div>
-                        </div>
-                        <div class="event-detail">
-                            <div class="event-detail-label">DJ</div>
-                            <div class="event-detail-value">OSIVE</div>
-                        </div>
-                        <div class="event-detail">
-                            <div class="event-detail-label">Eintritt</div>
-                            <div class="event-detail-value">Free Entry</div>
-                        </div>
-                        <div class="event-detail-label" id="player">
-						<div class="event-detail-value">
-                <audio controls>
-                                    <source src="content/audio/artist1.mp3" type="audio/mpeg">
-                                    Dein Browser unterstützt das Audio-Element nicht.
-              </audio>
-                          </div>
-                      </div>
-                    </div>
-                </div>
-                
-                <div class="booking-options">
-                    <div class="booking-card" onclick="showBookingModal('friends')">
-                        <div class="booking-card-icon">👥</div>
-                        <h3>Freund:innen Brunch</h3>
-                        <p>Gemeinsam genießen<br>2-4 Personen</p>
-                        <span class="booking-card-price">15€ p.P.</span>
-                        <button>Reservieren</button>
-                    </div>
-                    
-                    <div class="booking-card" onclick="showBookingModal('corporate')">
-                        <div class="booking-card-icon">💼</div>
-                        <h3>Firmen Event</h3>
-                        <p>Team-Building deluxe<br>bis 10 Personen</p>
-                        <span class="booking-card-price">20€ p.P.</span>
-                        <button>Reservieren</button>
-                    </div>
-                    
-                    <div class="booking-card" onclick="showBookingModal('feelwell')">
-                        <div class="booking-card-icon">🧘‍♀️</div>
-                        <h3>Romantischer Brunch</h3>
-                        <p>Love is in the Air<br>für 2 Personen</p>
-                        <span class="booking-card-price">35€</span>
-                        <button>Reservieren</button>
-                    </div>
-					
-					  <div class="booking-card" onclick="showBookingModal('feelwell')">
-                        <div class="booking-card-icon">🧘‍♀️</div>
-                        <h3>Luxus Brunch</h3>
-                        <p>I want it all<br>bis 4 Personen</p>
-                        <span class="booking-card-price">25€ p.P.</span>
-                        <button>Reservieren</button>
-                    </div>
-					
-                </div>
-            </div>
-</div>
-    </section>
-
-    <!-- Features Section -->
-    <section class="section">
-        <div class="section-container">
-            <div class="section-header">
-                <h2>Was macht uns besonders?</h2>
-                <p>Mehr als nur ein Brunch – ein Erlebnis für alle Sinne</p>
-            </div>
-            
-            <div class="features-grid">
-                <div class="feature-card">
-                    <div class="feature-icon">🌱</div>
-                    <h3>100% Bio & Regional</h3>
-                    <p>Alle unsere Zutaten stammen von lokalen Bio-Bauern.</p>
-                </div>
-                
-                <div class="feature-card">
-                    <div class="feature-icon">🎵</div>
-                    <h3>Live DJ Atmosphäre</h3>
-                    <p>Jeden Montag begleiten dich talentierte DJs und Künstler.</p>
-                </div>
-                
-                <div class="feature-card">
-                    <div class="feature-icon">☕</div>
-                    <h3>Premium Kaffee</h3>
-                    <p>Handverlesene Bohnen und perfekte Zubereitung.</p>
-                </div>
-                
-                <div class="feature-card">
-                    <div class="feature-icon">🤝</div>
-                    <h3>Community Gefühl</h3>
-                    <p>Triff Gleichgesinnte und starte gemeinsam positiv.</p>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <!-- Menu Section -->
-    <section class="section" id="menu">
-        <div class="section-container">
-            <div class="section-header">
-                <h2>Unser Menü</h2>
-                <p>Gesund, lecker und mit Liebe zubereitet</p>
-            </div>
-            
-            <div class="menu-categories">
-                <button class="category-btn active" onclick="filterMenu('all')">Alle</button>
-                <button class="category-btn" onclick="filterMenu('bowls')">Bowls</button>
-                <button class="category-btn" onclick="filterMenu('classics')">Klassiker</button>
-                <button class="category-btn" onclick="filterMenu('drinks')">Getränke</button>
-            </div>
-            
-            <div class="menu-items" id="menuItems"></div>
-        </div>
-    </section>
-
-    <!-- About Section -->
-    <section class="section" id="about">
-        <div class="section-container">
-            <div class="section-header">
-                <h2>Über uns</h2>
-                <p>Eine Vision von gesundem Genuss und Gemeinschaft</p>
-            </div>
-            
-            <div class="about-content">
-                <div class="about-text">
-                    <h3>Unsere Geschichte</h3>
-                    <p>Was einst als einfaches Geburtstagsritual begann, lebt heute in unserem Brunchlokal weiter. Drei Schwestern – eine Ärztin und zwei Flugbegleiterinnen – vereint durch die Liebe zur Familie, zum Reisen und natürlich: zum Brunchen.Ob in New York, Chicago, an der Amalfiküste oder aber auch ganz einfach in unserer Heimatstadt Wien – das gemeinsame Brunchen war immer ein besonderer Moment. Und mit jedem Bissen, jedem Kaffee und jeder neuen Idee wuchs auch der Wunsch, diesen Genuss zu teilen.Unsere Wurzeln liegen auf den Philippinen – und mit ihnen eine tiefe Verbundenheit zu Gastfreundschaft, Aromenvielfalt und dem Herz für gutes Essen. Diese Einflüsse spiegeln sich heute in unserer Speisekarte genauso wider wie die Erfahrungen aus aller Welt.Als bei Tina eine chronische Darmentzündung diagnostiziert wurde, wurde das Thema Ernährung für uns noch bedeutungsvoller. Seither setzen wir gezielt auf gesunde Alternativen und entzündungshemmende Zutaten – ohne auf Geschmack oder Kreativität zu verzichten.Das Ergebnis: Eine bunte Auswahl an trendigen, ausgewogenen und international inspirierten Brunchgerichten, die nicht nur sättigen, sondern glücklich machen.Kommt vorbei, bruncht mit uns</p>
-                </div>
-                
-                <div class="about-image-container">
-                    <video 
-                        autoplay 
-                        loop 
-                        muted
-                        playsinline
-                        poster="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 600 400'%3E%3Cdefs%3E%3ClinearGradient id='grad2' x1='0%25' y1='0%25' x2='100%25' y2='100%25'%3E%3Cstop offset='0%25' style='stop-color:%23F7F4F0;stop-opacity:1' /%3E%3Cstop offset='100%25' style='stop-color:%23EDE8E0;stop-opacity:1' /%3E%3C/linearGradient%3E%3C/defs%3E%3Crect fill='url(%23grad2)' width='600' height='400'/%3E%3Ctext x='300' y='180' text-anchor='middle' fill='%238B9D83' font-family='Arial, sans-serif' font-size='24' font-weight='bold'%3EDrei Schwestern%3C/text%3E%3Ctext x='300' y='210' text-anchor='middle' fill='%236B7C63' font-family='Arial, sans-serif' font-size='16'%3EEine Geschichte von Familie%3C/text%3E%3C/svg%3E"
-                        class="about-image"
-                    >
-                        <source src="/content/videos/sarmiento.mp4" type="video/mp4">
-                        Your browser does not support the video tag.
-                    </video>
-                </div>
-            </div>
-            
-            <div class="about-stats-grid">
-                <div class="stat-card">
-                    <span class="stat-number" data-target="500">0</span>
-                    <div class="stat-label">Glückliche Stammgäste</div>
-                </div>
-                <div class="stat-card">
-                    <span class="stat-number" data-target="100">0</span>
-                    <div class="stat-label">Bio-zertifiziert</div>
-                </div>
-                <div class="stat-card">
-                    <span class="stat-number" data-target="52">0</span>
-                    <div class="stat-label">Events pro Jahr</div>
-                </div>
-                <div class="stat-card">
-                    <span class="stat-number" data-target="4.9" data-decimal="1">0</span>
-                    <div class="stat-label">Google Bewertung</div>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <!-- Live Music Section -->
-    <section class="section" id="music">
-        <div class="section-container">
-            <div class="section-header">
-                <h2>Live DJ jeden Montag</h2>
-                <p>Lass dich von talentierten Künstlern inspirieren</p>
-            </div>
-            
-            <div class="music-events">
-                <div class="music-event event-highlight">
-                    <div class="music-date">Mo, 30. Juni</div>
-                    <div class="music-artist">DJ OSIVE</div>
-                    <div class="music-genre">Melodic House & Ambient</div>
-                </div>
-                
-                <div class="music-event">
-                    <div class="music-date">Mo, 7. Juli</div>
-                    <div class="music-artist">Acoustic Sessions</div>
-                    <div class="music-genre">Singer-Songwriter</div>
-                </div>
-                
-                <div class="music-event">
-                    <div class="music-date">Mo, 14. Juli</div>
-                    <div class="music-artist">Jazz Collective</div>
-                    <div class="music-genre">Smooth Jazz & Soul</div>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <!-- Contact Section -->
-    <section class="section" id="contact">
-        <div class="section-container">
-            <div class="section-header">
-                <h2>Kontakt & Anfahrt</h2>
-                <p>Wir freuen uns auf deinen Besuch!</p>
-            </div>
-            
-            <div class="contact-content">
-                <div class="contact-form">
-                    <h3>Kontaktformular</h3>
-                    <form action='/success' method='POST' name='contact'>
-                        <input type='hidden' name='form-name' value='contact' />
-                        <p style="display:none;">
-                            <label>Don't fill this out: <input name="bot-field" /></label>
-                        </p>
-                        <div class="form-group">
-                            <label for="contactName">Name *</label>
-                            <input type="text" id="contactName" name="name" required>
-                        </div>
-                        <div class="form-group">
-                            <label for="contactEmail">E-Mail *</label>
-                            <input type="email" id="contactEmail" name="email" required>
-                        </div>
-                        <div class="form-group">
-                            <label for="subject">Betreff</label>
-                            <select id="subject" name="subject">
-                                <option value="general">Allgemeine Anfrage</option>
-                                <option value="booking">Reservierung</option>
-                                <option value="catering">Catering</option>
-                                <option value="partnership">Kooperation</option>
-                                <option value="feedback">Feedback</option>
-                            </select>
-                        </div>
-                        <div class="form-group">
-                            <label for="message">Nachricht *</label>
-                            <textarea id="message" name="message" rows="5" required placeholder="Ihre Nachricht..."></textarea>
-                        </div>
-                        <button type="submit" class="submit-btn">
-                            <span id="contactSubmitText">Nachricht senden</span>
-                            <span class="loading" style="display: none;"></span>
-                        </button>
-                    </form>
-                </div>
-                
-                <div class="contact-info">
-                    <div class="info-card">
-                        <h4>📍 Adresse</h4>
-                        <p>ra'mien restaurant<br>Gumpendorferstraße 9<br>1060 Wien</p>
-                    </div>
-                    
-                    <div class="info-card">
-                        <h4>🕐 Öffnungszeiten</h4>
-                        <p><strong>Montag:</strong> 09:00 - 12:00 Uhr<br><strong>Di-So:</strong> Geschlossen</p>
-                    </div>
-                    
-                    <div class="info-card">
-                        <h4>📞 Direkter Kontakt</h4>
-                        <p><a href="mailto:hello@healthybrunchclub.at">hello@healthybrunchclub.at</a></p>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <!-- Newsletter -->
-    <section class="newsletter">
-        <div class="newsletter-container">
-            <h3>Verpasse keine Updates!</h3>
-            <p>Erhalte exklusive Angebote und Event-Infos.</p>
-            <form action='/success' class='newsletter-form' method='POST' name='newsletter'>
-                <input type='hidden' name='form-name' value='newsletter' />
-                <p style="display:none;">
-                    <label>Don't fill this out: <input name="bot-field" /></label>
-                </p>
-                <input type="email" name="email" class="newsletter-input" placeholder="Deine E-Mail" required>
-                <button type="submit" class="newsletter-btn">Anmelden</button>
-            </form>
-        </div>
-    </section>
-
-    <!-- Footer -->
-    <footer class="footer">
-        <div class="footer-container">
-            <div class="footer-section">
-                <h4>Healthy Brunch Club</h4>
-                <p>Start your Monday right with healthy food and good vibes.</p>
-            </div>
-            <div class="footer-section">
-                <h4>Quick Links</h4>
-                <a href="#menu">Menü</a>
-                <a href="#music">Live DJ</a>
-                <a href="#about">Über uns</a>
-                <a href="#contact">Kontakt</a>
-            </div>
-            <div class="footer-section">
-                <h4>Event Info</h4>
-                <p><strong>Jeden Montag:</strong> 09:00 - 12:00</p>
-            </div>
-        </div>
-        <div class="footer-bottom">
-            <p>© 2025 Healthy Brunch Club. Made with 💚 by Erwin Esener</p>
-        </div>
-    </footer>
-
-    <!-- Booking Modal -->
-    <div id="bookingModal" class="modal">
-        <div class="modal-content">
-            <button class="close-modal" onclick="closeModal()">×</button>
-            <div class="modal-header">
-                <h3 id="modalTitle">Tisch reservieren</h3>
-                <p id="modalDescription">Sichere dir deinen Platz</p>
-            </div>
-            
-            <form action='/success' id='bookingForm' method='POST' name='booking'>
-                <input type='hidden' name='form-name' value='booking' />
-                <p style="display:none;">
-                    <label>Don't fill this out: <input name="bot-field" /></label>
-                </p>
-                <input type="hidden" name="booking-type" id="bookingType">
-                
-                <div class="form-row">
-                    <div class="form-group">
-                        <label for="firstName">Vorname *</label>
-                        <input type="text" id="firstName" name="firstName" required>
-                    </div>
-                    <div class="form-group">
-                        <label for="lastName">Nachname *</label>
-                        <input type="text" id="lastName" name="lastName" required>
-                    </div>
-                </div>
-                
-                <div class="form-group">
-                    <label for="email">E-Mail *</label>
-                    <input type="email" id="email" name="email" required>
-                </div>
-                
-                <div class="form-group">
-                    <label for="phone">Telefon *</label>
-                    <input type="tel" id="phone" name="phone" required>
-                </div>
-                
-                <div class="form-row">
-                    <div class="form-group">
-                        <label for="date">Datum *</label>
-                        <input type="date" id="date" name="date" required>
-                    </div>
-                    <div class="form-group">
-                        <label for="guests">Anzahl Personen *</label>
-                        <select id="guests" name="guests" required>
-                            <option value="">Bitte wählen</option>
-                            <option value="1">1 Person</option>
-                            <option value="2">2 Personen</option>
-                            <option value="3">3 Personen</option>
-                            <option value="4">4 Personen</option>
-                            <option value="5">5 Personen</option>
-                            <option value="6">6 Personen</option>
-                            <option value="7">7 Personen</option>
-                            <option value="8">8 Personen</option>
-                            <option value="9">9 Personen</option>
-                            <option value="10+">10+ Personen</option>
-                        </select>
-                    </div>
-                </div>
-                
-                <div class="form-group">
-                    <label for="allergies">Allergien / Unverträglichkeiten</label>
-                    <textarea id="allergies" name="allergies" rows="3" placeholder="Eventuelle Allergien"></textarea>
-                </div>
-                
-                <div class="form-group" id="corporateFields" style="display: none;">
-                    <label for="company">Firma</label>
-                    <input type="text" id="company" name="company">
-                </div>
-                
-                <div class="form-group" id="feelwellFields" style="display: none;">
-                    <label>
-                        <input type="checkbox" name="yoga" value="yes"> Wellness-Optionen (+10€)
-                    </label>
-                </div>
-                
-                <button type="submit" class="submit-btn">
-                    <span id="submitText">Jetzt reservieren</span>
-                    <span class="loading" style="display: none;"></span>
-                </button>
-            </form>
-        </div>
-    </div>
-
-    <script>
-        // Advanced counter with easing
-        function animateCounter(element, target, duration = 2500, decimals = 0) {
-            let start = 0;
-            const startTime = performance.now();
-            
-            function easeOutExpo(t) {
-                return t === 1 ? 1 : 1 - Math.pow(2, -10 * t);
-            }
-            
-            function animate(currentTime) {
-                const elapsed = currentTime - startTime;
-                const progress = Math.min(elapsed / duration, 1);
-                const easedProgress = easeOutExpo(progress);
-                
-                let current = start + (target * easedProgress);
-                let displayValue = decimals > 0 ? current.toFixed(decimals) : Math.floor(current);
-                
-                const statLabel = element.parentElement.querySelector('.stat-label');
-                if (statLabel) {
-                    const labelText = statLabel.textContent;
-                    if (labelText.includes('Stammgäste')) {
-                        element.textContent = displayValue + '+';
-                    } else if (labelText.includes('Bio-zertifiziert')) {
-                        element.textContent = displayValue + '%';
-                    } else if (labelText.includes('Google')) {
-                        element.textContent = displayValue + '★';
-                    } else {
-                        element.textContent = displayValue;
-                    }
-                } else {
-                    element.textContent = displayValue;
-                }
-                
-                if (progress < 1) {
-                    const scale = 1 + (Math.sin(progress * Math.PI * 10) * 0.02);
-                    element.style.transform = `scale(${scale})`;
-                    requestAnimationFrame(animate);
-                } else {
-                    element.style.transform = 'scale(1)';
-                    element.style.animation = 'counterComplete 0.4s var(--ease-out-expo)';
-                }
-            }
-            
-            requestAnimationFrame(animate);
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
         }
 
-        // Advanced scroll effects
-        function initScrollEffects() {
-            const nav = document.querySelector('.nav');
-            let lastScrollY = window.scrollY;
-            let ticking = false;
-
-            function updateNav() {
-                const scrollY = window.scrollY;
-                const scrollDelta = scrollY - lastScrollY;
-                
-                if (document.getElementById('mobileMenu').classList.contains('show')) {
-                    closeMobileMenu();
-                }
-                
-                if (scrollY > 100) {
-                    nav.style.background = 'rgba(247, 244, 240, 0.95)';
-                    nav.style.backdropFilter = 'blur(25px)';
-                    nav.style.borderColor = 'rgba(139, 157, 131, 0.3)';
-                    nav.style.boxShadow = '0 8px 40px rgba(45, 62, 42, 0.1)';
-                } else {
-                    nav.style.background = 'rgba(247, 244, 240, 0.9)';
-                    nav.style.backdropFilter = 'blur(20px)';
-                    nav.style.borderColor = 'rgba(139, 157, 131, 0.2)';
-                    nav.style.boxShadow = '0 4px 20px rgba(45, 62, 42, 0.05)';
-                }
-                
-                if (window.innerWidth > 768) {
-                    if (scrollDelta > 5 && scrollY > 200) {
-                        nav.style.transform = 'translateX(-50%) translateY(-120%)';
-                        nav.style.opacity = '0.8';
-                    } else if (scrollDelta < -5 || scrollY <= 200) {
-                        nav.style.transform = 'translateX(-50%) translateY(0)';
-                        nav.style.opacity = '1';
-                    }
-                }
-                
-                lastScrollY = scrollY;
-                ticking = false;
-            }
-
-            window.addEventListener('scroll', () => {
-                if (!ticking) {
-                    requestAnimationFrame(updateNav);
-                    ticking = true;
-                }
-            });
+        /* Base styles for desktop */
+        body {
+            font-family: Arial, sans-serif;
+            line-height: 1.6;
+            color: #333;
         }
 
-        // Parallax effects for hero section
-        function initParallaxEffects() {
-            const heroSection = document.querySelector('.hero');
-            const heroContent = document.querySelector('.hero-content');
-            const heroVisual = document.querySelector('.hero-visual');
-            
-            if (!heroSection) return;
-            
-            let ticking = false;
-            
-            function updateParallax() {
-                const scrolled = window.pageYOffset;
-                const heroHeight = heroSection.offsetHeight;
-                const scrollProgress = scrolled / heroHeight;
-                
-                if (scrollProgress <= 1) {
-                    if (heroContent) {
-                        const translateY = scrolled * 0.2;
-                        heroContent.style.transform = `translateY(${translateY}px)`;
-                    }
-                    
-                    if (heroVisual) {
-                        const translateY = scrolled * 0.1;
-                        const scale = 1 + (scrollProgress * 0.05);
-                        heroVisual.style.transform = `translateY(${translateY}px) scale(${scale})`;
-                    }
-                }
-                
-                ticking = false;
-            }
-            
-            window.addEventListener('scroll', () => {
-                if (!ticking) {
-                    requestAnimationFrame(updateParallax);
-                    ticking = true;
-                }
-            });
+        nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 20px;
+            background: #fff;
         }
 
-        // Page reveal animation
-        function initPageReveal() {
-            const heroElements = [
-                '.hero-content h1',
-                '.hero-subtitle', 
-                '.hero-event-info',
-                '.booking-options'
-            ];
-            
-            heroElements.forEach((selector, index) => {
-                const element = document.querySelector(selector);
-                if (element) {
-                    element.style.opacity = '0';
-                    element.style.transform = 'translateY(60px) rotateX(15deg)';
-                    element.style.animation = `heroReveal 1s var(--ease-out-expo) ${0.2 + index * 0.15}s forwards`;
-                }
-            });
-            
-            const heroVisual = document.querySelector('.hero-visual');
-            if (heroVisual) {
-                heroVisual.style.opacity = '0';
-                heroVisual.style.transform = 'translateX(60px) rotateY(-15deg)';
-                heroVisual.style.animation = 'heroVisualReveal 1.2s var(--ease-out-expo) 0.8s forwards';
-            }
+        nav a {
+            text-decoration: none;
+            color: #333;
+            margin: 0 15px;
         }
 
-        // Mobile menu functions
-        function toggleMobileMenu() {
-            const mobileMenu = document.getElementById('mobileMenu');
-            const menuIcon = document.getElementById('mobileMenuIcon');
-            
-            if (mobileMenu.classList.contains('show')) {
-                closeMobileMenu();
-            } else {
-                mobileMenu.classList.add('show');
-                menuIcon.textContent = '✕';
-                menuIcon.style.transform = 'rotate(180deg)';
-                
-                const menuItems = mobileMenu.querySelectorAll('.mobile-menu-links a');
-                menuItems.forEach((item, index) => {
-                    item.style.opacity = '0';
-                    item.style.transform = 'translateX(-20px)';
-                    item.style.animation = `slideInLeft 0.4s var(--ease-out-expo) ${index * 0.05}s forwards`;
-                });
-            }
+        .hamburger, .mobile-nav {
+            display: none;
         }
 
-        function closeMobileMenu() {
-            const mobileMenu = document.getElementById('mobileMenu');
-            const menuIcon = document.getElementById('mobileMenuIcon');
-            
-            mobileMenu.classList.remove('show');
-            menuIcon.textContent = '☰';
-            menuIcon.style.transform = 'rotate(0deg)';
+        .player {
+            width: 300px;
+            visibility: hidden;
         }
-
-        // Video initialization
-        function initializeVideos() {
-            const videos = document.querySelectorAll('video');
-            
-            const videoObserver = new IntersectionObserver((entries) => {
-                entries.forEach(entry => {
-                    const video = entry.target;
-                    if (entry.isIntersecting) {
-                        video.style.filter = 'blur(0px)';
-                        video.play().catch(e => console.log('Video autoplay prevented:', e));
-                    } else {
-                        video.pause();
-                        video.style.filter = 'blur(2px)';
-                    }
-                });
-            }, { 
-                threshold: 0.3,
-                rootMargin: '50px'
-            });
-
-            videos.forEach(video => {
-                video.setAttribute('autoplay', '');
-                video.setAttribute('muted', '');
-                video.setAttribute('loop', '');
-                video.setAttribute('playsinline', '');
-                video.removeAttribute('controls');
-                video.controls = false;
-                
-                video.style.filter = 'blur(1px)';
-                video.style.transition = 'filter 0.6s var(--ease-out-circ)';
-                
-                videoObserver.observe(video);
-                
-                video.addEventListener('loadeddata', () => {
-                    video.style.filter = 'blur(0px)';
-                    video.play().catch(e => console.log('Video autoplay prevented:', e));
-                });
-                
-                video.addEventListener('error', (e) => {
-                    console.log('Video error:', e);
-                    video.style.display = 'none';
-                });
-            });
-        }
-
-        // Menu data
-        const menuData = {
-            bowls: [
-                { name: 'Power Morning Bowl', description: 'Quinoa, Avocado, Bio-Ei', price: '16,50€', tags: ['Bio'], icon: '🥗' },
-                { name: 'Acai Energy Bowl', description: 'Acai-Püree, Banane', price: '14,90€', tags: ['Vegan'], icon: '🫐' }
-            ],
-            classics: [
-                { name: 'Eggs Benedict Deluxe', description: 'Bio-Eier, Lachs', price: '18,90€', tags: ['Bestseller'], icon: '🍳' }
-            ],
-            drinks: [
-                { name: 'Signature Flat White', description: 'Espresso, Milchschaum', price: '5,50€', tags: ['Koffein'], icon: '☕' }
-            ]
-        };
-
-        function filterMenu(category) {
-            document.querySelectorAll('.category-btn').forEach(btn => btn.classList.remove('active'));
-            event.target.classList.add('active');
-            loadMenu(category);
-        }
-
-        function loadMenu(category) {
-            const menuItems = document.getElementById('menuItems');
-            menuItems.innerHTML = '';
-            
-            let items = category === 'all' ? 
-                [...menuData.bowls, ...menuData.classics, ...menuData.drinks] : 
-                menuData[category] || [];
-            
-            items.forEach((item, index) => {
-                const menuItem = document.createElement('div');
-                menuItem.className = 'menu-item';
-                menuItem.innerHTML = `
-                    <div class="menu-item-image">${item.icon}</div>
-                    <div class="menu-item-details">
-                        <div class="menu-item-header">
-                            <span class="menu-item-name">${item.name}</span>
-                            <span class="menu-item-price">${item.price}</span>
-                        </div>
-                        <p class="menu-item-description">${item.description}</p>
-                        <div class="menu-item-tags">${item.tags.map(tag => `<span class="tag">${tag}</span>`).join('')}</div>
-                    </div>
-                `;
-                menuItem.style.opacity = '0';
-                menuItem.style.transform = 'translateY(30px)';
-                menuItems.appendChild(menuItem);
-                
-                setTimeout(() => {
-                    menuItem.style.transition = 'all 0.6s ease';
-                    menuItem.style.opacity = '1';
-                    menuItem.style.transform = 'translateY(0)';
-                }, index * 100);
-            });
-        }
-
-        // Booking Modal
-        function showBookingModal(type) {
-            const modal = document.getElementById('bookingModal');
-            const modalTitle = document.getElementById('modalTitle');
-            const modalDescription = document.getElementById('modalDescription');
-            const bookingType = document.getElementById('bookingType');
-            const corporateFields = document.getElementById('corporateFields');
-            const feelwellFields = document.getElementById('feelwellFields');
-            
-            corporateFields.style.display = 'none';
-            feelwellFields.style.display = 'none';
-            
-            bookingType.value = type;
-            switch(type) {
-                case 'friends':
-                    modalTitle.textContent = 'Freund:innen Brunch';
-                    modalDescription.textContent = 'Perfekt für gemeinsame Momente';
-                    break;
-                case 'corporate':
-                    modalTitle.textContent = 'Firmen Event';
-                    modalDescription.textContent = 'Stärke dein Team';
-                    corporateFields.style.display = 'block';
-                    break;
-                case 'feelwell':
-                    modalTitle.textContent = 'Romantischer Brunch';
-                    modalDescription.textContent = 'Wellness und Genuss';
-                    feelwellFields.style.display = 'block';
-                    break;
-                default:
-                    modalTitle.textContent = 'Tisch reservieren';
-                    modalDescription.textContent = 'Sichere dir deinen Platz';
-            }
-            
-            modal.classList.add('show');
-            document.body.style.overflow = 'hidden';
-        }
-
-        function closeModal() {
-            document.getElementById('bookingModal').classList.remove('show');
-            document.body.style.overflow = '';
-        }
-
-        window.onclick = function(event) {
-            const modal = document.getElementById('bookingModal');
-            if (event.target === modal) closeModal();
-        };
-
-        function setMinDate() {
-            const dateInput = document.getElementById('date');
-            const today = new Date();
-            const nextMonday = new Date(today);
-            const daysUntilMonday = (8 - today.getDay()) % 7 || 7;
-            nextMonday.setDate(today.getDate() + daysUntilMonday);
-            
-            const year = nextMonday.getFullYear();
-            const month = String(nextMonday.getMonth() + 1).padStart(2, '0');
-            const day = String(nextMonday.getDate()).padStart(2, '0');
-            
-            dateInput.min = `${year}-${month}-${day}`;
-            dateInput.value = `${year}-${month}-${day}`;
-        }
-
-        function showNotification(title, message, type = 'success') {
-            const notification = document.getElementById('notification');
-            notification.className = `notification ${type}`;
-            notification.querySelector('.notification-icon').textContent = type === 'success' ? '✅' : '❌';
-            notification.querySelector('.notification-title').textContent = title;
-            notification.querySelector('.notification-message').textContent = message;
-            
-            notification.classList.add('show');
-            setTimeout(() => notification.classList.remove('show'), 5000);
-        }
-
-        function handleFormSubmit(e) {
-            e.preventDefault();
-            const form = e.target;
-            const submitBtn = form.querySelector('.submit-btn');
-            const submitText = form.querySelector('#submitText, #contactSubmitText');
-            const loading = form.querySelector('.loading');
-            
-            if (submitText && loading) {
-                submitText.style.display = 'none';
-                loading.style.display = 'inline-block';
-            }
-            
-            const formData = new FormData(form);
-            fetch('/', {
-                method: 'POST',
-                headers: { "Content-Type": "application/x-www-form-urlencoded" },
-                body: new URLSearchParams(formData).toString()
-            })
-            .then(() => {
-                if (form.name === 'booking') {
-                    showNotification('Reservierung erfolgreich!', 'Bestätigung kommt per E-Mail.');
-                    closeModal();
-                } else if (form.name === 'newsletter') {
-                    showNotification('Newsletter abonniert!', 'Willkommen in unserer Community!');
-                } else if (form.name === 'contact') {
-                    showNotification('Nachricht gesendet!', 'Wir melden uns bald.');
-                }
-                form.reset();
-            })
-            .catch(() => showNotification('Fehler', 'Bitte später erneut versuchen.', 'error'))
-            .finally(() => {
-                if (submitText && loading) {
-                    submitText.style.display = 'inline';
-                    loading.style.display = 'none';
-                }
-            });
-        }
-
-        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
-            anchor.addEventListener('click', function(e) {
-                e.preventDefault();
-                const target = document.querySelector(this.getAttribute('href'));
-                if (target) {
-                    window.scrollTo({
-                        top: target.offsetTop - 100,
-                        behavior: 'smooth'
-                    });
-                }
-            });
-        });
-
-        const observer = new IntersectionObserver((entries) => {
-            entries.forEach(entry => {
-                if (entry.isIntersecting) {
-                    entry.target.style.opacity = '1';
-                    entry.target.style.transform = 'translateY(0)';
-                }
-            });
-        }, { threshold: 0.1, rootMargin: '0px 0px -50px 0px' });
-
-        function initializeCounters() {
-            const counterElements = document.querySelectorAll('.stat-number[data-target]');
-            const counterObserver = new IntersectionObserver((entries) => {
-                entries.forEach(entry => {
-                    if (entry.isIntersecting && !entry.target.classList.contains('counted')) {
-                        const target = parseFloat(entry.target.getAttribute('data-target'));
-                        const decimals = parseInt(entry.target.getAttribute('data-decimal')) || 0;
-                        entry.target.classList.add('counted');
-                        animateCounter(entry.target, target, 2500, decimals);
-                    }
-                });
-            }, { threshold: 0.3 });
-
-            counterElements.forEach(element => counterObserver.observe(element));
-        }
-
-        document.addEventListener('DOMContentLoaded', () => {
-            initPageReveal();
-            initScrollEffects();
-            initParallaxEffects();
-            initializeVideos();
-            loadMenu('all');
-            setMinDate();
-            initializeCounters();
-            
-            document.querySelectorAll('.feature-card, .music-event, .stat-card').forEach(el => {
-                el.style.opacity = '0';
-                el.style.transform = 'translateY(30px)';
-                observer.observe(el);
-            });
-            
-            document.querySelectorAll('form').forEach(form => {
-                form.addEventListener('submit', handleFormSubmit);
-            });
-        });
-
-        document.addEventListener('keydown', (e) => {
-            if (e.key === 'Escape') closeModal();
-        });
-    </script>
-</body>
-</html>
