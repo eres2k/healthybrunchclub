@@ -285,6 +285,64 @@
                 transform: translateY(0) scale(1);
             }
         }
+		@media (max-width: 768px) {
+            .hero-container {
+                grid-template-columns: 1fr;
+                gap: 32px;
+            }
+            .hero-content {
+                max-width: 100% !important;
+                text-align: center;
+            }
+            .hero-visual {
+                height: auto;
+                min-height: 300px;
+                max-height: 400px;
+            }
+            video {
+                height: 100%;
+                object-fit: cover;
+            }
+            .image-overlay {
+                bottom: 16px;
+                left: 16px;
+                right: 16px;
+                padding: 16px;
+            }
+            .nav {
+                top: 0;
+                border-radius: 0;
+                padding: 10px 16px;
+            }
+            .mobile-menu {
+                top: 60px;
+                border-radius: 0 0 20px 20px;
+            }
+            .mobile-menu-toggle {
+                font-size: 20px;
+            }
+            .hero {
+                padding: 80px 16px 40px;
+            }
+            .hero-content h1 {
+                font-size: clamp(28px, 6vw, 36px);
+            }
+            .hero-subtitle {
+                font-size: 16px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .hero-visual {
+                min-height: 250px;
+            }
+            .image-overlay h2 {
+                font-size: 20px;
+            }
+            .image-overlay p {
+                font-size: 12px;
+            }
+        }
 
         .mobile-menu.show {
             display: block;
@@ -1423,6 +1481,10 @@
             border-top-color: var(--sage-green);
             animation: spin 1s ease-in-out infinite;
         }
+.hero-content {
+	max-width: 700px
+!important;
+}
 
         @keyframes spin {
             to { transform: rotate(360deg); }
@@ -1440,6 +1502,10 @@
                 grid-template-columns: 1fr;
                 gap: 16px;
             }
+#home .hero-container .hero-content {
+	float: left;
+	left: auto;
+}
 
             .form-row {
                 grid-template-columns: 1fr;
@@ -1479,10 +1545,10 @@
             .about-image-container {
                 height: 300px;
             }
-
-            .hero-visual {
-                height: 400px;
-            }
+#home .hero-container .hero-visual {
+}
+#home .hero-container .hero-content {
+}
         }
 
         @media (max-width: 480px) {
@@ -1574,13 +1640,11 @@
         </div>
     </nav>
 
-    <!-- Hero Section -->
     <section class="hero" id="home">
         <div class="hero-container">
             <div class="hero-content">
                 <h1>START YOUR <span class="highlight">MONDAY RIGHT</span></h1>
                 <p class="hero-subtitle">Erlebe die perfekte Kombination aus gesundem Essen, inspirierender Musik und positiver Atmosphäre.</p>
-                
                 <div class="hero-event-info">
                     <div class="event-badge">Featured Event</div>
                     <div class="event-details">
@@ -1608,8 +1672,7 @@
                         </audio>
                     </div>
                 </div>
-                
-              <div class="booking-options">
+                <div class="booking-options">
                     <div class="booking-card" onclick="showBookingModal('friends')">
                         <div class="booking-card-icon">👥</div>
                         <h3>Freund:innen Brunch</h3>
@@ -1617,7 +1680,6 @@
                         <span class="booking-card-price">15€ p.P.</span>
                         <button>Reservieren</button>
                     </div>
-                    
                     <div class="booking-card" onclick="showBookingModal('corporate')">
                         <div class="booking-card-icon">💼</div>
                         <h3>Firmen Event</h3>
@@ -1625,7 +1687,6 @@
                         <span class="booking-card-price">20€ p.P.</span>
                         <button>Reservieren</button>
                     </div>
-                    
                     <div class="booking-card" onclick="showBookingModal('feelwell')">
                         <div class="booking-card-icon">🧘‍♀️</div>
                         <h3>Romantischer Brunch</h3>
@@ -1633,17 +1694,8 @@
                         <span class="booking-card-price">25€</span>
                         <button>Reservieren</button>
                     </div>
-				    <div class="booking-card" onclick="showBookingModal('feelwell')">
-                        <div class="booking-card-icon">🧘‍♀️</div>
-                        <h3>Luxus Brunch</h3>
-                        <p>man gönnt sich ja sonst nichts<br>bis 4 Personen</p>
-                        <span class="booking-card-price">30€ p.P.</span>
-                        <button>Reservieren</button>
-                    </div>
                 </div>
-				
             </div>
-            
             <div class="hero-visual">
                 <video 
                     autoplay 
@@ -1656,7 +1708,6 @@
                     <source src="/content/videos/event.mp4" type="video/mp4">
                     Your browser does not support the video tag.
                 </video>
-                
                 <div class="image-overlay">
                     <h2>ra'mien restaurant</h2>
                     <p>Gumpendorferstraße 9, 1060 Wien • Donations appreciated</p>
