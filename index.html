@@ -1429,7 +1429,63 @@
             to { transform: rotate(360deg); }
         }
 
-        
+        @media (max-width: 768px) {
+            .hero-container,
+            .about-content,
+            .contact-content {
+                grid-template-columns: 1fr;
+                gap: 48px;
+            }
+
+            .booking-options {
+                grid-template-columns: 1fr;
+                gap: 16px;
+            }
+
+            .form-row {
+                grid-template-columns: 1fr;
+            }
+
+            .newsletter-form {
+                flex-direction: column;
+            }
+
+            .menu-items {
+                grid-template-columns: 1fr;
+            }
+
+            .nav {
+                top: 10px;
+                width: calc(100% - 20px);
+                padding: 12px 20px;
+                position: relative;
+            }
+
+            .nav-links {
+                display: none;
+            }
+
+            .mobile-menu-toggle {
+                display: block;
+            }
+
+            .hero {
+                padding: 100px 20px 60px;
+            }
+
+            .section {
+                padding: 80px 20px;
+            }
+
+            .about-image-container {
+                height: 300px;
+            }
+
+            .hero-visual {
+                height: 400px;
+            }
+			  
+        }
 
         @media (max-width: 480px) {
             .hero-content h1 {
