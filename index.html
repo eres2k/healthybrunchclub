@@ -1429,63 +1429,7 @@
             to { transform: rotate(360deg); }
         }
 
-        @media (max-width: 768px) {
-            .hero-container,
-            .about-content,
-            .contact-content {
-                grid-template-columns: 1fr;
-                gap: 48px;
-            }
-
-            .booking-options {
-                grid-template-columns: 1fr;
-                gap: 16px;
-            }
-
-            .form-row {
-                grid-template-columns: 1fr;
-            }
-
-            .newsletter-form {
-                flex-direction: column;
-            }
-
-            .menu-items {
-                grid-template-columns: 1fr;
-            }
-
-            .nav {
-                top: 10px;
-                width: calc(100% - 20px);
-                padding: 12px 20px;
-                position: relative;
-            }
-
-            .nav-links {
-                display: none;
-            }
-
-            .mobile-menu-toggle {
-                display: block;
-            }
-
-            .hero {
-                padding: 100px 20px 60px;
-            }
-
-            .section {
-                padding: 80px 20px;
-            }
-
-            .about-image-container {
-                height: 300px;
-            }
-
-            .hero-visual {
-                height: 400px;
-            }
-			  
-        }
+        
 
         @media (max-width: 480px) {
             .hero-content h1 {
@@ -1505,7 +1449,67 @@
                 gap: 12px;
             }
         }
+/* Mobile-specific styles */
+@media only screen and (max-width: 768px) {
+    /* Floating menu */
+    .hamburger {
+        position: fixed;
+        top: 20px;
+        right: 20px;
+        z-index: 1000;
+        background: rgba(0, 0, 0, 0.8);
+        color: white;
+        padding: 10px;
+        border-radius: 5px;
+        cursor: pointer;
+    }
 
+    .mobile-nav {
+        position: fixed;
+        top: 60px;
+        right: 20px;
+        background: rgba(0, 0, 0, 0.9);
+        z-index: 999;
+        padding: 20px;
+        border-radius: 10px;
+        display: none; /* Hidden by default, toggled via JS */
+    }
+
+    .mobile-nav.active {
+        display: block; /* Show when active */
+    }
+
+    .mobile-nav a {
+        color: white;
+        text-decoration: none;
+        display: block;
+        margin: 10px 0;
+    }
+
+    /* Reposition first video */
+    video:first-of-type {
+        order: 2; /* Move video after menus */
+        width: 100%;
+        margin-top: 20px;
+    }
+
+    /* Ensure navigation sections come first */
+    nav, .mobile-nav {
+        order: 1;
+    }
+
+    /* Adjust main content to avoid overlap with floating menu */
+    main {
+        margin-top: 80px; /* Space for floating menu */
+    }
+}
+
+/* Ensure desktop nav remains unaffected */
+@media only screen and (min-width: 769px) {
+    .hamburger, .mobile-nav {
+        display: none;
+    }
+}
 
 
         html {
