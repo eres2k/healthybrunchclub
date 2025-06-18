@@ -1,0 +1,9 @@
+# Netlify configuration for Healthy Brunch Club
+# Optimized for performance, SEO, and PWA functionality
+
+[build]
+  # Build command (if using a build process)
+  # command = "npm run build"
+  
+  # Publish directory
+  publish = "."

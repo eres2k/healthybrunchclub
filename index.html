@@ -3,9 +3,78 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Healthy Brunch Club - Start Your Day Right</title>
+    <title>Healthy Brunch Club - Start Your Monday Right | Bio Brunch Wien</title>
+    <meta name="description" content="Gesunder Bio-Brunch jeden Montag in Wien. Regionale Zutaten, Live-Musik und positive Vibes. Jetzt buchen in der Gumpendorfer Straße 9.">
+    <meta name="keywords" content="healthy brunch wien, bio brunch, gesund essen wien, montag brunch, gumpendorfer straße, vegetarisch vegan wien">
+    <meta name="author" content="Healthy Brunch Club">
+    <link rel="canonical" href="https://healthybrunchclub.at/">
+    
+    <!-- Open Graph Tags -->
+    <meta property="og:title" content="Healthy Brunch Club - Bio Brunch Wien">
+    <meta property="og:description" content="Gesunder Bio-Brunch jeden Montag mit regionalen Zutaten und Live-Musik">
+    <meta property="og:image" content="/og-image.jpg">
+    <meta property="og:url" content="https://healthybrunchclub.at/">
+    <meta property="og:type" content="website">
+    <meta property="og:locale" content="de_AT">
+    
+    <!-- Schema.org Structured Data -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "Restaurant",
+      "name": "Healthy Brunch Club",
+      "description": "Gesunder Bio-Brunch jeden Montag",
+      "url": "https://healthybrunchclub.at",
+      "telephone": "+43 676 123 456 78",
+      "email": "hello@healthybrunchclub.at",
+      "address": {
+        "@type": "PostalAddress",
+        "streetAddress": "Gumpendorfer Straße 9",
+        "addressLocality": "Wien",
+        "postalCode": "1060",
+        "addressCountry": "AT"
+      },
+      "openingHours": "Mo 08:00-14:00",
+      "priceRange": "€€",
+      "servesCuisine": ["Healthy", "Vegetarian", "Vegan", "Organic"],
+      "hasMenu": {
+        "@type": "Menu",
+        "hasMenuSection": [
+          {
+            "@type": "MenuSection",
+            "name": "Healthy Bowls",
+            "hasMenuItem": [
+              {
+                "@type": "MenuItem",
+                "name": "Power Bowl",
+                "description": "Quinoa, Avocado, Grünkohl, Tahini-Dressing",
+                "offers": {
+                  "@type": "Offer",
+                  "price": "14.50",
+                  "priceCurrency": "EUR"
+                }
+              }
+            ]
+          }
+        ]
+      }
+    }
+    </script>
+    
+    <!-- PWA Meta Tags -->
+    <meta name="theme-color" content="#A9AB88">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="default">
+    <meta name="apple-mobile-web-app-title" content="Healthy Brunch">
+    <link rel="apple-touch-icon" href="/icon-192.png">
+    <link rel="manifest" href="/manifest.json">
+    
+    <!-- Preload Critical Resources -->
+    <link rel="preload" href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" as="style">
+    <link rel="preload" href="#hero-image" as="image">
+    
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=SF+Pro+Display:wght@100;200;300;400;500;600;700;800;900&display=swap');
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap');
         
         * {
             margin: 0;
@@ -14,54 +83,59 @@
         }
 
         :root {
-            --glass-bg: rgba(255, 255, 255, 0.05);
-            --glass-border: rgba(255, 255, 255, 0.12);
-            --glass-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
-            --accent-primary: #00D4FF;
-            --accent-secondary: #7B68EE;
-            --accent-success: #00FF88;
-            --accent-warning: #FFB800;
-            --text-primary: rgba(255, 255, 255, 0.95);
-            --text-secondary: rgba(255, 255, 255, 0.75);
-            --text-tertiary: rgba(255, 255, 255, 0.55);
-            --surface-elevated: rgba(255, 255, 255, 0.08);
-            --surface-hover: rgba(255, 255, 255, 0.12);
-            --dark-surface: rgba(15, 15, 35, 0.6);
-            --accent-gradient: linear-gradient(135deg, #00D4FF 0%, #7B68EE 100%);
+            /* Flyer-inspired Natural Color Palette */
+            --earth-primary: #A9AB88;      /* Moss Green from flyer */
+            --earth-secondary: #DBAA89;    /* Warm Beige */
+            --earth-accent: #D4C3A1;       /* Cream */
+            --earth-neutral: #B7AFA3;      /* Mushroom */
+            --earth-light: #F3E8DA;        /* Off-White */
+            --earth-dark: #5D4E37;         /* Dark Brown */
+            --earth-forest: #81B14F;       /* Deep Forest */
+            --earth-clay: #E26C29;         /* Burnt Orange accent */
+            
+            /* Semantic Colors */
+            --accent-success: #81B14F;
+            --accent-warning: #E26C29;
+            --accent-error: #C4625A;
+            
+            /* Glass Morphism with Earth Tones */
+            --glass-bg: rgba(169, 171, 136, 0.15);
+            --glass-border: rgba(169, 171, 136, 0.25);
+            --glass-shadow: 0 8px 32px 0 rgba(93, 78, 55, 0.2);
+            --glass-elevated: rgba(212, 195, 161, 0.2);
+            
+            /* Text Colors with Proper Contrast */
+            --text-primary: #2D2621;
+            --text-secondary: #5D4E37;
+            --text-tertiary: #8B7D6B;
+            --text-light: #F3E8DA;
+            
+            /* Organic Gradients */
+            --earth-gradient: linear-gradient(135deg, #A9AB88 0%, #DBAA89 50%, #D4C3A1 100%);
+            --forest-gradient: linear-gradient(135deg, #81B14F 0%, #A9AB88 100%);
+            --sunset-gradient: linear-gradient(135deg, #E26C29 0%, #DBAA89 50%, #F3E8DA 100%);
+            
+            /* Typography */
+            --font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
         }
 
         body {
-            font-family: 'SF Pro Display', -apple-system, BlinkMacSystemFont, sans-serif;
+            font-family: var(--font-family);
             line-height: 1.6;
             color: var(--text-primary);
             background: 
-                radial-gradient(circle at 20% 80%, rgba(120, 119, 198, 0.3) 0%, transparent 50%),
-                radial-gradient(circle at 80% 20%, rgba(255, 255, 255, 0.15) 0%, transparent 50%),
-                radial-gradient(circle at 40% 40%, rgba(120, 219, 226, 0.1) 0%, transparent 50%),
-                linear-gradient(135deg, #0f0f23 0%, #1a1a2e 25%, #16213e 50%, #0f3460 100%);
+                radial-gradient(circle at 20% 80%, rgba(169, 171, 136, 0.1) 0%, transparent 50%),
+                radial-gradient(circle at 80% 20%, rgba(212, 195, 161, 0.15) 0%, transparent 50%),
+                radial-gradient(circle at 40% 40%, rgba(129, 177, 79, 0.05) 0%, transparent 50%),
+                linear-gradient(135deg, #F3E8DA 0%, #F8F4ED 25%, #F5F1E8 50%, #F3E8DA 100%);
             background-size: 100% 100%, 100% 100%, 100% 100%, 400% 400%;
-            animation: gradientShift 20s ease infinite;
+            animation: organicShift 25s ease infinite;
             overflow-x: hidden;
             min-height: 100vh;
             position: relative;
         }
 
-        body::before {
-            content: '';
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: 
-                linear-gradient(45deg, transparent 30%, rgba(255, 255, 255, 0.02) 31%, rgba(255, 255, 255, 0.02) 32%, transparent 33%),
-                linear-gradient(-45deg, transparent 30%, rgba(255, 255, 255, 0.02) 31%, rgba(255, 255, 255, 0.02) 32%, transparent 33%);
-            background-size: 40px 40px;
-            pointer-events: none;
-            z-index: -1;
-        }
-
-        @keyframes gradientShift {
+        @keyframes organicShift {
             0%, 100% { background-position: 0% 0%, 0% 0%, 0% 0%, 0% 50%; }
             25% { background-position: 100% 0%, 20% 80%, 60% 20%, 25% 75%; }
             50% { background-position: 0% 100%, 80% 20%, 40% 60%, 50% 100%; }
@@ -77,13 +151,13 @@
         }
 
         .glass-elevated {
-            background: var(--surface-elevated);
+            background: var(--glass-elevated);
             backdrop-filter: blur(30px);
             -webkit-backdrop-filter: blur(30px);
-            border: 1px solid rgba(255, 255, 255, 0.15);
+            border: 1px solid rgba(169, 171, 136, 0.3);
             box-shadow: 
-                0 20px 40px 0 rgba(0, 0, 0, 0.6),
-                inset 0 1px 0 rgba(255, 255, 255, 0.2);
+                0 20px 40px 0 rgba(93, 78, 55, 0.25),
+                inset 0 1px 0 rgba(243, 232, 218, 0.5);
         }
 
         /* Enhanced Navigation */
@@ -101,10 +175,10 @@
         }
 
         .nav.scrolled {
-            background: rgba(255, 255, 255, 0.08);
+            background: var(--glass-elevated);
             backdrop-filter: blur(30px);
-            border-color: rgba(255, 255, 255, 0.18);
-            box-shadow: 0 12px 40px rgba(0, 0, 0, 0.5);
+            border-color: var(--glass-border);
+            box-shadow: 0 12px 40px rgba(93, 78, 55, 0.3);
         }
 
         .nav-container {
@@ -131,7 +205,7 @@
         .logo::before {
             content: '🥑';
             font-size: 24px;
-            filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.2));
+            filter: drop-shadow(0 2px 4px rgba(93, 78, 55, 0.2));
         }
 
         .nav-links {
@@ -154,18 +228,18 @@
 
         .nav-links a:hover {
             color: var(--text-primary);
-            background: rgba(255, 255, 255, 0.1);
+            background: rgba(169, 171, 136, 0.15);
             transform: translateY(-1px);
         }
 
         .book-now-btn {
-            background: var(--accent-gradient) !important;
-            color: white !important;
+            background: var(--earth-gradient) !important;
+            color: var(--text-light) !important;
             padding: 12px 24px !important;
             border-radius: 16px !important;
             font-weight: 600 !important;
             transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1) !important;
-            box-shadow: 0 4px 20px rgba(0, 212, 255, 0.4);
+            box-shadow: 0 4px 20px rgba(169, 171, 136, 0.4);
             position: relative;
             overflow: hidden;
         }
@@ -177,7 +251,7 @@
             left: -100%;
             width: 100%;
             height: 100%;
-            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+            background: linear-gradient(90deg, transparent, rgba(243, 232, 218, 0.3), transparent);
             transition: left 0.5s;
         }
 
@@ -187,7 +261,7 @@
 
         .book-now-btn:hover {
             transform: translateY(-2px) !important;
-            box-shadow: 0 8px 30px rgba(0, 212, 255, 0.6) !important;
+            box-shadow: 0 8px 30px rgba(169, 171, 136, 0.6) !important;
         }
 
         /* Mobile Menu */
@@ -201,10 +275,12 @@
             padding: 8px;
             border-radius: 8px;
             transition: all 0.3s ease;
+            min-width: 44px;
+            min-height: 44px;
         }
 
         .mobile-menu-toggle:hover {
-            background: var(--surface-hover);
+            background: rgba(169, 171, 136, 0.15);
         }
 
         .mobile-menu {
@@ -213,13 +289,13 @@
             top: 100%;
             left: 0;
             right: 0;
-            background: var(--surface-elevated);
+            background: var(--glass-elevated);
             backdrop-filter: blur(25px);
-            border: 1px solid rgba(255, 255, 255, 0.15);
+            border: 1px solid var(--glass-border);
             border-radius: 20px;
             margin-top: 8px;
             padding: 20px;
-            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.6);
+            box-shadow: 0 20px 40px rgba(93, 78, 55, 0.3);
         }
 
         .mobile-menu.show {
@@ -256,24 +332,25 @@
             border-radius: 12px;
             transition: all 0.3s ease;
             display: block;
+            min-height: 44px;
         }
 
         .mobile-menu-links a:hover {
             color: var(--text-primary);
-            background: var(--surface-hover);
+            background: rgba(169, 171, 136, 0.15);
         }
 
         .mobile-book-btn {
-            background: var(--accent-gradient) !important;
-            color: white !important;
+            background: var(--earth-gradient) !important;
+            color: var(--text-light) !important;
             font-weight: 600 !important;
             text-align: center;
             margin-top: 8px;
         }
 
         .mobile-book-btn:hover {
-            color: white !important;
-            background: linear-gradient(135deg, var(--accent-secondary), var(--accent-primary)) !important;
+            color: var(--text-light) !important;
+            background: var(--forest-gradient) !important;
         }
 
         /* Hero Section */
@@ -293,8 +370,8 @@
             width: 100%;
             height: 100%;
             background: 
-                radial-gradient(circle at 25% 25%, rgba(0, 212, 255, 0.1) 0%, transparent 50%),
-                radial-gradient(circle at 75% 75%, rgba(123, 104, 238, 0.08) 0%, transparent 50%);
+                radial-gradient(circle at 25% 25%, rgba(169, 171, 136, 0.1) 0%, transparent 50%),
+                radial-gradient(circle at 75% 75%, rgba(129, 177, 79, 0.08) 0%, transparent 50%);
             pointer-events: none;
             z-index: 1;
         }
@@ -330,11 +407,11 @@
             margin-bottom: 24px;
             line-height: 1.1;
             letter-spacing: -2px;
-            text-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+            text-shadow: 0 4px 20px rgba(93, 78, 55, 0.1);
         }
 
         .hero-content h1 span {
-            background: var(--accent-gradient);
+            background: var(--earth-gradient);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
             background-clip: text;
@@ -348,7 +425,7 @@
             left: 0;
             width: 100%;
             height: 3px;
-            background: var(--accent-gradient);
+            background: var(--earth-gradient);
             border-radius: 2px;
             opacity: 0.6;
         }
@@ -378,9 +455,10 @@
             text-align: center;
             cursor: pointer;
             transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-            border: 1px solid rgba(255, 255, 255, 0.15);
+            border: 1px solid var(--glass-border);
             position: relative;
             overflow: hidden;
+            min-height: 240px;
         }
 
         .booking-card::before {
@@ -390,15 +468,15 @@
             left: 0;
             right: 0;
             bottom: 0;
-            background: linear-gradient(135deg, rgba(255, 255, 255, 0.1), rgba(255, 255, 255, 0.05));
+            background: var(--glass-elevated);
             opacity: 0;
             transition: opacity 0.3s ease;
         }
 
         .booking-card:hover {
             transform: translateY(-8px) scale(1.02);
-            border-color: rgba(255, 255, 255, 0.3);
-            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+            border-color: var(--earth-primary);
+            box-shadow: 0 20px 40px rgba(93, 78, 55, 0.2);
         }
 
         .booking-card:hover::before {
@@ -408,7 +486,9 @@
         .booking-card-icon {
             font-size: 48px;
             margin-bottom: 16px;
-            filter: drop-shadow(0 4px 8px rgba(0, 0, 0, 0.2));
+            filter: drop-shadow(0 4px 8px rgba(93, 78, 55, 0.1));
+            position: relative;
+            z-index: 2;
         }
 
         .booking-card h3 {
@@ -417,6 +497,8 @@
             color: var(--text-primary);
             margin-bottom: 8px;
             letter-spacing: -0.5px;
+            position: relative;
+            z-index: 2;
         }
 
         .booking-card p {
@@ -424,18 +506,21 @@
             color: var(--text-tertiary);
             margin-bottom: 16px;
             line-height: 1.4;
+            position: relative;
+            z-index: 2;
         }
 
         .booking-card-price {
             font-size: 24px;
             font-weight: 800;
-            background: var(--accent-gradient);
+            background: var(--earth-gradient);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
             background-clip: text;
             display: block;
             margin-bottom: 20px;
             position: relative;
+            z-index: 2;
         }
 
         .booking-card-price::after {
@@ -446,7 +531,7 @@
             transform: translateX(-50%);
             width: 60%;
             height: 2px;
-            background: var(--accent-gradient);
+            background: var(--earth-gradient);
             border-radius: 1px;
             opacity: 0.4;
         }
@@ -454,19 +539,23 @@
         .booking-card button {
             width: 100%;
             padding: 12px;
-            background: linear-gradient(135deg, rgba(255, 255, 255, 0.15), rgba(255, 255, 255, 0.1));
+            background: var(--glass-bg);
             color: var(--text-primary);
-            border: 1px solid rgba(255, 255, 255, 0.2);
+            border: 1px solid var(--glass-border);
             border-radius: 12px;
             font-weight: 600;
             cursor: pointer;
             transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
             backdrop-filter: blur(10px);
+            position: relative;
+            z-index: 2;
+            min-height: 44px;
         }
 
         .booking-card button:hover {
-            background: linear-gradient(135deg, rgba(255, 255, 255, 0.25), rgba(255, 255, 255, 0.15));
-            border-color: rgba(255, 255, 255, 0.3);
+            background: var(--earth-gradient);
+            color: var(--text-light);
+            border-color: var(--earth-primary);
             transform: translateY(-2px);
         }
 
@@ -477,8 +566,8 @@
             border-radius: 32px;
             overflow: hidden;
             backdrop-filter: blur(20px);
-            border: 1px solid rgba(255, 255, 255, 0.2);
-            background: linear-gradient(135deg, rgba(255, 255, 255, 0.05), rgba(255, 255, 255, 0.02));
+            border: 1px solid var(--glass-border);
+            background: var(--glass-bg);
             opacity: 0;
             animation: heroVisualReveal 1s cubic-bezier(0.4, 0, 0.2, 1) 0.8s forwards;
         }
@@ -498,13 +587,6 @@
             border-radius: 32px;
         }
 
-        .hero-video::-webkit-media-controls,
-        .hero-video::-webkit-media-controls-panel,
-        .hero-video::-webkit-media-controls-play-button,
-        .hero-video::-webkit-media-controls-start-playback-button {
-            display: none !important;
-        }
-
         .hero-visual::before {
             content: '';
             position: absolute;
@@ -512,7 +594,7 @@
             left: -50%;
             width: 200%;
             height: 200%;
-            background: conic-gradient(from 0deg, transparent, rgba(255, 255, 255, 0.08), transparent);
+            background: conic-gradient(from 0deg, transparent, rgba(169, 171, 136, 0.1), transparent);
             animation: rotate 25s linear infinite;
             z-index: 1;
             pointer-events: none;
@@ -525,7 +607,7 @@
             left: 0;
             right: 0;
             bottom: 0;
-            background: linear-gradient(135deg, rgba(0, 212, 255, 0.1), rgba(123, 104, 238, 0.08));
+            background: linear-gradient(135deg, rgba(169, 171, 136, 0.1), rgba(129, 177, 79, 0.08));
             border-radius: 32px;
             z-index: 2;
             pointer-events: none;
@@ -542,27 +624,168 @@
             bottom: 32px;
             left: 32px;
             right: 32px;
-            background: rgba(0, 0, 0, 0.4);
+            background: rgba(93, 78, 55, 0.4);
             backdrop-filter: blur(15px);
             border-radius: 16px;
             padding: 20px;
             z-index: 3;
             text-align: center;
-            border: 1px solid rgba(255, 255, 255, 0.1);
+            border: 1px solid var(--glass-border);
         }
 
         .video-overlay h2 {
             font-size: 28px;
             font-weight: 700;
             margin-bottom: 8px;
-            color: var(--text-primary);
-            text-shadow: 0 2px 8px rgba(0, 0, 0, 0.5);
+            color: var(--text-light);
+            text-shadow: 0 2px 8px rgba(93, 78, 55, 0.5);
         }
 
         .video-overlay p {
             font-size: 16px;
+            color: var(--text-light);
+            text-shadow: 0 1px 4px rgba(93, 78, 55, 0.5);
+            opacity: 0.9;
+        }
+
+        /* Menu Section */
+        .menu-section {
+            padding: 120px 20px;
+            position: relative;
+            background: linear-gradient(135deg, rgba(243, 232, 218, 0.5), rgba(248, 244, 237, 0.3));
+        }
+
+        .menu-container {
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        .menu-header {
+            text-align: center;
+            margin-bottom: 80px;
+        }
+
+        .menu-header h2 {
+            font-size: clamp(36px, 6vw, 48px);
+            font-weight: 800;
+            color: var(--text-primary);
+            margin-bottom: 16px;
+            letter-spacing: -1px;
+        }
+
+        .menu-header p {
+            font-size: 20px;
             color: var(--text-secondary);
-            text-shadow: 0 1px 4px rgba(0, 0, 0, 0.5);
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        .menu-categories {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 40px;
+            margin-bottom: 60px;
+        }
+
+        .menu-category {
+            background: var(--glass-bg);
+            backdrop-filter: blur(20px);
+            border: 1px solid var(--glass-border);
+            border-radius: 24px;
+            padding: 32px;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .menu-category:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 20px 40px rgba(93, 78, 55, 0.15);
+            border-color: var(--earth-primary);
+        }
+
+        .category-header {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            margin-bottom: 24px;
+            padding-bottom: 16px;
+            border-bottom: 2px solid var(--glass-border);
+        }
+
+        .category-icon {
+            font-size: 32px;
+            filter: drop-shadow(0 2px 4px rgba(93, 78, 55, 0.2));
+        }
+
+        .category-header h3 {
+            font-size: 24px;
+            font-weight: 700;
+            color: var(--text-primary);
+            letter-spacing: -0.5px;
+        }
+
+        .menu-item {
+            margin-bottom: 20px;
+            padding: 16px 0;
+            border-bottom: 1px solid rgba(169, 171, 136, 0.1);
+        }
+
+        .menu-item:last-child {
+            border-bottom: none;
+            margin-bottom: 0;
+        }
+
+        .item-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: start;
+            margin-bottom: 8px;
+            gap: 16px;
+        }
+
+        .item-name {
+            font-weight: 600;
+            color: var(--text-primary);
+            font-size: 16px;
+            line-height: 1.3;
+        }
+
+        .item-price {
+            font-weight: 700;
+            color: var(--earth-primary);
+            font-size: 16px;
+            white-space: nowrap;
+        }
+
+        .item-description {
+            color: var(--text-secondary);
+            font-size: 14px;
+            line-height: 1.4;
+            margin-bottom: 8px;
+        }
+
+        .item-tags {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+        }
+
+        .tag {
+            background: var(--earth-gradient);
+            color: var(--text-light);
+            padding: 4px 8px;
+            border-radius: 12px;
+            font-size: 11px;
+            font-weight: 500;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .tag.vegan {
+            background: var(--forest-gradient);
+        }
+
+        .tag.gluten-free {
+            background: var(--sunset-gradient);
         }
 
         /* Loading states */
@@ -582,8 +805,8 @@
         .video-loading-spinner {
             width: 40px;
             height: 40px;
-            border: 3px solid rgba(255, 255, 255, 0.2);
-            border-top: 3px solid var(--accent-primary);
+            border: 3px solid rgba(169, 171, 136, 0.3);
+            border-top: 3px solid var(--earth-primary);
             border-radius: 50%;
             animation: spin 1s linear infinite;
         }
@@ -637,6 +860,7 @@
             transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
             position: relative;
             overflow: hidden;
+            border: 1px solid var(--glass-border);
         }
 
         .feature-card::before {
@@ -646,13 +870,14 @@
             left: 0;
             right: 0;
             bottom: 0;
-            background: linear-gradient(135deg, rgba(255, 255, 255, 0.1), rgba(255, 255, 255, 0.05));
+            background: var(--glass-elevated);
             opacity: 0;
             transition: opacity 0.3s ease;
         }
 
         .feature-card:hover {
             transform: translateY(-12px);
+            box-shadow: 0 20px 40px rgba(93, 78, 55, 0.15);
         }
 
         .feature-card:hover::before {
@@ -663,7 +888,7 @@
             width: 80px;
             height: 80px;
             margin: 0 auto 24px;
-            background: var(--accent-gradient);
+            background: var(--earth-gradient);
             border-radius: 20px;
             display: flex;
             align-items: center;
@@ -671,7 +896,7 @@
             font-size: 32px;
             position: relative;
             z-index: 2;
-            box-shadow: 0 8px 24px rgba(0, 212, 255, 0.3);
+            box-shadow: 0 8px 24px rgba(169, 171, 136, 0.3);
         }
 
         .feature-icon::before {
@@ -681,7 +906,7 @@
             left: -2px;
             right: -2px;
             bottom: -2px;
-            background: var(--accent-gradient);
+            background: var(--earth-gradient);
             border-radius: 22px;
             z-index: -1;
             opacity: 0.3;
@@ -700,6 +925,79 @@
         .feature-card p {
             color: var(--text-secondary);
             line-height: 1.6;
+            position: relative;
+            z-index: 2;
+        }
+
+        /* Animated Stats Section */
+        .stats-section {
+            padding: 80px 20px;
+            background: var(--glass-bg);
+            backdrop-filter: blur(20px);
+            border-top: 1px solid var(--glass-border);
+            border-bottom: 1px solid var(--glass-border);
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 40px;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .stat-card {
+            text-align: center;
+            padding: 32px 20px;
+            border-radius: 20px;
+            background: var(--glass-elevated);
+            border: 1px solid var(--glass-border);
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .stat-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: var(--earth-gradient);
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .stat-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 12px 32px rgba(93, 78, 55, 0.15);
+        }
+
+        .stat-card:hover::before {
+            opacity: 0.05;
+        }
+
+        .stat-number {
+            font-size: 48px;
+            font-weight: 800;
+            background: var(--earth-gradient);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            display: block;
+            margin-bottom: 8px;
+            position: relative;
+            z-index: 2;
+            line-height: 1.1;
+        }
+
+        .stat-label {
+            color: var(--text-secondary);
+            font-size: 14px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 1px;
             position: relative;
             z-index: 2;
         }
@@ -732,8 +1030,8 @@
             border-radius: 24px;
             overflow: hidden;
             backdrop-filter: blur(20px);
-            border: 1px solid rgba(255, 255, 255, 0.2);
-            background: linear-gradient(135deg, rgba(255, 255, 255, 0.05), rgba(255, 255, 255, 0.02));
+            border: 1px solid var(--glass-border);
+            background: var(--glass-bg);
         }
 
         .about-video {
@@ -748,64 +1046,20 @@
             bottom: 24px;
             left: 24px;
             right: 24px;
-            background: rgba(0, 0, 0, 0.4);
+            background: rgba(93, 78, 55, 0.4);
             backdrop-filter: blur(15px);
             border-radius: 12px;
             padding: 16px;
             z-index: 3;
             text-align: center;
-            border: 1px solid rgba(255, 255, 255, 0.1);
-        }
-
-        .about-stats-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-            gap: 20px;
-            margin-top: 60px;
-        }
-
-        .stat-card {
-            padding: 32px;
-            border-radius: 20px;
-            text-align: center;
-            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-        }
-
-        .stat-card:hover {
-            transform: translateY(-4px);
-        }
-
-        .stat-number {
-            font-size: 40px;
-            font-weight: 800;
-            background: linear-gradient(135deg, var(--accent-primary), var(--accent-secondary));
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-            display: block;
-            margin-bottom: 8px;
-        }
-
-        .stat-label {
-            color: var(--text-secondary);
-            font-size: 14px;
-            font-weight: 500;
+            border: 1px solid var(--glass-border);
         }
 
         /* Footer */
         .footer {
             padding: 80px 20px 40px;
+            background: linear-gradient(135deg, rgba(93, 78, 55, 0.1), rgba(169, 171, 136, 0.05));
             position: relative;
-        }
-
-        .footer::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background: linear-gradient(135deg, rgba(0, 0, 0, 0.2), rgba(0, 0, 0, 0.1));
         }
 
         .footer-container {
@@ -820,7 +1074,7 @@
         }
 
         .footer-section h4 {
-            color: var(--accent-secondary);
+            color: var(--earth-primary);
             margin-bottom: 24px;
             font-size: 18px;
             font-weight: 700;
@@ -833,6 +1087,7 @@
             margin-bottom: 12px;
             transition: all 0.3s ease;
             padding: 8px 0;
+            min-height: 24px;
         }
 
         .footer-section a:hover {
@@ -841,7 +1096,7 @@
         }
 
         .footer-section p {
-            opacity: 0.8;
+            color: var(--text-secondary);
             line-height: 1.6;
         }
 
@@ -854,8 +1109,8 @@
         .social-links a {
             width: 48px;
             height: 48px;
-            background: rgba(255, 255, 255, 0.1);
-            border: 1px solid rgba(255, 255, 255, 0.2);
+            background: var(--glass-bg);
+            border: 1px solid var(--glass-border);
             border-radius: 12px;
             display: flex;
             align-items: center;
@@ -863,35 +1118,93 @@
             transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
             backdrop-filter: blur(10px);
             margin-bottom: 0;
+            text-decoration: none;
         }
 
         .social-links a:hover {
-            background: linear-gradient(135deg, var(--accent-primary), var(--accent-secondary));
+            background: var(--earth-gradient);
             border-color: transparent;
             transform: translateY(-2px);
-            box-shadow: 0 8px 24px rgba(0, 122, 255, 0.3);
+            box-shadow: 0 8px 24px rgba(169, 171, 136, 0.3);
         }
 
         .footer-bottom {
             text-align: center;
             padding-top: 48px;
-            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            border-top: 1px solid var(--glass-border);
             color: var(--text-tertiary);
             position: relative;
             z-index: 2;
         }
 
+        /* Notification System */
+        .notification {
+            position: fixed;
+            top: 100px;
+            right: -400px;
+            padding: 24px 32px;
+            border-radius: 16px;
+            z-index: 3000;
+            transition: right 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            min-width: 320px;
+            backdrop-filter: blur(20px);
+            border: 1px solid var(--glass-border);
+        }
+
+        .notification.show {
+            right: 32px;
+        }
+
+        .notification.success {
+            background: rgba(129, 177, 79, 0.2);
+            border-color: var(--accent-success);
+        }
+
+        .notification.error {
+            background: rgba(196, 98, 90, 0.2);
+            border-color: var(--accent-error);
+        }
+
+        .notification-icon {
+            font-size: 24px;
+        }
+
+        .notification.success .notification-icon {
+            color: var(--accent-success);
+        }
+
+        .notification.error .notification-icon {
+            color: var(--accent-error);
+        }
+
+        .notification-content {
+            flex: 1;
+        }
+
+        .notification-title {
+            font-weight: 700;
+            color: var(--text-primary);
+            margin-bottom: 4px;
+        }
+
+        .notification-message {
+            color: var(--text-secondary);
+            font-size: 14px;
+        }
+
         /* Enhanced Mobile Responsiveness */
         @media (max-width: 768px) {
-            /* Enhanced Mobile Navigation */
             .nav {
                 top: 10px;
                 width: calc(100% - 20px);
                 padding: 12px 20px;
                 border-radius: 16px;
-                background: rgba(255, 255, 255, 0.08);
+                background: var(--glass-elevated);
                 backdrop-filter: blur(25px);
-                box-shadow: 0 8px 40px rgba(0, 0, 0, 0.5);
+                box-shadow: 0 8px 40px rgba(93, 78, 55, 0.3);
             }
 
             .nav-links {
@@ -902,7 +1215,6 @@
                 display: block;
             }
 
-            /* Mobile Hero Layout - Video right after header */
             .hero {
                 padding: 90px 20px 40px;
                 min-height: auto;
@@ -943,26 +1255,12 @@
 
             .booking-card {
                 padding: 24px 20px;
+                min-height: 200px;
             }
 
-            .booking-card-icon {
-                font-size: 36px;
-                margin-bottom: 12px;
-            }
-
-            .video-overlay {
-                padding: 16px;
-                bottom: 20px;
-                left: 20px;
-                right: 20px;
-            }
-
-            .video-overlay h2 {
-                font-size: 20px;
-            }
-
-            .video-overlay p {
-                font-size: 14px;
+            .menu-categories {
+                grid-template-columns: 1fr;
+                gap: 24px;
             }
 
             .about-content {
@@ -983,8 +1281,9 @@
                 gap: 24px;
             }
 
-            .about-stats-grid {
+            .stats-grid {
                 grid-template-columns: repeat(2, 1fr);
+                gap: 20px;
             }
         }
 
@@ -1019,26 +1318,7 @@
 
             .booking-card {
                 padding: 20px 16px;
-            }
-
-            .booking-card-icon {
-                font-size: 32px;
-                margin-bottom: 10px;
-            }
-
-            .video-overlay {
-                padding: 12px;
-                bottom: 16px;
-                left: 16px;
-                right: 16px;
-            }
-
-            .video-overlay h2 {
-                font-size: 18px;
-            }
-
-            .video-overlay p {
-                font-size: 12px;
+                min-height: 180px;
             }
 
             .section {
@@ -1048,9 +1328,17 @@
             .about-video-container {
                 height: 250px;
             }
+
+            .menu-categories {
+                gap: 20px;
+            }
+
+            .menu-category {
+                padding: 24px 20px;
+            }
         }
 
-        /* Smooth scrolling */
+        /* Smooth scrolling and accessibility */
         html {
             scroll-behavior: smooth;
         }
@@ -1061,21 +1349,21 @@
         }
 
         ::-webkit-scrollbar-track {
-            background: rgba(255, 255, 255, 0.1);
+            background: rgba(169, 171, 136, 0.1);
         }
 
         ::-webkit-scrollbar-thumb {
-            background: linear-gradient(135deg, var(--accent-primary), var(--accent-secondary));
+            background: var(--earth-gradient);
             border-radius: 4px;
         }
 
         ::-webkit-scrollbar-thumb:hover {
-            background: linear-gradient(135deg, var(--accent-secondary), var(--accent-primary));
+            background: var(--forest-gradient);
         }
 
         /* Selection */
         ::selection {
-            background: rgba(0, 122, 255, 0.3);
+            background: rgba(169, 171, 136, 0.3);
             color: var(--text-primary);
         }
 
@@ -1095,79 +1383,72 @@
             }
         }
 
-        /* Loading animation */
-        .loading {
-            display: inline-block;
-            width: 20px;
-            height: 20px;
-            border: 2px solid rgba(255, 255, 255, 0.3);
-            border-radius: 50%;
-            border-top-color: white;
-            animation: spin 1s ease-in-out infinite;
+        /* PWA specific styles */
+        @media (display-mode: standalone) {
+            .nav {
+                top: 30px;
+            }
+            
+            .hero {
+                padding-top: 140px;
+            }
         }
 
-        /* Notification */
-        .notification {
-            position: fixed;
-            top: 100px;
-            right: -400px;
-            padding: 24px 32px;
-            border-radius: 16px;
-            z-index: 3000;
-            transition: right 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-            display: flex;
-            align-items: center;
-            gap: 16px;
-            min-width: 320px;
-            backdrop-filter: blur(20px);
+        /* Reduced motion accessibility */
+        @media (prefers-reduced-motion: reduce) {
+            *,
+            *::before,
+            *::after {
+                animation-duration: 0.01ms !important;
+                animation-iteration-count: 1 !important;
+                transition-duration: 0.01ms !important;
+            }
         }
 
-        .notification.show {
-            right: 32px;
+        /* High contrast mode support */
+        @media (prefers-contrast: high) {
+            :root {
+                --text-primary: #000000;
+                --text-secondary: #333333;
+                --glass-border: rgba(0, 0, 0, 0.5);
+            }
         }
 
-        .notification.success {
-            background: rgba(52, 199, 89, 0.2);
-            border: 1px solid rgba(52, 199, 89, 0.3);
+        /* Focus indicators for keyboard navigation */
+        .booking-card:focus,
+        .nav-links a:focus,
+        .mobile-menu-links a:focus,
+        .social-links a:focus,
+        button:focus {
+            outline: 3px solid var(--earth-primary);
+            outline-offset: 2px;
         }
 
-        .notification.error {
-            background: rgba(255, 59, 48, 0.2);
-            border: 1px solid rgba(255, 59, 48, 0.3);
+        /* Skip link for screen readers */
+        .skip-link {
+            position: absolute;
+            top: -40px;
+            left: 6px;
+            background: var(--earth-primary);
+            color: var(--text-light);
+            padding: 8px;
+            text-decoration: none;
+            border-radius: 4px;
+            z-index: 10000;
         }
 
-        .notification-icon {
-            font-size: 24px;
-        }
-
-        .notification.success .notification-icon {
-            color: var(--accent-success);
-        }
-
-        .notification.error .notification-icon {
-            color: #FF3B30;
-        }
-
-        .notification-content {
-            flex: 1;
-        }
-
-        .notification-title {
-            font-weight: 700;
-            color: var(--text-primary);
-            margin-bottom: 4px;
-        }
-
-        .notification-message {
-            color: var(--text-secondary);
-            font-size: 14px;
+        .skip-link:focus {
+            top: 6px;
         }
     </style>
 </head>
 <body>
+    <!-- Skip Link for Accessibility -->
+    <a href="#main-content" class="skip-link">Zum Hauptinhalt springen</a>
+
     <!-- Notification -->
-    <div id="notification" class="notification">
-        <span class="notification-icon"></span>
+    <div id="notification" class="notification" role="alert" aria-live="polite">
+        <span class="notification-icon" aria-hidden="true"></span>
         <div class="notification-content">
             <div class="notification-title"></div>
             <div class="notification-message"></div>
@@ -1175,13 +1456,14 @@
     </div>
 
     <!-- Enhanced Navigation -->
-    <nav class="nav glass" id="navbar">
+    <nav class="nav glass" id="navbar" role="navigation" aria-label="Hauptnavigation">
         <div class="nav-container">
             <div class="logo">Healthy Brunch Club</div>
             
             <!-- Desktop Navigation -->
             <ul class="nav-links">
                 <li><a href="#home">Home</a></li>
+                <li><a href="#menu">Speisekarte</a></li>
                 <li><a href="#features">Features</a></li>
                 <li><a href="#about">Über uns</a></li>
                 <li><a href="#contact">Kontakt</a></li>
@@ -1189,252 +1471,560 @@
             </ul>
 
             <!-- Mobile Menu Toggle -->
-            <button class="mobile-menu-toggle" id="mobileMenuToggle">☰</button>
+            <button class="mobile-menu-toggle" id="mobileMenuToggle" aria-label="Menü öffnen" aria-expanded="false">☰</button>
         </div>
 
         <!-- Mobile Menu -->
-        <div class="mobile-menu" id="mobileMenu">
+        <div class="mobile-menu" id="mobileMenu" role="menu">
             <ul class="mobile-menu-links">
-                <li><a href="#home">Home</a></li>
-                <li><a href="#features">Features</a></li>
-                <li><a href="#about">Über uns</a></li>
-                <li><a href="#contact">Kontakt</a></li>
-                <li><a href="#booking" class="mobile-book-btn">Jetzt buchen</a></li>
+                <li><a href="#home" role="menuitem">Home</a></li>
+                <li><a href="#menu" role="menuitem">Speisekarte</a></li>
+                <li><a href="#features" role="menuitem">Features</a></li>
+                <li><a href="#about" role="menuitem">Über uns</a></li>
+                <li><a href="#contact" role="menuitem">Kontakt</a></li>
+                <li><a href="#booking" class="mobile-book-btn" role="menuitem">Jetzt buchen</a></li>
             </ul>
         </div>
     </nav>
 
     <!-- Enhanced Hero Section -->
-    <section class="hero" id="home">
-        <div class="hero-container">
-            <div class="hero-content">
-                <h1>Starte deinen Tag mit <span>Energie & Geschmack</span></h1>
-                <p>Erlebe die perfekte Kombination aus gesundem Essen, inspirierender Musik und positiver Atmosphäre. Dein Montag wird nie wieder derselbe sein.</p>
-                
-                <div class="booking-options">
-                    <div class="booking-card glass">
-                        <div class="booking-card-icon">👥</div>
-                        <h3>Freund:innen Brunch</h3>
-                        <p>Gemeinsam genießen<br>2-4 Personen</p>
-                        <span class="booking-card-price">49€</span>
-                        <button onclick="showBooking('friends')">Jetzt buchen</button>
-                    </div>
+    <main id="main-content">
+        <section class="hero" id="home" role="banner">
+            <div class="hero-container">
+                <div class="hero-content">
+                    <h1>Starte deinen Tag mit <span>Energie & Geschmack</span></h1>
+                    <p>Erlebe die perfekte Kombination aus gesundem Essen, inspirierender Musik und positiver Atmosphäre. Dein Montag wird nie wieder derselbe sein.</p>
                     
-                    <div class="booking-card glass">
-                        <div class="booking-card-icon">💼</div>
-                        <h3>Firmen Event Brunch</h3>
-                        <p>Team-Building deluxe<br>(bis 10 Personen)</p>
-                        <span class="booking-card-price">25€ p.P.</span>
-                        <button onclick="showBooking('corporate')">Jetzt buchen</button>
+                    <div class="booking-options">
+                        <div class="booking-card glass" tabindex="0" role="button" aria-label="Freund:innen Brunch für 49 Euro buchen">
+                            <div class="booking-card-icon" aria-hidden="true">👥</div>
+                            <h3>Freund:innen Brunch</h3>
+                            <p>Gemeinsam genießen<br>2-4 Personen</p>
+                            <span class="booking-card-price">49€</span>
+                            <button onclick="showBooking('friends')" aria-label="Freund:innen Brunch buchen">Jetzt buchen</button>
+                        </div>
+                        
+                        <div class="booking-card glass" tabindex="0" role="button" aria-label="Firmen Event Brunch für 25 Euro pro Person buchen">
+                            <div class="booking-card-icon" aria-hidden="true">💼</div>
+                            <h3>Firmen Event Brunch</h3>
+                            <p>Team-Building deluxe<br>(bis 10 Personen)</p>
+                            <span class="booking-card-price">25€ p.P.</span>
+                            <button onclick="showBooking('corporate')" aria-label="Firmen Event Brunch buchen">Jetzt buchen</button>
+                        </div>
+                        
+                        <div class="booking-card glass" tabindex="0" role="button" aria-label="Romantischer Brunch für 20 Euro buchen">
+                            <div class="booking-card-icon" aria-hidden="true">🧘‍♀️</div>
+                            <h3>Romantischer Brunch</h3>
+                            <p>Love is in the Air<br>(für 2 Personen)</p>
+                            <span class="booking-card-price">20€</span>
+                            <button onclick="showBooking('romantic')" aria-label="Romantischer Brunch buchen">Jetzt buchen</button>
+                        </div>
                     </div>
-                    
-                    <div class="booking-card glass">
-                        <div class="booking-card-icon">🧘‍♀️</div>
-                        <h3>Romantischer Brunch</h3>
-                        <p>Love is in the Air<br>(für 2 Personen)</p>
-                        <span class="booking-card-price">20€</span>
-                        <button onclick="showBooking('romantic')">Jetzt buchen</button>
-                    </div>
-                </div>
-            </div>
-            
-            <!-- Enhanced Video Section -->
-            <div class="hero-visual glass">
-                <!-- Video Loading State -->
-                <div class="video-loading" id="videoLoading">
-                    <div class="video-loading-spinner"></div>
-                    <p>Loading video...</p>
                 </div>
                 
-                <!-- Main Video -->
-                <video
-                    autoplay 
-                    loop 
-                    muted
-                    poster="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 800 600'%3E%3Crect fill='%23000' width='800' height='600'/%3E%3Ctext y='50%25' x='50%25' text-anchor='middle' dominant-baseline='middle' fill='%23fff' font-size='20' font-family='SF Pro Display, sans-serif'%3EBrunch Video%3C/text%3E%3C/svg%3E" 
-                    class="hero-video" 
-                    id="heroVideo"
-                    oncanplay="hideVideoLoading()"
-                    onerror="handleVideoError()"
-                    onloadstart="showVideoLoading()" 
-                    playsinline
-                >
-                    <source src="https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4" type="video/mp4">
-                    <!-- Fallback for unsupported video -->
-                    <div class="video-fallback">
-                        <h2>Healthy Brunch</h2>
-                        <p>Fresh • Delicious • Energizing</p>
-                    </div>
-                </video>
-                
-                <!-- Video Overlay -->
-                <div class="video-overlay">
-                    <h2>Healthy Brunch</h2>
-                    <p>Fresh • Delicious • Energizing</p>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <!-- Features Section -->
-    <section class="section" id="features">
-        <div class="section-container">
-            <div class="section-header">
-                <h2>Was macht uns besonders?</h2>
-                <p>Mehr als nur ein Brunch – ein Erlebnis für alle Sinne</p>
-            </div>
-            
-            <div class="features-grid">
-                <div class="feature-card glass">
-                    <div class="feature-icon">🌱</div>
-                    <h3>100% Bio & Regional</h3>
-                    <p>Alle unsere Zutaten stammen von lokalen Bio-Bauern. Frisch, nachhaltig und voller Geschmack.</p>
-                </div>
-                
-                <div class="feature-card glass">
-                    <div class="feature-icon">🎵</div>
-                    <h3>Live Musik</h3>
-                    <p>Jeden Montag begleiten dich lokale Künstler mit sanften Klängen durch deinen Morgen.</p>
-                </div>
-                
-                <div class="feature-card glass">
-                    <div class="feature-icon">☕</div>
-                    <h3>Barista Kaffee</h3>
-                    <p>Preisgekrönter Kaffee von unserem hauseigenen Barista-Team. Der perfekte Start in den Tag.</p>
-                </div>
-                
-                <div class="feature-card glass">
-                    <div class="feature-icon">🏃‍♀️</div>
-                    <h3>Morning Yoga</h3>
-                    <p>Optional: Starte mit einer 30-minütigen Yoga-Session vor dem Brunch (Feel-Well Package).</p>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <!-- About Section -->
-    <section class="section" id="about">
-        <div class="section-container">
-            <div class="section-header">
-                <h2>Über uns</h2>
-                <p>Eine Vision von gesundem Genuss und Gemeinschaft</p>
-            </div>
-            
-            <div class="about-content">
-                <div class="about-text">
-                    <h3>Unsere Geschichte</h3>
-                    <p>Was einst als einfaches Geburtstagsritual begann, lebt heute in unserem Brunchlokal weiter. Drei Schwestern – eine Ärztin und zwei Flugbegleiterinnen – vereint durch die Liebe zur Familie, zum Reisen und natürlich: zum Brunchen.</p>
-                    <p>Ob in New York, Chicago, an der Amalfiküste oder aber auch ganz einfach in unserer Heimatstadt Wien – das gemeinsame Brunchen war immer ein besonderer Moment. Und mit jedem Bissen, jedem Kaffee und jeder neuen Idee wuchs auch der Wunsch, diesen Genuss zu teilen.</p>
-                    <p>Als bei Tina eine chronische Darmentzündung diagnostiziert wurde, wurde das Thema Ernährung für uns noch bedeutungsvoller. Seither setzen wir gezielt auf gesunde Alternativen und entzündungshemmende Zutaten – ohne auf Geschmack oder Kreativität zu verzichten.</p>
-                </div>
-                
-                <div class="about-video-container glass">
+                <!-- Enhanced Video Section -->
+                <div class="hero-visual glass">
                     <!-- Video Loading State -->
-                    <div class="video-loading" id="aboutVideoLoading">
+                    <div class="video-loading" id="videoLoading" aria-hidden="true">
                         <div class="video-loading-spinner"></div>
-                        <p>Loading...</p>
+                        <p>Loading video...</p>
                     </div>
                     
-                    <!-- About Video -->
-                    <video 
-                        class="about-video" 
-                        id="aboutVideo"
-                        muted 
+                    <!-- Main Video -->
+                    <video
+                        autoplay 
                         loop 
+                        muted
+                        poster="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 800 600'%3E%3Crect fill='%23F3E8DA' width='800' height='600'/%3E%3Ctext y='50%25' x='50%25' text-anchor='middle' dominant-baseline='middle' fill='%235D4E37' font-size='20' font-family='Inter, sans-serif'%3EBrunch Video%3C/text%3E%3C/svg%3E" 
+                        class="hero-video" 
+                        id="heroVideo"
+                        oncanplay="hideVideoLoading()"
+                        onerror="handleVideoError()"
+                        onloadstart="showVideoLoading()" 
                         playsinline
-                        poster="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 600 400'%3E%3Crect fill='%23000' width='600' height='400'/%3E%3Ctext y='45%25' x='50%25' text-anchor='middle' dominant-baseline='middle' fill='%23fff' font-size='16' font-family='SF Pro Display, sans-serif'%3EDrei Schwestern%3C/text%3E%3Ctext y='55%25' x='50%25' text-anchor='middle' dominant-baseline='middle' fill='%23ccc' font-size='14' font-family='SF Pro Display, sans-serif'%3EEine Geschichte%3C/text%3E%3C/svg%3E"
-                        onloadstart="showAboutVideoLoading()"
-                        oncanplay="hideAboutVideoLoading()"
-                        onerror="handleAboutVideoError()"
+                        aria-label="Healthy Brunch Club Atmosphäre Video"
                     >
-                        <source src="https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ElephantsDream.mp4" type="video/mp4">
+                        <source src="https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4" type="video/mp4">
+                        <!-- Fallback for unsupported video -->
+                        <div class="video-fallback">
+                            <h2>Healthy Brunch</h2>
+                            <p>Fresh • Delicious • Energizing</p>
+                        </div>
                     </video>
                     
                     <!-- Video Overlay -->
-                    <div class="about-video-overlay">
-                        <h4 style="font-size: 18px; font-weight: 600; margin-bottom: 4px;">Unsere Story</h4>
-                        <p style="font-size: 14px; opacity: 0.9;">Drei Schwestern, eine Vision</p>
+                    <div class="video-overlay">
+                        <h2>Healthy Brunch</h2>
+                        <p>Fresh • Delicious • Energizing</p>
                     </div>
                 </div>
             </div>
-            
-            <!-- Stats Section -->
-            <div class="about-stats-grid">
-                <div class="stat-card glass">
-                    <span class="stat-number">500+</span>
-                    <div class="stat-label">Glückliche Stammgäste</div>
-                </div>
-                <div class="stat-card glass">
-                    <span class="stat-number">100%</span>
-                    <div class="stat-label">Bio-zertifiziert</div>
-                </div>
-                <div class="stat-card glass">
-                    <span class="stat-number">52</span>
-                    <div class="stat-label">Live-Acts pro Jahr</div>
-                </div>
-                <div class="stat-card glass">
-                    <span class="stat-number">4.9★</span>
-                    <div class="stat-label">Google Bewertung</div>
-                </div>
-            </div>
-        </div>
-    </section>
+        </section>
 
-    <!-- Contact Section -->
-    <section class="section" id="contact">
-        <div class="section-container">
-            <div class="section-header">
-                <h2>Kontakt & Anfahrt</h2>
-                <p>Wir freuen uns auf deinen Besuch!</p>
-            </div>
-            
-            <div class="about-content">
-                <div class="about-text">
-                    <h3>Besuche uns</h3>
-                    <p><strong>📍 Adresse:</strong><br>
-                    ra'mien restaurant GmbH<br>
-                    Gumpendorfer str. 9<br>
-                    1060 Wien</p>
-                    
-                    <p><strong>🕐 Öffnungszeiten:</strong><br>
-                    Montag: 08:00 - 14:00 Uhr<br>
-                    Dienstag - Sonntag: Geschlossen<br>
-                    <small>Reservierungen empfohlen</small></p>
-                    
-                    <p><strong>📞 Kontakt:</strong><br>
-                    Telefon: <a href="tel:+4367612345678" style="color: var(--accent-primary);">+43 676 123 456 78</a><br>
-                    E-Mail: <a href="mailto:hello@healthybrunchclub.at" style="color: var(--accent-primary);">hello@healthybrunchclub.at</a><br>
-                    WhatsApp: <a href="https://wa.me/4367612345678" style="color: var(--accent-primary);">+43 676 123 456 78</a></p>
+        <!-- Menu Section -->
+        <section class="menu-section" id="menu" role="region" aria-labelledby="menu-heading">
+            <div class="menu-container">
+                <div class="menu-header">
+                    <h2 id="menu-heading">Unsere Speisekarte</h2>
+                    <p>Frische, biologische Zutaten aus der Region – jeden Montag neu zusammengestellt</p>
                 </div>
                 
-                <div class="about-video-container glass">
-                    <div style="width: 100%; height: 100%; background: linear-gradient(135deg, rgba(0, 212, 255, 0.1), rgba(123, 104, 238, 0.1)); display: flex; align-items: center; justify-content: center; flex-direction: column; text-align: center; padding: 40px; border-radius: 24px;">
-                        <div style="font-size: 48px; margin-bottom: 20px;">📍</div>
-                        <h3 style="color: var(--text-primary); margin-bottom: 16px; font-size: 24px;">Wien Zentrum</h3>
-                        <p style="color: var(--text-secondary); margin-bottom: 20px;">Gumpendorfer Straße 9<br>1060 Wien</p>
-                        <a href="https://maps.google.com/?q=Gumpendorfer+Straße+9,+1060+Wien" target="_blank" style="background: var(--accent-gradient); color: white; padding: 12px 24px; border-radius: 12px; text-decoration: none; font-weight: 600; transition: all 0.3s ease;">Route planen</a>
+                <div class="menu-categories">
+                    <!-- Healthy Bowls -->
+                    <div class="menu-category glass">
+                        <div class="category-header">
+                            <span class="category-icon" aria-hidden="true">🥗</span>
+                            <h3>Healthy Bowls</h3>
+                        </div>
+                        
+                        <div class="menu-item">
+                            <div class="item-header">
+                                <h4 class="item-name">Power Bowl</h4>
+                                <span class="item-price">€14,50</span>
+                            </div>
+                            <p class="item-description">Quinoa, Avocado, Grünkohl, Süßkartoffel, Tahini-Dressing</p>
+                            <div class="item-tags">
+                                <span class="tag vegan">Vegan</span>
+                                <span class="tag gluten-free">Glutenfrei</span>
+                                <span class="tag">Bio</span>
+                            </div>
+                        </div>
+                        
+                        <div class="menu-item">
+                            <div class="item-header">
+                                <h4 class="item-name">Buddha Bowl</h4>
+                                <span class="item-price">€13,90</span>
+                            </div>
+                            <p class="item-description">Brauner Reis, geröstetes Gemüse, Hummus, Sprossen</p>
+                            <div class="item-tags">
+                                <span class="tag vegan">Vegan</span>
+                                <span class="tag">Bio</span>
+                            </div>
+                        </div>
+                        
+                        <div class="menu-item">
+                            <div class="item-header">
+                                <h4 class="item-name">Protein Bowl</h4>
+                                <span class="item-price">€16,50</span>
+                            </div>
+                            <p class="item-description">Lachs, Quinoa, Edamame, Gurke, Miso-Dressing</p>
+                            <div class="item-tags">
+                                <span class="tag gluten-free">Glutenfrei</span>
+                                <span class="tag">Bio</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Plant-Based Specialties -->
+                    <div class="menu-category glass">
+                        <div class="category-header">
+                            <span class="category-icon" aria-hidden="true">🌱</span>
+                            <h3>Plant-Based Spezialitäten</h3>
+                        </div>
+                        
+                        <div class="menu-item">
+                            <div class="item-header">
+                                <h4 class="item-name">Vegan Scramble</h4>
+                                <span class="item-price">€12,90</span>
+                            </div>
+                            <p class="item-description">Tofu-Rührei mit Kurkuma, Paprika, Spinat, Vollkornbrot</p>
+                            <div class="item-tags">
+                                <span class="tag vegan">Vegan</span>
+                                <span class="tag">Bio</span>
+                            </div>
+                        </div>
+                        
+                        <div class="menu-item">
+                            <div class="item-header">
+                                <h4 class="item-name">Avocado Toast</h4>
+                                <span class="item-price">€11,50</span>
+                            </div>
+                            <p class="item-description">Sauerteigbrot, Avocado, Tomaten, Sprossen, Hanfsamen</p>
+                            <div class="item-tags">
+                                <span class="tag vegan">Vegan</span>
+                                <span class="tag">Bio</span>
+                            </div>
+                        </div>
+                        
+                        <div class="menu-item">
+                            <div class="item-header">
+                                <h4 class="item-name">Chia Pudding</h4>
+                                <span class="item-price">€9,90</span>
+                            </div>
+                            <p class="item-description">Kokosmilch, Beeren, Nüsse, Ahornsirup</p>
+                            <div class="item-tags">
+                                <span class="tag vegan">Vegan</span>
+                                <span class="tag gluten-free">Glutenfrei</span>
+                                <span class="tag">Bio</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Eggs & Proteins -->
+                    <div class="menu-category glass">
+                        <div class="category-header">
+                            <span class="category-icon" aria-hidden="true">🥚</span>
+                            <h3>Eier & Proteine</h3>
+                        </div>
+                        
+                        <div class="menu-item">
+                            <div class="item-header">
+                                <h4 class="item-name">Green Shakshuka</h4>
+                                <span class="item-price">€14,90</span>
+                            </div>
+                            <p class="item-description">Eier in Spinat-Kräuter-Sauce, Feta, Fladenbrot</p>
+                            <div class="item-tags">
+                                <span class="tag">Vegetarisch</span>
+                                <span class="tag">Bio</span>
+                            </div>
+                        </div>
+                        
+                        <div class="menu-item">
+                            <div class="item-header">
+                                <h4 class="item-name">Eggs Benedict</h4>
+                                <span class="item-price">€15,90</span>
+                            </div>
+                            <p class="item-description">Pochierte Eier, Avocado, Vollkorn-English Muffin, Hollandaise</p>
+                            <div class="item-tags">
+                                <span class="tag">Vegetarisch</span>
+                                <span class="tag">Bio</span>
+                            </div>
+                        </div>
+                        
+                        <div class="menu-item">
+                            <div class="item-header">
+                                <h4 class="item-name">Protein Pancakes</h4>
+                                <span class="item-price">€13,50</span>
+                            </div>
+                            <p class="item-description">Haferflocken, Banane, Proteinpulver, Beeren</p>
+                            <div class="item-tags">
+                                <span class="tag">Vegetarisch</span>
+                                <span class="tag gluten-free">Glutenfrei</span>
+                                <span class="tag">Bio</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Austrian Healthy Twists -->
+                    <div class="menu-category glass">
+                        <div class="category-header">
+                            <span class="category-icon" aria-hidden="true">🏔️</span>
+                            <h3>Österreichische Gesunde Varianten</h3>
+                        </div>
+                        
+                        <div class="menu-item">
+                            <div class="item-header">
+                                <h4 class="item-name">Gesunder Kaiserschmarren</h4>
+                                <span class="item-price">€12,90</span>
+                            </div>
+                            <p class="item-description">Vollkorn-Dinkel, Kokosblütenzucker, Beeren, Joghurt</p>
+                            <div class="item-tags">
+                                <span class="tag">Vegetarisch</span>
+                                <span class="tag">Bio</span>
+                            </div>
+                        </div>
+                        
+                        <div class="menu-item">
+                            <div class="item-header">
+                                <h4 class="item-name">Bärlauch-Frittata</h4>
+                                <span class="item-price">€13,90</span>
+                            </div>
+                            <p class="item-description">Saisonaler Bärlauch, Bio-Eier, Ziegenkäse, Kräuter</p>
+                            <div class="item-tags">
+                                <span class="tag">Vegetarisch</span>
+                                <span class="tag">Saisonal</span>
+                                <span class="tag">Bio</span>
+                            </div>
+                        </div>
+                        
+                        <div class="menu-item">
+                            <div class="item-header">
+                                <h4 class="item-name">Kürbis-Porridge</h4>
+                                <span class="item-price">€10,90</span>
+                            </div>
+                            <p class="item-description">Steirischer Kürbis, Haferflocken, Walnüsse, Zimt</p>
+                            <div class="item-tags">
+                                <span class="tag vegan">Vegan</span>
+                                <span class="tag">Saisonal</span>
+                                <span class="tag">Bio</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Superfood Smoothies & Getränke -->
+                    <div class="menu-category glass">
+                        <div class="category-header">
+                            <span class="category-icon" aria-hidden="true">🧃</span>
+                            <h3>Superfood Smoothies & Getränke</h3>
+                        </div>
+                        
+                        <div class="menu-item">
+                            <div class="item-header">
+                                <h4 class="item-name">Green Goddess</h4>
+                                <span class="item-price">€7,90</span>
+                            </div>
+                            <p class="item-description">Spinat, Banane, Mango, Ingwer, Kokoswasser</p>
+                            <div class="item-tags">
+                                <span class="tag vegan">Vegan</span>
+                                <span class="tag">Bio</span>
+                            </div>
+                        </div>
+                        
+                        <div class="menu-item">
+                            <div class="item-header">
+                                <h4 class="item-name">Golden Latte</h4>
+                                <span class="item-price">€5,50</span>
+                            </div>
+                            <p class="item-description">Kurkuma, Ingwer, Mandelmilch, Honig, Zimt</p>
+                            <div class="item-tags">
+                                <span class="tag vegan">Vegan</span>
+                                <span class="tag">Bio</span>
+                            </div>
+                        </div>
+                        
+                        <div class="menu-item">
+                            <div class="item-header">
+                                <h4 class="item-name">Cold Brew</h4>
+                                <span class="item-price">€4,90</span>
+                            </div>
+                            <p class="item-description">Bio-Kaffee, 18h kalt extrahiert, Hafermilch optional</p>
+                            <div class="item-tags">
+                                <span class="tag vegan">Vegan</span>
+                                <span class="tag">Bio</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Desserts & Süßes -->
+                    <div class="menu-category glass">
+                        <div class="category-header">
+                            <span class="category-icon" aria-hidden="true">🍰</span>
+                            <h3>Gesunde Desserts</h3>
+                        </div>
+                        
+                        <div class="menu-item">
+                            <div class="item-header">
+                                <h4 class="item-name">Raw Chocolate Cake</h4>
+                                <span class="item-price">€8,90</span>
+                            </div>
+                            <p class="item-description">Datteln, Cashews, Rohkakao, Kokosflocken</p>
+                            <div class="item-tags">
+                                <span class="tag vegan">Vegan</span>
+                                <span class="tag gluten-free">Glutenfrei</span>
+                                <span class="tag">Bio</span>
+                            </div>
+                        </div>
+                        
+                        <div class="menu-item">
+                            <div class="item-header">
+                                <h4 class="item-name">Energy Balls</h4>
+                                <span class="item-price">€6,50</span>
+                            </div>
+                            <p class="item-description">Haferflocken, Nüsse, Trockenfrüchte, Kokosöl</p>
+                            <div class="item-tags">
+                                <span class="tag vegan">Vegan</span>
+                                <span class="tag gluten-free">Glutenfrei</span>
+                                <span class="tag">Bio</span>
+                            </div>
+                        </div>
+                        
+                        <div class="menu-item">
+                            <div class="item-header">
+                                <h4 class="item-name">Marillen-Kompott</h4>
+                                <span class="item-price">€7,50</span>
+                            </div>
+                            <p class="item-description">Saisonale Wachauer Marillen, Honig, Vanille</p>
+                            <div class="item-tags">
+                                <span class="tag">Vegetarisch</span>
+                                <span class="tag">Saisonal</span>
+                                <span class="tag">Bio</span>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
-        </div>
-    </section>
+        </section>
+
+        <!-- Animated Stats Section -->
+        <section class="stats-section" role="region" aria-labelledby="stats-heading">
+            <div class="section-container">
+                <h2 id="stats-heading" style="text-align: center; margin-bottom: 60px; font-size: clamp(36px, 6vw, 48px); font-weight: 800; color: var(--text-primary);">Unsere Erfolgsgeschichte</h2>
+                
+                <div class="stats-grid">
+                    <div class="stat-card glass">
+                        <span class="stat-number" data-target="0" id="visitors-count">0</span>
+                        <div class="stat-label">Glückliche Gäste</div>
+                    </div>
+                    <div class="stat-card glass">
+                        <span class="stat-number" data-target="0" id="rating-count">0.0</span>
+                        <div class="stat-label">Google Bewertung</div>
+                    </div>
+                    <div class="stat-card glass">
+                        <span class="stat-number" data-target="0" id="meals-count">0</span>
+                        <div class="stat-label">Servierte Mahlzeiten</div>
+                    </div>
+                    <div class="stat-card glass">
+                        <span class="stat-number" data-target="0" id="events-count">0</span>
+                        <div class="stat-label">Live-Events</div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Features Section -->
+        <section class="section" id="features" role="region" aria-labelledby="features-heading">
+            <div class="section-container">
+                <div class="section-header">
+                    <h2 id="features-heading">Was macht uns besonders?</h2>
+                    <p>Mehr als nur ein Brunch – ein Erlebnis für alle Sinne</p>
+                </div>
+                
+                <div class="features-grid">
+                    <div class="feature-card glass">
+                        <div class="feature-icon" aria-hidden="true">🌱</div>
+                        <h3>100% Bio & Regional</h3>
+                        <p>Alle unsere Zutaten stammen von lokalen Bio-Bauern. Frisch, nachhaltig und voller Geschmack.</p>
+                    </div>
+                    
+                    <div class="feature-card glass">
+                        <div class="feature-icon" aria-hidden="true">🎵</div>
+                        <h3>Live Musik</h3>
+                        <p>Jeden Montag begleiten dich lokale Künstler mit sanften Klängen durch deinen Morgen.</p>
+                    </div>
+                    
+                    <div class="feature-card glass">
+                        <div class="feature-icon" aria-hidden="true">☕</div>
+                        <h3>Barista Kaffee</h3>
+                        <p>Preisgekrönter Kaffee von unserem hauseigenen Barista-Team. Der perfekte Start in den Tag.</p>
+                    </div>
+                    
+                    <div class="feature-card glass">
+                        <div class="feature-icon" aria-hidden="true">🧘‍♀️</div>
+                        <h3>Morning Yoga</h3>
+                        <p>Optional: Starte mit einer 30-minütigen Yoga-Session vor dem Brunch (Feel-Well Package).</p>
+                    </div>
+                    
+                    <div class="feature-card glass">
+                        <div class="feature-icon" aria-hidden="true">🌍</div>
+                        <h3>Zero Waste</h3>
+                        <p>Nachhaltige Verpackungen, Kompostierung und bewusste Portionsgrößen für eine bessere Zukunft.</p>
+                    </div>
+                    
+                    <div class="feature-card glass">
+                        <div class="feature-icon" aria-hidden="true">📚</div>
+                        <h3>Ernährungs-Workshops</h3>
+                        <p>Lerne mehr über gesunde Ernährung in unseren monatlichen Workshops und Kochkursen.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- About Section -->
+        <section class="section" id="about" role="region" aria-labelledby="about-heading">
+            <div class="section-container">
+                <div class="section-header">
+                    <h2 id="about-heading">Über uns</h2>
+                    <p>Eine Vision von gesundem Genuss und Gemeinschaft</p>
+                </div>
+                
+                <div class="about-content">
+                    <div class="about-text">
+                        <h3>Unsere Geschichte</h3>
+                        <p>Was einst als einfaches Geburtstagsritual begann, lebt heute in unserem Brunchlokal weiter. Drei Schwestern – eine Ärztin und zwei Flugbegleiterinnen – vereint durch die Liebe zur Familie, zum Reisen und natürlich: zum Brunchen.</p>
+                        <p>Ob in New York, Chicago, an der Amalfiküste oder aber auch ganz einfach in unserer Heimatstadt Wien – das gemeinsame Brunchen war immer ein besonderer Moment. Und mit jedem Bissen, jedem Kaffee und jeder neuen Idee wuchs auch der Wunsch, diesen Genuss zu teilen.</p>
+                        <p>Als bei Tina eine chronische Darmentzündung diagnostiziert wurde, wurde das Thema Ernährung für uns noch bedeutungsvoller. Seither setzen wir gezielt auf gesunde Alternativen und entzündungshemmende Zutaten – ohne auf Geschmack oder Kreativität zu verzichten.</p>
+                    </div>
+                    
+                    <div class="about-video-container glass">
+                        <!-- Video Loading State -->
+                        <div class="video-loading" id="aboutVideoLoading" aria-hidden="true">
+                            <div class="video-loading-spinner"></div>
+                            <p>Loading...</p>
+                        </div>
+                        
+                        <!-- About Video -->
+                        <video 
+                            class="about-video" 
+                            id="aboutVideo"
+                            muted 
+                            loop 
+                            playsinline
+                            poster="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 600 400'%3E%3Crect fill='%23F3E8DA' width='600' height='400'/%3E%3Ctext y='45%25' x='50%25' text-anchor='middle' dominant-baseline='middle' fill='%235D4E37' font-size='16' font-family='Inter, sans-serif'%3EDrei Schwestern%3C/text%3E%3Ctext y='55%25' x='50%25' text-anchor='middle' dominant-baseline='middle' fill='%23A9AB88' font-size='14' font-family='Inter, sans-serif'%3EEine Geschichte%3C/text%3E%3C/svg%3E"
+                            onloadstart="showAboutVideoLoading()"
+                            oncanplay="hideAboutVideoLoading()"
+                            onerror="handleAboutVideoError()"
+                            aria-label="Video über die drei Schwestern und ihre Geschichte"
+                        >
+                            <source src="https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ElephantsDream.mp4" type="video/mp4">
+                        </video>
+                        
+                        <!-- Video Overlay -->
+                        <div class="about-video-overlay">
+                            <h4 style="font-size: 18px; font-weight: 600; margin-bottom: 4px; color: var(--text-light);">Unsere Story</h4>
+                            <p style="font-size: 14px; opacity: 0.9; color: var(--text-light);">Drei Schwestern, eine Vision</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Contact Section -->
+        <section class="section" id="contact" role="region" aria-labelledby="contact-heading">
+            <div class="section-container">
+                <div class="section-header">
+                    <h2 id="contact-heading">Kontakt & Anfahrt</h2>
+                    <p>Wir freuen uns auf deinen Besuch!</p>
+                </div>
+                
+                <div class="about-content">
+                    <div class="about-text">
+                        <h3>Besuche uns</h3>
+                        <p><strong>📍 Adresse:</strong><br>
+                        ra'mien restaurant GmbH<br>
+                        Gumpendorfer str. 9<br>
+                        1060 Wien</p>
+                        
+                        <p><strong>🕐 Öffnungszeiten:</strong><br>
+                        Montag: 08:00 - 14:00 Uhr<br>
+                        Dienstag - Sonntag: Geschlossen<br>
+                        <small>Reservierungen empfohlen</small></p>
+                        
+                        <p><strong>📞 Kontakt:</strong><br>
+                        Telefon: <a href="tel:+4367612345678" style="color: var(--earth-primary);">+43 676 123 456 78</a><br>
+                        E-Mail: <a href="mailto:hello@healthybrunchclub.at" style="color: var(--earth-primary);">hello@healthybrunchclub.at</a><br>
+                        WhatsApp: <a href="https://wa.me/4367612345678" style="color: var(--earth-primary);">+43 676 123 456 78</a></p>
+                    </div>
+                    
+                    <div class="about-video-container glass">
+                        <div style="width: 100%; height: 100%; background: var(--earth-gradient); display: flex; align-items: center; justify-content: center; flex-direction: column; text-align: center; padding: 40px; border-radius: 24px;">
+                            <div style="font-size: 48px; margin-bottom: 20px;" aria-hidden="true">📍</div>
+                            <h3 style="color: var(--text-light); margin-bottom: 16px; font-size: 24px;">Wien Zentrum</h3>
+                            <p style="color: var(--text-light); margin-bottom: 20px; opacity: 0.9;">Gumpendorfer Straße 9<br>1060 Wien</p>
+                            <a href="https://maps.google.com/?q=Gumpendorfer+Straße+9,+1060+Wien" target="_blank" style="background: rgba(243, 232, 218, 0.2); color: var(--text-light); padding: 12px 24px; border-radius: 12px; text-decoration: none; font-weight: 600; transition: all 0.3s ease; border: 1px solid rgba(243, 232, 218, 0.3);" onmouseover="this.style.background='rgba(243, 232, 218, 0.3)'" onmouseout="this.style.background='rgba(243, 232, 218, 0.2)'">Route planen</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
 
     <!-- Footer -->
-    <footer class="footer">
+    <footer class="footer" role="contentinfo">
         <div class="footer-container">
             <div class="footer-section">
                 <h4>Healthy Brunch Club</h4>
                 <p>Start your Monday right with healthy food, good music, and positive vibes.</p>
                 <div class="social-links">
-                    <a href="#" aria-label="Instagram">📸</a>
-                    <a href="#" aria-label="Facebook">👍</a>
-                    <a href="#" aria-label="Twitter">🐦</a>
-                    <a href="#" aria-label="LinkedIn">💼</a>
+                    <a href="#" aria-label="Instagram" title="Folge uns auf Instagram">📸</a>
+                    <a href="#" aria-label="Facebook" title="Like uns auf Facebook">👍</a>
+                    <a href="#" aria-label="Twitter" title="Folge uns auf Twitter">🐦</a>
+                    <a href="#" aria-label="LinkedIn" title="Verbinde dich mit uns auf LinkedIn">💼</a>
                 </div>
             </div>
             
             <div class="footer-section">
                 <h4>Quick Links</h4>
+                <a href="#menu">Speisekarte</a>
                 <a href="#features">Features</a>
                 <a href="#about">Über uns</a>
                 <a href="#contact">Kontakt</a>
@@ -1464,14 +2054,32 @@
         </div>
     </footer>
 
+    <!-- PWA Manifest -->
     <script>
+        // PWA Service Worker Registration
+        if ('serviceWorker' in navigator) {
+            window.addEventListener('load', function() {
+                navigator.serviceWorker.register('/sw.js')
+                    .then(function(registration) {
+                        console.log('ServiceWorker registration successful');
+                    })
+                    .catch(function(err) {
+                        console.log('ServiceWorker registration failed: ', err);
+                    });
+            });
+        }
+
         // Enhanced Mobile Menu
         const mobileMenuToggle = document.getElementById('mobileMenuToggle');
         const mobileMenu = document.getElementById('mobileMenu');
         const navbar = document.getElementById('navbar');
 
         mobileMenuToggle.addEventListener('click', function() {
+            const isExpanded = mobileMenu.classList.contains('show');
+            
             mobileMenu.classList.toggle('show');
+            mobileMenuToggle.setAttribute('aria-expanded', !isExpanded);
+            mobileMenuToggle.setAttribute('aria-label', isExpanded ? 'Menü öffnen' : 'Menü schließen');
             
             // Animate hamburger menu
             if (mobileMenu.classList.contains('show')) {
@@ -1488,6 +2096,8 @@
         mobileLinks.forEach(link => {
             link.addEventListener('click', () => {
                 mobileMenu.classList.remove('show');
+                mobileMenuToggle.setAttribute('aria-expanded', 'false');
+                mobileMenuToggle.setAttribute('aria-label', 'Menü öffnen');
                 mobileMenuToggle.innerHTML = '☰';
                 mobileMenuToggle.style.transform = 'rotate(0deg)';
             });
@@ -1495,8 +2105,10 @@
 
         // Close mobile menu when clicking outside
         document.addEventListener('click', function(e) {
-            if (!navbar.contains(e.target)) {
+            if (!navbar.contains(e.target) && mobileMenu.classList.contains('show')) {
                 mobileMenu.classList.remove('show');
+                mobileMenuToggle.setAttribute('aria-expanded', 'false');
+                mobileMenuToggle.setAttribute('aria-label', 'Menü öffnen');
                 mobileMenuToggle.innerHTML = '☰';
                 mobileMenuToggle.style.transform = 'rotate(0deg)';
             }
@@ -1526,6 +2138,64 @@
             
             lastScrollTop = currentScroll <= 0 ? 0 : currentScroll;
         });
+
+        // Animated Counter Implementation
+        function animateCounter(element, target, duration = 2000, suffix = '') {
+            const start = 0;
+            const increment = target / (duration / 16);
+            let current = start;
+            
+            const timer = setInterval(() => {
+                current += increment;
+                if (current >= target) {
+                    current = target;
+                    clearInterval(timer);
+                }
+                
+                // Format number based on type
+                let displayValue;
+                if (suffix === '★') {
+                    displayValue = current.toFixed(1) + suffix;
+                } else if (target >= 1000) {
+                    displayValue = Math.floor(current).toLocaleString();
+                } else {
+                    displayValue = Math.floor(current);
+                }
+                
+                element.textContent = displayValue;
+            }, 16);
+        }
+
+        // Initialize counters when they come into view
+        function initializeCounters() {
+            const counters = [
+                { id: 'visitors-count', target: 500, suffix: '' },
+                { id: 'rating-count', target: 4.9, suffix: '★' },
+                { id: 'meals-count', target: 2847, suffix: '' },
+                { id: 'events-count', target: 52, suffix: '' }
+            ];
+
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        const counterId = entry.target.id;
+                        const counterData = counters.find(c => c.id === counterId);
+                        
+                        if (counterData && entry.target.textContent === '0' || entry.target.textContent === '0.0') {
+                            animateCounter(entry.target, counterData.target, 2000, counterData.suffix);
+                            observer.unobserve(entry.target);
+                        }
+                    }
+                });
+            }, { threshold: 0.5 });
+
+            counters.forEach(counter => {
+                const element = document.getElementById(counter.id);
+                if (element) {
+                    observer.observe(element);
+                }
+            });
+        }
 
         // Video control functions
         function showVideoLoading() {
@@ -1559,12 +2229,13 @@
                     justify-content: center;
                     flex-direction: column;
                     text-align: center;
-                    background: linear-gradient(135deg, rgba(255, 255, 255, 0.1), rgba(255, 255, 255, 0.05));
+                    background: var(--earth-gradient);
                     border-radius: 32px;
+                    color: var(--text-light);
                 `;
                 fallback.innerHTML = `
-                    <h2 style="font-size: 32px; font-weight: 700; margin-bottom: 16px; color: var(--text-primary);">Healthy Brunch</h2>
-                    <p style="font-size: 18px; color: var(--text-secondary);">Fresh • Delicious • Energizing</p>
+                    <h2 style="font-size: 32px; font-weight: 700; margin-bottom: 16px;">Healthy Brunch</h2>
+                    <p style="font-size: 18px; opacity: 0.9;">Fresh • Delicious • Energizing</p>
                 `;
                 video.parentNode.appendChild(fallback);
             }
@@ -1600,8 +2271,8 @@
                     display: flex;
                     align-items: center;
                     justify-content: center;
-                    background: linear-gradient(135deg, rgba(255, 255, 255, 0.1), rgba(255, 255, 255, 0.05));
-                    color: var(--text-primary);
+                    background: var(--earth-gradient);
+                    color: var(--text-light);
                     text-align: center;
                     padding: 40px;
                     border-radius: 24px;
@@ -1609,7 +2280,7 @@
                 fallback.innerHTML = `
                     <div>
                         <h3 style="font-size: 24px; margin-bottom: 16px;">Drei Schwestern</h3>
-                        <p style="color: var(--text-secondary);">Eine Geschichte von Familie,<br>Reisen und Leidenschaft</p>
+                        <p style="opacity: 0.9;">Eine Geschichte von Familie,<br>Reisen und Leidenschaft</p>
                     </div>
                 `;
                 video.parentNode.appendChild(fallback);
@@ -1619,23 +2290,6 @@
         // Initialize videos with Intersection Observer
         function initializeVideo() {
             const video = document.getElementById('heroVideo');
-            if (!video) return;
-
-            const observer = new IntersectionObserver((entries) => {
-                entries.forEach(entry => {
-                    if (entry.isIntersecting) {
-                        video.play().catch(() => {});
-                    } else {
-                        video.pause();
-                    }
-                });
-            }, { threshold: 0.5 });
-
-            observer.observe(video);
-        }
-
-        function initializeAboutVideo() {
-            const video = document.getElementById('aboutVideo');
             if (!video) return;
 
             const observer = new IntersectionObserver((entries) => {
@@ -1686,7 +2340,12 @@
             }
             
             showNotification('Buchungsanfrage', message, 'success');
-            // Here you would integrate with your actual booking system
+            
+            // Simulate booking redirect (replace with actual booking system)
+            setTimeout(() => {
+                // window.location.href = '/booking?type=' + type;
+                console.log('Redirecting to booking page for:', type);
+            }, 2000);
         }
 
         // Notification system
@@ -1737,7 +2396,7 @@
             rootMargin: '0px 0px -50px 0px'
         };
 
-        const observer = new IntersectionObserver((entries) => {
+        const fadeInObserver = new IntersectionObserver((entries) => {
             entries.forEach(entry => {
                 if (entry.isIntersecting) {
                     entry.target.style.opacity = '1';
@@ -1747,18 +2406,66 @@
             });
         }, observerOptions);
 
+        // Lazy loading images
+        function lazyLoadImages() {
+            const images = document.querySelectorAll('img[data-src]');
+            const imageObserver = new IntersectionObserver((entries, observer) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        const img = entry.target;
+                        img.src = img.dataset.src;
+                        img.classList.remove('lazy');
+                        imageObserver.unobserve(img);
+                    }
+                });
+            });
+
+            images.forEach(img => imageObserver.observe(img));
+        }
+
+        // Keyboard navigation improvements
+        function enhanceKeyboardNavigation() {
+            // Add keyboard support for booking cards
+            document.querySelectorAll('.booking-card').forEach(card => {
+                card.addEventListener('keydown', function(e) {
+                    if (e.key === 'Enter' || e.key === ' ') {
+                        e.preventDefault();
+                        const button = this.querySelector('button');
+                        if (button) {
+                            button.click();
+                        }
+                    }
+                });
+            });
+
+            // Escape key to close mobile menu
+            document.addEventListener('keydown', (e) => {
+                if (e.key === 'Escape' && mobileMenu.classList.contains('show')) {
+                    mobileMenu.classList.remove('show');
+                    mobileMenuToggle.setAttribute('aria-expanded', 'false');
+                    mobileMenuToggle.setAttribute('aria-label', 'Menü öffnen');
+                    mobileMenuToggle.innerHTML = '☰';
+                    mobileMenuToggle.style.transform = 'rotate(0deg)';
+                    mobileMenuToggle.focus();
+                }
+            });
+        }
+
         // Initialize everything
         document.addEventListener('DOMContentLoaded', () => {
             initializeVideo();
             initializeAboutVideo();
             handleVideoAutoplay();
+            initializeCounters();
+            lazyLoadImages();
+            enhanceKeyboardNavigation();
             
             // Observe elements for animation
-            document.querySelectorAll('.feature-card, .stat-card').forEach((el, index) => {
+            document.querySelectorAll('.feature-card, .menu-category').forEach((el, index) => {
                 el.style.opacity = '0';
                 el.style.transform = 'translateY(30px)';
                 el.style.transition = `all 0.8s cubic-bezier(0.4, 0, 0.2, 1) ${index * 0.1}s`;
-                observer.observe(el);
+                fadeInObserver.observe(el);
             });
 
             // Trigger hero animations
@@ -1770,6 +2477,16 @@
                     }
                 });
             }, 100);
+
+            // Initialize performance monitoring
+            if ('performance' in window) {
+                window.addEventListener('load', function() {
+                    setTimeout(function() {
+                        const perfData = performance.getEntriesByType('navigation')[0];
+                        console.log('Page load time:', perfData.loadEventEnd - perfData.loadEventStart, 'ms');
+                    }, 0);
+                });
+            }
         });
 
         // Optimize for touch devices
@@ -1777,7 +2494,7 @@
             document.body.classList.add('touch-device');
             
             // Add custom touch feedback
-            document.querySelectorAll('.booking-card, .feature-card').forEach(card => {
+            document.querySelectorAll('.booking-card, .feature-card, .menu-category').forEach(card => {
                 card.addEventListener('touchstart', function() {
                     this.style.transform = 'scale(0.98)';
                 });
@@ -1788,16 +2505,6 @@
             });
         }
 
-        // Keyboard navigation support
-        document.addEventListener('keydown', (e) => {
-            if (e.key === 'Escape') {
-                // Close any open modals or menus
-                mobileMenu.classList.remove('show');
-                mobileMenuToggle.innerHTML = '☰';
-                mobileMenuToggle.style.transform = 'rotate(0deg)';
-            }
-        });
-
         // Add loading states for better UX
         window.addEventListener('load', function() {
             document.body.classList.add('loaded');
@@ -1806,6 +2513,11 @@
             document.querySelectorAll('.video-loading').forEach(loading => {
                 loading.style.display = 'none';
             });
+
+            // Initialize analytics (replace with actual analytics)
+            if (typeof gtag !== 'undefined') {
+                gtag('config', 'GA_MEASUREMENT_ID');
+            }
         });
 
         // Enhanced error handling for videos
@@ -1826,16 +2538,16 @@
                         display: flex;
                         align-items: center;
                         justify-content: center;
-                        background: linear-gradient(135deg, rgba(255, 255, 255, 0.1), rgba(255, 255, 255, 0.05));
-                        color: var(--text-primary);
+                        background: var(--earth-gradient);
+                        color: var(--text-light);
                         text-align: center;
                         border-radius: inherit;
                     `;
                     fallback.innerHTML = `
                         <div>
-                            <div style="font-size: 48px; margin-bottom: 16px;">🎬</div>
+                            <div style="font-size: 48px; margin-bottom: 16px;" aria-hidden="true">🎬</div>
                             <h3 style="margin-bottom: 8px;">Video wird geladen...</h3>
-                            <p style="color: var(--text-secondary); font-size: 14px;">Bitte haben Sie einen Moment Geduld</p>
+                            <p style="opacity: 0.8; font-size: 14px;">Bitte haben Sie einen Moment Geduld</p>
                         </div>
                     `;
                     
@@ -1874,8 +2586,58 @@
             document.head.appendChild(link2);
         }
 
-        // Call prefetch on load
+        // Critical resource preloading
         window.addEventListener('load', prefetchResources);
+
+        // Web Vitals monitoring (for production)
+        function initWebVitals() {
+            if (typeof getCLS !== 'undefined') {
+                getCLS(console.log);
+                getFID(console.log);
+                getFCP(console.log);
+                getLCP(console.log);
+                getTTFB(console.log);
+            }
+        }
+
+        // Error tracking
+        window.addEventListener('error', function(e) {
+            console.error('JavaScript error:', e.error);
+            // Send to error tracking service in production
+        });
+
+        // Unhandled promise rejection tracking
+        window.addEventListener('unhandledrejection', function(e) {
+            console.error('Unhandled promise rejection:', e.reason);
+            // Send to error tracking service in production
+        });
     </script>
+
+    <!-- Netlify Forms -->
+    <form name="contact" netlify netlify-honeypot="bot-field" hidden>
+        <input type="text" name="name" />
+        <input type="email" name="email" />
+        <textarea name="message"></textarea>
+    </form>
+
+    <!-- Netlify Analytics -->
+    <script defer src="https://identity.netlify.com/v1/netlify-identity-widget.js"></script>
 </body>
-</html>
+</html>.pause();
+                    }
+                });
+            }, { threshold: 0.5 });
+
+            observer.observe(video);
+        }
+
+        function initializeAboutVideo() {
+            const video = document.getElementById('aboutVideo');
+            if (!video) return;
+
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        video.play().catch(() => {});
+                    } else {
+                        video
