@@ -2247,11 +2247,44 @@
                 case 'romantic':
                     message = 'Vielen Dank für Ihr Interesse am Romantischen Brunch!';
                     break;
+ 		case 'luxus':
+                    message = 'Vielen Dank für Ihr Interesse am Luxus Brunch!';
+                    break;
                 default:
                     message = 'Vielen Dank für Ihr Interesse!';
             }
             
             showNotification('Buchungsanfrage', message, 'success');
+        }
+
+   const audioPlayer = document.getElementById('audioPlayer');
+        const playButton = document.getElementById('playButton');
+        const progressFill = document.querySelector('.progress-fill');
+        const trackTime = document.querySelector('.track-time');
+
+        if (audioPlayer && playButton) {
+            playButton.addEventListener('click', function() {
+                if (audioPlayer.paused) {
+                    audioPlayer.play();
+                    this.innerHTML = '<svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M6 4h4v16H6V4zm8 0h4v16h-4V4z"/></svg>';
+                } else {
+                    audioPlayer.pause();
+                    this.innerHTML = '<svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M8 5v14l11-7z"/></svg>';
+                }
+            });
+
+            audioPlayer.addEventListener('timeupdate', function() {
+                const progress = (audioPlayer.currentTime / audioPlayer.duration) * 100;
+                progressFill.style.width = progress + '%';
+                const currentTime = formatTime(audioPlayer.currentTime);
+                const duration = formatTime(audioPlayer.duration);
+                trackTime.textContent = `${currentTime} / ${duration}`;
+            });
+
+            audioPlayer.addEventListener('ended', function() {
+                playButton.innerHTML = '<svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M8 5v14l11-7z"/></svg>';
+                progressFill.style.width = '0%';
+            });
         }
 
         // Notification system
