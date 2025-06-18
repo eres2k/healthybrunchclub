@@ -130,12 +130,14 @@
         }
 
         .logo {
-            font-size: 16px;
-            font-weight: 700;
-            color: var(--text-primary);
-            display: flex;
-            align-items: center;
-            gap: 6px;
+	font-size: 16px;
+	font-weight: 700;
+	color: var(--text-primary);
+	display: flex;
+	align-items: center;
+	gap: 6px;
+	max-height: 43px;
+	max-width: 129px;
         }
 
         .logo::before {
@@ -643,11 +645,11 @@
         }
 
         .featured-image {
-            width: 120px;
-            height: 120px;
-            border-radius: 16px;
-            object-fit: cover;
-            box-shadow: 0 10px 30px rgba(93, 78, 55, 0.2);
+	width: 120px;
+	height: 120px;
+	border-radius: 16px;
+	object-fit: cover;
+	box-shadow: 0 10px 30px rgba(93, 78, 55, 0.2);
         }
 
         .featured-info h3 {
@@ -1303,6 +1305,8 @@
             outline: 3px solid var(--earth-primary);
             outline-offset: 2px;
         }
+    .featured-png {
+}
     </style>
 </head>
 
@@ -1322,7 +1326,7 @@
     <!-- Navigation -->
     <nav class="nav glass" id="navbar" role="navigation" aria-label="Hauptnavigation">
         <div class="nav-container">
-            <div class="logo">Healthy Brunch Club</div>
+            <div class="logo"><img src="content/images/logo.png" alt="" width="356" height="200" class="logo"/></div>
             
             <!-- Desktop Navigation -->
             <ul class="nav-links">
@@ -1650,13 +1654,10 @@
                 
                 <!-- Featured DJ Event -->
                 <div class="featured-dj glass-elevated">
-                    <div class="featured-content">
-                        <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 150 150'%3E%3Crect fill='%23A9AB88' width='150' height='150'/%3E%3C/svg%3E" 
-                             alt="DJ Luna" 
-                             class="featured-image">
-                        
+                    <div class="featured-content"> <img src="content/images/osive.png" alt="" width="30" height="30" class="featured-image"/>
+						
                         <div class="featured-info">
-                            <h3>DJ Luna <span class="featured-badge">Nächstes Event</span></h3>
+                          <h3>DJ Osive <span class="featured-badge">Nächstes Event</span></h3>
                             <p>Deep House & Organic Beats - Perfekt für einen entspannten Morgen mit positiver Energie</p>
                             
                      <div class="music-player">
@@ -1667,7 +1668,7 @@
                                         </svg>
                                     </button>
                                     <div class="track-info">
-                                        <div class="track-name">Morning Vibes - Exclusive Mix</div>
+                                        <div class="track-name">DJ OSIVE - MIX</div>
                                         <div class="track-time">0:00 / 0:00</div>
                                     </div>
                                 </div>
@@ -1678,13 +1679,13 @@
                                     <source src="content/audio/artist1.mp3" type="audio/mpeg">
                                     Your browser does not support the audio element.
                                 </audio>
-                            </div>
-                        </div> 
+                          </div>
+                      </div> 
                         <div class="featured-date">
-                            <span class="featured-date-day">24</span>
-                            <span class="featured-date-month">März</span>
+                            <span class="featured-date-day">31</span>
+                            <span class="featured-date-month">Juni</span>
                         </div>
-                    </div>
+                  </div>
                 </div>
                 
                 <!-- Upcoming DJs -->
@@ -1696,7 +1697,7 @@
                         <div class="dj-info">
                             <h4 class="dj-name">Soul Café</h4>
                             <p class="dj-style">Jazz & Nu-Jazz Fusion</p>
-                            <p class="dj-date">📅 31. März 2025</p>
+                            <p class="dj-date">📅 7. Juli 2025</p>
                         </div>
                     </div>
                     
@@ -1707,7 +1708,7 @@
                         <div class="dj-info">
                             <h4 class="dj-name">Green Wave</h4>
                             <p class="dj-style">Ambient & Downtempo</p>
-                            <p class="dj-date">📅 7. April 2025</p>
+                            <p class="dj-date">📅 14. Juli 2025</p>
                         </div>
                     </div>
                 </div>
