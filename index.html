@@ -2257,7 +2257,7 @@
             showNotification('Buchungsanfrage', message, 'success');
         }
 
-   const audioPlayer = document.getElementById('audioPlayer');
+        const audioPlayer = document.getElementById('audioPlayer');
         const playButton = document.getElementById('playButton');
         const progressFill = document.querySelector('.progress-fill');
         const trackTime = document.querySelector('.track-time');
@@ -2285,7 +2285,6 @@
                 playButton.innerHTML = '<svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M8 5v14l11-7z"/></svg>';
                 progressFill.style.width = '0%';
             });
-        }
 
         // Notification system
         function showNotification(title, message, type = 'success') {
