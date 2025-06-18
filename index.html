@@ -1,5 +1,937 @@
+<!-- Animated Stats Section -->
+        <section class="stats-section" role="region" aria-labelledby="stats-heading">
+            <div class="section-container">
+                <h2 id="stats-heading" style="text-align: center; margin-bottom: 50px; font-size: clamp(32px, 5vw, 42px); font-weight: 800; color: var(--text-primary);">Unsere Erfolgsgeschichte</h2>
+                
+                <div class="stats-grid">
+                    <div class="stat-card glass">
+                        <span class="stat-number" data-target="500" id="visitors-count">0</span>
+                        <div class="stat-label">Glückliche Gäste</div>
+                    </div>
+                    <div class="stat-card glass">
+                        <span class="stat-number" data-target="4.9" id="rating-count">0.0</span>
+                        <div class="stat-label">Google Bewertung</div>
+                    </div>
+                    <div class="stat-card glass">
+                        <span class="stat-number" data-target="2847" id="meals-count">0</span>
+                        <div class="stat-label">Servierte Mahlzeiten</div>
+                    </div>
+                    <div class="stat-card glass">
+                        <span class="stat-number" data-target="52" id="events-count">0</span>
+                        <div class="stat-label">Live-Events</div>
+                    </div>
+                </div>
+            </div>
+        </section>
 
-<!DOCTYPE html>
+        <!-- Features Section -->
+        <section class="section" id="features" role="region" aria-labelledby="features-heading">
+            <div class="section-container">
+                <div class="section-header">
+                    <h2 id="features-heading">Was macht uns besonders?</h2>
+                    <p>Mehr als nur ein Brunch – ein Erlebnis für alle Sinne</p>
+                </div>
+                
+                <div class="features-grid">
+                    <div class="feature-card glass">
+                        <div class="feature-icon" aria-hidden="true">🌱</div>
+                        <h3>100% Bio & Regional</h3>
+                        <p>Alle unsere Zutaten stammen von lokalen Bio-Bauern. Frisch, nachhaltig und voller Geschmack.</p>
+                    </div>
+                    
+                    <div class="feature-card glass">
+                        <div class="feature-icon" aria-hidden="true">🎵</div>
+                        <h3>Live Musik</h3>
+                        <p>Jeden Montag begleiten dich lokale Künstler mit sanften Klängen durch deinen Morgen.</p>
+                    </div>
+                    
+                    <div class="feature-card glass">
+                        <div class="feature-icon" aria-hidden="true">☕</div>
+                        <h3>Barista Kaffee</h3>
+                        <p>Preisgekrönter Kaffee von unserem hauseigenen Barista-Team. Der perfekte Start in den Tag.</p>
+                    </div>
+                    
+                    <div class="feature-card glass">
+                        <div class="feature-icon" aria-hidden="true">🧘‍♀️</div>
+                        <h3>Morning Yoga</h3>
+                        <p>Optional: Starte mit einer 30-minütigen Yoga-Session vor dem Brunch (Feel-Well Package).</p>
+                    </div>
+                    
+                    <div class="feature-card glass">
+                        <div class="feature-icon" aria-hidden="true">🌍</div>
+                        <h3>Zero Waste</h3>
+                        <p>Nachhaltige Verpackungen, Kompostierung und bewusste Portionsgrößen für eine bessere Zukunft.</p>
+                    </div>
+                    
+                    <div class="feature-card glass">
+                        <div class="feature-icon" aria-hidden="true">📚</div>
+                        <h3>Ernährungs-Workshops</h3>
+                        <p>Lerne mehr über gesunde Ernährung in unseren monatlichen Workshops und Kochkursen.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- About Section -->
+        <section class="section" id="about" role="region" aria-labelledby="about-heading">
+            <div class="section-container">
+                <div class="section-header">
+                    <h2 id="about-heading">Über uns</h2>
+                    <p>Eine Vision von gesundem Genuss und Gemeinschaft</p>
+                </div>
+                
+                <div class="about-content">
+                    <div class="about-text">
+                        <h3>Unsere Geschichte</h3>
+                        <p>Was einst als einfaches Geburtstagsritual begann, lebt heute in unserem Brunchlokal weiter. Drei Schwestern – eine Ärztin und zwei Flugbegleiterinnen – vereint durch die Liebe zur Familie, zum Reisen und natürlich: zum Brunchen.</p>
+                        <p>Ob in New York, Chicago, an der Amalfiküste oder aber auch ganz einfach in unserer Heimatstadt Wien – das gemeinsame Brunchen war immer ein besonderer Moment. Und mit jedem Bissen, jedem Kaffee und jeder neuen Idee wuchs auch der Wunsch, diesen Genuss zu teilen.</p>
+                        <p>Als bei Tina eine chronische Darmentzündung diagnostiziert wurde, wurde das Thema Ernährung für uns noch bedeutungsvoller. Seither setzen wir gezielt auf gesunde Alternativen und entzündungshemmende Zutaten – ohne auf Geschmack oder Kreativität zu verzichten.</p>
+                    </div>
+                    
+                    <div class="about-video-container glass">
+                        <!-- Video Loading State -->
+                        <div class="video-loading" id="aboutVideoLoading" aria-hidden="true">
+                            <div class="video-loading-spinner"></div>
+                            <p>Loading...</p>
+                        </div>
+                        
+                        <!-- About Video -->
+                        <video 
+                            class="about-video" 
+                            id="aboutVideo"
+                            muted 
+                            loop 
+                            playsinline
+                            poster="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 600 400'%3E%3Crect fill='%23F3E8DA' width='600' height='400'/%3E%3Ctext y='45%25' x='50%25' text-anchor='middle' dominant-baseline='middle' fill='%235D4E37' font-size='16' font-family='Inter, sans-serif'%3EDrei Schwestern%3C/text%3E%3Ctext y='55%25' x='50%25' text-anchor='middle' dominant-baseline='middle' fill='%23A9AB88' font-size='14' font-family='Inter, sans-serif'%3EEine Geschichte%3C/text%3E%3C/svg%3E"
+                            onloadstart="showAboutVideoLoading()"
+                            oncanplay="hideAboutVideoLoading()"
+                            onerror="handleAboutVideoError()"
+                            aria-label="Video über die drei Schwestern und ihre Geschichte"
+                        >
+                            <source src="https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ElephantsDream.mp4" type="video/mp4">
+                        </video>
+                        
+                        <!-- Video Overlay -->
+                        <div class="about-video-overlay">
+                            <h4 style="font-size: 16px; font-weight: 600; margin-bottom: 4px; color: var(--text-light);">Unsere Story</h4>
+                            <p style="font-size: 13px; opacity: 0.9; color: var(--text-light);">Drei Schwestern, eine Vision</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Contact Section -->
+        <section class="section" id="contact" role="region" aria-labelledby="contact-heading">
+            <div class="section-container">
+                <div class="section-header">
+                    <h2 id="contact-heading">Kontakt & Anfahrt</h2>
+                    <p>Wir freuen uns auf deinen Besuch!</p>
+                </div>
+                
+                <div class="about-content">
+                    <div class="about-text">
+                        <h3>Besuche uns</h3>
+                        <p><strong>📍 Adresse:</strong><br>
+                        ra'mien restaurant GmbH<br>
+                        Gumpendorfer str. 9<br>
+                        1060 Wien</p>
+                        
+                        <p><strong>🕐 Öffnungszeiten:</strong><br>
+                        Montag: 08:00 - 14:00 Uhr<br>
+                        Dienstag - Sonntag: Geschlossen<br>
+                        <small>Reservierungen empfohlen</small></p>
+                        
+                        <p><strong>📞 Kontakt:</strong><br>
+                        Telefon: <a href="tel:+4367612345678" style="color: var(--earth-primary);">+43 676 123 456 78</a><br>
+                        E-Mail: <a href="mailto:hello@healthybrunchclub.at" style="color: var(--earth-primary);">hello@healthybrunchclub.at</a><br>
+                        WhatsApp: <a href="https://wa.me/4367612345678" style="color: var(--earth-primary);">+43 676 123 456 78</a></p>
+                    </div>
+                    
+                    <div class="about-video-container glass">
+                        <div style="width: 100%; height: 100%; background: var(--earth-gradient); display: flex; align-items: center; justify-content: center; flex-direction: column; text-align: center; padding: 36px; border-radius: 20px;">
+                            <div style="font-size: 42px; margin-bottom: 18px;" aria-hidden="true">📍</div>
+                            <h3 style="color: var(--text-light); margin-bottom: 14px; font-size: 22px;">Wien Zentrum</h3>
+                            <p style="color: var(--text-light); margin-bottom: 18px; opacity: 0.9;">Gumpendorfer Straße 9<br>1060 Wien</p>
+                            <a href="https://maps.google.com/?q=Gumpendorfer+Straße+9,+1060+Wien" target="_blank" style="background: rgba(243, 232, 218, 0.2); color: var(--text-light); padding: 10px 20px; border-radius: 10px; text-decoration: none; font-weight: 600; transition: all 0.3s ease; border: 1px solid rgba(243, 232, 218, 0.3);" onmouseover="this.style.background='rgba(243, 232, 218, 0.3)'" onmouseout="this.style.background='rgba(243, 232, 218, 0.2)'">Route planen</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- Footer -->
+    <footer class="footer" role="contentinfo">
+        <div class="footer-container">
+            <div class="footer-section">
+                <h4>Healthy Brunch Club</h4>
+                <p>Start your Monday right with healthy food, good music, and positive vibes.</p>
+                <div class="social-links">
+                    <a href="#" aria-label="Instagram" title="Folge uns auf Instagram">📸</a>
+                    <a href="#" aria-label="Facebook" title="Like uns auf Facebook">👍</a>
+                    <a href="#" aria-label="Twitter" title="Folge uns auf Twitter">🐦</a>
+                    <a href="#" aria-label="LinkedIn" title="Verbinde dich mit uns auf LinkedIn">💼</a>
+                </div>
+            </div>
+            
+            <div class="footer-section">
+                <h4>Quick Links</h4>
+                <a href="#menu">Speisekarte</a>
+                <a href="#djs">DJs & Events</a>
+                <a href="#features">Features</a>
+                <a href="#about">Über uns</a>
+                <a href="#contact">Kontakt</a>
+                <a href="#booking">Buchungen</a>
+            </div>
+            
+            <div class="footer-section">
+                <h4>Öffnungszeiten</h4>
+                <p>Montag: 08:00 - 14:00</p>
+                <p>Dienstag - Sonntag: Geschlossen</p>
+                <p style="margin-top: 1rem;">📍 Wien, Österreich</p>
+            </div>
+            
+            <div class="footer-section">
+                <h4>Kontakt</h4>
+                <a href="mailto:hello@healthybrunchclub.at">hello@healthybrunchclub.at</a>
+                <a href="tel:+4367612345678">+43 676 123 456 78</a>
+                <p style="margin-top: 1rem;">
+                    <a href="/impressum">Impressum</a> | 
+                    <a href="/datenschutz">Datenschutz</a>
+                </p>
+            </div>
+        </div>
+        
+        <div class="footer-bottom">
+            <p>&copy; 2025 Healthy Brunch Club. Made with 💚 in Wien</p>
+        </div>
+    </footer>
+
+    <!-- PWA Manifest -->
+    <script>
+        // PWA Service Worker Registration
+        if ('serviceWorker' in navigator) {
+            window.addEventListener('load', function() {
+                navigator.serviceWorker.register('/sw.js')
+                    .then(function(registration) {
+                        console.log('ServiceWorker registration successful');
+                    })
+                    .catch(function(err) {
+                        console.log('ServiceWorker registration failed: ', err);
+                    });
+            });
+        }
+
+        // Enhanced Mobile Menu
+        const mobileMenuToggle = document.getElementById('mobileMenuToggle');
+        const mobileMenu = document.getElementById('mobileMenu');
+        const navbar = document.getElementById('navbar');
+
+        mobileMenuToggle.addEventListener('click', function() {
+            const isExpanded = mobileMenu.classList.contains('show');
+            
+            mobileMenu.classList.toggle('show');
+            mobileMenuToggle.setAttribute('aria-expanded', !isExpanded);
+            mobileMenuToggle.setAttribute('aria-label', isExpanded ? 'Menü öffnen' : 'Menü schließen');
+            
+            // Animate hamburger menu
+            if (mobileMenu.classList.contains('show')) {
+                mobileMenuToggle.innerHTML = '✕';
+                mobileMenuToggle.style.transform = 'rotate(180deg)';
+            } else {
+                mobileMenuToggle.innerHTML = '☰';
+                mobileMenuToggle.style.transform = 'rotate(0deg)';
+            }
+        });
+
+        // Close mobile menu when clicking on a link
+        const mobileLinks = document.querySelectorAll('.mobile-menu-links a');
+        mobileLinks.forEach(link => {
+            link.addEventListener('click', () => {
+                mobileMenu.classList.remove('show');
+                mobileMenuToggle.setAttribute('aria-expanded', 'false');
+                mobileMenuToggle.setAttribute('aria-label', 'Menü öffnen');
+                mobileMenuToggle.innerHTML = '☰';
+                mobileMenuToggle.style.transform = 'rotate(0deg)';
+            });
+        });
+
+        // Close mobile menu when clicking outside
+        document.addEventListener('click', function(e) {
+            if (!navbar.contains(e.target) && mobileMenu.classList.contains('show')) {
+                mobileMenu.classList.remove('show');
+                mobileMenuToggle.setAttribute('aria-expanded', 'false');
+                mobileMenuToggle.setAttribute('aria-label', 'Menü öffnen');
+                mobileMenuToggle.innerHTML = '☰';
+                mobileMenuToggle.style.transform = 'rotate(0deg)';
+            }
+        });
+
+        // Enhanced Navbar Scroll Effect
+        let lastScrollTop = 0;
+        window.addEventListener('scroll', function() {
+            const currentScroll = window.pageYOffset || document.documentElement.scrollTop;
+            
+            if (currentScroll > 100) {
+                navbar.classList.add('scrolled');
+            } else {
+                navbar.classList.remove('scrolled');
+            }
+
+            // Hide/show navbar on scroll (mobile optimization)
+            if (window.innerWidth <= 768) {
+                if (currentScroll > lastScrollTop && currentScroll > 200) {
+                    // Scrolling down & past threshold
+                    navbar.style.transform = 'translateX(-50%) translateY(-100%)';
+                } else {
+                    // Scrolling up
+                    navbar.style.transform = 'translateX(-50%) translateY(0)';
+                }
+            }
+            
+            lastScrollTop = currentScroll <= 0 ? 0 : currentScroll;
+        });
+
+        // Music Player Functionality
+        let isPlaying = false;
+        const playButton = document.getElementById('playButton');
+        const progressFill = document.querySelector('.progress-fill');
+        let progressInterval;
+
+        if (playButton) {
+            playButton.addEventListener('click', function() {
+                isPlaying = !isPlaying;
+                
+                if (isPlaying) {
+                    // Change to pause icon
+                    this.innerHTML = '<svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M6 4h4v16H6V4zm8 0h4v16h-4V4z"/></svg>';
+                    
+                    // Simulate progress
+                    let progress = 35;
+                    progressInterval = setInterval(() => {
+                        progress += 0.5;
+                        if (progress >= 100) {
+                            progress = 0;
+                        }
+                        progressFill.style.width = progress + '%';
+                    }, 100);
+                } else {
+                    // Change to play icon
+                    this.innerHTML = '<svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M8 5v14l11-7z"/></svg>';
+                    
+                    // Stop progress
+                    clearInterval(progressInterval);
+                }
+            });
+        }
+
+        // Animated Counter Implementation
+        function animateCounter(element, target, duration = 2000, suffix = '') {
+            const start = 0;
+            const increment = target / (duration / 16);
+            let current = start;
+            
+            const timer = setInterval(() => {
+                current += increment;
+                if (current >= target) {
+                    current = target;
+                    clearInterval(timer);
+                }
+                
+                // Format number based on type
+                let displayValue;
+                if (suffix === '★') {
+                    displayValue = current.toFixed(1) + suffix;
+                } else if (target >= 1000) {
+                    displayValue = Math.floor(current).toLocaleString('de-DE');
+                } else {
+                    displayValue = Math.floor(current);
+                }
+                
+                element.textContent = displayValue;
+            }, 16);
+        }
+
+        // Initialize counters when they come into view
+        function initializeCounters() {
+            const counters = [
+                { id: 'visitors-count', target: 500, suffix: '' },
+                { id: 'rating-count', target: 4.9, suffix: '★' },
+                { id: 'meals-count', target: 2847, suffix: '' },
+                { id: 'events-count', target: 52, suffix: '' }
+            ];
+
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        const counterId = entry.target.id;
+                        const counterData = counters.find(c => c.id === counterId);
+                        
+                        if (counterData && (entry.target.textContent === '0' || entry.target.textContent === '0.0')) {
+                            animateCounter(entry.target, counterData.target, 2000, counterData.suffix);
+                            observer.unobserve(entry.target);
+                        }
+                    }
+                });
+            }, { threshold: 0.5 });
+
+            counters.forEach(counter => {
+                const element = document.getElementById(counter.id);
+                if (element) {
+                    observer.observe(element);
+                }
+            });
+        }
+
+        // Menu Filter System
+        function initializeMenuFilters() {
+            const filterButtons = document.querySelectorAll('.filter-btn');
+            const menuItems = document.querySelectorAll('.menu-item');
+            const menuCategories = document.querySelectorAll('.menu-category');
+
+            // Count items for each filter
+            function updateFilterCounts() {
+                const counts = {
+                    alle: menuItems.length,
+                    vegan: 0,
+                    bio: 0,
+                    glutenfrei: 0,
+                    vegetarisch: 0,
+                    protein: 0,
+                    saisonal: 0
+                };
+
+                menuItems.forEach(item => {
+                    const tags = item.dataset.tags ? item.dataset.tags.split(',') : [];
+                    
+                    tags.forEach(tag => {
+                        if (counts.hasOwnProperty(tag)) {
+                            counts[tag]++;
+                        }
+                    });
+                });
+
+                // Update count displays
+                Object.keys(counts).forEach(filter => {
+                    const countElement = document.getElementById(`count-${filter}`);
+                    if (countElement) {
+                        countElement.textContent = counts[filter];
+                    }
+                });
+            }
+
+            // Filter functionality
+            function filterMenuItems(activeFilter) {
+                let visibleCount = 0;
+
+                menuItems.forEach(item => {
+                    const tags = item.dataset.tags ? item.dataset.tags.split(',') : [];
+                    const shouldShow = activeFilter === 'alle' || tags.includes(activeFilter);
+
+                    if (shouldShow) {
+                        item.classList.remove('hidden');
+                        visibleCount++;
+                    } else {
+                        item.classList.add('hidden');
+                    }
+                });
+
+                // Hide/show categories based on visible items
+                menuCategories.forEach(category => {
+                    const categoryItems = category.querySelectorAll('.menu-item:not(.hidden)');
+                    if (categoryItems.length === 0) {
+                        category.classList.add('hidden');
+                    } else {
+                        category.classList.remove('hidden');
+                    }
+                });
+
+                return visibleCount;
+            }
+
+            // Add click handlers
+            filterButtons.forEach(button => {
+                button.addEventListener('click', function() {
+                    const filter = this.dataset.filter;
+
+                    // Update active state
+                    filterButtons.forEach(btn => {
+                        btn.classList.remove('active');
+                        btn.setAttribute('aria-pressed', 'false');
+                    });
+                    this.classList.add('active');
+                    this.setAttribute('aria-pressed', 'true');
+
+                    // Filter items
+                    const visibleCount = filterMenuItems(filter);
+
+                    // Show notification of results
+                    if (filter !== 'alle') {
+                        showNotification('Filter angewendet', `${visibleCount} Gerichte gefunden für "${filter.charAt(0).toUpperCase() + filter.slice(1)}"`, 'success');
+                    }
+                });
+            });
+
+            // Initialize counts
+            updateFilterCounts();
+
+            // Keyboard navigation for filters
+            filterButtons.forEach(button => {
+                button.addEventListener('keydown', function(e) {
+                    if (e.key === 'Enter' || e.key === ' ') {
+                        e.preventDefault();
+                        this.click();
+                    }
+                });
+            });
+        }
+
+        // Video control functions
+        function showVideoLoading() {
+            const loading = document.getElementById('videoLoading');
+            if (loading) loading.style.display = 'flex';
+        }
+
+        function hideVideoLoading() {
+            const loading = document.getElementById('videoLoading');
+            if (loading) loading.style.display = 'none';
+        }
+
+        function handleVideoError() {
+            const video = document.getElementById('heroVideo');
+            const loading = document.getElementById('videoLoading');
+            
+            if (loading) loading.style.display = 'none';
+            
+            // Show fallback content
+            if (video) {
+                video.style.display = 'none';
+                const fallback = document.createElement('div');
+                fallback.style.cssText = `
+                    position: absolute;
+                    top: 0;
+                    left: 0;
+                    width: 100%;
+                    height: 100%;
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                    flex-direction: column;
+                    text-align: center;
+                    background: var(--earth-gradient);
+                    border-radius: 28px;
+                    color: var(--text-light);
+                `;
+                fallback.innerHTML = `
+                    <h2 style="font-size: 28px; font-weight: 700; margin-bottom: 14px;">Healthy Brunch</h2>
+                    <p style="font-size: 16px; opacity: 0.9;">Fresh • Delicious • Energizing</p>
+                `;
+                video.parentNode.appendChild(fallback);
+            }
+        }
+
+        // About Video Functions
+        function showAboutVideoLoading() {
+            const loading = document.getElementById('aboutVideoLoading');
+            if (loading) loading.style.display = 'flex';
+        }
+
+        function hideAboutVideoLoading() {
+            const loading = document.getElementById('aboutVideoLoading');
+            if (loading) loading.style.display = 'none';
+        }
+
+        function handleAboutVideoError() {
+            const video = document.getElementById('aboutVideo');
+            const loading = document.getElementById('aboutVideoLoading');
+            
+            if (loading) loading.style.display = 'none';
+            
+            // Show fallback content
+            if (video) {
+                video.style.display = 'none';
+                const fallback = document.createElement('div');
+                fallback.style.cssText = `
+                    position: absolute;
+                    top: 0;
+                    left: 0;
+                    width: 100%;
+                    height: 100%;
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                    background: var(--earth-gradient);
+                    color: var(--text-light);
+                    text-align: center;
+                    padding: 36px;
+                    border-radius: 20px;
+                `;
+                fallback.innerHTML = `
+                    <div>
+                        <h3 style="font-size: 22px; margin-bottom: 14px;">Drei Schwestern</h3>
+                        <p style="opacity: 0.9;">Eine Geschichte von Familie,<br>Reisen und Leidenschaft</p>
+                    </div>
+                `;
+                video.parentNode.appendChild(fallback);
+            }
+        }
+
+        // Initialize videos with Intersection Observer
+        function initializeVideo() {
+            const video = document.getElementById('heroVideo');
+            if (!video) return;
+
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        video.play().catch(() => {});
+                    } else {
+                        video.pause();
+                    }
+                });
+            }, { threshold: 0.3 });
+
+            observer.observe(video);
+        }
+
+        function initializeAboutVideo() {
+            const video = document.getElementById('aboutVideo');
+            if (!video) return;
+
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        video.play().catch(() => {});
+                    } else {
+                        video.pause();
+                    }
+                });
+            }, { threshold: 0.5 });
+
+            observer.observe(video);
+        }
+
+        // Enhanced Smooth Scrolling
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const targetId = this.getAttribute('href');
+                const targetElement = document.querySelector(targetId);
+                
+                if (targetElement) {
+                    const offsetTop = targetElement.offsetTop - 80; // Account for fixed navbar
+                    window.scrollTo({
+                        top: offsetTop,
+                        behavior: 'smooth'
+                    });
+                }
+            });
+        });
+
+        // Booking Functions
+        function showBooking(type) {
+            let message = '';
+            switch(type) {
+                case 'friends':
+                    message = 'Vielen Dank für Ihr Interesse am Freund:innen Brunch! Wir leiten Sie zur Buchungsseite weiter.';
+                    break;
+                case 'corporate':
+                    message = 'Vielen Dank für Ihr Interesse am Firmen Event Brunch! Wir leiten Sie zur Buchungsseite weiter.';
+                    break;
+                case 'romantic':
+                    message = 'Vielen Dank für Ihr Interesse am Romantischen Brunch! Wir leiten Sie zur Buchungsseite weiter.';
+                    break;
+                default:
+                    message = 'Vielen Dank für Ihr Interesse! Wir leiten Sie zur Buchungsseite weiter.';
+            }
+            
+            showNotification('Buchungsanfrage', message, 'success');
+            
+            // Simulate booking redirect (replace with actual booking system)
+            setTimeout(() => {
+                // window.location.href = '/booking?type=' + type;
+                console.log('Redirecting to booking page for:', type);
+            }, 2000);
+        }
+
+        // Notification system
+        function showNotification(title, message, type = 'success') {
+            const notification = document.getElementById('notification');
+            const icon = notification.querySelector('.notification-icon');
+            const titleEl = notification.querySelector('.notification-title');
+            const messageEl = notification.querySelector('.notification-message');
+            
+            notification.className = `notification ${type}`;
+            icon.textContent = type === 'success' ? '✅' : '❌';
+            titleEl.textContent = title;
+            messageEl.textContent = message;
+            
+            notification.classList.add('show');
+            
+            setTimeout(() => {
+                notification.classList.remove('show');
+            }, 5000);
+        }
+
+        // Video autoplay optimization for mobile
+        function handleVideoAutoplay() {
+            const video = document.querySelector('.hero-video');
+            const aboutVideo = document.querySelector('.about-video');
+            const isTouch = 'ontouchstart' in window;
+            
+            if (isTouch) {
+                // On touch devices, be more careful with autoplay
+                [video, aboutVideo].forEach(vid => {
+                    if (vid) {
+                        vid.muted = true;
+                        vid.setAttribute('playsinline', '');
+                        
+                        // Try to play on first user interaction
+                        document.addEventListener('touchstart', function playVideo() {
+                            vid.play().catch(e => console.log('Video autoplay prevented'));
+                            document.removeEventListener('touchstart', playVideo);
+                        }, { once: true });
+                    }
+                });
+            }
+        }
+
+        // Performance optimization: Intersection Observer for animations
+        const observerOptions = {
+            threshold: 0.1,
+            rootMargin: '0px 0px -50px 0px'
+        };
+
+        const fadeInObserver = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.style.opacity = '1';
+                    entry.target.style.transform = 'translateY(0)';
+                    entry.target.classList.add('animated');
+                }
+            });
+        }, observerOptions);
+
+        // Lazy loading images
+        function lazyLoadImages() {
+            const images = document.querySelectorAll('img[data-src]');
+            const imageObserver = new IntersectionObserver((entries, observer) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        const img = entry.target;
+                        img.src = img.dataset.src;
+                        img.classList.remove('lazy');
+                        imageObserver.unobserve(img);
+                    }
+                });
+            });
+
+            images.forEach(img => imageObserver.observe(img));
+        }
+
+        // Keyboard navigation improvements
+        function enhanceKeyboardNavigation() {
+            // Add keyboard support for booking cards
+            document.querySelectorAll('.booking-card').forEach(card => {
+                card.addEventListener('keydown', function(e) {
+                    if (e.key === 'Enter' || e.key === ' ') {
+                        e.preventDefault();
+                        const button = this.querySelector('button');
+                        if (button) {
+                            button.click();
+                        }
+                    }
+                });
+            });
+
+            // Escape key to close mobile menu
+            document.addEventListener('keydown', (e) => {
+                if (e.key === 'Escape' && mobileMenu.classList.contains('show')) {
+                    mobileMenu.classList.remove('show');
+                    mobileMenuToggle.setAttribute('aria-expanded', 'false');
+                    mobileMenuToggle.setAttribute('aria-label', 'Menü öffnen');
+                    mobileMenuToggle.innerHTML = '☰';
+                    mobileMenuToggle.style.transform = 'rotate(0deg)';
+                    mobileMenuToggle.focus();
+                }
+            });
+        }
+
+        // Initialize everything
+        document.addEventListener('DOMContentLoaded', () => {
+            initializeVideo();
+            initializeAboutVideo();
+            handleVideoAutoplay();
+            initializeCounters();
+            initializeMenuFilters();
+            lazyLoadImages();
+            enhanceKeyboardNavigation();
+            
+            // Observe elements for animation
+            document.querySelectorAll('.feature-card, .menu-category, .dj-card').forEach((el, index) => {
+                el.style.opacity = '0';
+                el.style.transform = 'translateY(30px)';
+                el.style.transition = `all 0.8s cubic-bezier(0.4, 0, 0.2, 1) ${index * 0.1}s`;
+                fadeInObserver.observe(el);
+            });
+
+            // Trigger hero animations
+            setTimeout(() => {
+                const heroElements = document.querySelectorAll('.hero-content, .hero-visual');
+                heroElements.forEach(el => {
+                    if (el.style.animationFillMode !== 'forwards') {
+                        el.style.opacity = '1';
+                    }
+                });
+            }, 100);
+
+            // Initialize performance monitoring
+            if ('performance' in window) {
+                window.addEventListener('load', function() {
+                    setTimeout(function() {
+                        const perfData = performance.getEntriesByType('navigation')[0];
+                        console.log('Page load time:', perfData.loadEventEnd - perfData.loadEventStart, 'ms');
+                    }, 0);
+                });
+            }
+        });
+
+        // Optimize for touch devices
+        if ('ontouchstart' in window) {
+            document.body.classList.add('touch-device');
+            
+            // Add custom touch feedback
+            document.querySelectorAll('.booking-card, .feature-card, .menu-category, .dj-card').forEach(card => {
+                card.addEventListener('touchstart', function() {
+                    this.style.transform = 'scale(0.98)';
+                });
+                
+                card.addEventListener('touchend', function() {
+                    this.style.transform = '';
+                });
+            });
+        }
+
+        // Add loading states for better UX
+        window.addEventListener('load', function() {
+            document.body.classList.add('loaded');
+            
+            // Remove any loading spinners that might still be visible
+            document.querySelectorAll('.video-loading').forEach(loading => {
+                loading.style.display = 'none';
+            });
+
+            // Initialize analytics (replace with actual analytics)
+            if (typeof gtag !== 'undefined') {
+                gtag('config', 'GA_MEASUREMENT_ID');
+            }
+        });
+
+        // Enhanced error handling for videos
+        function setupVideoErrorHandling() {
+            const videos = document.querySelectorAll('video');
+            videos.forEach(video => {
+                video.addEventListener('error', function() {
+                    console.log('Video failed to load:', this.src);
+                    // Create fallback content
+                    const fallback = document.createElement('div');
+                    fallback.className = 'video-fallback';
+                    fallback.style.cssText = `
+                        position: absolute;
+                        top: 0;
+                        left: 0;
+                        width: 100%;
+                        height: 100%;
+                        display: flex;
+                        align-items: center;
+                        justify-content: center;
+                        background: var(--earth-gradient);
+                        color: var(--text-light);
+                        text-align: center;
+                        border-radius: inherit;
+                    `;
+                    fallback.innerHTML = `
+                        <div>
+                            <div style="font-size: 42px; margin-bottom: 14px;" aria-hidden="true">🎬</div>
+                            <h3 style="margin-bottom: 8px;">Video wird geladen...</h3>
+                            <p style="opacity: 0.8; font-size: 13px;">Bitte haben Sie einen Moment Geduld</p>
+                        </div>
+                    `;
+                    
+                    this.style.display = 'none';
+                    this.parentNode.appendChild(fallback);
+                });
+            });
+        }
+
+        // Call setup functions
+        document.addEventListener('DOMContentLoaded', () => {
+            setupVideoErrorHandling();
+        });
+
+        // Add resize handler for responsive adjustments
+        window.addEventListener('resize', function() {
+            // Recalculate any dynamic dimensions if needed
+            const heroVisual = document.querySelector('.hero-visual');
+            if (heroVisual && window.innerWidth <= 768) {
+                heroVisual.style.height = '280px';
+            } else if (heroVisual) {
+                heroVisual.style.height = '500px';
+            }
+        });
+
+        // Prefetch important resources
+        function prefetchResources() {
+            const link1 = document.createElement('link');
+            link1.rel = 'prefetch';
+            link1.href = 'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4';
+            document.head.appendChild(link1);
+
+            const link2 = document.createElement('link');
+            link2.rel = 'prefetch';
+            link2.href = 'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ElephantsDream.mp4';
+            document.head.appendChild(link2);
+        }
+
+        // Critical resource preloading
+        window.addEventListener('load', prefetchResources);
+
+        // Web Vitals monitoring (for production)
+        function initWebVitals() {
+            if (typeof getCLS !== 'undefined') {
+                getCLS(console.log);
+                getFID(console.log);
+                getFCP(console.log);
+                getLCP(console.log);
+                getTTFB(console.log);
+            }
+        }
+
+        // Error tracking
+        window.addEventListener('error', function(e) {
+            console.error('JavaScript error:', e.error);
+            // Send to error tracking service in production
+        });
+
+        // Unhandled promise rejection tracking
+        window.addEventListener('unhandledrejection', function(e) {
+            console.error('Unhandled promise rejection:', e.reason);
+            // Send to error tracking service in production
+        });
+    </script>
+
+    <!-- Netlify Forms -->
+    <form name="contact" netlify netlify-honeypot="bot-field" hidden>
+        <input type="text" name="name" />
+        <input type="email" name="email" />
+        <textarea name="message"></textarea>
+    </form>
+
+    <!-- Netlify Analytics -->
+    <script defer src="https://identity.netlify.com/v1/netlify-identity-widget.js"></script>
+</body>
+</html><!DOCTYPE html>
 <html lang="de">
 <head>
     <meta charset="UTF-8">
@@ -161,16 +1093,16 @@
                 inset 0 1px 0 rgba(243, 232, 218, 0.5);
         }
 
-        /* Enhanced Navigation */
+        /* Enhanced Navigation - Smaller */
         .nav {
             position: fixed;
-            top: 20px;
+            top: 15px;
             left: 50%;
             transform: translateX(-50%);
-            width: calc(100% - 40px);
+            width: calc(100% - 30px);
             max-width: 1200px;
-            padding: 16px 32px;
-            border-radius: 20px;
+            padding: 12px 24px;
+            border-radius: 16px;
             z-index: 1000;
             transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
         }
@@ -189,12 +1121,12 @@
         }
 
         .logo {
-            font-size: 20px;
+            font-size: 18px;
             font-weight: 700;
             color: var(--text-primary);
             display: flex;
             align-items: center;
-            gap: 8px;
+            gap: 6px;
             letter-spacing: -0.5px;
             transition: transform 0.3s ease;
         }
@@ -205,14 +1137,14 @@
 
         .logo::before {
             content: '🥑';
-            font-size: 24px;
+            font-size: 20px;
             filter: drop-shadow(0 2px 4px rgba(93, 78, 55, 0.2));
         }
 
         .nav-links {
             display: flex;
             list-style: none;
-            gap: 32px;
+            gap: 24px;
             align-items: center;
         }
 
@@ -220,11 +1152,11 @@
             text-decoration: none;
             color: var(--text-secondary);
             font-weight: 500;
-            font-size: 15px;
+            font-size: 14px;
             transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
             position: relative;
-            padding: 8px 16px;
-            border-radius: 12px;
+            padding: 6px 12px;
+            border-radius: 10px;
         }
 
         .nav-links a:hover {
@@ -236,8 +1168,8 @@
         .book-now-btn {
             background: var(--earth-gradient) !important;
             color: var(--text-light) !important;
-            padding: 12px 24px !important;
-            border-radius: 16px !important;
+            padding: 10px 20px !important;
+            border-radius: 14px !important;
             font-weight: 600 !important;
             transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1) !important;
             box-shadow: 0 4px 20px rgba(169, 171, 136, 0.4);
@@ -270,14 +1202,14 @@
             display: none;
             background: none;
             border: none;
-            font-size: 24px;
+            font-size: 20px;
             color: var(--text-primary);
             cursor: pointer;
-            padding: 8px;
+            padding: 6px;
             border-radius: 8px;
             transition: all 0.3s ease;
-            min-width: 44px;
-            min-height: 44px;
+            min-width: 40px;
+            min-height: 40px;
         }
 
         .mobile-menu-toggle:hover {
@@ -293,9 +1225,9 @@
             background: var(--glass-elevated);
             backdrop-filter: blur(25px);
             border: 1px solid var(--glass-border);
-            border-radius: 20px;
-            margin-top: 8px;
-            padding: 20px;
+            border-radius: 16px;
+            margin-top: 6px;
+            padding: 16px;
             box-shadow: 0 20px 40px rgba(93, 78, 55, 0.3);
         }
 
@@ -318,7 +1250,7 @@
         .mobile-menu-links {
             display: flex;
             flex-direction: column;
-            gap: 16px;
+            gap: 12px;
             list-style: none;
             margin: 0;
             padding: 0;
@@ -328,12 +1260,12 @@
             text-decoration: none;
             color: var(--text-secondary);
             font-weight: 500;
-            font-size: 16px;
-            padding: 12px 16px;
-            border-radius: 12px;
+            font-size: 15px;
+            padding: 10px 14px;
+            border-radius: 10px;
             transition: all 0.3s ease;
             display: block;
-            min-height: 44px;
+            min-height: 40px;
         }
 
         .mobile-menu-links a:hover {
@@ -346,7 +1278,7 @@
             color: var(--text-light) !important;
             font-weight: 600 !important;
             text-align: center;
-            margin-top: 8px;
+            margin-top: 6px;
         }
 
         .mobile-book-btn:hover {
@@ -354,10 +1286,10 @@
             background: var(--forest-gradient) !important;
         }
 
-        /* Hero Section */
+        /* Hero Section - Smaller */
         .hero {
-            padding: 120px 20px 80px;
-            min-height: 100vh;
+            padding: 100px 20px 60px;
+            min-height: 85vh;
             display: flex;
             align-items: center;
             position: relative;
@@ -382,7 +1314,7 @@
             margin: 0 auto;
             display: grid;
             grid-template-columns: 1fr 1fr;
-            gap: 80px;
+            gap: 60px;
             align-items: center;
             width: 100%;
             position: relative;
@@ -402,10 +1334,10 @@
         }
 
         .hero-content h1 {
-            font-size: clamp(48px, 8vw, 72px);
+            font-size: clamp(42px, 7vw, 64px);
             font-weight: 800;
             color: var(--text-primary);
-            margin-bottom: 24px;
+            margin-bottom: 20px;
             line-height: 1.1;
             letter-spacing: -2px;
             text-shadow: 0 4px 20px rgba(93, 78, 55, 0.1);
@@ -432,34 +1364,34 @@
         }
 
         .hero-content p {
-            font-size: 20px;
+            font-size: 18px;
             color: var(--text-secondary);
-            margin-bottom: 48px;
+            margin-bottom: 36px;
             line-height: 1.6;
-            max-width: 500px;
+            max-width: 480px;
             opacity: 0;
             animation: heroReveal 1s cubic-bezier(0.4, 0, 0.2, 1) 0.4s forwards;
         }
 
         .booking-options {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-            gap: 20px;
-            margin-bottom: 40px;
+            grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+            gap: 16px;
+            margin-bottom: 30px;
             opacity: 0;
             animation: heroReveal 1s cubic-bezier(0.4, 0, 0.2, 1) 0.6s forwards;
         }
 
         .booking-card {
-            padding: 32px 24px;
-            border-radius: 24px;
+            padding: 28px 20px;
+            border-radius: 20px;
             text-align: center;
             cursor: pointer;
             transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
             border: 1px solid var(--glass-border);
             position: relative;
             overflow: hidden;
-            min-height: 240px;
+            min-height: 220px;
         }
 
         .booking-card::before {
@@ -485,41 +1417,41 @@
         }
 
         .booking-card-icon {
-            font-size: 48px;
-            margin-bottom: 16px;
+            font-size: 42px;
+            margin-bottom: 14px;
             filter: drop-shadow(0 4px 8px rgba(93, 78, 55, 0.1));
             position: relative;
             z-index: 2;
         }
 
         .booking-card h3 {
-            font-size: 18px;
+            font-size: 16px;
             font-weight: 700;
             color: var(--text-primary);
-            margin-bottom: 8px;
+            margin-bottom: 6px;
             letter-spacing: -0.5px;
             position: relative;
             z-index: 2;
         }
 
         .booking-card p {
-            font-size: 14px;
+            font-size: 13px;
             color: var(--text-tertiary);
-            margin-bottom: 16px;
+            margin-bottom: 14px;
             line-height: 1.4;
             position: relative;
             z-index: 2;
         }
 
         .booking-card-price {
-            font-size: 24px;
+            font-size: 22px;
             font-weight: 800;
             background: var(--earth-gradient);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
             background-clip: text;
             display: block;
-            margin-bottom: 20px;
+            margin-bottom: 16px;
             position: relative;
             z-index: 2;
         }
@@ -539,18 +1471,18 @@
 
         .booking-card button {
             width: 100%;
-            padding: 12px;
+            padding: 10px;
             background: var(--glass-bg);
             color: var(--text-primary);
             border: 1px solid var(--glass-border);
-            border-radius: 12px;
+            border-radius: 10px;
             font-weight: 600;
             cursor: pointer;
             transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
             backdrop-filter: blur(10px);
             position: relative;
             z-index: 2;
-            min-height: 44px;
+            min-height: 40px;
         }
 
         .booking-card button:hover {
@@ -560,11 +1492,11 @@
             transform: translateY(-2px);
         }
 
-        /* Enhanced Hero Visual */
+        /* Enhanced Hero Visual - Smaller */
         .hero-visual {
             position: relative;
-            height: 600px;
-            border-radius: 32px;
+            height: 500px;
+            border-radius: 28px;
             overflow: hidden;
             backdrop-filter: blur(20px);
             border: 1px solid var(--glass-border);
@@ -585,7 +1517,7 @@
             width: 100%;
             height: 100%;
             object-fit: cover;
-            border-radius: 32px;
+            border-radius: 28px;
         }
 
         .hero-visual::before {
@@ -609,7 +1541,7 @@
             right: 0;
             bottom: 0;
             background: linear-gradient(135deg, rgba(169, 171, 136, 0.1), rgba(129, 177, 79, 0.08));
-            border-radius: 32px;
+            border-radius: 28px;
             z-index: 2;
             pointer-events: none;
             opacity: 0.6;
@@ -622,36 +1554,288 @@
 
         .video-overlay {
             position: absolute;
-            bottom: 32px;
-            left: 32px;
-            right: 32px;
+            bottom: 28px;
+            left: 28px;
+            right: 28px;
             background: rgba(93, 78, 55, 0.4);
             backdrop-filter: blur(15px);
-            border-radius: 16px;
-            padding: 20px;
+            border-radius: 14px;
+            padding: 16px;
             z-index: 3;
             text-align: center;
             border: 1px solid var(--glass-border);
         }
 
         .video-overlay h2 {
-            font-size: 28px;
+            font-size: 24px;
             font-weight: 700;
-            margin-bottom: 8px;
+            margin-bottom: 6px;
             color: var(--text-light);
             text-shadow: 0 2px 8px rgba(93, 78, 55, 0.5);
         }
 
         .video-overlay p {
-            font-size: 16px;
+            font-size: 14px;
             color: var(--text-light);
             text-shadow: 0 1px 4px rgba(93, 78, 55, 0.5);
             opacity: 0.9;
         }
 
-        /* Menu Section */
+        /* DJ Section - NEW */
+        .dj-section {
+            padding: 100px 20px;
+            position: relative;
+            background: linear-gradient(135deg, rgba(169, 171, 136, 0.05), rgba(248, 244, 237, 0.3));
+        }
+
+        .dj-container {
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        .dj-header {
+            text-align: center;
+            margin-bottom: 50px;
+        }
+
+        .dj-header h2 {
+            font-size: clamp(32px, 5vw, 42px);
+            font-weight: 800;
+            color: var(--text-primary);
+            margin-bottom: 14px;
+            letter-spacing: -1px;
+        }
+
+        .dj-header p {
+            font-size: 18px;
+            color: var(--text-secondary);
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        /* Featured DJ Event */
+        .featured-dj {
+            background: var(--glass-elevated);
+            border-radius: 24px;
+            padding: 40px;
+            margin-bottom: 60px;
+            border: 1px solid var(--glass-border);
+            box-shadow: 0 20px 40px rgba(93, 78, 55, 0.15);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .featured-dj::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: var(--earth-gradient);
+            opacity: 0.05;
+            z-index: 0;
+        }
+
+        .featured-content {
+            display: grid;
+            grid-template-columns: auto 1fr auto;
+            gap: 40px;
+            align-items: center;
+            position: relative;
+            z-index: 1;
+        }
+
+        .featured-image {
+            width: 150px;
+            height: 150px;
+            border-radius: 20px;
+            object-fit: cover;
+            box-shadow: 0 10px 30px rgba(93, 78, 55, 0.2);
+        }
+
+        .featured-info h3 {
+            font-size: 28px;
+            font-weight: 700;
+            color: var(--text-primary);
+            margin-bottom: 8px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .featured-badge {
+            background: var(--earth-gradient);
+            color: var(--text-light);
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .featured-info p {
+            color: var(--text-secondary);
+            margin-bottom: 20px;
+            font-size: 16px;
+        }
+
+        /* Music Player */
+        .music-player {
+            background: var(--glass-bg);
+            border-radius: 16px;
+            padding: 20px;
+            border: 1px solid var(--glass-border);
+            backdrop-filter: blur(10px);
+        }
+
+        .player-controls {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+
+        .play-button {
+            width: 50px;
+            height: 50px;
+            background: var(--earth-gradient);
+            border: none;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(169, 171, 136, 0.4);
+        }
+
+        .play-button:hover {
+            transform: scale(1.1);
+            box-shadow: 0 6px 20px rgba(169, 171, 136, 0.6);
+        }
+
+        .play-button svg {
+            width: 20px;
+            height: 20px;
+            fill: var(--text-light);
+            margin-left: 2px;
+        }
+
+        .track-info {
+            flex: 1;
+        }
+
+        .track-name {
+            font-weight: 600;
+            color: var(--text-primary);
+            margin-bottom: 4px;
+            font-size: 14px;
+        }
+
+        .track-time {
+            color: var(--text-tertiary);
+            font-size: 12px;
+        }
+
+        .progress-bar {
+            height: 4px;
+            background: rgba(169, 171, 136, 0.2);
+            border-radius: 2px;
+            margin-top: 12px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .progress-fill {
+            position: absolute;
+            top: 0;
+            left: 0;
+            height: 100%;
+            width: 35%;
+            background: var(--earth-gradient);
+            border-radius: 2px;
+            transition: width 0.3s ease;
+        }
+
+        .featured-date {
+            text-align: center;
+        }
+
+        .featured-date-day {
+            font-size: 48px;
+            font-weight: 800;
+            color: var(--earth-primary);
+            line-height: 1;
+            display: block;
+        }
+
+        .featured-date-month {
+            font-size: 14px;
+            color: var(--text-secondary);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        /* Upcoming DJs */
+        .upcoming-djs {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+            gap: 24px;
+        }
+
+        .dj-card {
+            background: var(--glass-bg);
+            border-radius: 20px;
+            padding: 30px;
+            border: 1px solid var(--glass-border);
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            backdrop-filter: blur(10px);
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+
+        .dj-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 12px 30px rgba(93, 78, 55, 0.15);
+            border-color: var(--earth-primary);
+        }
+
+        .dj-avatar {
+            width: 80px;
+            height: 80px;
+            border-radius: 16px;
+            object-fit: cover;
+            flex-shrink: 0;
+        }
+
+        .dj-info {
+            flex: 1;
+        }
+
+        .dj-name {
+            font-size: 18px;
+            font-weight: 700;
+            color: var(--text-primary);
+            margin-bottom: 4px;
+        }
+
+        .dj-style {
+            font-size: 14px;
+            color: var(--text-secondary);
+            margin-bottom: 8px;
+        }
+
+        .dj-date {
+            font-size: 13px;
+            color: var(--earth-primary);
+            font-weight: 600;
+        }
+
+        /* Menu Section - Enhanced with Filters */
         .menu-section {
-            padding: 120px 20px;
+            padding: 100px 20px;
             position: relative;
             background: linear-gradient(135deg, rgba(243, 232, 218, 0.5), rgba(248, 244, 237, 0.3));
         }
@@ -663,55 +1847,171 @@
 
         .menu-header {
             text-align: center;
-            margin-bottom: 60px;
+            margin-bottom: 50px;
         }
 
         .menu-header h2 {
-            font-size: clamp(36px, 6vw, 48px);
+            font-size: clamp(32px, 5vw, 42px);
             font-weight: 800;
             color: var(--text-primary);
-            margin-bottom: 16px;
+            margin-bottom: 14px;
             letter-spacing: -1px;
         }
 
         .menu-header p {
-            font-size: 20px;
+            font-size: 18px;
             color: var(--text-secondary);
             max-width: 600px;
             margin: 0 auto;
         }
 
+        /* Menu Filters - NEW Enhanced Design */
+        .menu-filters {
+            display: flex;
+            gap: 12px;
+            margin-bottom: 40px;
+            padding: 20px;
+            background: var(--glass-elevated);
+            border-radius: 20px;
+            overflow-x: auto;
+            -webkit-overflow-scrolling: touch;
+            scrollbar-width: thin;
+            scrollbar-color: var(--earth-primary) transparent;
+            border: 1px solid var(--glass-border);
+            backdrop-filter: blur(20px);
+        }
+
+        .menu-filters::-webkit-scrollbar {
+            height: 6px;
+        }
+
+        .menu-filters::-webkit-scrollbar-track {
+            background: transparent;
+        }
+
+        .menu-filters::-webkit-scrollbar-thumb {
+            background: var(--earth-primary);
+            border-radius: 3px;
+        }
+
+        .filter-btn {
+            background: var(--glass-bg);
+            border: 1px solid var(--glass-border);
+            color: var(--text-secondary);
+            padding: 12px 20px;
+            border-radius: 14px;
+            cursor: pointer;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            font-weight: 500;
+            font-size: 14px;
+            white-space: nowrap;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            position: relative;
+            overflow: hidden;
+            min-height: 44px;
+        }
+
+        .filter-btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: var(--earth-gradient);
+            opacity: 0.1;
+            transition: left 0.5s;
+        }
+
+        .filter-btn:hover::before {
+            left: 0;
+        }
+
+        .filter-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(169, 171, 136, 0.2);
+            border-color: var(--earth-primary);
+        }
+
+        .filter-btn.active {
+            background: var(--earth-gradient);
+            color: var(--text-light);
+            border-color: transparent;
+            box-shadow: 0 4px 15px rgba(169, 171, 136, 0.4);
+        }
+
+        .filter-icon {
+            font-size: 16px;
+        }
+
+        .filter-count {
+            background: rgba(255, 255, 255, 0.2);
+            padding: 2px 8px;
+            border-radius: 10px;
+            font-size: 12px;
+            font-weight: 600;
+        }
+
+        .filter-btn.active .filter-count {
+            background: rgba(255, 255, 255, 0.3);
+        }
+
+        /* Hidden menu items */
+        .menu-item.hidden {
+            display: none;
+        }
+
+        .menu-category.hidden {
+            display: none;
+        }
+
         .menu-categories {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
-            gap: 40px;
-            margin-bottom: 60px;
+            grid-template-columns: repeat(auto-fit, minmax(340px, 1fr));
+            gap: 32px;
+            margin-bottom: 50px;
+        }
+
+        .menu-category {
+            background: var(--glass-bg);
+            border-radius: 20px;
+            padding: 28px;
+            border: 1px solid var(--glass-border);
+            backdrop-filter: blur(10px);
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .menu-category:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 12px 30px rgba(93, 78, 55, 0.1);
         }
 
         .category-header {
             display: flex;
             align-items: center;
-            gap: 16px;
-            margin-bottom: 24px;
-            padding-bottom: 16px;
+            gap: 14px;
+            margin-bottom: 20px;
+            padding-bottom: 14px;
             border-bottom: 2px solid var(--glass-border);
         }
 
         .category-icon {
-            font-size: 32px;
+            font-size: 28px;
             filter: drop-shadow(0 2px 4px rgba(93, 78, 55, 0.2));
         }
 
         .category-header h3 {
-            font-size: 24px;
+            font-size: 20px;
             font-weight: 700;
             color: var(--text-primary);
             letter-spacing: -0.5px;
         }
 
         .menu-item {
-            margin-bottom: 20px;
-            padding: 16px 0;
+            margin-bottom: 16px;
+            padding: 14px 0;
             border-bottom: 1px solid rgba(169, 171, 136, 0.1);
         }
 
@@ -724,43 +2024,43 @@
             display: flex;
             justify-content: space-between;
             align-items: start;
-            margin-bottom: 8px;
-            gap: 16px;
+            margin-bottom: 6px;
+            gap: 14px;
         }
 
         .item-name {
             font-weight: 600;
             color: var(--text-primary);
-            font-size: 16px;
+            font-size: 15px;
             line-height: 1.3;
         }
 
         .item-price {
             font-weight: 700;
             color: var(--earth-primary);
-            font-size: 16px;
+            font-size: 15px;
             white-space: nowrap;
         }
 
         .item-description {
             color: var(--text-secondary);
-            font-size: 14px;
+            font-size: 13px;
             line-height: 1.4;
-            margin-bottom: 8px;
+            margin-bottom: 6px;
         }
 
         .item-tags {
             display: flex;
-            gap: 8px;
+            gap: 6px;
             flex-wrap: wrap;
         }
 
         .tag {
             background: var(--earth-gradient);
             color: var(--text-light);
-            padding: 4px 8px;
-            border-radius: 12px;
-            font-size: 11px;
+            padding: 3px 8px;
+            border-radius: 10px;
+            font-size: 10px;
             font-weight: 500;
             text-transform: uppercase;
             letter-spacing: 0.5px;
@@ -785,12 +2085,12 @@
             display: flex;
             flex-direction: column;
             align-items: center;
-            gap: 16px;
+            gap: 14px;
         }
 
         .video-loading-spinner {
-            width: 40px;
-            height: 40px;
+            width: 36px;
+            height: 36px;
             border: 3px solid rgba(169, 171, 136, 0.3);
             border-top: 3px solid var(--earth-primary);
             border-radius: 50%;
@@ -801,9 +2101,9 @@
             to { transform: rotate(360deg); }
         }
 
-        /* Sections */
+        /* Sections - Smaller */
         .section {
-            padding: 120px 20px;
+            padding: 100px 20px;
             position: relative;
         }
 
@@ -814,34 +2114,34 @@
 
         .section-header {
             text-align: center;
-            margin-bottom: 80px;
+            margin-bottom: 60px;
         }
 
         .section-header h2 {
-            font-size: clamp(36px, 6vw, 48px);
+            font-size: clamp(32px, 5vw, 42px);
             font-weight: 800;
             color: var(--text-primary);
-            margin-bottom: 16px;
+            margin-bottom: 14px;
             letter-spacing: -1px;
         }
 
         .section-header p {
-            font-size: 20px;
+            font-size: 18px;
             color: var(--text-secondary);
             max-width: 600px;
             margin: 0 auto;
         }
 
-        /* Features Grid */
+        /* Features Grid - Smaller */
         .features-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
-            gap: 32px;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 28px;
         }
 
         .feature-card {
-            padding: 40px 32px;
-            border-radius: 24px;
+            padding: 36px 28px;
+            border-radius: 20px;
             text-align: center;
             transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
             position: relative;
@@ -862,8 +2162,8 @@
         }
 
         .feature-card:hover {
-            transform: translateY(-12px);
-            box-shadow: 0 20px 40px rgba(93, 78, 55, 0.15);
+            transform: translateY(-10px);
+            box-shadow: 0 18px 36px rgba(93, 78, 55, 0.15);
         }
 
         .feature-card:hover::before {
@@ -871,15 +2171,15 @@
         }
 
         .feature-icon {
-            width: 80px;
-            height: 80px;
-            margin: 0 auto 24px;
+            width: 70px;
+            height: 70px;
+            margin: 0 auto 20px;
             background: var(--earth-gradient);
-            border-radius: 20px;
+            border-radius: 18px;
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 32px;
+            font-size: 28px;
             position: relative;
             z-index: 2;
             box-shadow: 0 8px 24px rgba(169, 171, 136, 0.3);
@@ -893,16 +2193,16 @@
             right: -2px;
             bottom: -2px;
             background: var(--earth-gradient);
-            border-radius: 22px;
+            border-radius: 20px;
             z-index: -1;
             opacity: 0.3;
             filter: blur(8px);
         }
 
         .feature-card h3 {
-            font-size: 24px;
+            font-size: 20px;
             font-weight: 700;
-            margin-bottom: 16px;
+            margin-bottom: 12px;
             color: var(--text-primary);
             position: relative;
             z-index: 2;
@@ -913,11 +2213,12 @@
             line-height: 1.6;
             position: relative;
             z-index: 2;
+            font-size: 14px;
         }
 
-        /* Animated Stats Section */
+        /* Animated Stats Section - Smaller */
         .stats-section {
-            padding: 80px 20px;
+            padding: 70px 20px;
             background: var(--glass-bg);
             backdrop-filter: blur(20px);
             border-top: 1px solid var(--glass-border);
@@ -926,16 +2227,16 @@
 
         .stats-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-            gap: 40px;
+            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+            gap: 32px;
             max-width: 1200px;
             margin: 0 auto;
         }
 
         .stat-card {
             text-align: center;
-            padding: 32px 20px;
-            border-radius: 20px;
+            padding: 28px 18px;
+            border-radius: 18px;
             background: var(--glass-elevated);
             border: 1px solid var(--glass-border);
             transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
@@ -957,7 +2258,7 @@
 
         .stat-card:hover {
             transform: translateY(-4px);
-            box-shadow: 0 12px 32px rgba(93, 78, 55, 0.15);
+            box-shadow: 0 10px 28px rgba(93, 78, 55, 0.15);
         }
 
         .stat-card:hover::before {
@@ -965,14 +2266,14 @@
         }
 
         .stat-number {
-            font-size: 48px;
+            font-size: 42px;
             font-weight: 800;
             background: var(--earth-gradient);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
             background-clip: text;
             display: block;
-            margin-bottom: 8px;
+            margin-bottom: 6px;
             position: relative;
             z-index: 2;
             line-height: 1.1;
@@ -980,7 +2281,7 @@
 
         .stat-label {
             color: var(--text-secondary);
-            font-size: 14px;
+            font-size: 13px;
             font-weight: 600;
             text-transform: uppercase;
             letter-spacing: 1px;
@@ -988,18 +2289,18 @@
             z-index: 2;
         }
 
-        /* About Section */
+        /* About Section - Smaller */
         .about-content {
             display: grid;
             grid-template-columns: 1fr 1fr;
-            gap: 80px;
+            gap: 60px;
             align-items: center;
-            margin-top: 48px;
+            margin-top: 40px;
         }
 
         .about-text h3 {
-            font-size: 32px;
-            margin-bottom: 32px;
+            font-size: 28px;
+            margin-bottom: 28px;
             color: var(--text-primary);
             font-weight: 700;
         }
@@ -1007,13 +2308,14 @@
         .about-text p {
             line-height: 1.8;
             color: var(--text-secondary);
-            margin-bottom: 24px;
+            margin-bottom: 20px;
+            font-size: 15px;
         }
 
         .about-video-container {
             position: relative;
-            height: 400px;
-            border-radius: 24px;
+            height: 350px;
+            border-radius: 20px;
             overflow: hidden;
             backdrop-filter: blur(20px);
             border: 1px solid var(--glass-border);
@@ -1024,26 +2326,26 @@
             width: 100%;
             height: 100%;
             object-fit: cover;
-            border-radius: 24px;
+            border-radius: 20px;
         }
 
         .about-video-overlay {
             position: absolute;
-            bottom: 24px;
-            left: 24px;
-            right: 24px;
+            bottom: 20px;
+            left: 20px;
+            right: 20px;
             background: rgba(93, 78, 55, 0.4);
             backdrop-filter: blur(15px);
             border-radius: 12px;
-            padding: 16px;
+            padding: 14px;
             z-index: 3;
             text-align: center;
             border: 1px solid var(--glass-border);
         }
 
-        /* Footer */
+        /* Footer - Smaller */
         .footer {
-            padding: 80px 20px 40px;
+            padding: 70px 20px 36px;
             background: linear-gradient(135deg, rgba(93, 78, 55, 0.1), rgba(169, 171, 136, 0.05));
             position: relative;
         }
@@ -1052,17 +2354,17 @@
             max-width: 1400px;
             margin: 0 auto;
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-            gap: 48px;
-            margin-bottom: 48px;
+            grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+            gap: 40px;
+            margin-bottom: 40px;
             position: relative;
             z-index: 2;
         }
 
         .footer-section h4 {
             color: var(--earth-primary);
-            margin-bottom: 24px;
-            font-size: 18px;
+            margin-bottom: 20px;
+            font-size: 16px;
             font-weight: 700;
         }
 
@@ -1070,10 +2372,11 @@
             color: var(--text-secondary);
             text-decoration: none;
             display: block;
-            margin-bottom: 12px;
+            margin-bottom: 10px;
             transition: all 0.3s ease;
-            padding: 8px 0;
-            min-height: 24px;
+            padding: 6px 0;
+            min-height: 22px;
+            font-size: 14px;
         }
 
         .footer-section a:hover {
@@ -1084,17 +2387,18 @@
         .footer-section p {
             color: var(--text-secondary);
             line-height: 1.6;
+            font-size: 14px;
         }
 
         .social-links {
             display: flex;
-            gap: 16px;
-            margin-top: 24px;
+            gap: 14px;
+            margin-top: 20px;
         }
 
         .social-links a {
-            width: 48px;
-            height: 48px;
+            width: 44px;
+            height: 44px;
             background: var(--glass-bg);
             border: 1px solid var(--glass-border);
             border-radius: 12px;
@@ -1116,32 +2420,33 @@
 
         .footer-bottom {
             text-align: center;
-            padding-top: 48px;
+            padding-top: 40px;
             border-top: 1px solid var(--glass-border);
             color: var(--text-tertiary);
             position: relative;
             z-index: 2;
+            font-size: 14px;
         }
 
         /* Notification System */
         .notification {
             position: fixed;
-            top: 100px;
+            top: 90px;
             right: -400px;
-            padding: 24px 32px;
-            border-radius: 16px;
+            padding: 20px 28px;
+            border-radius: 14px;
             z-index: 3000;
             transition: right 0.4s cubic-bezier(0.4, 0, 0.2, 1);
             display: flex;
             align-items: center;
-            gap: 16px;
-            min-width: 320px;
+            gap: 14px;
+            min-width: 300px;
             backdrop-filter: blur(20px);
             border: 1px solid var(--glass-border);
         }
 
         .notification.show {
-            right: 32px;
+            right: 28px;
         }
 
         .notification.success {
@@ -1155,7 +2460,7 @@
         }
 
         .notification-icon {
-            font-size: 24px;
+            font-size: 20px;
         }
 
         .notification.success .notification-icon {
@@ -1174,11 +2479,12 @@
             font-weight: 700;
             color: var(--text-primary);
             margin-bottom: 4px;
+            font-size: 15px;
         }
 
         .notification-message {
             color: var(--text-secondary);
-            font-size: 14px;
+            font-size: 13px;
         }
 
         /* Enhanced Mobile Responsiveness */
@@ -1186,8 +2492,8 @@
             .nav {
                 top: 10px;
                 width: calc(100% - 20px);
-                padding: 12px 20px;
-                border-radius: 16px;
+                padding: 10px 18px;
+                border-radius: 14px;
                 background: var(--glass-elevated);
                 backdrop-filter: blur(25px);
                 box-shadow: 0 8px 40px rgba(93, 78, 55, 0.3);
@@ -1202,14 +2508,14 @@
             }
 
             .hero {
-                padding: 90px 20px 40px;
+                padding: 80px 20px 36px;
                 min-height: auto;
             }
 
             .hero-container {
                 display: flex;
                 flex-direction: column;
-                gap: 40px;
+                gap: 36px;
             }
 
             .hero-content {
@@ -1218,100 +2524,20 @@
 
             .hero-visual {
                 order: 2;
-                height: 300px;
-                margin-bottom: 30px;
+                height: 280px;
+                margin-bottom: 24px;
             }
 
             .booking-options {
                 order: 3;
                 grid-template-columns: 1fr;
-                gap: 16px;
-                margin-top: 20px;
+                gap: 14px;
+                margin-top: 16px;
             }
 
             .hero-content h1 {
-                font-size: 40px;
-                margin-bottom: 16px;
-            }
-
-            .hero-content p {
-                font-size: 16px;
-                margin-bottom: 24px;
-            }
-
-            .booking-card {
-                padding: 24px 20px;
-                min-height: 200px;
-            }
-
-            .menu-categories {
-                grid-template-columns: 1fr;
-                gap: 24px;
-            }
-
-            .menu-filters {
-                gap: 8px;
-                padding: 0 10px;
-            }
-
-            .filter-btn {
-                padding: 10px 16px;
-                font-size: 12px;
-                min-height: 44px;
-                gap: 6px;
-            }
-
-            .filter-btn .filter-count {
-                padding: 1px 6px;
-                font-size: 11px;
-            }
-
-            .about-content {
-                grid-template-columns: 1fr;
-                gap: 40px;
-            }
-
-            .about-video-container {
-                height: 300px;
-            }
-
-            .section {
-                padding: 60px 20px;
-            }
-
-            .features-grid {
-                grid-template-columns: 1fr;
-                gap: 24px;
-            }
-
-            .stats-grid {
-                grid-template-columns: repeat(2, 1fr);
-                gap: 20px;
-            }
-        }
-
-        @media (max-width: 480px) {
-            .nav {
-                top: 5px;
-                width: calc(100% - 10px);
-                padding: 10px 16px;
-            }
-
-            .hero {
-                padding: 80px 15px 30px;
-            }
-
-            .hero-container {
-                gap: 30px;
-            }
-
-            .hero-visual {
-                height: 250px;
-                margin-bottom: 20px;
-            }
-
-            .hero-content h1 {
-                font-size: 32px;
+                font-size: 36px;
+                margin-bottom: 14px;
             }
 
             .hero-content p {
@@ -1320,8 +2546,110 @@
             }
 
             .booking-card {
-                padding: 20px 16px;
+                padding: 22px 18px;
                 min-height: 180px;
+            }
+
+            .menu-categories {
+                grid-template-columns: 1fr;
+                gap: 20px;
+            }
+
+            .menu-filters {
+                gap: 8px;
+                padding: 16px;
+            }
+
+            .filter-btn {
+                padding: 10px 16px;
+                font-size: 12px;
+                min-height: 40px;
+                gap: 6px;
+            }
+
+            .filter-btn .filter-count {
+                padding: 1px 6px;
+                font-size: 11px;
+            }
+
+            .featured-content {
+                grid-template-columns: 1fr;
+                gap: 24px;
+                text-align: center;
+            }
+
+            .featured-image {
+                margin: 0 auto;
+            }
+
+            .featured-date {
+                order: -1;
+            }
+
+            .upcoming-djs {
+                grid-template-columns: 1fr;
+            }
+
+            .dj-card {
+                padding: 24px;
+            }
+
+            .about-content {
+                grid-template-columns: 1fr;
+                gap: 36px;
+            }
+
+            .about-video-container {
+                height: 280px;
+            }
+
+            .section {
+                padding: 60px 20px;
+            }
+
+            .features-grid {
+                grid-template-columns: 1fr;
+                gap: 20px;
+            }
+
+            .stats-grid {
+                grid-template-columns: repeat(2, 1fr);
+                gap: 16px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .nav {
+                top: 5px;
+                width: calc(100% - 10px);
+                padding: 8px 14px;
+            }
+
+            .hero {
+                padding: 70px 15px 28px;
+            }
+
+            .hero-container {
+                gap: 28px;
+            }
+
+            .hero-visual {
+                height: 240px;
+                margin-bottom: 16px;
+            }
+
+            .hero-content h1 {
+                font-size: 30px;
+            }
+
+            .hero-content p {
+                font-size: 14px;
+                margin-bottom: 16px;
+            }
+
+            .booking-card {
+                padding: 18px 16px;
+                min-height: 160px;
             }
 
             .section {
@@ -1329,15 +2657,15 @@
             }
 
             .about-video-container {
-                height: 250px;
+                height: 240px;
             }
 
             .menu-categories {
-                gap: 20px;
+                gap: 16px;
             }
 
             .menu-category {
-                padding: 24px 20px;
+                padding: 20px 18px;
             }
         }
 
@@ -1389,11 +2717,11 @@
         /* PWA specific styles */
         @media (display-mode: standalone) {
             .nav {
-                top: 30px;
+                top: 25px;
             }
             
             .hero {
-                padding-top: 140px;
+                padding-top: 120px;
             }
         }
 
@@ -1466,6 +2794,7 @@
             <!-- Desktop Navigation -->
             <ul class="nav-links">
                 <li><a href="#home">Home</a></li>
+                <li><a href="#djs">DJs & Events</a></li>
                 <li><a href="#menu">Speisekarte</a></li>
                 <li><a href="#features">Features</a></li>
                 <li><a href="#about">Über uns</a></li>
@@ -1481,6 +2810,7 @@
         <div class="mobile-menu" id="mobileMenu" role="menu">
             <ul class="mobile-menu-links">
                 <li><a href="#home" role="menuitem">Home</a></li>
+                <li><a href="#djs" role="menuitem">DJs & Events</a></li>
                 <li><a href="#menu" role="menuitem">Speisekarte</a></li>
                 <li><a href="#features" role="menuitem">Features</a></li>
                 <li><a href="#about" role="menuitem">Über uns</a></li>
@@ -1564,7 +2894,79 @@
             </div>
         </section>
 
-        <!-- Menu Section -->
+        <!-- DJ Section - NEW -->
+        <section class="dj-section" id="djs" role="region" aria-labelledby="dj-heading">
+            <div class="dj-container">
+                <div class="dj-header">
+                    <h2 id="dj-heading">Live DJs & Events</h2>
+                    <p>Jeden Montag begleiten dich lokale DJs mit sanften Klängen durch deinen Morgen</p>
+                </div>
+                
+                <!-- Featured DJ Event -->
+                <div class="featured-dj glass-elevated">
+                    <div class="featured-content">
+                        <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 150 150'%3E%3Crect fill='%23A9AB88' width='150' height='150'/%3E%3Ctext y='50%25' x='50%25' text-anchor='middle' dominant-baseline='middle' fill='%23F3E8DA' font-size='16' font-family='Inter, sans-serif' font-weight='600'%3EDJ Luna%3C/text%3E%3C/svg%3E" 
+                             alt="DJ Luna" 
+                             class="featured-image">
+                        
+                        <div class="featured-info">
+                            <h3>DJ Luna <span class="featured-badge">Nächstes Event</span></h3>
+                            <p>Deep House & Organic Beats - Perfekt für einen entspannten Morgen mit positiver Energie</p>
+                            
+                            <!-- Music Player -->
+                            <div class="music-player">
+                                <div class="player-controls">
+                                    <button class="play-button" id="playButton" aria-label="Play/Pause">
+                                        <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                                            <path d="M8 5v14l11-7z"/>
+                                        </svg>
+                                    </button>
+                                    <div class="track-info">
+                                        <div class="track-name">Morning Vibes - Exclusive Mix</div>
+                                        <div class="track-time">1:45 / 5:00</div>
+                                    </div>
+                                </div>
+                                <div class="progress-bar">
+                                    <div class="progress-fill"></div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="featured-date">
+                            <span class="featured-date-day">24</span>
+                            <span class="featured-date-month">März</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Upcoming DJs -->
+                <div class="upcoming-djs">
+                    <div class="dj-card glass">
+                        <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 80 80'%3E%3Crect fill='%23DBAA89' width='80' height='80'/%3E%3Ctext y='50%25' x='50%25' text-anchor='middle' dominant-baseline='middle' fill='%23F3E8DA' font-size='12' font-family='Inter, sans-serif' font-weight='600'%3ESoul Café%3C/text%3E%3C/svg%3E" 
+                             alt="Soul Café" 
+                             class="dj-avatar">
+                        <div class="dj-info">
+                            <h4 class="dj-name">Soul Café</h4>
+                            <p class="dj-style">Jazz & Nu-Jazz Fusion</p>
+                            <p class="dj-date">📅 31. März 2025</p>
+                        </div>
+                    </div>
+                    
+                    <div class="dj-card glass">
+                        <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 80 80'%3E%3Crect fill='%2381B14F' width='80' height='80'/%3E%3Ctext y='50%25' x='50%25' text-anchor='middle' dominant-baseline='middle' fill='%23F3E8DA' font-size='12' font-family='Inter, sans-serif' font-weight='600'%3EGreen Wave%3C/text%3E%3C/svg%3E" 
+                             alt="Green Wave" 
+                             class="dj-avatar">
+                        <div class="dj-info">
+                            <h4 class="dj-name">Green Wave</h4>
+                            <p class="dj-style">Ambient & Downtempo</p>
+                            <p class="dj-date">📅 7. April 2025</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Menu Section with Enhanced Filters -->
         <section class="menu-section" id="menu" role="region" aria-labelledby="menu-heading">
             <div class="menu-container">
                 <div class="menu-header">
@@ -1754,7 +3156,7 @@
                             <h3>Österreichische Gesunde Varianten</h3>
                         </div>
                         
-                        <div class="menu-item">
+                        <div class="menu-item" data-tags="vegetarisch,bio">
                             <div class="item-header">
                                 <h4 class="item-name">Gesunder Kaiserschmarren</h4>
                                 <span class="item-price">€12,90</span>
@@ -1766,7 +3168,7 @@
                             </div>
                         </div>
                         
-                        <div class="menu-item">
+                        <div class="menu-item" data-tags="vegetarisch,saisonal,bio">
                             <div class="item-header">
                                 <h4 class="item-name">Bärlauch-Frittata</h4>
                                 <span class="item-price">€13,90</span>
@@ -1779,7 +3181,7 @@
                             </div>
                         </div>
                         
-                        <div class="menu-item">
+                        <div class="menu-item" data-tags="vegan,saisonal,bio">
                             <div class="item-header">
                                 <h4 class="item-name">Kürbis-Porridge</h4>
                                 <span class="item-price">€10,90</span>
@@ -1886,904 +3288,3 @@
                 </div>
             </div>
         </section>
-
-        <!-- Animated Stats Section -->
-        <section class="stats-section" role="region" aria-labelledby="stats-heading">
-            <div class="section-container">
-                <h2 id="stats-heading" style="text-align: center; margin-bottom: 60px; font-size: clamp(36px, 6vw, 48px); font-weight: 800; color: var(--text-primary);">Unsere Erfolgsgeschichte</h2>
-                
-                <div class="stats-grid">
-                    <div class="stat-card glass">
-                        <span class="stat-number" data-target="500" id="visitors-count">0</span>
-                        <div class="stat-label">Glückliche Gäste</div>
-                    </div>
-                    <div class="stat-card glass">
-                        <span class="stat-number" data-target="4.9" id="rating-count">0.0</span>
-                        <div class="stat-label">Google Bewertung</div>
-                    </div>
-                    <div class="stat-card glass">
-                        <span class="stat-number" data-target="2847" id="meals-count">0</span>
-                        <div class="stat-label">Servierte Mahlzeiten</div>
-                    </div>
-                    <div class="stat-card glass">
-                        <span class="stat-number" data-target="52" id="events-count">0</span>
-                        <div class="stat-label">Live-Events</div>
-                    </div>
-                </div>
-            </div>
-        </section>
-
-        <!-- Features Section -->
-        <section class="section" id="features" role="region" aria-labelledby="features-heading">
-            <div class="section-container">
-                <div class="section-header">
-                    <h2 id="features-heading">Was macht uns besonders?</h2>
-                    <p>Mehr als nur ein Brunch – ein Erlebnis für alle Sinne</p>
-                </div>
-                
-                <div class="features-grid">
-                    <div class="feature-card glass">
-                        <div class="feature-icon" aria-hidden="true">🌱</div>
-                        <h3>100% Bio & Regional</h3>
-                        <p>Alle unsere Zutaten stammen von lokalen Bio-Bauern. Frisch, nachhaltig und voller Geschmack.</p>
-                    </div>
-                    
-                    <div class="feature-card glass">
-                        <div class="feature-icon" aria-hidden="true">🎵</div>
-                        <h3>Live Musik</h3>
-                        <p>Jeden Montag begleiten dich lokale Künstler mit sanften Klängen durch deinen Morgen.</p>
-                    </div>
-                    
-                    <div class="feature-card glass">
-                        <div class="feature-icon" aria-hidden="true">☕</div>
-                        <h3>Barista Kaffee</h3>
-                        <p>Preisgekrönter Kaffee von unserem hauseigenen Barista-Team. Der perfekte Start in den Tag.</p>
-                    </div>
-                    
-                    <div class="feature-card glass">
-                        <div class="feature-icon" aria-hidden="true">🧘‍♀️</div>
-                        <h3>Morning Yoga</h3>
-                        <p>Optional: Starte mit einer 30-minütigen Yoga-Session vor dem Brunch (Feel-Well Package).</p>
-                    </div>
-                    
-                    <div class="feature-card glass">
-                        <div class="feature-icon" aria-hidden="true">🌍</div>
-                        <h3>Zero Waste</h3>
-                        <p>Nachhaltige Verpackungen, Kompostierung und bewusste Portionsgrößen für eine bessere Zukunft.</p>
-                    </div>
-                    
-                    <div class="feature-card glass">
-                        <div class="feature-icon" aria-hidden="true">📚</div>
-                        <h3>Ernährungs-Workshops</h3>
-                        <p>Lerne mehr über gesunde Ernährung in unseren monatlichen Workshops und Kochkursen.</p>
-                    </div>
-                </div>
-            </div>
-        </section>
-
-        <!-- About Section -->
-        <section class="section" id="about" role="region" aria-labelledby="about-heading">
-            <div class="section-container">
-                <div class="section-header">
-                    <h2 id="about-heading">Über uns</h2>
-                    <p>Eine Vision von gesundem Genuss und Gemeinschaft</p>
-                </div>
-                
-                <div class="about-content">
-                    <div class="about-text">
-                        <h3>Unsere Geschichte</h3>
-                        <p>Was einst als einfaches Geburtstagsritual begann, lebt heute in unserem Brunchlokal weiter. Drei Schwestern – eine Ärztin und zwei Flugbegleiterinnen – vereint durch die Liebe zur Familie, zum Reisen und natürlich: zum Brunchen.</p>
-                        <p>Ob in New York, Chicago, an der Amalfiküste oder aber auch ganz einfach in unserer Heimatstadt Wien – das gemeinsame Brunchen war immer ein besonderer Moment. Und mit jedem Bissen, jedem Kaffee und jeder neuen Idee wuchs auch der Wunsch, diesen Genuss zu teilen.</p>
-                        <p>Als bei Tina eine chronische Darmentzündung diagnostiziert wurde, wurde das Thema Ernährung für uns noch bedeutungsvoller. Seither setzen wir gezielt auf gesunde Alternativen und entzündungshemmende Zutaten – ohne auf Geschmack oder Kreativität zu verzichten.</p>
-                    </div>
-                    
-                    <div class="about-video-container glass">
-                        <!-- Video Loading State -->
-                        <div class="video-loading" id="aboutVideoLoading" aria-hidden="true">
-                            <div class="video-loading-spinner"></div>
-                            <p>Loading...</p>
-                        </div>
-                        
-                        <!-- About Video -->
-                        <video 
-                            class="about-video" 
-                            id="aboutVideo"
-                            muted 
-                            loop 
-                            playsinline
-                            poster="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 600 400'%3E%3Crect fill='%23F3E8DA' width='600' height='400'/%3E%3Ctext y='45%25' x='50%25' text-anchor='middle' dominant-baseline='middle' fill='%235D4E37' font-size='16' font-family='Inter, sans-serif'%3EDrei Schwestern%3C/text%3E%3Ctext y='55%25' x='50%25' text-anchor='middle' dominant-baseline='middle' fill='%23A9AB88' font-size='14' font-family='Inter, sans-serif'%3EEine Geschichte%3C/text%3E%3C/svg%3E"
-                            onloadstart="showAboutVideoLoading()"
-                            oncanplay="hideAboutVideoLoading()"
-                            onerror="handleAboutVideoError()"
-                            aria-label="Video über die drei Schwestern und ihre Geschichte"
-                        >
-                            <source src="https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ElephantsDream.mp4" type="video/mp4">
-                        </video>
-                        
-                        <!-- Video Overlay -->
-                        <div class="about-video-overlay">
-                            <h4 style="font-size: 18px; font-weight: 600; margin-bottom: 4px; color: var(--text-light);">Unsere Story</h4>
-                            <p style="font-size: 14px; opacity: 0.9; color: var(--text-light);">Drei Schwestern, eine Vision</p>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </section>
-
-        <!-- Contact Section -->
-        <section class="section" id="contact" role="region" aria-labelledby="contact-heading">
-            <div class="section-container">
-                <div class="section-header">
-                    <h2 id="contact-heading">Kontakt & Anfahrt</h2>
-                    <p>Wir freuen uns auf deinen Besuch!</p>
-                </div>
-                
-                <div class="about-content">
-                    <div class="about-text">
-                        <h3>Besuche uns</h3>
-                        <p><strong>📍 Adresse:</strong><br>
-                        ra'mien restaurant GmbH<br>
-                        Gumpendorfer str. 9<br>
-                        1060 Wien</p>
-                        
-                        <p><strong>🕐 Öffnungszeiten:</strong><br>
-                        Montag: 08:00 - 14:00 Uhr<br>
-                        Dienstag - Sonntag: Geschlossen<br>
-                        <small>Reservierungen empfohlen</small></p>
-                        
-                        <p><strong>📞 Kontakt:</strong><br>
-                        Telefon: <a href="tel:+4367612345678" style="color: var(--earth-primary);">+43 676 123 456 78</a><br>
-                        E-Mail: <a href="mailto:hello@healthybrunchclub.at" style="color: var(--earth-primary);">hello@healthybrunchclub.at</a><br>
-                        WhatsApp: <a href="https://wa.me/4367612345678" style="color: var(--earth-primary);">+43 676 123 456 78</a></p>
-                    </div>
-                    
-                    <div class="about-video-container glass">
-                        <div style="width: 100%; height: 100%; background: var(--earth-gradient); display: flex; align-items: center; justify-content: center; flex-direction: column; text-align: center; padding: 40px; border-radius: 24px;">
-                            <div style="font-size: 48px; margin-bottom: 20px;" aria-hidden="true">📍</div>
-                            <h3 style="color: var(--text-light); margin-bottom: 16px; font-size: 24px;">Wien Zentrum</h3>
-                            <p style="color: var(--text-light); margin-bottom: 20px; opacity: 0.9;">Gumpendorfer Straße 9<br>1060 Wien</p>
-                            <a href="https://maps.google.com/?q=Gumpendorfer+Straße+9,+1060+Wien" target="_blank" style="background: rgba(243, 232, 218, 0.2); color: var(--text-light); padding: 12px 24px; border-radius: 12px; text-decoration: none; font-weight: 600; transition: all 0.3s ease; border: 1px solid rgba(243, 232, 218, 0.3);" onmouseover="this.style.background='rgba(243, 232, 218, 0.3)'" onmouseout="this.style.background='rgba(243, 232, 218, 0.2)'">Route planen</a>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </section>
-    </main>
-
-    <!-- Footer -->
-    <footer class="footer" role="contentinfo">
-        <div class="footer-container">
-            <div class="footer-section">
-                <h4>Healthy Brunch Club</h4>
-                <p>Start your Monday right with healthy food, good music, and positive vibes.</p>
-                <div class="social-links">
-                    <a href="#" aria-label="Instagram" title="Folge uns auf Instagram">📸</a>
-                    <a href="#" aria-label="Facebook" title="Like uns auf Facebook">👍</a>
-                    <a href="#" aria-label="Twitter" title="Folge uns auf Twitter">🐦</a>
-                    <a href="#" aria-label="LinkedIn" title="Verbinde dich mit uns auf LinkedIn">💼</a>
-                </div>
-            </div>
-            
-            <div class="footer-section">
-                <h4>Quick Links</h4>
-                <a href="#menu">Speisekarte</a>
-                <a href="#features">Features</a>
-                <a href="#about">Über uns</a>
-                <a href="#contact">Kontakt</a>
-                <a href="#booking">Buchungen</a>
-            </div>
-            
-            <div class="footer-section">
-                <h4>Öffnungszeiten</h4>
-                <p>Montag: 08:00 - 14:00</p>
-                <p>Dienstag - Sonntag: Geschlossen</p>
-                <p style="margin-top: 1rem;">📍 Wien, Österreich</p>
-            </div>
-            
-            <div class="footer-section">
-                <h4>Kontakt</h4>
-                <a href="mailto:hello@healthybrunchclub.at">hello@healthybrunchclub.at</a>
-                <a href="tel:+4367612345678">+43 676 123 456 78</a>
-                <p style="margin-top: 1rem;">
-                    <a href="/impressum">Impressum</a> | 
-                    <a href="/datenschutz">Datenschutz</a>
-                </p>
-            </div>
-        </div>
-        
-        <div class="footer-bottom">
-            <p>&copy; 2025 Healthy Brunch Club. Made with 💚 in Wien</p>
-        </div>
-    </footer>
-
-    <!-- PWA Manifest -->
-    <script>
-        // PWA Service Worker Registration
-        if ('serviceWorker' in navigator) {
-            window.addEventListener('load', function() {
-                navigator.serviceWorker.register('/sw.js')
-                    .then(function(registration) {
-                        console.log('ServiceWorker registration successful');
-                    })
-                    .catch(function(err) {
-                        console.log('ServiceWorker registration failed: ', err);
-                    });
-            });
-        }
-
-        // Enhanced Mobile Menu
-        const mobileMenuToggle = document.getElementById('mobileMenuToggle');
-        const mobileMenu = document.getElementById('mobileMenu');
-        const navbar = document.getElementById('navbar');
-
-        mobileMenuToggle.addEventListener('click', function() {
-            const isExpanded = mobileMenu.classList.contains('show');
-            
-            mobileMenu.classList.toggle('show');
-            mobileMenuToggle.setAttribute('aria-expanded', !isExpanded);
-            mobileMenuToggle.setAttribute('aria-label', isExpanded ? 'Menü öffnen' : 'Menü schließen');
-            
-            // Animate hamburger menu
-            if (mobileMenu.classList.contains('show')) {
-                mobileMenuToggle.innerHTML = '✕';
-                mobileMenuToggle.style.transform = 'rotate(180deg)';
-            } else {
-                mobileMenuToggle.innerHTML = '☰';
-                mobileMenuToggle.style.transform = 'rotate(0deg)';
-            }
-        });
-
-        // Close mobile menu when clicking on a link
-        const mobileLinks = document.querySelectorAll('.mobile-menu-links a');
-        mobileLinks.forEach(link => {
-            link.addEventListener('click', () => {
-                mobileMenu.classList.remove('show');
-                mobileMenuToggle.setAttribute('aria-expanded', 'false');
-                mobileMenuToggle.setAttribute('aria-label', 'Menü öffnen');
-                mobileMenuToggle.innerHTML = '☰';
-                mobileMenuToggle.style.transform = 'rotate(0deg)';
-            });
-        });
-
-        // Close mobile menu when clicking outside
-        document.addEventListener('click', function(e) {
-            if (!navbar.contains(e.target) && mobileMenu.classList.contains('show')) {
-                mobileMenu.classList.remove('show');
-                mobileMenuToggle.setAttribute('aria-expanded', 'false');
-                mobileMenuToggle.setAttribute('aria-label', 'Menü öffnen');
-                mobileMenuToggle.innerHTML = '☰';
-                mobileMenuToggle.style.transform = 'rotate(0deg)';
-            }
-        });
-
-        // Enhanced Navbar Scroll Effect
-        let lastScrollTop = 0;
-        window.addEventListener('scroll', function() {
-            const currentScroll = window.pageYOffset || document.documentElement.scrollTop;
-            
-            if (currentScroll > 100) {
-                navbar.classList.add('scrolled');
-            } else {
-                navbar.classList.remove('scrolled');
-            }
-
-            // Hide/show navbar on scroll (mobile optimization)
-            if (window.innerWidth <= 768) {
-                if (currentScroll > lastScrollTop && currentScroll > 200) {
-                    // Scrolling down & past threshold
-                    navbar.style.transform = 'translateX(-50%) translateY(-100%)';
-                } else {
-                    // Scrolling up
-                    navbar.style.transform = 'translateX(-50%) translateY(0)';
-                }
-            }
-            
-            lastScrollTop = currentScroll <= 0 ? 0 : currentScroll;
-        });
-
-        // Animated Counter Implementation - FIXED
-        function animateCounter(element, target, duration = 2000, suffix = '') {
-            const start = 0;
-            const increment = target / (duration / 16);
-            let current = start;
-            
-            const timer = setInterval(() => {
-                current += increment;
-                if (current >= target) {
-                    current = target;
-                    clearInterval(timer);
-                }
-                
-                // Format number based on type
-                let displayValue;
-                if (suffix === '★') {
-                    displayValue = current.toFixed(1) + suffix;
-                } else if (target >= 1000) {
-                    displayValue = Math.floor(current).toLocaleString('de-DE');
-                } else {
-                    displayValue = Math.floor(current);
-                }
-                
-                element.textContent = displayValue;
-            }, 16);
-        }
-
-        // Initialize counters when they come into view - FIXED
-        function initializeCounters() {
-            const counters = [
-                { id: 'visitors-count', target: 500, suffix: '' },
-                { id: 'rating-count', target: 4.9, suffix: '★' },
-                { id: 'meals-count', target: 2847, suffix: '' },
-                { id: 'events-count', target: 52, suffix: '' }
-            ];
-
-            const observer = new IntersectionObserver((entries) => {
-                entries.forEach(entry => {
-                    if (entry.isIntersecting) {
-                        const counterId = entry.target.id;
-                        const counterData = counters.find(c => c.id === counterId);
-                        
-                        if (counterData && (entry.target.textContent === '0' || entry.target.textContent === '0.0')) {
-                            animateCounter(entry.target, counterData.target, 2000, counterData.suffix);
-                            observer.unobserve(entry.target);
-                        }
-                    }
-                });
-            }, { threshold: 0.5 });
-
-            counters.forEach(counter => {
-                const element = document.getElementById(counter.id);
-                if (element) {
-                    observer.observe(element);
-                }
-            });
-        }
-
-        // Menu Filter System
-        function initializeMenuFilters() {
-            const filterButtons = document.querySelectorAll('.filter-btn');
-            const menuItems = document.querySelectorAll('.menu-item');
-            const menuCategories = document.querySelectorAll('.menu-category');
-
-            // Count items for each filter
-            function updateFilterCounts() {
-                const counts = {
-                    alle: menuItems.length,
-                    vegan: 0,
-                    bio: 0,
-                    glutenfrei: 0,
-                    vegetarisch: 0,
-                    protein: 0,
-                    saisonal: 0
-                };
-
-                menuItems.forEach(item => {
-                    const tags = item.dataset.tags ? item.dataset.tags.split(',') : [];
-                    
-                    tags.forEach(tag => {
-                        if (counts.hasOwnProperty(tag)) {
-                            counts[tag]++;
-                        }
-                    });
-                });
-
-                // Update count displays
-                Object.keys(counts).forEach(filter => {
-                    const countElement = document.getElementById(`count-${filter}`);
-                    if (countElement) {
-                        countElement.textContent = counts[filter];
-                    }
-                });
-            }
-
-            // Filter functionality
-            function filterMenuItems(activeFilter) {
-                let visibleCount = 0;
-
-                menuItems.forEach(item => {
-                    const tags = item.dataset.tags ? item.dataset.tags.split(',') : [];
-                    const shouldShow = activeFilter === 'alle' || tags.includes(activeFilter);
-
-                    if (shouldShow) {
-                        item.classList.remove('hidden');
-                        visibleCount++;
-                    } else {
-                        item.classList.add('hidden');
-                    }
-                });
-
-                // Hide/show categories based on visible items
-                menuCategories.forEach(category => {
-                    const categoryItems = category.querySelectorAll('.menu-item:not(.hidden)');
-                    if (categoryItems.length === 0) {
-                        category.classList.add('hidden');
-                    } else {
-                        category.classList.remove('hidden');
-                    }
-                });
-
-                return visibleCount;
-            }
-
-            // Add click handlers
-            filterButtons.forEach(button => {
-                button.addEventListener('click', function() {
-                    const filter = this.dataset.filter;
-
-                    // Update active state
-                    filterButtons.forEach(btn => {
-                        btn.classList.remove('active');
-                        btn.setAttribute('aria-pressed', 'false');
-                    });
-                    this.classList.add('active');
-                    this.setAttribute('aria-pressed', 'true');
-
-                    // Filter items
-                    const visibleCount = filterMenuItems(filter);
-
-                    // Show notification of results
-                    if (filter !== 'alle') {
-                        showNotification('Filter angewendet', `${visibleCount} Gerichte gefunden für "${filter.charAt(0).toUpperCase() + filter.slice(1)}"`, 'success');
-                    }
-                });
-            });
-
-            // Initialize counts
-            updateFilterCounts();
-
-            // Keyboard navigation for filters
-            filterButtons.forEach(button => {
-                button.addEventListener('keydown', function(e) {
-                    if (e.key === 'Enter' || e.key === ' ') {
-                        e.preventDefault();
-                        this.click();
-                    }
-                });
-            });
-        }
-
-        // Video control functions
-        function showVideoLoading() {
-            const loading = document.getElementById('videoLoading');
-            if (loading) loading.style.display = 'flex';
-        }
-
-        function hideVideoLoading() {
-            const loading = document.getElementById('videoLoading');
-            if (loading) loading.style.display = 'none';
-        }
-
-        function handleVideoError() {
-            const video = document.getElementById('heroVideo');
-            const loading = document.getElementById('videoLoading');
-            
-            if (loading) loading.style.display = 'none';
-            
-            // Show fallback content
-            if (video) {
-                video.style.display = 'none';
-                const fallback = document.createElement('div');
-                fallback.style.cssText = `
-                    position: absolute;
-                    top: 0;
-                    left: 0;
-                    width: 100%;
-                    height: 100%;
-                    display: flex;
-                    align-items: center;
-                    justify-content: center;
-                    flex-direction: column;
-                    text-align: center;
-                    background: var(--earth-gradient);
-                    border-radius: 32px;
-                    color: var(--text-light);
-                `;
-                fallback.innerHTML = `
-                    <h2 style="font-size: 32px; font-weight: 700; margin-bottom: 16px;">Healthy Brunch</h2>
-                    <p style="font-size: 18px; opacity: 0.9;">Fresh • Delicious • Energizing</p>
-                `;
-                video.parentNode.appendChild(fallback);
-            }
-        }
-
-        // About Video Functions
-        function showAboutVideoLoading() {
-            const loading = document.getElementById('aboutVideoLoading');
-            if (loading) loading.style.display = 'flex';
-        }
-
-        function hideAboutVideoLoading() {
-            const loading = document.getElementById('aboutVideoLoading');
-            if (loading) loading.style.display = 'none';
-        }
-
-        function handleAboutVideoError() {
-            const video = document.getElementById('aboutVideo');
-            const loading = document.getElementById('aboutVideoLoading');
-            
-            if (loading) loading.style.display = 'none';
-            
-            // Show fallback content
-            if (video) {
-                video.style.display = 'none';
-                const fallback = document.createElement('div');
-                fallback.style.cssText = `
-                    position: absolute;
-                    top: 0;
-                    left: 0;
-                    width: 100%;
-                    height: 100%;
-                    display: flex;
-                    align-items: center;
-                    justify-content: center;
-                    background: var(--earth-gradient);
-                    color: var(--text-light);
-                    text-align: center;
-                    padding: 40px;
-                    border-radius: 24px;
-                `;
-                fallback.innerHTML = `
-                    <div>
-                        <h3 style="font-size: 24px; margin-bottom: 16px;">Drei Schwestern</h3>
-                        <p style="opacity: 0.9;">Eine Geschichte von Familie,<br>Reisen und Leidenschaft</p>
-                    </div>
-                `;
-                video.parentNode.appendChild(fallback);
-            }
-        }
-
-        // Initialize videos with Intersection Observer
-        function initializeVideo() {
-            const video = document.getElementById('heroVideo');
-            if (!video) return;
-
-            const observer = new IntersectionObserver((entries) => {
-                entries.forEach(entry => {
-                    if (entry.isIntersecting) {
-                        video.play().catch(() => {});
-                    } else {
-                        video.pause();
-                    }
-                });
-            }, { threshold: 0.3 });
-
-            observer.observe(video);
-        }
-
-        // Enhanced Smooth Scrolling
-        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
-            anchor.addEventListener('click', function (e) {
-                e.preventDefault();
-                const targetId = this.getAttribute('href');
-                const targetElement = document.querySelector(targetId);
-                
-                if (targetElement) {
-                    const offsetTop = targetElement.offsetTop - 100; // Account for fixed navbar
-                    window.scrollTo({
-                        top: offsetTop,
-                        behavior: 'smooth'
-                    });
-                }
-            });
-        });
-
-        // Booking Functions
-        function showBooking(type) {
-            let message = '';
-            switch(type) {
-                case 'friends':
-                    message = 'Vielen Dank für Ihr Interesse am Freund:innen Brunch! Wir leiten Sie zur Buchungsseite weiter.';
-                    break;
-                case 'corporate':
-                    message = 'Vielen Dank für Ihr Interesse am Firmen Event Brunch! Wir leiten Sie zur Buchungsseite weiter.';
-                    break;
-                case 'romantic':
-                    message = 'Vielen Dank für Ihr Interesse am Romantischen Brunch! Wir leiten Sie zur Buchungsseite weiter.';
-                    break;
-                default:
-                    message = 'Vielen Dank für Ihr Interesse! Wir leiten Sie zur Buchungsseite weiter.';
-            }
-            
-            showNotification('Buchungsanfrage', message, 'success');
-            
-            // Simulate booking redirect (replace with actual booking system)
-            setTimeout(() => {
-                // window.location.href = '/booking?type=' + type;
-                console.log('Redirecting to booking page for:', type);
-            }, 2000);
-        }
-
-        // Notification system
-        function showNotification(title, message, type = 'success') {
-            const notification = document.getElementById('notification');
-            const icon = notification.querySelector('.notification-icon');
-            const titleEl = notification.querySelector('.notification-title');
-            const messageEl = notification.querySelector('.notification-message');
-            
-            notification.className = `notification ${type}`;
-            icon.textContent = type === 'success' ? '✅' : '❌';
-            titleEl.textContent = title;
-            messageEl.textContent = message;
-            
-            notification.classList.add('show');
-            
-            setTimeout(() => {
-                notification.classList.remove('show');
-            }, 5000);
-        }
-
-        // Video autoplay optimization for mobile
-        function handleVideoAutoplay() {
-            const video = document.querySelector('.hero-video');
-            const aboutVideo = document.querySelector('.about-video');
-            const isTouch = 'ontouchstart' in window;
-            
-            if (isTouch) {
-                // On touch devices, be more careful with autoplay
-                [video, aboutVideo].forEach(vid => {
-                    if (vid) {
-                        vid.muted = true;
-                        vid.setAttribute('playsinline', '');
-                        
-                        // Try to play on first user interaction
-                        document.addEventListener('touchstart', function playVideo() {
-                            vid.play().catch(e => console.log('Video autoplay prevented'));
-                            document.removeEventListener('touchstart', playVideo);
-                        }, { once: true });
-                    }
-                });
-            }
-        }
-
-        // Performance optimization: Intersection Observer for animations
-        const observerOptions = {
-            threshold: 0.1,
-            rootMargin: '0px 0px -50px 0px'
-        };
-
-        const fadeInObserver = new IntersectionObserver((entries) => {
-            entries.forEach(entry => {
-                if (entry.isIntersecting) {
-                    entry.target.style.opacity = '1';
-                    entry.target.style.transform = 'translateY(0)';
-                    entry.target.classList.add('animated');
-                }
-            });
-        }, observerOptions);
-
-        // Lazy loading images
-        function lazyLoadImages() {
-            const images = document.querySelectorAll('img[data-src]');
-            const imageObserver = new IntersectionObserver((entries, observer) => {
-                entries.forEach(entry => {
-                    if (entry.isIntersecting) {
-                        const img = entry.target;
-                        img.src = img.dataset.src;
-                        img.classList.remove('lazy');
-                        imageObserver.unobserve(img);
-                    }
-                });
-            });
-
-            images.forEach(img => imageObserver.observe(img));
-        }
-
-        // Keyboard navigation improvements
-        function enhanceKeyboardNavigation() {
-            // Add keyboard support for booking cards
-            document.querySelectorAll('.booking-card').forEach(card => {
-                card.addEventListener('keydown', function(e) {
-                    if (e.key === 'Enter' || e.key === ' ') {
-                        e.preventDefault();
-                        const button = this.querySelector('button');
-                        if (button) {
-                            button.click();
-                        }
-                    }
-                });
-            });
-
-            // Escape key to close mobile menu
-            document.addEventListener('keydown', (e) => {
-                if (e.key === 'Escape' && mobileMenu.classList.contains('show')) {
-                    mobileMenu.classList.remove('show');
-                    mobileMenuToggle.setAttribute('aria-expanded', 'false');
-                    mobileMenuToggle.setAttribute('aria-label', 'Menü öffnen');
-                    mobileMenuToggle.innerHTML = '☰';
-                    mobileMenuToggle.style.transform = 'rotate(0deg)';
-                    mobileMenuToggle.focus();
-                }
-            });
-        }
-
-        // Initialize everything
-        document.addEventListener('DOMContentLoaded', () => {
-            initializeVideo();
-            initializeAboutVideo();
-            handleVideoAutoplay();
-            initializeCounters();
-            initializeMenuFilters(); // NEW: Initialize menu filters
-            lazyLoadImages();
-            enhanceKeyboardNavigation();
-            
-            // Observe elements for animation
-            document.querySelectorAll('.feature-card, .menu-category').forEach((el, index) => {
-                el.style.opacity = '0';
-                el.style.transform = 'translateY(30px)';
-                el.style.transition = `all 0.8s cubic-bezier(0.4, 0, 0.2, 1) ${index * 0.1}s`;
-                fadeInObserver.observe(el);
-            });
-
-            // Trigger hero animations
-            setTimeout(() => {
-                const heroElements = document.querySelectorAll('.hero-content, .hero-visual');
-                heroElements.forEach(el => {
-                    if (el.style.animationFillMode !== 'forwards') {
-                        el.style.opacity = '1';
-                    }
-                });
-            }, 100);
-
-            // Initialize performance monitoring
-            if ('performance' in window) {
-                window.addEventListener('load', function() {
-                    setTimeout(function() {
-                        const perfData = performance.getEntriesByType('navigation')[0];
-                        console.log('Page load time:', perfData.loadEventEnd - perfData.loadEventStart, 'ms');
-                    }, 0);
-                });
-            }
-        });
-
-        // Optimize for touch devices
-        if ('ontouchstart' in window) {
-            document.body.classList.add('touch-device');
-            
-            // Add custom touch feedback
-            document.querySelectorAll('.booking-card, .feature-card, .menu-category').forEach(card => {
-                card.addEventListener('touchstart', function() {
-                    this.style.transform = 'scale(0.98)';
-                });
-                
-                card.addEventListener('touchend', function() {
-                    this.style.transform = '';
-                });
-            });
-        }
-
-        // Add loading states for better UX
-        window.addEventListener('load', function() {
-            document.body.classList.add('loaded');
-            
-            // Remove any loading spinners that might still be visible
-            document.querySelectorAll('.video-loading').forEach(loading => {
-                loading.style.display = 'none';
-            });
-
-            // Initialize analytics (replace with actual analytics)
-            if (typeof gtag !== 'undefined') {
-                gtag('config', 'GA_MEASUREMENT_ID');
-            }
-        });
-
-        // Enhanced error handling for videos
-        function setupVideoErrorHandling() {
-            const videos = document.querySelectorAll('video');
-            videos.forEach(video => {
-                video.addEventListener('error', function() {
-                    console.log('Video failed to load:', this.src);
-                    // Create fallback content
-                    const fallback = document.createElement('div');
-                    fallback.className = 'video-fallback';
-                    fallback.style.cssText = `
-                        position: absolute;
-                        top: 0;
-                        left: 0;
-                        width: 100%;
-                        height: 100%;
-                        display: flex;
-                        align-items: center;
-                        justify-content: center;
-                        background: var(--earth-gradient);
-                        color: var(--text-light);
-                        text-align: center;
-                        border-radius: inherit;
-                    `;
-                    fallback.innerHTML = `
-                        <div>
-                            <div style="font-size: 48px; margin-bottom: 16px;" aria-hidden="true">🎬</div>
-                            <h3 style="margin-bottom: 8px;">Video wird geladen...</h3>
-                            <p style="opacity: 0.8; font-size: 14px;">Bitte haben Sie einen Moment Geduld</p>
-                        </div>
-                    `;
-                    
-                    this.style.display = 'none';
-                    this.parentNode.appendChild(fallback);
-                });
-            });
-        }
-
-        // Call setup functions
-        document.addEventListener('DOMContentLoaded', () => {
-            setupVideoErrorHandling();
-        });
-
-        // Add resize handler for responsive adjustments
-        window.addEventListener('resize', function() {
-            // Recalculate any dynamic dimensions if needed
-            const heroVisual = document.querySelector('.hero-visual');
-            if (heroVisual && window.innerWidth <= 768) {
-                heroVisual.style.height = '300px';
-            } else if (heroVisual) {
-                heroVisual.style.height = '600px';
-            }
-        });
-
-        // Prefetch important resources
-        function prefetchResources() {
-            const link1 = document.createElement('link');
-            link1.rel = 'prefetch';
-            link1.href = 'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4';
-            document.head.appendChild(link1);
-
-            const link2 = document.createElement('link');
-            link2.rel = 'prefetch';
-            link2.href = 'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ElephantsDream.mp4';
-            document.head.appendChild(link2);
-        }
-
-        // Critical resource preloading
-        window.addEventListener('load', prefetchResources);
-
-        // Web Vitals monitoring (for production)
-        function initWebVitals() {
-            if (typeof getCLS !== 'undefined') {
-                getCLS(console.log);
-                getFID(console.log);
-                getFCP(console.log);
-                getLCP(console.log);
-                getTTFB(console.log);
-            }
-        }
-
-        // Error tracking
-        window.addEventListener('error', function(e) {
-            console.error('JavaScript error:', e.error);
-            // Send to error tracking service in production
-        });
-
-        // Unhandled promise rejection tracking
-        window.addEventListener('unhandledrejection', function(e) {
-            console.error('Unhandled promise rejection:', e.reason);
-            // Send to error tracking service in production
-        });
-    </script>
-
-    <!-- Netlify Forms -->
-    <form name="contact" netlify netlify-honeypot="bot-field" hidden>
-        <input type="text" name="name" />
-        <input type="email" name="email" />
-        <textarea name="message"></textarea>
-    </form>
-
-    <!-- Netlify Analytics -->
-    <script defer src="https://identity.netlify.com/v1/netlify-identity-widget.js"></script>
-</body>
-</html>.pause();
-                    }
-                });
-            }, { threshold: 0.5 });
-
-            observer.observe(video);
-        }
-
-        function initializeAboutVideo() {
-            const video = document.getElementById('aboutVideo');
-            if (!video) return;
-
-            const observer = new IntersectionObserver((entries) => {
-                entries.forEach(entry => {
-                    if (entry.isIntersecting) {
-                        video.play().catch(() => {});
-                    } else {
-                        video
