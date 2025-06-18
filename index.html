@@ -1,4 +1,147 @@
-<!DOCTYPE html>
+                        <div class="menu-item" data-tags="vegetarisch,bio">
+                            <div class="item-header">
+                                <h4 class="item-name">Gesunder Kaiserschmarren</h4>
+                                <span class="item-price">€12,90</span>
+                            </div>
+                            <p class="item-description">Vollkorn-Dinkel, Kokosblütenzucker, Beeren, Joghurt</p>
+                            <div class="item-tags">
+                                <span class="tag">Vegetarisch</span>
+                                <span class="tag">Bio</span>
+                            </div>
+                        </div>
+                        
+                        <div class="menu-item" data-tags="vegetarisch,saisonal,bio">
+                            <div class="item-header">
+                                <h4 class="item-name">Bärlauch-Frittata</h4>
+                                <span class="item-price">€13,90</span>
+                            </div>
+                            <p class="item-description">Saisonaler Bärlauch, Bio-Eier, Ziegenkäse, Kräuter</p>
+                            <div class="item-tags">
+                                <span class="tag">Vegetarisch</span>
+                                <span class="tag">Saisonal</span>
+                                <span class="tag">Bio</span>
+                            </div>
+                        </div>
+                        
+                        <div class="menu-item" data-tags="vegan,saisonal,bio">
+                            <div class="item-header">
+                                <h4 class="item-name">Kürbis-Porridge</h4>
+                                <span class="item-price">€10,90</span>
+                            </div>
+                            <p class="item-description">Steirischer Kürbis, Haferflocken, Walnüsse, Zimt</p>
+                            <div class="item-tags">
+                                <span class="tag vegan">Vegan</span>
+                                <span class="tag">Saisonal</span>
+                                <span class="tag">Bio</span>
+                            </div>
+                        </div>        /* Menu Filter Styles */
+        .menu-filters {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 12px;
+            justify-content: center;
+            margin-bottom: 40px;
+            padding: 0 20px;
+        }
+
+        .filter-btn {
+            background: var(--glass-bg);
+            border: 2px solid var(--glass-border);
+            color: var(--text-secondary);
+            padding: 12px 20px;
+            border-radius: 25px;
+            font-weight: 600;
+            font-size: 14px;
+            cursor: pointer;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            backdrop-filter: blur(10px);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            min-height: 44px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .filter-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(93, 78, 55, 0.15);
+            border-color: var(--earth-primary);
+        }
+
+        .filter-btn.active {
+            background: var(--earth-gradient);
+            color: var(--text-light);
+            border-color: var(--earth-primary);
+            box-shadow: 0 8px 20px rgba(169, 171, 136, 0.4);
+        }
+
+        .filter-btn .filter-icon {
+            font-size: 16px;
+        }
+
+        .filter-btn .filter-count {
+            background: rgba(255, 255, 255, 0.2);
+            padding: 2px 8px;
+            border-radius: 12px;
+            font-size: 12px;
+            font-weight: 700;
+        }
+
+        .filter-btn.active .filter-count {
+            background: rgba(243, 232, 218, 0.3);
+        }
+
+        /* Menu Item Animation */
+        .menu-item {
+            margin-bottom: 20px;
+            padding: 16px 0;
+            border-bottom: 1px solid rgba(169, 171, 136, 0.1);
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .menu-item.hidden {
+            opacity: 0;
+            transform: translateY(-20px);
+            height: 0;
+            padding: 0;
+            margin: 0;
+            overflow: hidden;
+        }
+
+        .menu-item:last-child {
+            border-bottom: none;
+            margin-bottom: 0;
+        }
+
+        .menu-category {
+            background: var(--glass-bg);
+            backdrop-filter: blur(20px);
+            border: 1px solid var(--glass-border);
+            border-radius: 24px;
+            padding: 32px;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .menu-category.hidden {
+            opacity: 0.3;
+            transform: scale(0.98);
+        }
+
+        .menu-category:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 20px 40px rgba(93, 78, 55, 0.15);
+            border-color: var(--earth-primary);
+        }
+
+        .menu-categories {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 40px;
+            margin-bottom: 60px;
+        }<!DOCTYPE html>
 <html lang="de">
 <head>
     <meta charset="UTF-8">
@@ -662,7 +805,7 @@
 
         .menu-header {
             text-align: center;
-            margin-bottom: 80px;
+            margin-bottom: 60px;
         }
 
         .menu-header h2 {
@@ -685,21 +828,6 @@
             grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
             gap: 40px;
             margin-bottom: 60px;
-        }
-
-        .menu-category {
-            background: var(--glass-bg);
-            backdrop-filter: blur(20px);
-            border: 1px solid var(--glass-border);
-            border-radius: 24px;
-            padding: 32px;
-            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-        }
-
-        .menu-category:hover {
-            transform: translateY(-8px);
-            box-shadow: 0 20px 40px rgba(93, 78, 55, 0.15);
-            border-color: var(--earth-primary);
         }
 
         .category-header {
@@ -1263,6 +1391,23 @@
                 gap: 24px;
             }
 
+            .menu-filters {
+                gap: 8px;
+                padding: 0 10px;
+            }
+
+            .filter-btn {
+                padding: 10px 16px;
+                font-size: 12px;
+                min-height: 44px;
+                gap: 6px;
+            }
+
+            .filter-btn .filter-count {
+                padding: 1px 6px;
+                font-size: 11px;
+            }
+
             .about-content {
                 grid-template-columns: 1fr;
                 gap: 40px;
@@ -1569,6 +1714,45 @@
                     <p>Frische, biologische Zutaten aus der Region – jeden Montag neu zusammengestellt</p>
                 </div>
                 
+                <!-- Menu Filters -->
+                <div class="menu-filters" role="group" aria-label="Speisen filtern">
+                    <button class="filter-btn active" data-filter="alle" aria-pressed="true">
+                        <span class="filter-icon">🍽️</span>
+                        Alle
+                        <span class="filter-count" id="count-alle">42</span>
+                    </button>
+                    <button class="filter-btn" data-filter="vegan" aria-pressed="false">
+                        <span class="filter-icon">🌱</span>
+                        Vegan
+                        <span class="filter-count" id="count-vegan">18</span>
+                    </button>
+                    <button class="filter-btn" data-filter="bio" aria-pressed="false">
+                        <span class="filter-icon">🌿</span>
+                        Bio
+                        <span class="filter-count" id="count-bio">42</span>
+                    </button>
+                    <button class="filter-btn" data-filter="glutenfrei" aria-pressed="false">
+                        <span class="filter-icon">🌾</span>
+                        Glutenfrei
+                        <span class="filter-count" id="count-glutenfrei">15</span>
+                    </button>
+                    <button class="filter-btn" data-filter="vegetarisch" aria-pressed="false">
+                        <span class="filter-icon">🥗</span>
+                        Vegetarisch
+                        <span class="filter-count" id="count-vegetarisch">24</span>
+                    </button>
+                    <button class="filter-btn" data-filter="protein" aria-pressed="false">
+                        <span class="filter-icon">💪</span>
+                        Protein
+                        <span class="filter-count" id="count-protein">12</span>
+                    </button>
+                    <button class="filter-btn" data-filter="saisonal" aria-pressed="false">
+                        <span class="filter-icon">🍂</span>
+                        Saisonal
+                        <span class="filter-count" id="count-saisonal">8</span>
+                    </button>
+                </div>
+                
                 <div class="menu-categories">
                     <!-- Healthy Bowls -->
                     <div class="menu-category glass">
@@ -1577,7 +1761,7 @@
                             <h3>Healthy Bowls</h3>
                         </div>
                         
-                        <div class="menu-item">
+                        <div class="menu-item" data-tags="vegan,glutenfrei,bio,protein">
                             <div class="item-header">
                                 <h4 class="item-name">Power Bowl</h4>
                                 <span class="item-price">€14,50</span>
@@ -1590,7 +1774,7 @@
                             </div>
                         </div>
                         
-                        <div class="menu-item">
+                        <div class="menu-item" data-tags="vegan,bio">
                             <div class="item-header">
                                 <h4 class="item-name">Buddha Bowl</h4>
                                 <span class="item-price">€13,90</span>
@@ -1602,7 +1786,7 @@
                             </div>
                         </div>
                         
-                        <div class="menu-item">
+                        <div class="menu-item" data-tags="glutenfrei,bio,protein">
                             <div class="item-header">
                                 <h4 class="item-name">Protein Bowl</h4>
                                 <span class="item-price">€16,50</span>
@@ -1622,7 +1806,7 @@
                             <h3>Plant-Based Spezialitäten</h3>
                         </div>
                         
-                        <div class="menu-item">
+                        <div class="menu-item" data-tags="vegan,bio">
                             <div class="item-header">
                                 <h4 class="item-name">Vegan Scramble</h4>
                                 <span class="item-price">€12,90</span>
@@ -1634,7 +1818,7 @@
                             </div>
                         </div>
                         
-                        <div class="menu-item">
+                        <div class="menu-item" data-tags="vegan,bio">
                             <div class="item-header">
                                 <h4 class="item-name">Avocado Toast</h4>
                                 <span class="item-price">€11,50</span>
@@ -1646,7 +1830,7 @@
                             </div>
                         </div>
                         
-                        <div class="menu-item">
+                        <div class="menu-item" data-tags="vegan,glutenfrei,bio">
                             <div class="item-header">
                                 <h4 class="item-name">Chia Pudding</h4>
                                 <span class="item-price">€9,90</span>
@@ -1667,7 +1851,7 @@
                             <h3>Eier & Proteine</h3>
                         </div>
                         
-                        <div class="menu-item">
+                        <div class="menu-item" data-tags="vegetarisch,bio">
                             <div class="item-header">
                                 <h4 class="item-name">Green Shakshuka</h4>
                                 <span class="item-price">€14,90</span>
@@ -1679,7 +1863,7 @@
                             </div>
                         </div>
                         
-                        <div class="menu-item">
+                        <div class="menu-item" data-tags="vegetarisch,bio">
                             <div class="item-header">
                                 <h4 class="item-name">Eggs Benedict</h4>
                                 <span class="item-price">€15,90</span>
@@ -1691,7 +1875,7 @@
                             </div>
                         </div>
                         
-                        <div class="menu-item">
+                        <div class="menu-item" data-tags="vegetarisch,glutenfrei,bio,protein">
                             <div class="item-header">
                                 <h4 class="item-name">Protein Pancakes</h4>
                                 <span class="item-price">€13,50</span>
@@ -1758,7 +1942,7 @@
                             <h3>Superfood Smoothies & Getränke</h3>
                         </div>
                         
-                        <div class="menu-item">
+                        <div class="menu-item" data-tags="vegan,bio">
                             <div class="item-header">
                                 <h4 class="item-name">Green Goddess</h4>
                                 <span class="item-price">€7,90</span>
@@ -1770,7 +1954,7 @@
                             </div>
                         </div>
                         
-                        <div class="menu-item">
+                        <div class="menu-item" data-tags="vegan,bio">
                             <div class="item-header">
                                 <h4 class="item-name">Golden Latte</h4>
                                 <span class="item-price">€5,50</span>
@@ -1782,7 +1966,7 @@
                             </div>
                         </div>
                         
-                        <div class="menu-item">
+                        <div class="menu-item" data-tags="vegan,bio">
                             <div class="item-header">
                                 <h4 class="item-name">Cold Brew</h4>
                                 <span class="item-price">€4,90</span>
@@ -1802,7 +1986,7 @@
                             <h3>Gesunde Desserts</h3>
                         </div>
                         
-                        <div class="menu-item">
+                        <div class="menu-item" data-tags="vegan,glutenfrei,bio">
                             <div class="item-header">
                                 <h4 class="item-name">Raw Chocolate Cake</h4>
                                 <span class="item-price">€8,90</span>
@@ -1815,7 +1999,7 @@
                             </div>
                         </div>
                         
-                        <div class="menu-item">
+                        <div class="menu-item" data-tags="vegan,glutenfrei,bio,protein">
                             <div class="item-header">
                                 <h4 class="item-name">Energy Balls</h4>
                                 <span class="item-price">€6,50</span>
@@ -1828,7 +2012,7 @@
                             </div>
                         </div>
                         
-                        <div class="menu-item">
+                        <div class="menu-item" data-tags="vegetarisch,saisonal,bio">
                             <div class="item-header">
                                 <h4 class="item-name">Marillen-Kompott</h4>
                                 <span class="item-price">€7,50</span>
@@ -1852,19 +2036,19 @@
                 
                 <div class="stats-grid">
                     <div class="stat-card glass">
-                        <span class="stat-number" data-target="0" id="visitors-count">0</span>
+                        <span class="stat-number" data-target="500" id="visitors-count">0</span>
                         <div class="stat-label">Glückliche Gäste</div>
                     </div>
                     <div class="stat-card glass">
-                        <span class="stat-number" data-target="0" id="rating-count">0.0</span>
+                        <span class="stat-number" data-target="4.9" id="rating-count">0.0</span>
                         <div class="stat-label">Google Bewertung</div>
                     </div>
                     <div class="stat-card glass">
-                        <span class="stat-number" data-target="0" id="meals-count">0</span>
+                        <span class="stat-number" data-target="2847" id="meals-count">0</span>
                         <div class="stat-label">Servierte Mahlzeiten</div>
                     </div>
                     <div class="stat-card glass">
-                        <span class="stat-number" data-target="0" id="events-count">0</span>
+                        <span class="stat-number" data-target="52" id="events-count">0</span>
                         <div class="stat-label">Live-Events</div>
                     </div>
                 </div>
@@ -2139,7 +2323,7 @@
             lastScrollTop = currentScroll <= 0 ? 0 : currentScroll;
         });
 
-        // Animated Counter Implementation
+        // Animated Counter Implementation - FIXED
         function animateCounter(element, target, duration = 2000, suffix = '') {
             const start = 0;
             const increment = target / (duration / 16);
@@ -2157,7 +2341,7 @@
                 if (suffix === '★') {
                     displayValue = current.toFixed(1) + suffix;
                 } else if (target >= 1000) {
-                    displayValue = Math.floor(current).toLocaleString();
+                    displayValue = Math.floor(current).toLocaleString('de-DE');
                 } else {
                     displayValue = Math.floor(current);
                 }
@@ -2166,7 +2350,7 @@
             }, 16);
         }
 
-        // Initialize counters when they come into view
+        // Initialize counters when they come into view - FIXED
         function initializeCounters() {
             const counters = [
                 { id: 'visitors-count', target: 500, suffix: '' },
@@ -2181,7 +2365,7 @@
                         const counterId = entry.target.id;
                         const counterData = counters.find(c => c.id === counterId);
                         
-                        if (counterData && entry.target.textContent === '0' || entry.target.textContent === '0.0') {
+                        if (counterData && (entry.target.textContent === '0' || entry.target.textContent === '0.0')) {
                             animateCounter(entry.target, counterData.target, 2000, counterData.suffix);
                             observer.unobserve(entry.target);
                         }
@@ -2194,6 +2378,109 @@
                 if (element) {
                     observer.observe(element);
                 }
+            });
+        }
+
+        // Menu Filter System
+        function initializeMenuFilters() {
+            const filterButtons = document.querySelectorAll('.filter-btn');
+            const menuItems = document.querySelectorAll('.menu-item');
+            const menuCategories = document.querySelectorAll('.menu-category');
+
+            // Count items for each filter
+            function updateFilterCounts() {
+                const counts = {
+                    alle: menuItems.length,
+                    vegan: 0,
+                    bio: 0,
+                    glutenfrei: 0,
+                    vegetarisch: 0,
+                    protein: 0,
+                    saisonal: 0
+                };
+
+                menuItems.forEach(item => {
+                    const tags = item.dataset.tags ? item.dataset.tags.split(',') : [];
+                    
+                    tags.forEach(tag => {
+                        if (counts.hasOwnProperty(tag)) {
+                            counts[tag]++;
+                        }
+                    });
+                });
+
+                // Update count displays
+                Object.keys(counts).forEach(filter => {
+                    const countElement = document.getElementById(`count-${filter}`);
+                    if (countElement) {
+                        countElement.textContent = counts[filter];
+                    }
+                });
+            }
+
+            // Filter functionality
+            function filterMenuItems(activeFilter) {
+                let visibleCount = 0;
+
+                menuItems.forEach(item => {
+                    const tags = item.dataset.tags ? item.dataset.tags.split(',') : [];
+                    const shouldShow = activeFilter === 'alle' || tags.includes(activeFilter);
+
+                    if (shouldShow) {
+                        item.classList.remove('hidden');
+                        visibleCount++;
+                    } else {
+                        item.classList.add('hidden');
+                    }
+                });
+
+                // Hide/show categories based on visible items
+                menuCategories.forEach(category => {
+                    const categoryItems = category.querySelectorAll('.menu-item:not(.hidden)');
+                    if (categoryItems.length === 0) {
+                        category.classList.add('hidden');
+                    } else {
+                        category.classList.remove('hidden');
+                    }
+                });
+
+                return visibleCount;
+            }
+
+            // Add click handlers
+            filterButtons.forEach(button => {
+                button.addEventListener('click', function() {
+                    const filter = this.dataset.filter;
+
+                    // Update active state
+                    filterButtons.forEach(btn => {
+                        btn.classList.remove('active');
+                        btn.setAttribute('aria-pressed', 'false');
+                    });
+                    this.classList.add('active');
+                    this.setAttribute('aria-pressed', 'true');
+
+                    // Filter items
+                    const visibleCount = filterMenuItems(filter);
+
+                    // Show notification of results
+                    if (filter !== 'alle') {
+                        showNotification('Filter angewendet', `${visibleCount} Gerichte gefunden für "${filter.charAt(0).toUpperCase() + filter.slice(1)}"`, 'success');
+                    }
+                });
+            });
+
+            // Initialize counts
+            updateFilterCounts();
+
+            // Keyboard navigation for filters
+            filterButtons.forEach(button => {
+                button.addEventListener('keydown', function(e) {
+                    if (e.key === 'Enter' || e.key === ' ') {
+                        e.preventDefault();
+                        this.click();
+                    }
+                });
             });
         }
 
@@ -2457,6 +2744,7 @@
             initializeAboutVideo();
             handleVideoAutoplay();
             initializeCounters();
+            initializeMenuFilters(); // NEW: Initialize menu filters
             lazyLoadImages();
             enhanceKeyboardNavigation();
             
@@ -2641,3 +2929,4 @@
                         video.play().catch(() => {});
                     } else {
                         video
+                
