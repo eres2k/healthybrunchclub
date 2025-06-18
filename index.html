@@ -1913,166 +1913,122 @@
     </footer>
 
     <!-- JavaScript -->
-    <script>
-        // Mobile Menu
+   <script>
+        if ('serviceWorker' in navigator) {
+            window.addEventListener('load', function() {
+                navigator.serviceWorker.register('/sw.js')
+                    .then(function(registration) {
+                        console.log('ServiceWorker registration successful');
+                    })
+                    .catch(function(err) {
+                        console.log('ServiceWorker registration failed: ', err);
+                    });
+            });
+        }
+
         const mobileMenuToggle = document.getElementById('mobileMenuToggle');
         const mobileMenu = document.getElementById('mobileMenu');
         const navbar = document.getElementById('navbar');
 
         mobileMenuToggle.addEventListener('click', function() {
             const isExpanded = mobileMenu.classList.contains('show');
-            
             mobileMenu.classList.toggle('show');
             mobileMenuToggle.setAttribute('aria-expanded', !isExpanded);
-            mobileMenuToggle.innerHTML = isExpanded ? '☰' : '✕';
+            mobileMenuToggle.setAttribute('aria-label', isExpanded ? 'Menü öffnen' : 'Menü schließen');
+            mobileMenuToggle.innerHTML = mobileMenu.classList.contains('show') ? '✕' : '☰';
+            mobileMenuToggle.style.transform = mobileMenu.classList.contains('show') ? 'rotate(180deg)' : 'rotate(0deg)';
         });
 
-        // Close mobile menu when clicking on a link
         const mobileLinks = document.querySelectorAll('.mobile-menu-links a');
         mobileLinks.forEach(link => {
             link.addEventListener('click', () => {
                 mobileMenu.classList.remove('show');
                 mobileMenuToggle.setAttribute('aria-expanded', 'false');
+                mobileMenuToggle.setAttribute('aria-label', 'Menü öffnen');
                 mobileMenuToggle.innerHTML = '☰';
+                mobileMenuToggle.style.transform = 'rotate(0deg)';
             });
         });
 
-        // Navbar scroll effect
+        document.addEventListener('click', function(e) {
+            if (!navbar.contains(e.target) && mobileMenu.classList.contains('show')) {
+                mobileMenu.classList.remove('show');
+                mobileMenuToggle.setAttribute('aria-expanded', 'false');
+                mobileMenuToggle.setAttribute('aria-label', 'Menü öffnen');
+                mobileMenuToggle.innerHTML = '☰';
+                mobileMenuToggle.style.transform = 'rotate(0deg)';
+            }
+        });
+
+        let lastScrollTop = 0;
         window.addEventListener('scroll', function() {
             const currentScroll = window.pageYOffset || document.documentElement.scrollTop;
-            
             if (currentScroll > 100) {
                 navbar.classList.add('scrolled');
             } else {
                 navbar.classList.remove('scrolled');
             }
+            if (window.innerWidth <= 768) {
+                if (currentScroll > lastScrollTop && currentScroll > 200) {
+                    navbar.style.transform = 'translateX(-50%) translateY(-100%)';
+                } else {
+                    navbar.style.transform = 'translateX(-50%) translateY(0)';
+                }
+            }
+            lastScrollTop = currentScroll <= 0 ? 0 : currentScroll;
         });
 
-        // Music Player - Fixed
-        let isPlaying = false;
-        let progress = 0;
-        let duration = 300; // 5 minutes in seconds
-        let currentTime = 0;
-        let progressInterval;
-        
+        const audioPlayer = document.getElementById('audioPlayer');
         const playButton = document.getElementById('playButton');
-        const progressFill = document.getElementById('progressFill');
-        const trackTimeEl = document.querySelector('.track-time');
+        const progressFill = document.querySelector('.progress-fill');
+        const trackTime = document.querySelector('.track-time');
+
+        if (audioPlayer && playButton) {
+            playButton.addEventListener('click', function() {
+                if (audioPlayer.paused) {
+                    audioPlayer.play();
+                    this.innerHTML = '<svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M6 4h4v16H6V4zm8 0h4v16h-4V4z"/></svg>';
+                } else {
+                    audioPlayer.pause();
+                    this.innerHTML = '<svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M8 5v14l11-7z"/></svg>';
+                }
+            });
+
+            audioPlayer.addEventListener('timeupdate', function() {
+                const progress = (audioPlayer.currentTime / audioPlayer.duration) * 100;
+                progressFill.style.width = progress + '%';
+                const currentTime = formatTime(audioPlayer.currentTime);
+                const duration = formatTime(audioPlayer.duration);
+                trackTime.textContent = `${currentTime} / ${duration}`;
+            });
+
+            audioPlayer.addEventListener('ended', function() {
+                playButton.innerHTML = '<svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M8 5v14l11-7z"/></svg>';
+                progressFill.style.width = '0%';
+            });
+        }
 
         function formatTime(seconds) {
             const minutes = Math.floor(seconds / 60);
             const secs = Math.floor(seconds % 60);
-            return `${minutes}:${secs.toString().padStart(2, '0')}`;
+            return `${minutes}:${secs < 10 ? '0' : ''}${secs}`;
         }
 
-        function updateProgress() {
-            currentTime += 0.1;
-            if (currentTime >= duration) {
-                currentTime = 0;
-            }
-            progress = (currentTime / duration) * 100;
-            progressFill.style.width = progress + '%';
-            trackTimeEl.textContent = `${formatTime(currentTime)} / ${formatTime(duration)}`;
-        }
-
-        if (playButton) {
-            playButton.addEventListener('click', function() {
-                isPlaying = !isPlaying;
-                
-                if (isPlaying) {
-                    // Change to pause icon
-                    this.innerHTML = '<svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M6 4h4v16H6V4zm8 0h4v16h-4V4z"/></svg>';
-                    
-                    // Start progress
-                    progressInterval = setInterval(updateProgress, 100);
-                } else {
-                    // Change to play icon
-                    this.innerHTML = '<svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M8 5v14l11-7z"/></svg>';
-                    
-                    // Stop progress
-                    clearInterval(progressInterval);
-                }
-            });
-        }
-
-        // Animated Counter
-        function animateCounter(element, target, duration = 2000, suffix = '') {
-            const start = 0;
-            const increment = target / (duration / 16);
-            let current = start;
-            
-            const timer = setInterval(() => {
-                current += increment;
-                if (current >= target) {
-                    current = target;
-                    clearInterval(timer);
-                }
-                
-                let displayValue;
-                if (suffix === '★') {
-                    displayValue = current.toFixed(1) + suffix;
-                } else if (target >= 1000) {
-                    displayValue = Math.floor(current).toLocaleString('de-DE');
-                } else {
-                    displayValue = Math.floor(current);
-                }
-                
-                element.textContent = displayValue;
-            }, 16);
-        }
-
-        // Initialize counters when they come into view
-        function initializeCounters() {
-            const counters = [
-                { id: 'visitors-count', target: 500, suffix: '' },
-                { id: 'rating-count', target: 4.9, suffix: '★' },
-                { id: 'meals-count', target: 2847, suffix: '' },
-                { id: 'events-count', target: 52, suffix: '' }
-            ];
-
-            const observer = new IntersectionObserver((entries) => {
-                entries.forEach(entry => {
-                    if (entry.isIntersecting) {
-                        const counterId = entry.target.id;
-                        const counterData = counters.find(c => c.id === counterId);
-                        
-                        if (counterData && entry.target.textContent === '0' || entry.target.textContent === '0.0') {
-                            animateCounter(entry.target, counterData.target, 2000, counterData.suffix);
-                            observer.unobserve(entry.target);
-                        }
-                    }
-                });
-            }, { threshold: 0.5 });
-
-            counters.forEach(counter => {
-                const element = document.getElementById(counter.id);
-                if (element) {
-                    observer.observe(element);
-                }
-            });
-        }
-
-        // Menu Filter System - Fixed
         function initializeMenuFilters() {
             const filterButtons = document.querySelectorAll('.filter-btn');
             const menuItems = document.querySelectorAll('.menu-item');
             const menuCategories = document.querySelectorAll('.menu-category');
 
-            // Update filter counts
             function updateFilterCounts() {
                 const counts = {
                     alle: menuItems.length,
                     vegan: 0,
                     bio: 0,
-                    glutenfrei: 0,
-                    vegetarisch: 0,
-                    protein: 0,
-                    saisonal: 0
+                    glutenfrei: 0
                 };
 
                 menuItems.forEach(item => {
                     const tags = item.dataset.tags ? item.dataset.tags.split(',') : [];
-                    
                     tags.forEach(tag => {
                         if (counts.hasOwnProperty(tag)) {
                             counts[tag]++;
@@ -2080,7 +2036,6 @@
                     });
                 });
 
-                // Update count displays
                 Object.keys(counts).forEach(filter => {
                     const countElement = document.getElementById(`count-${filter}`);
                     if (countElement) {
@@ -2089,14 +2044,11 @@
                 });
             }
 
-            // Filter functionality
             function filterMenuItems(activeFilter) {
                 let visibleCount = 0;
-
                 menuItems.forEach(item => {
                     const tags = item.dataset.tags ? item.dataset.tags.split(',') : [];
                     const shouldShow = activeFilter === 'alle' || tags.includes(activeFilter);
-
                     if (shouldShow) {
                         item.classList.remove('hidden');
                         visibleCount++;
@@ -2105,47 +2057,33 @@
                     }
                 });
 
-                // Hide/show categories based on visible items
                 menuCategories.forEach(category => {
                     const categoryItems = category.querySelectorAll('.menu-item:not(.hidden)');
-                    if (categoryItems.length === 0) {
-                        category.classList.add('hidden');
-                    } else {
-                        category.classList.remove('hidden');
-                    }
+                    category.classList.toggle('hidden', categoryItems.length === 0);
                 });
 
                 return visibleCount;
             }
 
-            // Add click handlers
             filterButtons.forEach(button => {
                 button.addEventListener('click', function() {
                     const filter = this.dataset.filter;
-
-                    // Update active state
                     filterButtons.forEach(btn => {
                         btn.classList.remove('active');
                         btn.setAttribute('aria-pressed', 'false');
                     });
                     this.classList.add('active');
                     this.setAttribute('aria-pressed', 'true');
-
-                    // Filter items
                     const visibleCount = filterMenuItems(filter);
-
-                    // Show notification
                     if (filter !== 'alle') {
-                        showNotification('Filter angewendet', `${visibleCount} Gerichte gefunden`, 'success');
+                        showNotification('Filter angewendet', `${visibleCount} Gerichte gefunden für "${filter.charAt(0).toUpperCase() + filter.slice(1)}"`, 'success');
                     }
                 });
             });
 
-            // Initialize counts
             updateFilterCounts();
         }
 
-        // Video control functions
         function showVideoLoading() {
             const loading = document.getElementById('videoLoading');
             if (loading) loading.style.display = 'flex';
@@ -2154,6 +2092,36 @@
         function hideVideoLoading() {
             const loading = document.getElementById('videoLoading');
             if (loading) loading.style.display = 'none';
+        }
+
+        function handleVideoError() {
+            const video = document.getElementById('heroVideo');
+            const loading = document.getElementById('videoLoading');
+            if (loading) loading.style.display = 'none';
+            if (video) {
+                video.style.display = 'none';
+                const fallback = document.createElement('div');
+                fallback.style.cssText = `
+                    position: absolute;
+                    top: 0;
+                    left: 0;
+                    width: 100%;
+                    height: 100%;
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                    flex-direction: column;
+                    text-align: center;
+                    background: var(--earth-gradient);
+                    border-radius: 28px;
+                    color: var(--text-light);
+                `;
+                fallback.innerHTML = `
+                    <h2 style="font-size: 28px; font-weight: 700; margin-bottom: 14px;">Healthy Brunch</h2>
+                    <p style="font-size: 16px; opacity: 0.9;">Fresh • Delicious • Energizing</p>
+                `;
+                video.parentNode.appendChild(fallback);
+            }
         }
 
         function showAboutVideoLoading() {
@@ -2166,75 +2134,68 @@
             if (loading) loading.style.display = 'none';
         }
 
-        // Initialize videos
+        function handleAboutVideoError() {
+            const video = document.getElementById('aboutVideo');
+            const loading = document.getElementById('aboutVideoLoading');
+            if (loading) loading.style.display = 'none';
+            if (video) {
+                video.style.display = 'none';
+                const fallback = document.createElement('div');
+                fallback.style.cssText = `
+                    position: absolute;
+                    top: 0;
+                    left: 0;
+                    width: 100%;
+                    height: 100%;
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                    background: var(--earth-gradient);
+                    color: var(--text-light);
+                    text-align: center;
+                    padding: 36px;
+                    border-radius: 20px;
+                `;
+                fallback.innerHTML = `
+                    <div>
+                        <h3 style="font-size: 22px; margin-bottom: 14px;">Drei Schwestern</h3>
+                        <p style="opacity: 0.9;">Eine Geschichte von Familie,<br>Reisen und Leidenschaft</p>
+                    </div>
+                `;
+                video.parentNode.appendChild(fallback);
+            }
+        }
+
         function initializeVideo() {
             const video = document.getElementById('heroVideo');
-            if (video) {
-                video.addEventListener('loadstart', showVideoLoading);
-                video.addEventListener('canplay', hideVideoLoading);
-                video.addEventListener('error', function() {
-                    hideVideoLoading();
-                    console.log('Video failed to load');
+            if (!video) return;
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        video.play().catch(() => {});
+                    } else {
+                        video.pause();
+                    }
                 });
-
-                // Intersection Observer for autoplay
-                const observer = new IntersectionObserver((entries) => {
-                    entries.forEach(entry => {
-                        if (entry.isIntersecting) {
-                            video.play().catch(() => {});
-                        } else {
-                            video.pause();
-                        }
-                    });
-                }, { threshold: 0.3 });
-
-                observer.observe(video);
-            }
+            }, { threshold: 0.3 });
+            observer.observe(video);
         }
 
         function initializeAboutVideo() {
             const video = document.getElementById('aboutVideo');
-            if (video) {
-                video.addEventListener('loadstart', showAboutVideoLoading);
-                video.addEventListener('canplay', hideAboutVideoLoading);
-                video.addEventListener('error', function() {
-                    hideAboutVideoLoading();
-                    console.log('About video failed to load');
+            if (!video) return;
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        video.play().catch(() => {});
+                    } else {
+                        video.pause();
+                    }
                 });
-
-                // Intersection Observer for autoplay
-                const observer = new IntersectionObserver((entries) => {
-                    entries.forEach(entry => {
-                        if (entry.isIntersecting) {
-                            video.play().catch(() => {});
-                        } else {
-                            video.pause();
-                        }
-                    });
-                }, { threshold: 0.5 });
-
-                observer.observe(video);
-            }
+            }, { threshold: 0.5 });
+            observer.observe(video);
         }
 
-        // Smooth scrolling
-        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
-            anchor.addEventListener('click', function (e) {
-                e.preventDefault();
-                const targetId = this.getAttribute('href');
-                const targetElement = document.querySelector(targetId);
-                
-                if (targetElement) {
-                    const offsetTop = targetElement.offsetTop - 70;
-                    window.scrollTo({
-                        top: offsetTop,
-                        behavior: 'smooth'
-                    });
-                }
-            });
-        });
-
-        // Booking Functions
         function showBooking(type) {
             let message = '';
             switch(type) {
@@ -2247,70 +2208,35 @@
                 case 'romantic':
                     message = 'Vielen Dank für Ihr Interesse am Romantischen Brunch!';
                     break;
-		case 'luxus':
-                    message = 'Vielen Dank für Ihr Interesse am Luxus Brunch!';
-                    break;
                 default:
                     message = 'Vielen Dank für Ihr Interesse!';
             }
-            
             showNotification('Buchungsanfrage', message, 'success');
+            setTimeout(() => {
+                console.log('Redirecting to booking page for:', type);
+            }, 2000);
         }
 
-        // Notification system
         function showNotification(title, message, type = 'success') {
             const notification = document.getElementById('notification');
             const icon = notification.querySelector('.notification-icon');
             const titleEl = notification.querySelector('.notification-title');
             const messageEl = notification.querySelector('.notification-message');
-            
             notification.className = `notification ${type}`;
             icon.textContent = type === 'success' ? '✅' : '❌';
             titleEl.textContent = title;
             messageEl.textContent = message;
-            
             notification.classList.add('show');
-            
             setTimeout(() => {
                 notification.classList.remove('show');
             }, 5000);
         }
 
-        // Fade-in animation on scroll
-        const observerOptions = {
-            threshold: 0.1,
-            rootMargin: '0px 0px -50px 0px'
-        };
-
-        const fadeInObserver = new IntersectionObserver((entries) => {
-            entries.forEach(entry => {
-                if (entry.isIntersecting) {
-                    entry.target.style.opacity = '1';
-                    entry.target.style.transform = 'translateY(0)';
-                }
-            });
-        }, observerOptions);
-
-        // Initialize everything
         document.addEventListener('DOMContentLoaded', () => {
             initializeVideo();
             initializeAboutVideo();
-            initializeCounters();
             initializeMenuFilters();
-            
-            // Observe elements for animation
-            document.querySelectorAll('.feature-card, .menu-category, .dj-card').forEach((el, index) => {
-                el.style.opacity = '0';
-                el.style.transform = 'translateY(20px)';
-                el.style.transition = `all 0.6s ease ${index * 0.1}s`;
-                fadeInObserver.observe(el);
-            });
         });
-
-        // Handle touch events for mobile
-        if ('ontouchstart' in window) {
-            document.body.classList.add('touch-device');
-        }
     </script>
 </body>
 </html>
