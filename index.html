@@ -24,9 +24,14 @@
     <meta name="apple-mobile-web-app-title" content="Healthy Brunch">
     <link rel="apple-touch-icon" href="/icon-192.png">
     <link rel="manifest" href="/manifest.json">
+   
+    <!-- Google Font Link -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500;1,600;1,700&display=swap" rel="stylesheet">
     
+ 
     <style>
-@import url('https://fonts.googleapis.com/css2?family=Lora:ital,wght@300;400;500;600;700;800&display=swap');
       
      * {
             margin: 0;
@@ -67,9 +72,9 @@
             --forest-gradient: linear-gradient(135deg, #81B14F 0%, #A9AB88 100%);
             --sunset-gradient: linear-gradient(135deg, #E26C29 0%, #DBAA89 50%, #F3E8DA 100%);
             
-            /* Typography */
-            --font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
-        }
+        /* Typography */
+            --font-family: 'Lora', serif;
+	   }
 
         body {
             font-family: var(--font-family);
@@ -1359,42 +1364,41 @@
 
     <!-- Main Content -->
     <main id="main-content">
-        <!-- Hero Section -->
-        <section class="hero" id="home" role="banner">
-            <div class="hero-container">
-                <div class="hero-content">
-                    <h1>Starte deinen Tag mit <span>Energie & Geschmack</span></h1>
-                    <p>Erlebe die perfekte Kombination aus gesundem Essen, inspirierender Musik und positiver Atmosphäre. Dein Montag wird nie wieder derselbe sein.</p>
-                    
-             
-                </div>
-                
-                <!-- Video Section -->
-                <div class="hero-visual glass">
-                    <div class="video-loading" id="videoLoading" aria-hidden="true">
-                        <div class="video-loading-spinner"></div>
-                        <p>Loading video...</p>
-                    </div>
-                    
-                    <video
-                        autoplay 
-                        loop 
-                        muted
-                        poster="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 800 600'%3E%3Crect fill='%23F3E8DA' width='800' height='600'/%3E%3C/svg%3E" 
-                        class="hero-video" 
-                        id="heroVideo"
-                        playsinline
-                    >
-                        <source src="content/videos/intro.mp4" type="video/mp4">
-                    </video>
-                    
-                    <div class="video-overlay">
-                        <h2>Healthy Brunch</h2>
-                        <p>Fresh • Delicious • Energizing</p>
-                    </div>
-                </div>
+      <!-- Hero Section -->
+<section class="hero" id="home" role="banner">
+    <div class="hero-container">
+        <div class="hero-content">
+            <h1>Starte deinen Tag mit <span>Energie & Geschmack</span></h1>
+            <p>Erlebe die perfekte Kombination aus gesundem Essen, inspirierender Musik und positiver Atmosphäre. Dein Montag wird nie wieder derselbe sein.</p>
+        </div>
+        
+        <!-- Video Section - Now Full Width Below Text -->
+        <div class="hero-visual glass">
+            <div class="video-loading" id="videoLoading" aria-hidden="true">
+                <div class="video-loading-spinner"></div>
+                <p>Loading video...</p>
             </div>
-        </section>
+            
+            <video
+                autoplay 
+                loop 
+                muted
+                poster="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 800 600'%3E%3Crect fill='%23F3E8DA' width='800' height='600'/%3E%3C/svg%3E" 
+                class="hero-video" 
+                id="heroVideo"
+                playsinline
+            >
+                <source src="content/videos/intro.mp4" type="video/mp4">
+            </video>
+            
+            <div class="video-overlay">
+                <h2>Healthy Brunch</h2>
+                <p>Fresh • Delicious • Energizing</p>
+            </div>
+        </div>
+    </div>
+</section>
+
 
         <!-- Menu Section -->
         <section class="menu-section" id="menu">
