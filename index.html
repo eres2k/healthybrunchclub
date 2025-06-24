@@ -5,36 +5,11 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>healthy brunch club - start your monday right | bio brunch wien</title>
     <meta name="description" content="gesunder bio-brunch jeden montag in wien. regionale zutaten, live-musik und positive vibes. jetzt buchen in der gumpendorfer straße 9.">
-    <meta name="keywords" content="healthy brunch wien, bio brunch, gesund essen wien, montag brunch, gumpendorfer straße, vegetarisch vegan wien">
-    <meta name="author" content="healthy brunch club">
-    <link rel="canonical" href="https://healthybrunchclub.at/">
     
-    <!-- Netlify Identity Widget -->
-    <script type="text/javascript" src="https://identity.netlify.com/v1/netlify-identity-widget.js"></script>
-    
-    <!-- Open Graph Tags -->
-    <meta property="og:title" content="healthy brunch club - bio brunch wien">
-    <meta property="og:description" content="gesunder bio-brunch jeden montag mit regionalen zutaten und live-musik">
-    <meta property="og:image" content="/og-image.jpg">
-    <meta property="og:url" content="https://healthybrunchclub.at/">
-    <meta property="og:type" content="website">
-    <meta property="og:locale" content="de_AT">
-    
-    <!-- PWA Meta Tags -->
-    <meta name="theme-color" content="#A8C09A">
-    <meta name="apple-mobile-web-app-capable" content="yes">
-    <meta name="apple-mobile-web-app-status-bar-style" content="default">
-    <meta name="apple-mobile-web-app-title" content="healthy brunch">
-    <link rel="apple-touch-icon" href="/icon-192.png">
-    <link rel="manifest" href="/manifest.json">
-   
     <!-- Google Font Link -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400..700;1,400..700&display=swap" rel="stylesheet">
-
-    <script src="cms-loader.js"></script>
-
     
     <style>
         * {
@@ -83,107 +58,6 @@
             background: var(--warm-white);
             overflow-x: hidden;
             min-height: 100vh;
-        }
-
-        /* Loading Screen */
-        .loading-screen {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: var(--cream);
-            z-index: 9999;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            transition: opacity 0.8s ease, visibility 0.8s ease;
-        }
-
-        .loading-screen.hidden {
-            opacity: 0;
-            visibility: hidden;
-        }
-
-        .loading-logo {
-            font-family: var(--font-accent);
-            font-size: 48px;
-            color: var(--sage-green);
-            margin-bottom: 30px;
-            animation: pulse 2s ease-in-out infinite;
-        }
-
-        @keyframes pulse {
-            0%, 100% { transform: scale(1); opacity: 0.8; }
-            50% { transform: scale(1.05); opacity: 1; }
-        }
-
-        .loading-bar {
-            width: 200px;
-            height: 4px;
-            background: rgba(168, 192, 154, 0.2);
-            border-radius: 2px;
-            overflow: hidden;
-            position: relative;
-        }
-
-        .loading-progress {
-            height: 100%;
-            background: var(--sage-green);
-            width: 0%;
-            animation: loadProgress 2s ease forwards;
-            border-radius: 2px;
-        }
-
-        @keyframes loadProgress {
-            0% { width: 0%; }
-            100% { width: 100%; }
-        }
-
-        /* Entrance Animation Classes */
-        .fade-in {
-            opacity: 0;
-            animation: fadeIn 1s ease forwards;
-        }
-
-        .fade-in-up {
-            opacity: 0;
-            transform: translateY(30px);
-            animation: fadeInUp 0.8s ease forwards;
-        }
-
-        .fade-in-delay-1 { animation-delay: 0.2s; }
-        .fade-in-delay-2 { animation-delay: 0.4s; }
-        .fade-in-delay-3 { animation-delay: 0.6s; }
-
-        @keyframes fadeIn {
-            to {
-                opacity: 1;
-            }
-        }
-
-        @keyframes fadeInUp {
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
-
-        /* Texture Overlay */
-        body::before {
-            content: '';
-            position: fixed;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background-image: 
-                repeating-linear-gradient(45deg, transparent, transparent 35px, rgba(255, 245, 235, 0.5) 35px, rgba(255, 245, 235, 0.5) 70px),
-                repeating-linear-gradient(-45deg, transparent, transparent 35px, rgba(255, 229, 217, 0.3) 35px, rgba(255, 229, 217, 0.3) 70px);
-            pointer-events: none;
-            z-index: 1;
-            opacity: 0.3;
         }
 
         /* Floating Event Window */
@@ -290,36 +164,6 @@
             height: 35px;
         }
 
-        /* Admin Edit Button */
-        .admin-edit-btn {
-            position: fixed;
-            bottom: 100px;
-            right: 30px;
-            background: var(--sage-green);
-            color: white;
-            padding: 12px 20px;
-            border-radius: 25px;
-            text-decoration: none;
-            font-size: 14px;
-            font-weight: 600;
-            box-shadow: var(--soft-shadow);
-            transition: all 0.3s ease;
-            z-index: 998;
-            display: none;
-        }
-
-        .admin-edit-btn:hover {
-            background: var(--olive);
-            transform: translateY(-2px);
-            box-shadow: var(--hover-shadow);
-        }
-
-        .admin-edit-btn.show {
-            display: flex;
-            align-items: center;
-            gap: 8px;
-        }
-
         /* Navigation */
         .nav {
             position: fixed;
@@ -334,11 +178,6 @@
             transition: all 0.3s ease;
         }
 
-        .nav.scrolled {
-            padding: 10px 0;
-            box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
-        }
-
         .nav-container {
             max-width: 1200px;
             margin: 0 auto;
@@ -349,14 +188,7 @@
         }
 
         .logo {
-            font-family: var(--font-accent);
-            font-size: 28px;
-            font-weight: 700;
-            color: var(--sage-green);
-            text-decoration: none;
-            display: flex;
-            align-items: center;
-            gap: 10px;
+            height: 50px;
         }
 
         .nav-links {
@@ -372,26 +204,10 @@
             font-weight: 500;
             font-size: 15px;
             transition: color 0.3s ease;
-            position: relative;
-        }
-
-        .nav-links a::after {
-            content: '';
-            position: absolute;
-            bottom: -5px;
-            left: 0;
-            width: 0;
-            height: 2px;
-            background: var(--sage-green);
-            transition: width 0.3s ease;
         }
 
         .nav-links a:hover {
             color: var(--sage-green);
-        }
-
-        .nav-links a:hover::after {
-            width: 100%;
         }
 
         .book-btn {
@@ -409,20 +225,6 @@
             box-shadow: var(--hover-shadow);
         }
 
-        .book-btn::after {
-            display: none;
-        }
-
-        /* Mobile Menu */
-        .mobile-menu-toggle {
-            display: none;
-            background: none;
-            border: none;
-            font-size: 24px;
-            color: var(--sage-green);
-            cursor: pointer;
-        }
-
         /* Hero Section */
         .hero {
             padding: 120px 20px 80px;
@@ -432,36 +234,6 @@
             background: var(--warm-gradient);
             position: relative;
             overflow: hidden;
-        }
-
-        .hero::before {
-            content: '';
-            position: absolute;
-            top: -50%;
-            right: -20%;
-            width: 600px;
-            height: 600px;
-            background: radial-gradient(circle, var(--peach) 0%, transparent 70%);
-            opacity: 0.3;
-            animation: float 20s ease-in-out infinite;
-        }
-
-        .hero::after {
-            content: '';
-            position: absolute;
-            bottom: -30%;
-            left: -10%;
-            width: 400px;
-            height: 400px;
-            background: radial-gradient(circle, var(--mint-green) 0%, transparent 70%);
-            opacity: 0.3;
-            animation: float 25s ease-in-out infinite reverse;
-        }
-
-        @keyframes float {
-            0%, 100% { transform: translate(0, 0) scale(1); }
-            33% { transform: translate(30px, -30px) scale(1.1); }
-            66% { transform: translate(-20px, 20px) scale(0.9); }
         }
 
         .hero-container {
@@ -539,55 +311,12 @@
         .hero-visual {
             position: relative;
             height: 500px;
-        }
-
-        .hero-image-container {
-            position: absolute;
-            background: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: var(--cream);
             border-radius: 30px;
-            overflow: hidden;
             box-shadow: var(--hover-shadow);
-            transition: all 0.3s ease;
-        }
-
-        .hero-image-container:nth-child(1) {
-            top: 0;
-            left: 0;
-            width: 280px;
-            height: 350px;
-            z-index: 3;
-        }
-
-        .hero-image-container:nth-child(2) {
-            top: 50px;
-            right: 0;
-            width: 250px;
-            height: 300px;
-            z-index: 2;
-        }
-
-        .hero-image-container:nth-child(3) {
-            bottom: 0;
-            left: 50%;
-            transform: translateX(-50%);
-            width: 200px;
-            height: 250px;
-            z-index: 1;
-        }
-
-        .hero-image-container:hover {
-            transform: scale(1.05);
-            z-index: 4;
-        }
-
-        .hero-image-container:nth-child(3):hover {
-            transform: translateX(-50%) scale(1.05);
-        }
-
-        .hero-video {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
         }
 
         /* Menu Section */
@@ -713,27 +442,12 @@
             font-weight: 500;
         }
 
-        /* Special Menu Items */
-        .menu-special {
-            grid-column: 1 / -1;
-            background: var(--morning-gradient);
-            color: white;
-            padding: 40px;
-            border-radius: 25px;
+        .no-menu-message {
             text-align: center;
-            margin: 40px 0;
-        }
-
-        .menu-special h3 {
-            font-family: var(--font-accent);
-            font-size: 36px;
-            margin-bottom: 10px;
-        }
-
-        .menu-special p {
-            font-size: 18px;
-            margin-bottom: 20px;
-            opacity: 0.95;
+            padding: 40px;
+            color: var(--text-medium);
+            font-style: italic;
+            grid-column: 1 / -1;
         }
 
         /* Features Section */
@@ -758,25 +472,6 @@
             border-radius: 25px;
             box-shadow: var(--card-shadow);
             transition: all 0.3s ease;
-            position: relative;
-            overflow: hidden;
-        }
-
-        .feature-card::before {
-            content: '';
-            position: absolute;
-            top: -50%;
-            left: -50%;
-            width: 200%;
-            height: 200%;
-            background: var(--nature-gradient);
-            opacity: 0;
-            transition: opacity 0.3s ease;
-            transform: rotate(45deg);
-        }
-
-        .feature-card:hover::before {
-            opacity: 0.05;
         }
 
         .feature-card:hover {
@@ -834,79 +529,6 @@
             margin-bottom: 10px;
         }
 
-        .contact-form {
-            display: grid;
-            gap: 25px;
-        }
-
-        .form-row {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 25px;
-        }
-
-        .form-group {
-            display: flex;
-            flex-direction: column;
-        }
-
-        .form-group label {
-            font-weight: 600;
-            color: var(--text-dark);
-            margin-bottom: 8px;
-            font-size: 14px;
-        }
-
-        .form-group input,
-        .form-group textarea,
-        .form-group select {
-            padding: 15px;
-            border: 2px solid #f0f0f0;
-            border-radius: 15px;
-            font-family: inherit;
-            font-size: 15px;
-            transition: all 0.3s ease;
-            background: white;
-        }
-
-        .form-group input:focus,
-        .form-group textarea:focus,
-        .form-group select:focus {
-            outline: none;
-            border-color: var(--sage-green);
-            box-shadow: 0 0 0 3px rgba(168, 192, 154, 0.1);
-        }
-
-        .form-group textarea {
-            resize: vertical;
-            min-height: 120px;
-        }
-
-        .form-submit {
-            background: var(--morning-gradient);
-            color: white;
-            padding: 18px 40px;
-            border: none;
-            border-radius: 25px;
-            font-size: 16px;
-            font-weight: 600;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            box-shadow: var(--soft-shadow);
-            margin-top: 10px;
-        }
-
-        .form-submit:hover {
-            transform: translateY(-3px);
-            box-shadow: var(--hover-shadow);
-        }
-
-        /* Netlify Honeypot */
-        .netlify-honeypot {
-            position: absolute;
-            left: -5000px;
-        }
-
         /* Footer */
         .footer {
             background: var(--text-dark);
@@ -942,29 +564,6 @@
             color: var(--peach);
         }
 
-        .social-links {
-            display: flex;
-            gap: 15px;
-            margin-top: 20px;
-        }
-
-        .social-link {
-            width: 45px;
-            height: 45px;
-            background: rgba(255, 255, 255, 0.1);
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            transition: all 0.3s ease;
-            font-size: 20px;
-        }
-
-        .social-link:hover {
-            background: var(--peach);
-            transform: translateY(-3px);
-        }
-
         .footer-bottom {
             text-align: center;
             padding-top: 40px;
@@ -972,47 +571,19 @@
             color: rgba(255, 255, 255, 0.6);
         }
 
-        .logo {
-            height: 50px;
-        }
-
-        /* No menu message */
-        .no-menu-message {
-            text-align: center;
-            padding: 40px;
-            color: var(--text-medium);
-            font-style: italic;
-        }
-
         /* Mobile Responsive */
         @media (max-width: 768px) {
-            .nav-links {
-                display: none;
-            }
-
-            .mobile-menu-toggle {
-                display: block;
-            }
-
             .hero-container {
                 grid-template-columns: 1fr;
                 text-align: center;
             }
 
             .hero-visual {
-                display: none;
+                height: 300px;
             }
 
             .menu-grid {
                 grid-template-columns: 1fr;
-            }
-
-            .form-row {
-                grid-template-columns: 1fr;
-            }
-
-            .contact-container {
-                padding: 30px 20px;
             }
 
             .event-window {
@@ -1020,355 +591,45 @@
                 bottom: 20px;
                 width: 280px;
             }
-
-            .admin-edit-btn {
-                bottom: 90px;
-                right: 20px;
-            }
-        }
-
-        /* Skip link for accessibility */
-        .skip-link {
-            position: absolute;
-            top: -40px;
-            left: 10px;
-            background: var(--sage-green);
-            color: white;
-            padding: 8px 16px;
-            text-decoration: none;
-            border-radius: 4px;
-            z-index: 10000;
-        }
-
-        .skip-link:focus {
-            top: 10px;
         }
     </style>
 </head>
 
-
 <body>
-
-<!-- Add this script section to your index.html before closing </body> tag -->
-<script>
-// CMS Content Loader for Healthy Brunch Club
-(function() {
-    'use strict';
-
-    // Configuration
-    const CONFIG = {
-        contentPath: '/content',
-        refreshInterval: 300000, // 5 minutes
-        animationDelay: 100
-    };
-
-    // Utility function to fetch JSON data
-    async function fetchJSON(url) {
-        try {
-            const response = await fetch(url);
-            if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
-            return await response.json();
-        } catch (error) {
-            console.error('Error fetching data:', error);
-            return null;
-        }
-    }
-
-    // Function to create menu item HTML
-    function createMenuItemHTML(item) {
-        return `
-            <div class="menu-item">
-                <div class="menu-item-header">
-                    <span class="menu-item-name">${item.name || ''}</span>
-                </div>
-                <p class="menu-item-description">${item.description || ''}</p>
-                ${item.tags && item.tags.length > 0 ? `
-                    <div class="menu-tags">
-                        ${item.tags.map(tag => `<span class="menu-tag">${tag}</span>`).join('')}
-                    </div>
-                ` : ''}
-            </div>
-        `;
-    }
-
-    // Function to create menu category card
-    function createMenuCategoryCard(category) {
-        const card = document.createElement('div');
-        card.className = 'menu-card';
-        card.style.opacity = '0';
-        card.style.transform = 'translateY(30px)';
-        
-        card.innerHTML = `
-            <h3 class="menu-category-title">${category.title} ${category.icon || ''}</h3>
-            <div class="menu-items">
-                ${category.items.map(item => createMenuItemHTML(item)).join('')}
-            </div>
-        `;
-        
-        return card;
-    }
-
-    // Function to animate cards
-    function animateCards(cards) {
-        cards.forEach((card, index) => {
-            card.style.transition = `all 0.6s ease ${index * 0.1}s`;
-            
-            setTimeout(() => {
-                card.style.opacity = '1';
-                card.style.transform = 'translateY(0)';
-            }, CONFIG.animationDelay);
-        });
-    }
-
-    // Function to load and display menu
-    async function loadMenu() {
-        const menuGrid = document.getElementById('menuGrid');
-        if (!menuGrid) return;
-
-        try {
-            // In production, this would fetch from your CMS API endpoint
-            // For now, using example data that matches your menu structure
-            const menuData = [
-                {
-                    title: "morning rituals",
-                    icon: "🌅",
-                    order: 1,
-                    items: [
-                        {
-                            name: "warmes wasser mit bio-zitrone",
-                            description: "der perfekte start für deine verdauung",
-                            tags: ["detox", "vegan"]
-                        },
-                        {
-                            name: "golden milk latte",
-                            description: "kurkuma, ingwer, zimt & hafermilch",
-                            tags: ["anti-inflammatory", "lactosefrei"]
-                        },
-                        {
-                            name: "matcha zeremonie",
-                            description: "ceremonial grade matcha, aufgeschäumt",
-                            tags: ["energy", "antioxidants"]
-                        }
-                    ]
-                },
-                {
-                    title: "power bowls",
-                    icon: "🥣",
-                    order: 2,
-                    items: [
-                        {
-                            name: "açaí sunrise bowl",
-                            description: "açaí, banane, beeren, granola, kokosflocken",
-                            tags: ["superfood", "vegan"]
-                        },
-                        {
-                            name: "premium porridge",
-                            description: "haferflocken, chia, hanfsamen, heidelbeeren, mandeln",
-                            tags: ["glutenfrei", "protein"]
-                        },
-                        {
-                            name: "buddha bowl deluxe",
-                            description: "quinoa, hummus, grillgemüse, tahini-dressing",
-                            tags: ["protein-rich", "vegan"]
-                        }
-                    ]
-                }
-            ];
-
-            // Sort categories by order
-            menuData.sort((a, b) => (a.order || 0) - (b.order || 0));
-
-            // Clear existing content
-            menuGrid.innerHTML = '';
-
-            // Create and append category cards
-            const cards = menuData.map(category => createMenuCategoryCard(category));
-            cards.forEach(card => menuGrid.appendChild(card));
-
-            // Animate cards
-            animateCards(cards);
-
-        } catch (error) {
-            console.error('Error loading menu:', error);
-            menuGrid.innerHTML = `
-                <div class="no-menu-message">
-                    <p>Menü wird geladen...</p>
-                    <p style="font-size: 14px; margin-top: 10px;">Bitte aktivieren Sie Netlify CMS für dynamische Inhalte.</p>
-                </div>
-            `;
-        }
-    }
-
-    // Function to format event date
-    function formatEventDate(dateString) {
-        const date = new Date(dateString);
-        return date.toLocaleDateString('de-AT', {
-            weekday: 'long',
-            day: 'numeric',
-            month: 'long',
-            year: 'numeric'
-        });
-    }
-
-    // Function to load and display events
-    async function loadEvents() {
-        const eventWindow = document.getElementById('eventWindow');
-        const eventContent = document.getElementById('eventContent');
-        
-        if (!eventWindow || !eventContent) return;
-
-        try {
-            // In production, this would fetch from your CMS API endpoint
-            const eventsData = [
-                {
-                    title: "next monday special",
-                    artist: "dj cosmic kitchen",
-                    date: "2025-01-27T09:00:00+01:00",
-                    description: "erlebe entspannte lounge-klänge während deines brunches mit unserem special guest dj cosmic kitchen!",
-                    musicStyle: "downtempo, organic house, world fusion",
-                    startTime: "9:00 uhr",
-                    audioPreview: "/dj-preview.mp3",
-                    active: true
-                }
-            ];
-
-            // Filter active events
-            const activeEvents = eventsData.filter(event => event.active);
-
-            if (activeEvents.length > 0) {
-                const event = activeEvents[0];
-                
-                eventContent.innerHTML = `
-                    <div class="event-header">
-                        <h3>${event.title}</h3>
-                        <p>${event.artist}</p>
-                    </div>
-                    <div class="event-details">
-                        <strong>📅 ${formatEventDate(event.date)}, ${event.startTime}</strong>
-                        ${event.description}
-                        
-                        <strong>🎵 musik-stil:</strong>
-                        ${event.musicStyle}
-                    </div>
-                    ${event.audioPreview ? `
-                        <div class="audio-player">
-                            <h4>hör rein in den sound:</h4>
-                            <audio controls>
-                                <source src="${event.audioPreview}" type="audio/mpeg">
-                                dein browser unterstützt kein audio.
-                            </audio>
-                        </div>
-                    ` : ''}
-                `;
-                
-                eventWindow.style.display = 'block';
-            } else {
-                eventWindow.style.display = 'none';
-            }
-
-        } catch (error) {
-            console.error('Error loading events:', error);
-            eventWindow.style.display = 'none';
-        }
-    }
-
-    // Function to initialize content loading
-    function initializeContent() {
-        // Load content immediately
-        loadMenu();
-        loadEvents();
-
-        // Set up periodic refresh
-        setInterval(() => {
-            loadMenu();
-            loadEvents();
-        }, CONFIG.refreshInterval);
-    }
-
-    // Wait for DOM to be ready
-    if (document.readyState === 'loading') {
-        document.addEventListener('DOMContentLoaded', initializeContent);
-    } else {
-        initializeContent();
-    }
-
-    // Expose functions globally if needed for debugging
-    window.cmsLoader = {
-        loadMenu,
-        loadEvents,
-        refresh: initializeContent
-    };
-
-})();
-
-// Integration with existing code
-document.addEventListener('DOMContentLoaded', function() {
-    // Your existing initialization code remains here
-    
-    // The CMS loader will automatically handle menu and event loading
-    console.log('CMS Integration loaded. Use window.cmsLoader.refresh() to manually refresh content.');
-});
-</script>
-
-<!-- 
-INTEGRATION NOTES:
-
-1. This script automatically loads when the page loads
-2. It replaces the static menu content with dynamic content
-3. Events are loaded and displayed in the event window
-4. Content refreshes every 5 minutes automatically
-5. You can manually refresh by calling: window.cmsLoader.refresh()
-
-NETLIFY CMS API ENDPOINTS:
-
-Once Netlify CMS is set up, you'll need to update the fetchJSON calls to use actual API endpoints:
-- Menu: /api/menu or /.netlify/functions/get-menu
-- Events: /api/events or /.netlify/functions/get-events
-
-These endpoints will be created when you set up Netlify Functions to read your CMS content.
--->
-
-
-
-
-
-    <!-- Loading Screen -->
-    <div class="loading-screen" id="loadingScreen">
-        <div class="loading-logo"><img src="content/images/logo.png" width="356" height="194" alt=""/></div>
-        <div class="loading-bar">
-            <div class="loading-progress"></div>
-        </div>
-    </div>
-
-    <!-- Skip Link -->
-    <a href="#main-content" class="skip-link">zum hauptinhalt springen</a>
-
     <!-- Navigation -->
-    <nav class="nav fade-in" id="navbar">
+    <nav class="nav" id="navbar">
         <div class="nav-container">
-            <a href="#home" class="logo"><img src="content/images/logo.png" alt=""  class="logo"/>&nbsp;</a>
+            <a href="#home" class="logo">
+                <img src="content/images/logo.png" alt="Healthy Brunch Club" class="logo"/>
+            </a>
             
             <ul class="nav-links">
-              <li><a href="#home">home</a></li>
+                <li><a href="#home">home</a></li>
                 <li><a href="#menu">speisekarte</a></li>
                 <li><a href="#features">features</a></li>
                 <li><a href="#about">über uns</a></li>
                 <li><a href="#contact">kontakt</a></li>
                 <li><a href="#booking" class="book-btn">tisch reservieren</a></li>
             </ul>
-
-            <button class="mobile-menu-toggle" aria-label="menu öffnen">☰</button>
         </div>
     </nav>
 
-
+    <!-- Floating Event Window -->
+    <div class="event-window" id="eventWindow">
+        <button class="event-toggle" onclick="toggleEventWindow()">
+            <span id="toggleIcon">−</span>
+        </button>
+        <div class="event-content" id="eventContent">
+            <!-- Event content will be loaded here -->
+        </div>
+    </div>
 
     <!-- Main Content -->
     <main id="main-content">
         <!-- Hero Section -->
         <section class="hero" id="home">
             <div class="hero-container">
-                <div class="hero-content fade-in-up">
+                <div class="hero-content">
                     <h1>start your monday with <span>healthy vibes</span></h1>
                     <p>erlebe die perfekte kombination aus bio-zutaten, liebevoll zubereiteten speisen und entspannter atmosphäre. jeden montag von 8-14 uhr.</p>
                     
@@ -1379,24 +640,7 @@ These endpoints will be created when you set up Netlify Functions to read your C
                 </div>
                 
                 <div class="hero-visual">
-                    <div class="hero-image-container fade-in-up fade-in-delay-1">
-                        <video class="hero-video" autoplay muted loop playsinline>
-                            <source src="/content/videos/event.mp4" type="video/mp4">
-                            <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 280 350'%3E%3Crect fill='%23FFE5D9' width='280' height='350'/%3E%3Ctext x='50%25' y='50%25' text-anchor='middle' fill='%23A8C09A' font-size='20'%3Ehealthy bowl%3C/text%3E%3C/svg%3E" alt="healthy bowl">
-                        </video>
-                    </div>
-                    <div class="hero-image-container fade-in-up fade-in-delay-2">
-                        <video class="hero-video" autoplay muted loop playsinline>
-                            <source src="/content/videos/intro.mp4" type="video/mp4">
-                            <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 250 300'%3E%3Crect fill='%23B8D4B2' width='250' height='300'/%3E%3Ctext x='50%25' y='50%25' text-anchor='middle' fill='white' font-size='20'%3Efresh juice%3C/text%3E%3C/svg%3E" alt="fresh juice">
-                        </video>
-                    </div>
-                    <div class="hero-image-container fade-in-up fade-in-delay-3">
-                        <video class="hero-video" autoplay muted loop playsinline>
-                            <source src="/content/videos/sarmiento.mp4" type="video/mp4">
-                            <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 200 250'%3E%3Crect fill='%23FFB5A7' width='200' height='250'/%3E%3Ctext x='50%25' y='50%25' text-anchor='middle' fill='white' font-size='18'%3Eavocado toast%3C/text%3E%3C/svg%3E" alt="avocado toast">
-                        </video>
-                    </div>
+                    <h3 style="color: var(--sage-green); font-family: var(--font-accent);">Dein gesunder Start in die Woche</h3>
                 </div>
             </div>
         </section>
@@ -1479,91 +723,19 @@ These endpoints will be created when you set up Netlify Functions to read your C
             </div>
         </section>
 
-        <!-- Contact Form Section -->
-        <section class="contact-section" id="contact" id="booking">
+        <!-- Contact Section -->
+        <section class="contact-section" id="contact">
             <div class="contact-container">
                 <div class="contact-header">
-                    <h2>reserviere deinen tisch</h2>
+                    <h2>kontakt & reservierung</h2>
                     <p>sichere dir deinen platz für ein unvergessliches brunch-erlebnis</p>
                 </div>
-
-                <form name="reservierung" method="POST" data-netlify="true" data-netlify-honeypot="bot-field" class="contact-form">
-                    <!-- Netlify Honeypot field -->
-                    <p class="netlify-honeypot">
-                        <label>don't fill this out if you're human: <input name="bot-field" /></label>
-                    </p>
-
-                    <div class="form-row">
-                        <div class="form-group">
-                            <label for="name">name *</label>
-                            <input type="text" id="name" name="name" required>
-                        </div>
-                        <div class="form-group">
-                            <label for="email">e-mail *</label>
-                            <input type="email" id="email" name="email" required>
-                        </div>
-                    </div>
-
-                    <div class="form-row">
-                        <div class="form-group">
-                            <label for="phone">telefon</label>
-                            <input type="tel" id="phone" name="phone">
-                        </div>
-                        <div class="form-group">
-                            <label for="date">datum *</label>
-                            <select id="date" name="date" required>
-                                <option value="">montag wählen</option>
-                            </select>
-                        </div>
-                    </div>
-
-                    <div class="form-row">
-                        <div class="form-group">
-                            <label for="time">uhrzeit *</label>
-                            <select id="time" name="time" required>
-                                <option value="08:00">08:00</option>
-                                <option value="08:30">08:30</option>
-                                <option value="09:00">09:00</option>
-                                <option value="09:30">09:30</option>
-                                <option value="10:00">10:00</option>
-                                <option value="10:30">10:30</option>
-                                <option value="11:00">11:00</option>
-                                <option value="11:30">11:30</option>
-                                <option value="12:00">12:00</option>
-                                <option value="12:30">12:30</option>
-                                <option value="13:00">13:00</option>
-                                <option value="13:30">13:30</option>
-                            </select>
-                        </div>
-                        <div class="form-group">
-                            <label for="guests">anzahl personen *</label>
-                            <select id="guests" name="guests" required>
-                                <option value="">bitte wählen</option>
-                                <option value="1">1 person</option>
-                                <option value="2">2 personen</option>
-                                <option value="3">3 personen</option>
-                                <option value="4">4 personen</option>
-                                <option value="5">5 personen</option>
-                                <option value="6">6 personen</option>
-                                <option value="7+">7+ personen</option>
-                            </select>
-                        </div>
-                    </div>
-
-                    <div class="form-group">
-                        <label for="allergies">allergien / unverträglichkeiten</label>
-                        <textarea id="allergies" name="allergies" placeholder="bitte teile uns eventuelle allergien oder spezielle wünsche mit..."></textarea>
-                    </div>
-
-                    <div class="form-group">
-                        <label for="newsletter">
-                            <input type="checkbox" id="newsletter" name="newsletter" style="width: auto; margin-right: 10px;">
-                            ich möchte den newsletter mit aktuellen events und specials erhalten
-                        </label>
-                    </div>
-
-                    <button type="submit" class="form-submit">tisch reservieren</button>
-                </form>
+                <div style="text-align: center;">
+                    <p><strong>📍 Adresse:</strong> Gumpendorfer Straße 9, 1060 Wien</p>
+                    <p><strong>🕐 Öffnungszeiten:</strong> Montag: 08:00 - 14:00 Uhr</p>
+                    <p><strong>📞 Telefon:</strong> +43 676 123 456 78</p>
+                    <p><strong>✉️ E-Mail:</strong> hello@healthybrunchclub.at</p>
+                </div>
             </div>
         </section>
     </main>
@@ -1581,99 +753,336 @@ These endpoints will be created when you set up Netlify Functions to read your C
             <div class="footer-section">
                 <h4>kontakt</h4>
                 <p>gumpendorfer straße 9<br>1060 wien</p>
-                <p><a href="tel:+4367612345678">+43 676 123 456 78</a></p>
-                <p><a href="mailto:hello@healthybrunchclub.at">hello@healthybrunchclub.at</a></p>
+                <p>+43 676 123 456 78</p>
+                <p>hello@healthybrunchclub.at</p>
             </div>
 
             <div class="footer-section">
                 <h4>healthy brunch club</h4>
                 <p>start your monday right with healthy food, good vibes, and amazing people.</p>
-                <div class="social-links">
-                    <a href="#" class="social-link" aria-label="instagram">📷</a>
-                    <a href="#" class="social-link" aria-label="facebook">👍</a>
-                    <a href="#" class="social-link" aria-label="pinterest">📌</a>
-                </div>
-            </div>
-
-            <div class="footer-section">
-                <h4>newsletter</h4>
-                <p>bleibe auf dem laufenden über events, neue gerichte und special offers!</p>
-                <form name="newsletter" method="POST" data-netlify="true" style="margin-top: 15px;">
-                    <input type="email" name="email" placeholder="deine e-mail" required style="padding: 10px; border: none; border-radius: 5px; width: 100%; margin-bottom: 10px;">
-                    <button type="submit" style="background: var(--peach); border: none; color: white; padding: 10px 20px; border-radius: 5px; cursor: pointer; width: 100%;">anmelden</button>
-                </form>
             </div>
         </div>
 
         <div class="footer-bottom">
-            <p>&copy; 2025 healthy brunch club wien. made with love in vienna. | <a href="/impressum" style="color: inherit;">impressum</a> | <a href="/datenschutz" style="color: inherit;">datenschutz</a></p>
+            <p>&copy; 2025 healthy brunch club wien. made with love in vienna.</p>
         </div>
     </footer>
 
-    <!-- Scripts -->
     <script>
-        // Loading Screen
-        window.addEventListener('load', function() {
-            setTimeout(function() {
-                document.getElementById('loadingScreen').classList.add('hidden');
-            }, 2000);
-        });
+        // Enhanced CMS Content Loader
+        (function() {
+            'use strict';
+
+            // Configuration
+            const CONFIG = {
+                refreshInterval: 300000, // 5 minutes
+                animationDelay: 100,
+                fallbackDelay: 2000 // 2 seconds before showing fallback
+            };
+
+            // Fallback Menu Data
+            const FALLBACK_MENU_DATA = [
+                {
+                    title: "morning rituals",
+                    icon: "🌅",
+                    order: 1,
+                    items: [
+                        {
+                            name: "warmes wasser mit bio-zitrone",
+                            description: "der perfekte start für deine verdauung",
+                            tags: ["detox", "vegan"]
+                        },
+                        {
+                            name: "golden milk latte",
+                            description: "kurkuma, ingwer, zimt & hafermilch",
+                            tags: ["anti-inflammatory", "lactosefrei"]
+                        },
+                        {
+                            name: "matcha zeremonie",
+                            description: "ceremonial grade matcha, aufgeschäumt",
+                            tags: ["energy", "antioxidants"]
+                        }
+                    ]
+                },
+                {
+                    title: "power bowls",
+                    icon: "🥣",
+                    order: 2,
+                    items: [
+                        {
+                            name: "açaí sunrise bowl",
+                            description: "açaí, banane, beeren, granola, kokosflocken",
+                            tags: ["superfood", "vegan"]
+                        },
+                        {
+                            name: "premium porridge",
+                            description: "haferflocken, chia, hanfsamen, heidelbeeren, mandeln",
+                            tags: ["glutenfrei", "protein"]
+                        },
+                        {
+                            name: "buddha bowl deluxe",
+                            description: "quinoa, hummus, grillgemüse, tahini-dressing",
+                            tags: ["protein-rich", "vegan"]
+                        }
+                    ]
+                },
+                {
+                    title: "egg creations",
+                    icon: "🥚",
+                    order: 3,
+                    items: [
+                        {
+                            name: "shakshuka wien style",
+                            description: "pochierte eier in würziger tomatensauce, feta, kräuter",
+                            tags: ["vegetarisch", "spicy"]
+                        },
+                        {
+                            name: "eggs benedict deluxe",
+                            description: "sauerteigbrot, pochierte eier, avocado-hollandaise",
+                            tags: ["signature"]
+                        },
+                        {
+                            name: "farmers omelette",
+                            description: "bio-eier, saisongemüse, bergkäse, kräuter",
+                            tags: ["protein", "glutenfrei"]
+                        }
+                    ]
+                }
+            ];
+
+            // Fallback Event Data
+            const FALLBACK_EVENT_DATA = [
+                {
+                    title: "next monday special",
+                    artist: "dj cosmic kitchen",
+                    date: "2025-01-27T09:00:00+01:00",
+                    description: "erlebe entspannte lounge-klänge während deines brunches mit unserem special guest dj cosmic kitchen!",
+                    musicStyle: "downtempo, organic house, world fusion",
+                    startTime: "9:00 uhr",
+                    audioPreview: "content/audio/artist1.mp3",
+                    active: true
+                }
+            ];
+
+            // Create menu item HTML
+            function createMenuItemHTML(item) {
+                return `
+                    <div class="menu-item">
+                        <div class="menu-item-header">
+                            <span class="menu-item-name">${item.name || ''}</span>
+                        </div>
+                        <p class="menu-item-description">${item.description || ''}</p>
+                        ${item.tags && item.tags.length > 0 ? `
+                            <div class="menu-tags">
+                                ${item.tags.map(tag => `<span class="menu-tag">${tag}</span>`).join('')}
+                            </div>
+                        ` : ''}
+                    </div>
+                `;
+            }
+
+            // Create menu category card
+            function createMenuCategoryCard(category) {
+                const card = document.createElement('div');
+                card.className = 'menu-card';
+                card.style.opacity = '0';
+                card.style.transform = 'translateY(30px)';
+                
+                card.innerHTML = `
+                    <h3 class="menu-category-title">${category.title} ${category.icon || ''}</h3>
+                    <div class="menu-items">
+                        ${category.items && category.items.length > 0 
+                            ? category.items.map(item => createMenuItemHTML(item)).join('')
+                            : '<p style="color: var(--text-light); font-style: italic;">Keine Einträge vorhanden</p>'
+                        }
+                    </div>
+                `;
+                
+                return card;
+            }
+
+            // Animate cards
+            function animateCards(cards) {
+                cards.forEach((card, index) => {
+                    card.style.transition = `all 0.6s ease ${index * 0.1}s`;
+                    
+                    setTimeout(() => {
+                        card.style.opacity = '1';
+                        card.style.transform = 'translateY(0)';
+                    }, CONFIG.animationDelay + (index * 100));
+                });
+            }
+
+            // Load and display menu
+            async function loadMenu() {
+                const menuGrid = document.getElementById('menuGrid');
+                if (!menuGrid) return;
+
+                console.log('Loading menu...');
+                
+                let menuData = null;
+
+                // Try to load from CMS
+                try {
+                    const response = await fetch('/.netlify/functions/get-menu');
+                    if (response.ok) {
+                        menuData = await response.json();
+                        console.log('Menu loaded from CMS:', menuData);
+                        
+                        if (!menuData || menuData.length === 0) {
+                            throw new Error('CMS returned empty menu data');
+                        }
+                    } else {
+                        throw new Error(`CMS responded with status: ${response.status}`);
+                    }
+                } catch (error) {
+                    console.log('CMS not available, using fallback data:', error.message);
+                    menuData = FALLBACK_MENU_DATA;
+                }
+
+                // Display menu data
+                displayMenuData(menuGrid, menuData);
+            }
+
+            // Display menu data
+            function displayMenuData(menuGrid, menuData) {
+                // Sort categories by order
+                menuData.sort((a, b) => (a.order || 0) - (b.order || 0));
+
+                // Clear existing content
+                menuGrid.innerHTML = '';
+
+                // Create and append category cards
+                const cards = menuData.map(category => createMenuCategoryCard(category));
+                cards.forEach(card => menuGrid.appendChild(card));
+
+                // Animate cards
+                animateCards(cards);
+
+                console.log(`${menuData.length} menu categories displayed successfully`);
+            }
+
+            // Format event date
+            function formatEventDate(dateString) {
+                const date = new Date(dateString);
+                return date.toLocaleDateString('de-AT', {
+                    weekday: 'long',
+                    day: 'numeric',
+                    month: 'long',
+                    year: 'numeric'
+                });
+            }
+
+            // Load and display events
+            async function loadEvents() {
+                const eventWindow = document.getElementById('eventWindow');
+                const eventContent = document.getElementById('eventContent');
+                
+                if (!eventWindow || !eventContent) {
+                    console.log('Event window elements not found');
+                    return;
+                }
+
+                console.log('Loading events...');
+                
+                let eventsData = null;
+
+                // Try to load from CMS
+                try {
+                    const response = await fetch('/.netlify/functions/get-events');
+                    if (response.ok) {
+                        eventsData = await response.json();
+                        console.log('Events loaded from CMS:', eventsData);
+                        
+                        if (!eventsData || eventsData.length === 0) {
+                            throw new Error('CMS returned empty events data');
+                        }
+                    } else {
+                        throw new Error(`CMS responded with status: ${response.status}`);
+                    }
+                } catch (error) {
+                    console.log('CMS not available, using fallback events:', error.message);
+                    eventsData = FALLBACK_EVENT_DATA;
+                }
+
+                // Filter active events
+                const activeEvents = eventsData.filter(event => event.active);
+
+                if (activeEvents.length > 0) {
+                    const event = activeEvents[0];
+                    
+                    eventContent.innerHTML = `
+                        <div class="event-header">
+                            <h3>${event.title}</h3>
+                            <p>${event.artist}</p>
+                        </div>
+                        <div class="event-details">
+                            <strong>📅 ${formatEventDate(event.date)}, ${event.startTime}</strong>
+                            ${event.description}
+                            
+                            <strong>🎵 musik-stil:</strong>
+                            ${event.musicStyle}
+                        </div>
+                        ${event.audioPreview ? `
+                            <div class="audio-player">
+                                <h4>hör rein in den sound:</h4>
+                                <audio controls>
+                                    <source src="${event.audioPreview}" type="audio/mpeg">
+                                    dein browser unterstützt kein audio.
+                                </audio>
+                            </div>
+                        ` : ''}
+                    `;
+                    
+                    eventWindow.style.display = 'block';
+                    console.log('Event window displayed successfully');
+                } else {
+                    eventWindow.style.display = 'none';
+                    console.log('No active events found');
+                }
+            }
+
+            // Initialize content loading
+            function initializeContent() {
+                console.log('Initializing CMS content loader...');
+                
+                // Load content immediately
+                loadMenu();
+                loadEvents();
+
+                // Set up periodic refresh
+                setInterval(() => {
+                    console.log('Refreshing content...');
+                    loadMenu();
+                    loadEvents();
+                }, CONFIG.refreshInterval);
+            }
+
+            // Wait for DOM to be ready
+            if (document.readyState === 'loading') {
+                document.addEventListener('DOMContentLoaded', initializeContent);
+            } else {
+                initializeContent();
+            }
+
+            // Expose functions globally for debugging
+            window.cmsLoader = {
+                loadMenu,
+                loadEvents,
+                refresh: initializeContent
+            };
+
+        })();
 
         // Toggle Event Window
         function toggleEventWindow() {
             const eventWindow = document.getElementById('eventWindow');
             const toggleIcon = document.getElementById('toggleIcon');
             
-            eventWindow.classList.toggle('collapsed');
-            toggleIcon.textContent = eventWindow.classList.contains('collapsed') ? '🎵' : '−';
-        }
-
-        // Show Admin Button for logged in users
-        if (window.netlifyIdentity) {
-            window.netlifyIdentity.on("init", user => {
-                if (user) {
-                    document.getElementById('adminEditBtn').classList.add('show');
-                }
-            });
-            
-            window.netlifyIdentity.on("login", () => {
-                document.getElementById('adminEditBtn').classList.add('show');
-            });
-            
-            window.netlifyIdentity.on("logout", () => {
-                document.getElementById('adminEditBtn').classList.remove('show');
-            });
-        }
-
-        // Fill Monday dates in the select dropdown
-        function fillMondayDates() {
-            const dateSelect = document.getElementById('date');
-            const today = new Date();
-            const daysUntilMonday = (8 - today.getDay()) % 7 || 7;
-            
-            for (let i = 0; i < 4; i++) {
-                const monday = new Date(today);
-                monday.setDate(today.getDate() + daysUntilMonday + (i * 7));
-                
-                const option = document.createElement('option');
-                option.value = monday.toISOString().split('T')[0];
-                option.textContent = monday.toLocaleDateString('de-AT', { 
-                    weekday: 'long', 
-                    day: 'numeric', 
-                    month: 'long' 
-                });
-                
-                dateSelect.appendChild(option);
+            if (eventWindow && toggleIcon) {
+                eventWindow.classList.toggle('collapsed');
+                toggleIcon.textContent = eventWindow.classList.contains('collapsed') ? '🎵' : '−';
             }
-        }
-
-        // Call function when page loads
-        document.addEventListener('DOMContentLoaded', fillMondayDates);
-
-        // Handle form submission success
-        if (window.location.search.includes('success=true')) {
-            alert('vielen dank für deine reservierung! wir haben deine anfrage erhalten und melden uns in kürze bei dir.');
-            window.history.replaceState({}, document.title, window.location.pathname);
         }
 
         // Smooth scrolling for navigation links
@@ -1690,105 +1099,21 @@ These endpoints will be created when you set up Netlify Functions to read your C
             });
         });
 
-        // Navigation scroll effect
-        window.addEventListener('scroll', function() {
-            const navbar = document.getElementById('navbar');
-            if (window.scrollY > 100) {
-                navbar.classList.add('scrolled');
-            } else {
-                navbar.classList.remove('scrolled');
+        // Simple fallback loading message replacement
+        setTimeout(() => {
+            const noMenuMessage = document.querySelector('.no-menu-message');
+            if (noMenuMessage && noMenuMessage.textContent.includes('wird geladen')) {
+                noMenuMessage.innerHTML = `
+                    <p>Menu wird vom CMS geladen...</p>
+                    <p style="font-size: 14px; margin-top: 10px; color: var(--text-light);">
+                        Falls nichts erscheint, ist das CMS noch nicht konfiguriert. 
+                        Die Fallback-Daten sollten in Kürze angezeigt werden.
+                    </p>
+                `;
             }
-        });
+        }, 3000);
 
-        // Mobile menu toggle
-        const mobileMenuToggle = document.querySelector('.mobile-menu-toggle');
-        const navLinks = document.querySelector('.nav-links');
-
-        if (mobileMenuToggle) {
-            mobileMenuToggle.addEventListener('click', function() {
-                navLinks.style.display = navLinks.style.display === 'flex' ? 'none' : 'flex';
-                navLinks.style.flexDirection = 'column';
-                navLinks.style.position = 'absolute';
-                navLinks.style.top = '100%';
-                navLinks.style.left = '0';
-                navLinks.style.right = '0';
-                navLinks.style.background = 'white';
-                navLinks.style.padding = '20px';
-                navLinks.style.boxShadow = '0 4px 20px rgba(0,0,0,0.1)';
-            });
-        }
-
-        // Intersection Observer for fade-in animations
-        const observerOptions = {
-            threshold: 0.1,
-            rootMargin: '0px 0px -50px 0px'
-        };
-
-        const observer = new IntersectionObserver(function(entries) {
-            entries.forEach(entry => {
-                if (entry.isIntersecting) {
-                    entry.target.style.opacity = '1';
-                    entry.target.style.transform = 'translateY(0)';
-                }
-            });
-        }, observerOptions);
-
-        // Load menu data
-        async function loadMenuData() {
-            try {
-                const response = await fetch('/content/menu/');
-                const files = await response.text();
-                const menuGrid = document.getElementById('menuGrid');
-                
-                // Parse markdown files and render menu
-                // This is a simplified version - you would need to implement proper markdown parsing
-                menuGrid.innerHTML = '<p class="no-menu-message">Bitte benutzen Sie das Admin-Panel, um Menü-Einträge hinzuzufügen.</p>';
-            } catch (error) {
-                console.log('Menu will be loaded from CMS');
-            }
-        }
-
-        // Load event data
-        async function loadEventData() {
-            try {
-                const response = await fetch('/content/events/');
-                const files = await response.text();
-                const eventWindow = document.getElementById('eventWindow');
-                const eventContent = document.getElementById('eventContent');
-                
-                // This is a simplified version - you would need to implement proper event loading
-                // For now, hide the event window if no events
-                eventWindow.style.display = 'none';
-            } catch (error) {
-                console.log('Events will be loaded from CMS');
-            }
-        }
-
-        // Observe all menu cards and feature cards
-        document.addEventListener('DOMContentLoaded', function() {
-            const cards = document.querySelectorAll('.menu-card, .feature-card');
-            cards.forEach((card, index) => {
-                card.style.opacity = '0';
-                card.style.transform = 'translateY(30px)';
-                card.style.transition = `all 0.6s ease ${index * 0.1}s`;
-                observer.observe(card);
-            });
-
-            // Load dynamic content
-            loadMenuData();
-            loadEventData();
-        });
-
-        // Netlify CMS redirect after login
-        if (window.netlifyIdentity) {
-            window.netlifyIdentity.on("init", user => {
-                if (!user) {
-                    window.netlifyIdentity.on("login", () => {
-                        document.location.href = "/admin/";
-                    });
-                }
-            });
-        }
+        console.log('Enhanced Healthy Brunch Club website loaded successfully!');
     </script>
 </body>
 </html>
