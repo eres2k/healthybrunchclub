@@ -968,9 +968,18 @@
             border-top: 1px solid rgba(255, 255, 255, 0.1);
             color: rgba(255, 255, 255, 0.6);
         }
-.logo {
-	height: 50px;
-}
+
+        .logo {
+            height: 50px;
+        }
+
+        /* No menu message */
+        .no-menu-message {
+            text-align: center;
+            padding: 40px;
+            color: var(--text-medium);
+            font-style: italic;
+        }
 
         /* Mobile Responsive */
         @media (max-width: 768px) {
@@ -1065,29 +1074,12 @@
     </nav>
 
     <!-- Floating Event Window -->
-    <div class="event-window" id="eventWindow">
+    <div class="event-window" id="eventWindow" style="display: none;">
         <button class="event-toggle" onclick="toggleEventWindow()">
             <span id="toggleIcon">−</span>
         </button>
-        <div class="event-content">
-            <div class="event-header">
-                <h3>next monday special</h3>
-                <p>dj cosmic kitchen</p>
-            </div>
-            <div class="event-details">
-                <strong>📅 nächsten montag, 31.6.25, 9:00 uhr</strong>
-                erlebe entspannte lounge-klänge während deines brunches mit unserem special guest dj ostrive!
-                
-                <strong>🎵 musik-stil:</strong>
-                downtempo, organic house, world fusion
-            </div>
-            <div class="audio-player">
-                <h4>hör rein in den sound:</h4>
-                <audio controls>
-                    <source src="/dj-preview.mp3" type="audio/mpeg">
-                    dein browser unterstützt kein audio.
-                </audio>
-            </div>
+        <div class="event-content" id="eventContent">
+            <!-- Event content will be loaded dynamically -->
         </div>
     </div>
 
@@ -1142,422 +1134,10 @@
             </div>
 
             <div class="menu-grid" id="menuGrid">
-                <!-- Morning Rituals -->
-                <div class="menu-card">
-                    <h3 class="menu-category-title">morning rituals 🌅</h3>
-                    <div class="menu-items">
-                        <div class="menu-item">
-                            <div class="menu-item-header">
-                                <span class="menu-item-name">warmes wasser mit bio-zitrone</span>
-                            </div>
-                            <p class="menu-item-description">der perfekte start für deine verdauung</p>
-                            <div class="menu-tags">
-                                <span class="menu-tag">detox</span>
-                                <span class="menu-tag">vegan</span>
-                            </div>
-                        </div>
-                        <div class="menu-item">
-                            <div class="menu-item-header">
-                                <span class="menu-item-name">golden milk latte</span>
-                            </div>
-                            <p class="menu-item-description">kurkuma, ingwer, zimt & hafermilch</p>
-                            <div class="menu-tags">
-                                <span class="menu-tag">anti-inflammatory</span>
-                                <span class="menu-tag">lactosefrei</span>
-                            </div>
-                        </div>
-                        <div class="menu-item">
-                            <div class="menu-item-header">
-                                <span class="menu-item-name">matcha zeremonie</span>
-                            </div>
-                            <p class="menu-item-description">ceremonial grade matcha, aufgeschäumt</p>
-                            <div class="menu-tags">
-                                <span class="menu-tag">energy</span>
-                                <span class="menu-tag">antioxidants</span>
-                            </div>
-                        </div>
-                    </div>
+                <!-- Menu items will be loaded dynamically -->
+                <div class="no-menu-message">
+                    <p>Die Speisekarte wird geladen...</p>
                 </div>
-
-                <!-- Power Bowls -->
-                <div class="menu-card">
-                    <h3 class="menu-category-title">power bowls 🥣</h3>
-                    <div class="menu-items">
-                        <div class="menu-item">
-                            <div class="menu-item-header">
-                                <span class="menu-item-name">açaí sunrise bowl</span>
-                            </div>
-                            <p class="menu-item-description">açaí, banane, beeren, granola, kokosflocken</p>
-                            <div class="menu-tags">
-                                <span class="menu-tag">superfood</span>
-                                <span class="menu-tag">vegan</span>
-                            </div>
-                        </div>
-                        <div class="menu-item">
-                            <div class="menu-item-header">
-                                <span class="menu-item-name">premium porridge</span>
-                            </div>
-                            <p class="menu-item-description">haferflocken, chia, hanfsamen, heidelbeeren, mandeln</p>
-                            <div class="menu-tags">
-                                <span class="menu-tag">glutenfrei</span>
-                                <span class="menu-tag">protein</span>
-                            </div>
-                        </div>
-                        <div class="menu-item">
-                            <div class="menu-item-header">
-                                <span class="menu-item-name">buddha bowl deluxe</span>
-                            </div>
-                            <p class="menu-item-description">quinoa, hummus, grillgemüse, tahini-dressing</p>
-                            <div class="menu-tags">
-                                <span class="menu-tag">protein-rich</span>
-                                <span class="menu-tag">vegan</span>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Egg Creations -->
-                <div class="menu-card">
-                    <h3 class="menu-category-title">egg creations 🥚</h3>
-                    <div class="menu-items">
-                        <div class="menu-item">
-                            <div class="menu-item-header">
-                                <span class="menu-item-name">shakshuka wien style</span>
-                            </div>
-                            <p class="menu-item-description">pochierte eier in würziger tomatensauce, feta, kräuter</p>
-                            <div class="menu-tags">
-                                <span class="menu-tag">vegetarisch</span>
-                                <span class="menu-tag">spicy</span>
-                            </div>
-                        </div>
-                        <div class="menu-item">
-                            <div class="menu-item-header">
-                                <span class="menu-item-name">eggs benedict deluxe</span>
-                            </div>
-                            <p class="menu-item-description">sauerteigbrot, pochierte eier, avocado-hollandaise</p>
-                            <div class="menu-tags">
-                                <span class="menu-tag">signature</span>
-                            </div>
-                        </div>
-                        <div class="menu-item">
-                            <div class="menu-item-header">
-                                <span class="menu-item-name">farmers omelette</span>
-                            </div>
-                            <p class="menu-item-description">bio-eier, saisongemüse, bergkäse, kräuter</p>
-                            <div class="menu-tags">
-                                <span class="menu-tag">protein</span>
-                                <span class="menu-tag">glutenfrei</span>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Avocado Love -->
-                <div class="menu-card">
-                    <h3 class="menu-category-title">avocado love 🥑</h3>
-                    <div class="menu-items">
-                        <div class="menu-item">
-                            <div class="menu-item-header">
-                                <span class="menu-item-name">rainbow avocado toast</span>
-                            </div>
-                            <p class="menu-item-description">vollkornbrot, avocado, radieschen, sprossen, dukkah</p>
-                            <div class="menu-tags">
-                                <span class="menu-tag">instagram-worthy</span>
-                                <span class="menu-tag">vegan</span>
-                            </div>
-                        </div>
-                        <div class="menu-item">
-                            <div class="menu-item-header">
-                                <span class="menu-item-name">guacamole bowl</span>
-                            </div>
-                            <p class="menu-item-description">hausgemachte guacamole, tortilla chips, gemüsesticks</p>
-                            <div class="menu-tags">
-                                <span class="menu-tag">sharing</span>
-                                <span class="menu-tag">glutenfrei</span>
-                            </div>
-                        </div>
-                        <div class="menu-item">
-                            <div class="menu-item-header">
-                                <span class="menu-item-name">avo & egg smash</span>
-                            </div>
-                            <p class="menu-item-description">zerdrückte avocado, pochiertes ei, chili, lime</p>
-                            <div class="menu-tags">
-                                <span class="menu-tag">bestseller</span>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Pancakes & More -->
-                <div class="menu-card">
-                    <h3 class="menu-category-title">pancakes & more 🥞</h3>
-                    <div class="menu-items">
-                        <div class="menu-item">
-                            <div class="menu-item-header">
-                                <span class="menu-item-name">fluffy protein pancakes</span>
-                            </div>
-                            <p class="menu-item-description">hafermehl, banane, ahornsirup, beeren</p>
-                            <div class="menu-tags">
-                                <span class="menu-tag">protein</span>
-                                <span class="menu-tag">glutenfrei</span>
-                            </div>
-                        </div>
-                        <div class="menu-item">
-                            <div class="menu-item-header">
-                                <span class="menu-item-name">french toast supreme</span>
-                            </div>
-                            <p class="menu-item-description">brioche, vanille, zimt, kompott</p>
-                            <div class="menu-tags">
-                                <span class="menu-tag">comfort food</span>
-                            </div>
-                        </div>
-                        <div class="menu-item">
-                            <div class="menu-item-header">
-                                <span class="menu-item-name">belgian waffles</span>
-                            </div>
-                            <p class="menu-item-description">knusprige waffeln, nutella, früchte</p>
-                            <div class="menu-tags">
-                                <span class="menu-tag">sweet treat</span>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Salads & Greens -->
-                <div class="menu-card">
-                    <h3 class="menu-category-title">salads & greens 🥗</h3>
-                    <div class="menu-items">
-                        <div class="menu-item">
-                            <div class="menu-item-header">
-                                <span class="menu-item-name">caesar salad 2.0</span>
-                            </div>
-                            <p class="menu-item-description">romana, parmesan, croutons, veganes caesar-dressing</p>
-                            <div class="menu-tags">
-                                <span class="menu-tag">klassiker</span>
-                            </div>
-                        </div>
-                        <div class="menu-item">
-                            <div class="menu-item-header">
-                                <span class="menu-item-name">superfood salat</span>
-                            </div>
-                            <p class="menu-item-description">kale, quinoa, granatapfel, walnüsse, tahini</p>
-                            <div class="menu-tags">
-                                <span class="menu-tag">nutrient-dense</span>
-                                <span class="menu-tag">vegan</span>
-                            </div>
-                        </div>
-                        <div class="menu-item">
-                            <div class="menu-item-header">
-                                <span class="menu-item-name">burrata dreams</span>
-                            </div>
-                            <p class="menu-item-description">burrata, tomaten, basilikum, balsamico</p>
-                            <div class="menu-tags">
-                                <span class="menu-tag">italienisch</span>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Guilt-Free Sweets -->
-                <div class="menu-card">
-                    <h3 class="menu-category-title">guilt-free sweets 🍰</h3>
-                    <div class="menu-items">
-                        <div class="menu-item">
-                            <div class="menu-item-header">
-                                <span class="menu-item-name">raw chocolate brownie</span>
-                            </div>
-                            <p class="menu-item-description">datteln, kakao, nüsse, kokosblütenzucker</p>
-                            <div class="menu-tags">
-                                <span class="menu-tag">raw</span>
-                                <span class="menu-tag">zuckerfrei</span>
-                            </div>
-                        </div>
-                        <div class="menu-item">
-                            <div class="menu-item-header">
-                                <span class="menu-item-name">chia mango pudding</span>
-                            </div>
-                            <p class="menu-item-description">chiasamen, kokosmilch, frische mango, minze</p>
-                            <div class="menu-tags">
-                                <span class="menu-tag">omega-3</span>
-                                <span class="menu-tag">vegan</span>
-                            </div>
-                        </div>
-                        <div class="menu-item">
-                            <div class="menu-item-header">
-                                <span class="menu-item-name">energy balls trio</span>
-                            </div>
-                            <p class="menu-item-description">kokos, matcha & schoko variationen</p>
-                            <div class="menu-tags">
-                                <span class="menu-tag">snack</span>
-                                <span class="menu-tag">protein</span>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Hot Beverages -->
-                <div class="menu-card">
-                    <h3 class="menu-category-title">hot beverages ☕</h3>
-                    <div class="menu-items">
-                        <div class="menu-item">
-                            <div class="menu-item-header">
-                                <span class="menu-item-name">specialty coffee</span>
-                            </div>
-                            <p class="menu-item-description">single origin, lokal geröstet</p>
-                            <div class="menu-tags">
-                                <span class="menu-tag">fair trade</span>
-                            </div>
-                        </div>
-                        <div class="menu-item">
-                            <div class="menu-item-header">
-                                <span class="menu-item-name">chai latte hausgemacht</span>
-                            </div>
-                            <p class="menu-item-description">gewürze, schwarztee, pflanzenmilch</p>
-                            <div class="menu-tags">
-                                <span class="menu-tag">warming</span>
-                            </div>
-                        </div>
-                        <div class="menu-item">
-                            <div class="menu-item-header">
-                                <span class="menu-item-name">hot chocolate deluxe</span>
-                            </div>
-                            <p class="menu-item-description">belgische schokolade, marshmallows</p>
-                            <div class="menu-tags">
-                                <span class="menu-tag">comfort</span>
-                            </div>
-                        </div>
-                        <div class="menu-item">
-                            <div class="menu-item-header">
-                                <span class="menu-item-name">tee-auswahl</span>
-                            </div>
-                            <p class="menu-item-description">bio kräuter-, grün-, schwarz- & früchtetees</p>
-                            <div class="menu-tags">
-                                <span class="menu-tag">variety</span>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Fresh & Alive -->
-                <div class="menu-card">
-                    <h3 class="menu-category-title">fresh & alive 🥤</h3>
-                    <div class="menu-items">
-                        <div class="menu-item">
-                            <div class="menu-item-header">
-                                <span class="menu-item-name">green goddess</span>
-                            </div>
-                            <p class="menu-item-description">spinat, gurke, apfel, zitrone, ingwer</p>
-                            <div class="menu-tags">
-                                <span class="menu-tag">detox</span>
-                                <span class="menu-tag">cold-pressed</span>
-                            </div>
-                        </div>
-                        <div class="menu-item">
-                            <div class="menu-item-header">
-                                <span class="menu-item-name">immunity booster</span>
-                            </div>
-                            <p class="menu-item-description">orange, karotte, kurkuma, ingwer, schwarzer pfeffer</p>
-                            <div class="menu-tags">
-                                <span class="menu-tag">vitamin c</span>
-                                <span class="menu-tag">anti-inflammatory</span>
-                            </div>
-                        </div>
-                        <div class="menu-item">
-                            <div class="menu-item-header">
-                                <span class="menu-item-name">pink paradise</span>
-                            </div>
-                            <p class="menu-item-description">rote beete, apfel, zitrone, minze</p>
-                            <div class="menu-tags">
-                                <span class="menu-tag">antioxidants</span>
-                            </div>
-                        </div>
-                        <div class="menu-item">
-                            <div class="menu-item-header">
-                                <span class="menu-item-name">coconut water+</span>
-                            </div>
-                            <p class="menu-item-description">kokoswasser, lime, minze, chia</p>
-                            <div class="menu-tags">
-                                <span class="menu-tag">hydration</span>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Smoothies -->
-                <div class="menu-card">
-                    <h3 class="menu-category-title">smoothies 🥤</h3>
-                    <div class="menu-items">
-                        <div class="menu-item">
-                            <div class="menu-item-header">
-                                <span class="menu-item-name">berry blast</span>
-                            </div>
-                            <p class="menu-item-description">blaubeeren, himbeeren, banane, mandelmilch</p>
-                            <div class="menu-tags">
-                                <span class="menu-tag">antioxidants</span>
-                            </div>
-                        </div>
-                        <div class="menu-item">
-                            <div class="menu-item-header">
-                                <span class="menu-item-name">tropical vibes</span>
-                            </div>
-                            <p class="menu-item-description">mango, ananas, kokos, passionsfrucht</p>
-                            <div class="menu-tags">
-                                <span class="menu-tag">vitamin boost</span>
-                            </div>
-                        </div>
-                        <div class="menu-item">
-                            <div class="menu-item-header">
-                                <span class="menu-item-name">green protein</span>
-                            </div>
-                            <p class="menu-item-description">spinat, banane, proteinpulver, mandelbutter</p>
-                            <div class="menu-tags">
-                                <span class="menu-tag">post-workout</span>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Kombucha & More -->
-                <div class="menu-card">
-                    <h3 class="menu-category-title">kombucha & more 🍶</h3>
-                    <div class="menu-items">
-                        <div class="menu-item">
-                            <div class="menu-item-header">
-                                <span class="menu-item-name">hausgemachter kombucha</span>
-                            </div>
-                            <p class="menu-item-description">ingwer-zitrone oder beeren</p>
-                            <div class="menu-tags">
-                                <span class="menu-tag">probiotics</span>
-                            </div>
-                        </div>
-                        <div class="menu-item">
-                            <div class="menu-item-header">
-                                <span class="menu-item-name">kefir smoothie</span>
-                            </div>
-                            <p class="menu-item-description">kokos-kefir mit früchten</p>
-                            <div class="menu-tags">
-                                <span class="menu-tag">gut health</span>
-                            </div>
-                        </div>
-                        <div class="menu-item">
-                            <div class="menu-item-header">
-                                <span class="menu-item-name">hausgemachte limonade</span>
-                            </div>
-                            <p class="menu-item-description">zitrone-minze oder holunder</p>
-                            <div class="menu-tags">
-                                <span class="menu-tag">refreshing</span>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Special Monday Offer 
-                <div class="menu-special">
-                    <h3>monday special 🌟</h3>
-                    <p>jeden montag: all-you-can-eat brunch buffet</p>
-                    <p style="font-size: 14px; margin-top: 10px; opacity: 0.9;">inkl. kaffee, tee & frisch gepresste säfte</p>
-                </div>
-				-->
             </div>
         </section>
 
@@ -1878,6 +1458,37 @@
             });
         }, observerOptions);
 
+        // Load menu data
+        async function loadMenuData() {
+            try {
+                const response = await fetch('/content/menu/');
+                const files = await response.text();
+                const menuGrid = document.getElementById('menuGrid');
+                
+                // Parse markdown files and render menu
+                // This is a simplified version - you would need to implement proper markdown parsing
+                menuGrid.innerHTML = '<p class="no-menu-message">Bitte benutzen Sie das Admin-Panel, um Menü-Einträge hinzuzufügen.</p>';
+            } catch (error) {
+                console.log('Menu will be loaded from CMS');
+            }
+        }
+
+        // Load event data
+        async function loadEventData() {
+            try {
+                const response = await fetch('/content/events/');
+                const files = await response.text();
+                const eventWindow = document.getElementById('eventWindow');
+                const eventContent = document.getElementById('eventContent');
+                
+                // This is a simplified version - you would need to implement proper event loading
+                // For now, hide the event window if no events
+                eventWindow.style.display = 'none';
+            } catch (error) {
+                console.log('Events will be loaded from CMS');
+            }
+        }
+
         // Observe all menu cards and feature cards
         document.addEventListener('DOMContentLoaded', function() {
             const cards = document.querySelectorAll('.menu-card, .feature-card');
@@ -1887,7 +1498,22 @@
                 card.style.transition = `all 0.6s ease ${index * 0.1}s`;
                 observer.observe(card);
             });
+
+            // Load dynamic content
+            loadMenuData();
+            loadEventData();
         });
+
+        // Netlify CMS redirect after login
+        if (window.netlifyIdentity) {
+            window.netlifyIdentity.on("init", user => {
+                if (!user) {
+                    window.netlifyIdentity.on("login", () => {
+                        document.location.href = "/admin/";
+                    });
+                }
+            });
+        }
     </script>
 </body>
 </html>
