@@ -1,10 +1,11 @@
+// CMS Content Loader for Healthy Brunch Club
 (function() {
     'use strict';
 
     // Configuration
     const CONFIG = {
-        menuAPI: 'netlify/functions/get-menu',
-        eventsAPI: 'netlify/functions/get-events',
+        menuAPI: '/.netlify/functions/get-menu',
+        eventsAPI: '/.netlify/functions/get-events',
         refreshInterval: 300000, // 5 minutes
         animationDelay: 100
     };
@@ -82,13 +83,13 @@
     // Fallback Event-Daten
     const FALLBACK_EVENT_DATA = [
         {
-            title: "Erwin Esener",
-            artist: "Erwin Esener",
-            date: "2025-06-24T16:15:39.708Z",
-            description: "Erlebe entspannte lounge-klänge während deines brunches mit unserem special guest Erwin Esener!",
-            musicStyle: "Downtempo, Organic House, World Fusion",
-            startTime: "9:00 Uhr",
-            audioPreview: "/content/images/artist1.mp3",
+            title: "next monday special",
+            artist: "dj cosmic kitchen",
+            date: "2025-01-27T09:00:00+01:00",
+            description: "erlebe entspannte lounge-klänge während deines brunches mit unserem special guest dj cosmic kitchen!",
+            musicStyle: "downtempo, organic house, world fusion",
+            startTime: "9:00 uhr",
+            audioPreview: "/content/audio/dj-preview.mp3",
             active: true
         }
     ];
