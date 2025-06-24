@@ -1,3 +1,10 @@
+const matter = require('gray-matter');
+const fs = require('fs');
+
+// Markdown-Datei mit Front Matter lesen
+const file = fs.readFileSync('content/post.md', 'utf8');
+const { data, content } = matter(file);
+
 {
   "name": "healthy-brunch-club",
   "version": "1.0.0",
@@ -5,4 +12,5 @@
   "dependencies": {
     "gray-matter": "^4.0.3"
   }
+  
 }
