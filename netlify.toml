@@ -1,6 +1,10 @@
 [build]
   command = "npm run build"
   functions = "netlify/functions"
-  
+  publish = "."
+
 [build.environment]
   NODE_VERSION = "18"
+
+[functions]
+  included_files = ["content/**"]
