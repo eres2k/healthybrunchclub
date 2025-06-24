@@ -3,23 +3,83 @@ const path = require('path');
 const matter = require('gray-matter');
 
 exports.handler = async (event, context) => {
+  // Set CORS headers
+  const headers = {
+    'Access-Control-Allow-Origin': '*',
+    'Access-Control-Allow-Headers': 'Content-Type',
+    'Access-Control-Allow-Methods': 'GET, POST, OPTIONS',
+    'Content-Type': 'application/json',
+    'Cache-Control': 'public, max-age=300'
+  };
+
+  // Handle preflight requests
+  if (event.httpMethod === 'OPTIONS') {
+    return {
+      statusCode: 200,
+      headers,
+      body: ''
+    };
+  }
+
   try {
-    // Verwende process.cwd() für den korrekten Pfad in Netlify
+    // Use the correct path for Netlify build environment
     const menuDir = path.join(process.cwd(), 'content', 'menu');
     
-    // Prüfe ob das Verzeichnis existiert
+    console.log('Looking for menu directory at:', menuDir);
+    
+    // Check if directory exists
     try {
       await fs.access(menuDir);
-    } catch {
+    } catch (error) {
       console.error('Menu directory not found:', menuDir);
+      
+      // Return default menu data if directory doesn't exist
+      const defaultMenu = [
+        {
+          title: "morning rituals",
+          icon: "🌅",
+          order: 1,
+          items: [
+            {
+              name: "warmes wasser mit bio-zitrone",
+              description: "der perfekte start für deine verdauung",
+              tags: ["detox", "vegan"]
+            },
+            {
+              name: "golden milk latte",
+              description: "kurkuma, ingwer, zimt & hafermilch",
+              tags: ["anti-inflammatory", "lactosefrei"]
+            }
+          ]
+        },
+        {
+          title: "power bowls",
+          icon: "🥣",
+          order: 2,
+          items: [
+            {
+              name: "açaí sunrise bowl",
+              description: "açaí, banane, beeren, granola, kokosflocken",
+              tags: ["superfood", "vegan"]
+            },
+            {
+              name: "premium porridge",
+              description: "haferflocken, chia, hanfsamen, heidelbeeren, mandeln",
+              tags: ["glutenfrei", "protein"]
+            }
+          ]
+        }
+      ];
+      
       return {
-        statusCode: 404,
-        body: JSON.stringify({ error: 'Menu directory not found' })
+        statusCode: 200,
+        headers,
+        body: JSON.stringify(defaultMenu)
       };
     }
     
     const files = await fs.readdir(menuDir);
-    console.log('Found files:', files);
+    console.log('Found menu files:', files);
     
     const menuCategories = await Promise.all(
       files
@@ -29,36 +89,50 @@ exports.handler = async (event, context) => {
             const filePath = path.join(menuDir, file);
             const content = await fs.readFile(filePath, 'utf8');
             const { data } = matter(content);
-            console.log('Parsed file:', file, data);
-            return data;
+            
+            console.log('Parsed menu file:', file, data);
+            
+            // Ensure the category has the required structure
+            if (!data.title) {
+              console.warn(`Menu file ${file} missing title`);
+              return null;
+            }
+            
+            return {
+              title: data.title,
+              icon: data.icon || '',
+              order: data.order || 0,
+              items: data.items || []
+            };
           } catch (error) {
-            console.error('Error parsing file:', file, error);
+            console.error('Error parsing menu file:', file, error);
             return null;
           }
         })
     );
     
-    // Filtere null-Werte und sortiere
+    // Filter out null values and sort by order
     const validCategories = menuCategories
       .filter(cat => cat !== null)
       .sort((a, b) => (a.order || 0) - (b.order || 0));
     
+    console.log('Returning menu categories:', validCategories.length);
+    
     return {
       statusCode: 200,
-      headers: {
-        'Content-Type': 'application/json',
-        'Cache-Control': 'public, max-age=300'
-      },
+      headers,
       body: JSON.stringify(validCategories)
     };
+    
   } catch (error) {
     console.error('Error in get-menu function:', error);
+    
     return {
       statusCode: 500,
+      headers,
       body: JSON.stringify({ 
         error: 'Failed to load menu', 
-        details: error.message,
-        stack: error.stack 
+        details: error.message 
       })
     };
   }
