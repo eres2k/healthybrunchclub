@@ -1471,28 +1471,6 @@
             });
         }, observerOptions);
 
-        // Load menu data
-        async function loadMenuData() {
-            try {
-                const response = await fetch('/content/menu/');
-                const files = await response.text();
-                const menuGrid = document.getElementById('menuGrid');
-                
-                // Parse markdown files and render menu
-                // This is a simplified version - you would need to implement proper markdown parsing
-                menuGrid.innerHTML = '<p class="no-menu-message">Bitte benutzen Sie das Admin-Panel, um Menü-Einträge hinzuzufügen.</p>';
-            } catch (error) {
-                console.log('Menu will be loaded from CMS');
-            }
-        }
-
-        // Load event data
-        async function loadEventData() {
-            try {
-                const response = await fetch('/content/events/');
-                const files = await response.text();
-                const eventWindow = document.getElementById('eventWindow');
-                const eventContent = document.getElementById('eventContent');
                 
                 // This is a simplified version - you would need to implement proper event loading
                 // For now, hide the event window if no events
