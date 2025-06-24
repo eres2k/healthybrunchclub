@@ -10,6 +10,14 @@
         animationDelay: 100
     };
 
+    // Check if running locally (without Netlify Dev)
+    const isLocalhost = window.location.hostname === 'localhost' || 
+                       window.location.hostname === '127.0.0.1' || 
+                       window.location.hostname === '';
+    
+    // If running locally without Netlify Dev, always use fallback data
+    const useOnlyFallback = isLocalhost && !window.location.port.includes('8888');
+
     // Fallback Menü-Daten (falls CMS nicht verfügbar)
     const FALLBACK_MENU_DATA = [
         {
@@ -75,6 +83,72 @@
                     name: "farmers omelette",
                     description: "bio-eier, saisongemüse, bergkäse, kräuter",
                     tags: ["protein", "glutenfrei"]
+                }
+            ]
+        },
+        {
+            title: "avocado love",
+            icon: "🥑",
+            order: 4,
+            items: [
+                {
+                    name: "rainbow avocado toast",
+                    description: "vollkornbrot, avocado, radieschen, sprossen, dukkah",
+                    tags: ["instagram-worthy", "vegan"]
+                },
+                {
+                    name: "guacamole bowl",
+                    description: "hausgemachte guacamole, tortilla chips, gemüsesticks",
+                    tags: ["sharing", "glutenfrei"]
+                },
+                {
+                    name: "avo & egg smash",
+                    description: "zerdrückte avocado, pochiertes ei, chili, lime",
+                    tags: ["bestseller"]
+                }
+            ]
+        },
+        {
+            title: "pancakes & more",
+            icon: "🥞",
+            order: 5,
+            items: [
+                {
+                    name: "fluffy protein pancakes",
+                    description: "hafermehl, banane, ahornsirup, beeren",
+                    tags: ["protein", "glutenfrei"]
+                },
+                {
+                    name: "french toast supreme",
+                    description: "brioche, vanille, zimt, kompott",
+                    tags: ["comfort food"]
+                },
+                {
+                    name: "belgian waffles",
+                    description: "knusprige waffeln, nutella, früchte",
+                    tags: ["sweet treat"]
+                }
+            ]
+        },
+        {
+            title: "hot beverages",
+            icon: "☕",
+            order: 6,
+            items: [
+                {
+                    name: "specialty coffee",
+                    description: "single origin, lokal geröstet",
+                    tags: ["fair trade"]
+                },
+                {
+                    name: "chai latte hausgemacht",
+                    description: "gewürze, schwarztee, pflanzenmilch",
+                    tags: ["warming"]
+                },
+                {
+                    name: "hot chocolate deluxe",
+                    description: "belgische schokolade, marshmallows",
+                    tags: ["comfort"]
                 }
             ]
         }
@@ -148,35 +222,41 @@
         const menuGrid = document.getElementById('menuGrid');
         if (!menuGrid) return;
 
-        try {
-            console.log('Versuche Menü von CMS zu laden...');
-            
-            // Versuche zuerst vom CMS zu laden
-            const response = await fetch(CONFIG.menuAPI);
-            let menuData;
+        let menuData = FALLBACK_MENU_DATA;
 
-            if (response.ok) {
-                menuData = await response.json();
-                console.log('Menü erfolgreich vom CMS geladen:', menuData);
-            } else {
-                throw new Error(`CMS nicht verfügbar: ${response.status}`);
-            }
-
-            // Fallback auf lokale Daten wenn CMS leer ist
-            if (!menuData || menuData.length === 0) {
-                console.log('CMS Menü ist leer, verwende Fallback-Daten');
-                menuData = FALLBACK_MENU_DATA;
-            }
-
-        } catch (error) {
-            console.log('CMS nicht verfügbar, verwende lokale Fallback-Daten:', error.message);
-            menuData = FALLBACK_MENU_DATA;
-            
-            // Cache Fallback-Daten für spätere Verwendung
+        // If running locally without Netlify Dev, skip API call
+        if (useOnlyFallback) {
+            console.log('Lokale Entwicklung erkannt - verwende Fallback-Daten');
+        } else {
             try {
-                localStorage.setItem('menuCache', JSON.stringify(menuData));
-            } catch (e) {
-                console.warn('Konnte Menü nicht im Local Storage cachen:', e);
+                console.log('Versuche Menü von CMS zu laden...');
+                
+                // Versuche vom CMS zu laden
+                const response = await fetch(CONFIG.menuAPI);
+
+                if (response.ok) {
+                    const cmsData = await response.json();
+                    console.log('Menü erfolgreich vom CMS geladen:', cmsData);
+                    
+                    // Use CMS data if available and not empty
+                    if (cmsData && cmsData.length > 0) {
+                        menuData = cmsData;
+                    } else {
+                        console.log('CMS Menü ist leer, verwende Fallback-Daten');
+                    }
+                } else {
+                    throw new Error(`CMS nicht verfügbar: ${response.status}`);
+                }
+
+            } catch (error) {
+                console.log('CMS nicht verfügbar, verwende lokale Fallback-Daten:', error.message);
+                
+                // Cache Fallback-Daten für spätere Verwendung
+                try {
+                    localStorage.setItem('menuCache', JSON.stringify(menuData));
+                } catch (e) {
+                    console.warn('Konnte Menü nicht im Local Storage cachen:', e);
+                }
             }
         }
 
@@ -218,32 +298,40 @@
         if (!eventWindow) {
             console.log('Event Window nicht gefunden, erstelle es...');
             createEventWindow();
+            return;
         }
 
         const eventContent = document.getElementById('eventContent');
         if (!eventContent) return;
 
-        try {
-            console.log('Versuche Events von CMS zu laden...');
-            
-            const response = await fetch(CONFIG.eventsAPI);
-            let eventsData;
+        let eventsData = FALLBACK_EVENT_DATA;
 
-            if (response.ok) {
-                eventsData = await response.json();
-                console.log('Events erfolgreich vom CMS geladen:', eventsData);
-            } else {
-                throw new Error(`CMS nicht verfügbar: ${response.status}`);
+        // If running locally without Netlify Dev, skip API call
+        if (useOnlyFallback) {
+            console.log('Lokale Entwicklung erkannt - verwende Fallback-Events');
+        } else {
+            try {
+                console.log('Versuche Events von CMS zu laden...');
+                
+                const response = await fetch(CONFIG.eventsAPI);
+
+                if (response.ok) {
+                    const cmsData = await response.json();
+                    console.log('Events erfolgreich vom CMS geladen:', cmsData);
+                    
+                    // Use CMS data if available and not empty
+                    if (cmsData && cmsData.length > 0) {
+                        eventsData = cmsData;
+                    } else {
+                        console.log('Keine Events im CMS, verwende Fallback-Daten');
+                    }
+                } else {
+                    throw new Error(`CMS nicht verfügbar: ${response.status}`);
+                }
+
+            } catch (error) {
+                console.log('CMS nicht verfügbar, verwende lokale Fallback-Events:', error.message);
             }
-
-            if (!eventsData || eventsData.length === 0) {
-                console.log('Keine Events im CMS, verwende Fallback-Daten');
-                eventsData = FALLBACK_EVENT_DATA;
-            }
-
-        } catch (error) {
-            console.log('CMS nicht verfügbar, verwende lokale Fallback-Events:', error.message);
-            eventsData = FALLBACK_EVENT_DATA;
         }
 
         // Get the first active event
@@ -311,30 +399,25 @@
     async function initializeContent() {
         console.log('Initialisiere CMS Content Loader...');
         
-        // Check if running in development mode
-        const isDev = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1';
-        
-        if (isDev) {
-            console.log('Entwicklungsmodus erkannt - verwende Fallback-Daten');
+        if (useOnlyFallback) {
+            console.log('Lokale Entwicklung ohne Netlify Dev - verwende nur Fallback-Daten');
+        } else {
+            // Check CMS availability
+            const cmsAvailable = await checkCMSStatus();
+            console.log('CMS verfügbar:', cmsAvailable);
         }
-
-        // Check CMS availability
-        const cmsAvailable = await checkCMSStatus();
-        console.log('CMS verfügbar:', cmsAvailable);
 
         // Load content immediately
         await loadMenu();
         await loadEvents();
 
-        // Set up periodic refresh only if CMS is available
-        if (cmsAvailable) {
+        // Set up periodic refresh only if CMS is available and not in local mode
+        if (!useOnlyFallback) {
             console.log('Setze periodische Aktualisierung ein (alle 5 Minuten)');
             setInterval(() => {
                 loadMenu();
                 loadEvents();
             }, CONFIG.refreshInterval);
-        } else {
-            console.log('CMS nicht verfügbar - keine periodische Aktualisierung');
         }
     }
 
