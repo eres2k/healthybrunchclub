@@ -1,0 +1,19 @@
+backend:
+  name: git-gateway
+  branch: main
+
+media_folder: "images/uploads"
+public_folder: "/images/uploads"
+
+collections:
+  - name: "menu"
+    label: "Speisekarte"
+    folder: "_menu"
+    create: true
+    slug: "{{slug}}"
+    fields:
+      - {label: "Kategorie", name: "category", widget: "string"}
+      - {label: "Name", name: "title", widget: "string"}
+      - {label: "Beschreibung", name: "description", widget: "text"}
+      - {label: "Tags", name: "tags", widget: "list"}
+      - {label: "Reihenfolge", name: "order", widget: "number"}

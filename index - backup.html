@@ -1,0 +1,2243 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Healthy Brunch Club - Start Your Monday Right | Bio Brunch Wien</title>
+    <meta name="description" content="Gesunder Bio-Brunch jeden Montag in Wien. Regionale Zutaten, Live-Musik und positive Vibes. Jetzt buchen in der Gumpendorfer Straße 9.">
+    <meta name="keywords" content="healthy brunch wien, bio brunch, gesund essen wien, montag brunch, gumpendorfer straße, vegetarisch vegan wien">
+    <meta name="author" content="Healthy Brunch Club">
+    <link rel="canonical" href="https://healthybrunchclub.at/">
+    
+    <!-- Open Graph Tags -->
+    <meta property="og:title" content="Healthy Brunch Club - Bio Brunch Wien">
+    <meta property="og:description" content="Gesunder Bio-Brunch jeden Montag mit regionalen Zutaten und Live-Musik">
+    <meta property="og:image" content="/og-image.jpg">
+    <meta property="og:url" content="https://healthybrunchclub.at/">
+    <meta property="og:type" content="website">
+    <meta property="og:locale" content="de_AT">
+    
+    <!-- PWA Meta Tags -->
+    <meta name="theme-color" content="#A9AB88">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="default">
+    <meta name="apple-mobile-web-app-title" content="Healthy Brunch">
+    <link rel="apple-touch-icon" href="/icon-192.png">
+    <link rel="manifest" href="/manifest.json">
+    
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap');
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            /* Flyer-inspired Natural Color Palette */
+            --earth-primary: #A9AB88;
+            --earth-secondary: #DBAA89;
+            --earth-accent: #D4C3A1;
+            --earth-neutral: #B7AFA3;
+            --earth-light: #F3E8DA;
+            --earth-dark: #5D4E37;
+            --earth-forest: #81B14F;
+            --earth-clay: #E26C29;
+            
+            /* Semantic Colors */
+            --accent-success: #81B14F;
+            --accent-warning: #E26C29;
+            --accent-error: #C4625A;
+            
+            /* Glass Morphism with Earth Tones */
+            --glass-bg: rgba(169, 171, 136, 0.15);
+            --glass-border: rgba(169, 171, 136, 0.25);
+            --glass-shadow: 0 8px 32px 0 rgba(93, 78, 55, 0.2);
+            --glass-elevated: rgba(212, 195, 161, 0.2);
+            
+            /* Text Colors with Proper Contrast */
+            --text-primary: #2D2621;
+            --text-secondary: #5D4E37;
+            --text-tertiary: #8B7D6B;
+            --text-light: #F3E8DA;
+            
+            /* Organic Gradients */
+            --earth-gradient: linear-gradient(135deg, #A9AB88 0%, #DBAA89 50%, #D4C3A1 100%);
+            --forest-gradient: linear-gradient(135deg, #81B14F 0%, #A9AB88 100%);
+            --sunset-gradient: linear-gradient(135deg, #E26C29 0%, #DBAA89 50%, #F3E8DA 100%);
+            
+            /* Typography */
+            --font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+        }
+
+        body {
+            font-family: var(--font-family);
+            line-height: 1.6;
+            color: var(--text-primary);
+            background: linear-gradient(135deg, #F3E8DA 0%, #F8F4ED 25%, #F5F1E8 50%, #F3E8DA 100%);
+            background-size: 400% 400%;
+            animation: organicShift 25s ease infinite;
+            overflow-x: hidden;
+            min-height: 100vh;
+        }
+
+        @keyframes organicShift {
+            0%, 100% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+        }
+
+        .glass {
+            background: var(--glass-bg);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border: 1px solid var(--glass-border);
+            box-shadow: var(--glass-shadow);
+        }
+
+        .glass-elevated {
+            background: var(--glass-elevated);
+            backdrop-filter: blur(30px);
+            -webkit-backdrop-filter: blur(30px);
+            border: 1px solid rgba(169, 171, 136, 0.3);
+            box-shadow: 0 20px 40px 0 rgba(93, 78, 55, 0.25);
+        }
+
+        /* Compact Navigation */
+        .nav {
+            position: fixed;
+            top: 10px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: calc(100% - 20px);
+            max-width: 1200px;
+            padding: 10px 20px;
+            border-radius: 14px;
+            z-index: 1000;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .nav.scrolled {
+            background: var(--glass-elevated);
+            backdrop-filter: blur(30px);
+            box-shadow: 0 12px 40px rgba(93, 78, 55, 0.3);
+        }
+
+        .nav-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+	font-size: 16px;
+	font-weight: 700;
+	color: var(--text-primary);
+	display: flex;
+	align-items: center;
+	gap: 6px;
+	max-height: 43px;
+	max-width: 129px;
+        }
+
+        .logo::before {
+            content: '🥑';
+            font-size: 18px;
+        }
+
+        .nav-links {
+            display: flex;
+            list-style: none;
+            gap: 20px;
+            align-items: center;
+        }
+
+        .nav-links a {
+            text-decoration: none;
+            color: var(--text-secondary);
+            font-weight: 500;
+            font-size: 13px;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            padding: 5px 10px;
+            border-radius: 8px;
+        }
+
+        .nav-links a:hover {
+            color: var(--text-primary);
+            background: rgba(169, 171, 136, 0.15);
+        }
+
+        .book-now-btn {
+            background: var(--earth-gradient) !important;
+            color: var(--text-light) !important;
+            padding: 8px 18px !important;
+            border-radius: 12px !important;
+            font-weight: 600 !important;
+            box-shadow: 0 4px 20px rgba(169, 171, 136, 0.4);
+        }
+
+        .book-now-btn:hover {
+            transform: translateY(-2px) !important;
+            box-shadow: 0 8px 30px rgba(169, 171, 136, 0.6) !important;
+        }
+
+        /* Mobile Menu */
+        .mobile-menu-toggle {
+            display: none;
+            background: none;
+            border: none;
+            font-size: 20px;
+            color: var(--text-primary);
+            cursor: pointer;
+            padding: 6px;
+            min-width: 40px;
+            min-height: 40px;
+        }
+
+        .mobile-menu {
+            display: none;
+            position: absolute;
+            top: 100%;
+            left: 0;
+            right: 0;
+            background: var(--glass-elevated);
+            backdrop-filter: blur(25px);
+            border-radius: 14px;
+            margin-top: 6px;
+            padding: 16px;
+            box-shadow: 0 20px 40px rgba(93, 78, 55, 0.3);
+        }
+
+        .mobile-menu.show {
+            display: block;
+            animation: mobileMenuSlide 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        @keyframes mobileMenuSlide {
+            from {
+                opacity: 0;
+                transform: translateY(-20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .mobile-menu-links {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            list-style: none;
+        }
+
+        .mobile-menu-links a {
+            text-decoration: none;
+            color: var(--text-secondary);
+            font-weight: 500;
+            font-size: 14px;
+            padding: 10px 14px;
+            border-radius: 10px;
+            transition: all 0.3s ease;
+            display: block;
+        }
+
+        .mobile-menu-links a:hover {
+            color: var(--text-primary);
+            background: rgba(169, 171, 136, 0.15);
+        }
+
+        /* Compact Hero Section */
+        .hero {
+            padding: 80px 20px 40px;
+            min-height: 70vh;
+            display: flex;
+            align-items: center;
+        }
+
+        .hero-container {
+            max-width: 1400px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 40px;
+            align-items: center;
+            width: 100%;
+        }
+
+        .hero-content h1 {
+            font-size: clamp(36px, 5vw, 52px);
+            font-weight: 800;
+            color: var(--text-primary);
+            margin-bottom: 16px;
+            line-height: 1.1;
+            letter-spacing: -1.5px;
+        }
+
+        .hero-content h1 span {
+            background: var(--earth-gradient);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .hero-content p {
+            font-size: 16px;
+            color: var(--text-secondary);
+            margin-bottom: 28px;
+            line-height: 1.5;
+            max-width: 480px;
+        }
+
+        .booking-options {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+            gap: 14px;
+            margin-bottom: 20px;
+        }
+
+        .booking-card {
+            padding: 20px 16px;
+            border-radius: 16px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            border: 1px solid var(--glass-border);
+            min-height: 180px;
+        }
+
+        .booking-card:hover {
+            transform: translateY(-6px);
+            border-color: var(--earth-primary);
+            box-shadow: 0 20px 40px rgba(93, 78, 55, 0.2);
+        }
+
+        .booking-card-icon {
+            font-size: 36px;
+            margin-bottom: 10px;
+        }
+
+        .booking-card h3 {
+            font-size: 14px;
+            font-weight: 700;
+            color: var(--text-primary);
+            margin-bottom: 4px;
+        }
+
+        .booking-card p {
+            font-size: 12px;
+            color: var(--text-tertiary);
+            margin-bottom: 10px;
+            line-height: 1.3;
+        }
+
+        .booking-card-price {
+            font-size: 20px;
+            font-weight: 800;
+            background: var(--earth-gradient);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            display: block;
+            margin-bottom: 12px;
+        }
+
+        .booking-card button {
+            width: 100%;
+            padding: 8px;
+            background: var(--glass-bg);
+            color: var(--text-primary);
+            border: 1px solid var(--glass-border);
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            font-size: 13px;
+        }
+
+        .booking-card button:hover {
+            background: var(--earth-gradient);
+            color: var(--text-light);
+            border-color: var(--earth-primary);
+        }
+
+        /* Compact Hero Visual */
+        .hero-visual {
+            position: relative;
+            height: 400px;
+            border-radius: 24px;
+            overflow: hidden;
+            backdrop-filter: blur(20px);
+            border: 1px solid var(--glass-border);
+            background: var(--glass-bg);
+        }
+
+        .hero-video {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            border-radius: 24px;
+        }
+
+        .video-overlay {
+            position: absolute;
+            bottom: 20px;
+            left: 20px;
+            right: 20px;
+            background: rgba(93, 78, 55, 0.4);
+            backdrop-filter: blur(15px);
+            border-radius: 12px;
+            padding: 12px;
+            text-align: center;
+            border: 1px solid var(--glass-border);
+        }
+
+        .video-overlay h2 {
+            font-size: 20px;
+            font-weight: 700;
+            margin-bottom: 4px;
+            color: var(--text-light);
+        }
+
+        .video-overlay p {
+            font-size: 13px;
+            color: var(--text-light);
+            opacity: 0.9;
+        }
+
+        /* Compact Menu Section */
+        .menu-section {
+            padding: 60px 20px;
+            background: linear-gradient(135deg, rgba(243, 232, 218, 0.5), rgba(248, 244, 237, 0.3));
+        }
+
+        .menu-container {
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        .menu-header {
+            text-align: center;
+            margin-bottom: 36px;
+        }
+
+        .menu-header h2 {
+            font-size: clamp(28px, 4vw, 36px);
+            font-weight: 800;
+            color: var(--text-primary);
+            margin-bottom: 10px;
+        }
+
+        .menu-header p {
+            font-size: 16px;
+            color: var(--text-secondary);
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        /* Menu Filters */
+        .menu-filters {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 30px;
+            padding: 16px;
+            background: var(--glass-elevated);
+            border-radius: 16px;
+            overflow-x: auto;
+            -webkit-overflow-scrolling: touch;
+            scrollbar-width: thin;
+            scrollbar-color: var(--earth-primary) transparent;
+        }
+
+        .filter-btn {
+            background: var(--glass-bg);
+            border: 1px solid var(--glass-border);
+            color: var(--text-secondary);
+            padding: 10px 16px;
+            border-radius: 12px;
+            cursor: pointer;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            font-weight: 500;
+            font-size: 13px;
+            white-space: nowrap;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            font-family: inherit;
+        }
+
+        .filter-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(169, 171, 136, 0.2);
+            border-color: var(--earth-primary);
+        }
+
+        .filter-btn.active {
+            background: var(--earth-gradient);
+            color: var(--text-light);
+            border-color: transparent;
+            box-shadow: 0 4px 15px rgba(169, 171, 136, 0.4);
+        }
+
+        .filter-icon {
+            font-size: 14px;
+        }
+
+        .filter-count {
+            background: rgba(255, 255, 255, 0.2);
+            padding: 2px 6px;
+            border-radius: 8px;
+            font-size: 11px;
+            font-weight: 600;
+        }
+
+        /* Hidden menu items */
+        .menu-item.hidden {
+            display: none !important;
+        }
+
+        .menu-category.hidden {
+            display: none !important;
+        }
+
+        .menu-categories {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+            gap: 24px;
+            margin-bottom: 40px;
+        }
+
+        .menu-category {
+            background: var(--glass-bg);
+            border-radius: 16px;
+            padding: 20px;
+            border: 1px solid var(--glass-border);
+            backdrop-filter: blur(10px);
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .menu-category:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 12px 30px rgba(93, 78, 55, 0.1);
+        }
+
+        .category-header {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 16px;
+            padding-bottom: 12px;
+            border-bottom: 2px solid var(--glass-border);
+        }
+
+        .category-icon {
+            font-size: 24px;
+        }
+
+        .category-header h3 {
+            font-size: 18px;
+            font-weight: 700;
+            color: var(--text-primary);
+        }
+
+        .menu-item {
+            margin-bottom: 14px;
+            padding: 12px 0;
+            border-bottom: 1px solid rgba(169, 171, 136, 0.1);
+        }
+
+        .menu-item:last-child {
+            border-bottom: none;
+            margin-bottom: 0;
+        }
+
+        .item-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: start;
+            margin-bottom: 4px;
+            gap: 10px;
+        }
+
+        .item-name {
+            font-weight: 600;
+            color: var(--text-primary);
+            font-size: 14px;
+            line-height: 1.3;
+        }
+
+        .item-price {
+            font-weight: 700;
+            color: var(--earth-primary);
+            font-size: 14px;
+            white-space: nowrap;
+        }
+
+        .item-description {
+            color: var(--text-secondary);
+            font-size: 12px;
+            line-height: 1.4;
+            margin-bottom: 6px;
+        }
+
+        .item-tags {
+            display: flex;
+            gap: 4px;
+            flex-wrap: wrap;
+        }
+
+        .tag {
+            background: var(--earth-gradient);
+            color: var(--text-light);
+            padding: 2px 6px;
+            border-radius: 8px;
+            font-size: 10px;
+            font-weight: 500;
+            text-transform: uppercase;
+            letter-spacing: 0.3px;
+        }
+
+        /* Compact DJ Section */
+        .dj-section {
+            padding: 60px 20px;
+            background: linear-gradient(135deg, rgba(169, 171, 136, 0.05), rgba(248, 244, 237, 0.3));
+        }
+
+        .dj-container {
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        .dj-header {
+            text-align: center;
+            margin-bottom: 36px;
+        }
+
+        .dj-header h2 {
+            font-size: clamp(28px, 4vw, 36px);
+            font-weight: 800;
+            color: var(--text-primary);
+            margin-bottom: 10px;
+        }
+
+        .dj-header p {
+            font-size: 16px;
+            color: var(--text-secondary);
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        /* Featured DJ Event */
+        .featured-dj {
+            background: var(--glass-elevated);
+            border-radius: 20px;
+            padding: 30px;
+            margin-bottom: 40px;
+            border: 1px solid var(--glass-border);
+            box-shadow: 0 20px 40px rgba(93, 78, 55, 0.15);
+        }
+
+        .featured-content {
+            display: grid;
+            grid-template-columns: auto 1fr auto;
+            gap: 30px;
+            align-items: center;
+        }
+
+        .featured-image {
+	width: 120px;
+	height: 120px;
+	border-radius: 16px;
+	object-fit: cover;
+	box-shadow: 0 10px 30px rgba(93, 78, 55, 0.2);
+        }
+
+        .featured-info h3 {
+            font-size: 24px;
+            font-weight: 700;
+            color: var(--text-primary);
+            margin-bottom: 6px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .featured-badge {
+            background: var(--earth-gradient);
+            color: var(--text-light);
+            padding: 3px 10px;
+            border-radius: 16px;
+            font-size: 11px;
+            font-weight: 600;
+            text-transform: uppercase;
+        }
+
+        .featured-info p {
+            color: var(--text-secondary);
+            margin-bottom: 16px;
+            font-size: 14px;
+        }
+
+        /* Music Player */
+        .music-player {
+            background: var(--glass-bg);
+            border-radius: 12px;
+            padding: 16px;
+            border: 1px solid var(--glass-border);
+            backdrop-filter: blur(10px);
+        }
+
+        .player-controls {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+        }
+
+        .play-button {
+            width: 44px;
+            height: 44px;
+            background: var(--earth-gradient);
+            border: none;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(169, 171, 136, 0.4);
+        }
+
+        .play-button:hover {
+            transform: scale(1.1);
+            box-shadow: 0 6px 20px rgba(169, 171, 136, 0.6);
+        }
+
+        .play-button svg {
+            width: 18px;
+            height: 18px;
+            fill: var(--text-light);
+            margin-left: 2px;
+        }
+
+        .track-info {
+            flex: 1;
+        }
+
+        .track-name {
+            font-weight: 600;
+            color: var(--text-primary);
+            margin-bottom: 2px;
+            font-size: 13px;
+        }
+
+        .track-time {
+            color: var(--text-tertiary);
+            font-size: 11px;
+        }
+
+        .progress-bar {
+            height: 4px;
+            background: rgba(169, 171, 136, 0.2);
+            border-radius: 2px;
+            margin-top: 10px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .progress-fill {
+            position: absolute;
+            top: 0;
+            left: 0;
+            height: 100%;
+            width: 35%;
+            background: var(--earth-gradient);
+            border-radius: 2px;
+            transition: width 0.1s linear;
+        }
+
+        .featured-date {
+            text-align: center;
+        }
+
+        .featured-date-day {
+            font-size: 40px;
+            font-weight: 800;
+            color: var(--earth-primary);
+            line-height: 1;
+            display: block;
+        }
+
+        .featured-date-month {
+            font-size: 13px;
+            color: var(--text-secondary);
+            text-transform: uppercase;
+            letter-spacing: 0.8px;
+        }
+
+        /* Upcoming DJs */
+        .upcoming-djs {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+        }
+
+        .dj-card {
+            background: var(--glass-bg);
+            border-radius: 16px;
+            padding: 24px;
+            border: 1px solid var(--glass-border);
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            backdrop-filter: blur(10px);
+            display: flex;
+            align-items: center;
+            gap: 16px;
+        }
+
+        .dj-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 12px 30px rgba(93, 78, 55, 0.15);
+            border-color: var(--earth-primary);
+        }
+
+        .dj-avatar {
+            width: 64px;
+            height: 64px;
+            border-radius: 12px;
+            object-fit: cover;
+            flex-shrink: 0;
+        }
+
+        .dj-info {
+            flex: 1;
+        }
+
+        .dj-name {
+            font-size: 16px;
+            font-weight: 700;
+            color: var(--text-primary);
+            margin-bottom: 2px;
+        }
+
+        .dj-style {
+            font-size: 13px;
+            color: var(--text-secondary);
+            margin-bottom: 6px;
+        }
+
+        .dj-date {
+            font-size: 12px;
+            color: var(--earth-primary);
+            font-weight: 600;
+        }
+
+        /* Compact Sections */
+        .section {
+            padding: 60px 20px;
+        }
+
+        .section-container {
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        .section-header {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+
+        .section-header h2 {
+            font-size: clamp(28px, 4vw, 36px);
+            font-weight: 800;
+            color: var(--text-primary);
+            margin-bottom: 10px;
+        }
+
+        .section-header p {
+            font-size: 16px;
+            color: var(--text-secondary);
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        /* Compact Features Grid */
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 20px;
+        }
+
+        .feature-card {
+            padding: 28px 20px;
+            border-radius: 16px;
+            text-align: center;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            border: 1px solid var(--glass-border);
+        }
+
+        .feature-card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 18px 36px rgba(93, 78, 55, 0.15);
+        }
+
+        .feature-icon {
+            width: 56px;
+            height: 56px;
+            margin: 0 auto 16px;
+            background: var(--earth-gradient);
+            border-radius: 14px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+            box-shadow: 0 8px 24px rgba(169, 171, 136, 0.3);
+        }
+
+        .feature-card h3 {
+            font-size: 18px;
+            font-weight: 700;
+            margin-bottom: 8px;
+            color: var(--text-primary);
+        }
+
+        .feature-card p {
+            color: var(--text-secondary);
+            line-height: 1.5;
+            font-size: 13px;
+        }
+
+        /* Compact Stats Section */
+        .stats-section {
+            padding: 50px 20px;
+            background: var(--glass-bg);
+            backdrop-filter: blur(20px);
+            border-top: 1px solid var(--glass-border);
+            border-bottom: 1px solid var(--glass-border);
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+            gap: 24px;
+            max-width: 1000px;
+            margin: 0 auto;
+        }
+
+        .stat-card {
+            text-align: center;
+            padding: 20px 14px;
+            border-radius: 14px;
+            background: var(--glass-elevated);
+            border: 1px solid var(--glass-border);
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .stat-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 10px 28px rgba(93, 78, 55, 0.15);
+        }
+
+        .stat-number {
+            font-size: 36px;
+            font-weight: 800;
+            background: var(--earth-gradient);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            display: block;
+            margin-bottom: 4px;
+            line-height: 1;
+        }
+
+        .stat-label {
+            color: var(--text-secondary);
+            font-size: 12px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.8px;
+        }
+
+        /* Compact About Section */
+        .about-content {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 40px;
+            align-items: center;
+            margin-top: 30px;
+        }
+
+        .about-text h3 {
+            font-size: 24px;
+            margin-bottom: 20px;
+            color: var(--text-primary);
+            font-weight: 700;
+        }
+
+        .about-text p {
+            line-height: 1.6;
+            color: var(--text-secondary);
+            margin-bottom: 16px;
+            font-size: 14px;
+        }
+
+        .about-video-container {
+            position: relative;
+            height: 300px;
+            border-radius: 16px;
+            overflow: hidden;
+            backdrop-filter: blur(20px);
+            border: 1px solid var(--glass-border);
+            background: var(--glass-bg);
+        }
+
+        .about-video {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            border-radius: 16px;
+        }
+
+        /* Compact Footer */
+        .footer {
+            padding: 50px 20px 30px;
+            background: linear-gradient(135deg, rgba(93, 78, 55, 0.1), rgba(169, 171, 136, 0.05));
+        }
+
+        .footer-container {
+            max-width: 1400px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 36px;
+            margin-bottom: 30px;
+        }
+
+        .footer-section h4 {
+            color: var(--earth-primary);
+            margin-bottom: 16px;
+            font-size: 15px;
+            font-weight: 700;
+        }
+
+        .footer-section a {
+            color: var(--text-secondary);
+            text-decoration: none;
+            display: block;
+            margin-bottom: 8px;
+            transition: all 0.3s ease;
+            font-size: 13px;
+        }
+
+        .footer-section a:hover {
+            color: var(--text-primary);
+            transform: translateX(4px);
+        }
+
+        .footer-section p {
+            color: var(--text-secondary);
+            line-height: 1.5;
+            font-size: 13px;
+        }
+
+        .social-links {
+            display: flex;
+            gap: 12px;
+            margin-top: 16px;
+        }
+
+        .social-links a {
+            width: 40px;
+            height: 40px;
+            background: var(--glass-bg);
+            border: 1px solid var(--glass-border);
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            backdrop-filter: blur(10px);
+        }
+
+        .social-links a:hover {
+            background: var(--earth-gradient);
+            border-color: transparent;
+            transform: translateY(-2px);
+            box-shadow: 0 8px 24px rgba(169, 171, 136, 0.3);
+        }
+
+        .footer-bottom {
+            text-align: center;
+            padding-top: 30px;
+            border-top: 1px solid var(--glass-border);
+            color: var(--text-tertiary);
+            font-size: 13px;
+        }
+
+        /* Notification System */
+        .notification {
+            position: fixed;
+            top: 80px;
+            right: -400px;
+            padding: 16px 24px;
+            border-radius: 12px;
+            z-index: 3000;
+            transition: right 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            min-width: 280px;
+            backdrop-filter: blur(20px);
+            border: 1px solid var(--glass-border);
+        }
+
+        .notification.show {
+            right: 20px;
+        }
+
+        .notification.success {
+            background: rgba(129, 177, 79, 0.2);
+            border-color: var(--accent-success);
+        }
+
+        .notification-icon {
+            font-size: 18px;
+        }
+
+        .notification-title {
+            font-weight: 700;
+            color: var(--text-primary);
+            margin-bottom: 2px;
+            font-size: 14px;
+        }
+
+        .notification-message {
+            color: var(--text-secondary);
+            font-size: 12px;
+        }
+
+        /* Loading states */
+        .video-loading {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            z-index: 2;
+            color: var(--text-secondary);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .video-loading-spinner {
+            width: 30px;
+            height: 30px;
+            border: 3px solid rgba(169, 171, 136, 0.3);
+            border-top: 3px solid var(--earth-primary);
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        /* Mobile Responsiveness */
+        @media (max-width: 768px) {
+            .nav {
+                top: 8px;
+                width: calc(100% - 16px);
+                padding: 8px 16px;
+                background: var(--glass-elevated);
+            }
+
+            .nav-links {
+                display: none;
+            }
+
+            .mobile-menu-toggle {
+                display: block;
+            }
+
+            .hero {
+                padding: 70px 20px 30px;
+                min-height: auto;
+            }
+
+            .hero-container {
+                display: flex;
+                flex-direction: column;
+                gap: 30px;
+            }
+
+            .hero-visual {
+                height: 240px;
+            }
+
+            .hero-content h1 {
+                font-size: 32px;
+            }
+
+            .hero-content p {
+                font-size: 14px;
+            }
+
+            .booking-options {
+                grid-template-columns: 1fr;
+                gap: 12px;
+            }
+
+            .booking-card {
+                min-height: 150px;
+            }
+
+            .menu-categories {
+                grid-template-columns: 1fr;
+                gap: 18px;
+            }
+
+            .featured-content {
+                grid-template-columns: 1fr;
+                gap: 20px;
+                text-align: center;
+            }
+
+            .featured-image {
+                margin: 0 auto;
+            }
+
+            .upcoming-djs {
+                grid-template-columns: 1fr;
+            }
+
+            .about-content {
+                grid-template-columns: 1fr;
+                gap: 30px;
+            }
+
+            .about-video-container {
+                height: 240px;
+            }
+
+            .section {
+                padding: 40px 20px;
+            }
+
+            .features-grid {
+                grid-template-columns: 1fr;
+                gap: 16px;
+            }
+
+            .stats-grid {
+                grid-template-columns: repeat(2, 1fr);
+                gap: 16px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .hero-content h1 {
+                font-size: 28px;
+            }
+
+            .booking-card {
+                padding: 16px 14px;
+                min-height: 140px;
+            }
+
+            .menu-header h2,
+            .section-header h2,
+            .dj-header h2 {
+                font-size: 24px;
+            }
+
+            .menu-filters {
+                gap: 6px;
+                padding: 12px;
+            }
+
+            .filter-btn {
+                padding: 8px 12px;
+                font-size: 11px;
+            }
+        }
+
+        /* Scrollbar styling */
+        ::-webkit-scrollbar {
+            width: 6px;
+            height: 6px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: rgba(169, 171, 136, 0.1);
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: var(--earth-gradient);
+            border-radius: 3px;
+        }
+
+        /* Selection */
+        ::selection {
+            background: rgba(169, 171, 136, 0.3);
+            color: var(--text-primary);
+        }
+
+        /* Skip link for accessibility */
+        .skip-link {
+            position: absolute;
+            top: -40px;
+            left: 6px;
+            background: var(--earth-primary);
+            color: var(--text-light);
+            padding: 8px;
+            text-decoration: none;
+            border-radius: 4px;
+            z-index: 10000;
+        }
+
+        .skip-link:focus {
+            top: 6px;
+        }
+
+        /* Focus indicators */
+        button:focus,
+        a:focus,
+        .booking-card:focus {
+            outline: 3px solid var(--earth-primary);
+            outline-offset: 2px;
+        }
+    .featured-png {
+}
+    </style>
+</head>
+
+<body>
+    <!-- Skip Link for Accessibility -->
+    <a href="#main-content" class="skip-link">Zum Hauptinhalt springen</a>
+
+    <!-- Notification -->
+    <div id="notification" class="notification" role="alert" aria-live="polite">
+        <span class="notification-icon" aria-hidden="true"></span>
+        <div class="notification-content">
+            <div class="notification-title"></div>
+            <div class="notification-message"></div>
+        </div>
+    </div>
+
+    <!-- Navigation -->
+    <nav class="nav glass" id="navbar" role="navigation" aria-label="Hauptnavigation">
+        <div class="nav-container">
+            <div class="logo"><img src="content/images/logo.png" alt="" width="356" height="200" class="logo"/></div>
+            
+            <!-- Desktop Navigation -->
+            <ul class="nav-links">
+                <li><a href="#home">Home</a></li>
+                <li><a href="#menu">Speisekarte</a></li>
+                <li><a href="#djs">DJs & Events</a></li>
+                <li><a href="#features">Features</a></li>
+                <li><a href="#about">Über uns</a></li>
+                <li><a href="#contact">Kontakt</a></li>
+                <li><a href="#booking" class="book-now-btn">Jetzt buchen</a></li>
+            </ul>
+
+            <!-- Mobile Menu Toggle -->
+            <button class="mobile-menu-toggle" id="mobileMenuToggle" aria-label="Menü öffnen" aria-expanded="false">☰</button>
+        </div>
+
+        <!-- Mobile Menu -->
+        <div class="mobile-menu" id="mobileMenu" role="menu">
+            <ul class="mobile-menu-links">
+                <li><a href="#home" role="menuitem">Home</a></li>
+                <li><a href="#menu" role="menuitem">Speisekarte</a></li>
+                <li><a href="#djs" role="menuitem">DJs & Events</a></li>
+                <li><a href="#features" role="menuitem">Features</a></li>
+                <li><a href="#about" role="menuitem">Über uns</a></li>
+                <li><a href="#contact" role="menuitem">Kontakt</a></li>
+                <li><a href="#booking" class="mobile-book-btn" role="menuitem">Jetzt buchen</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <main id="main-content">
+        <!-- Hero Section -->
+        <section class="hero" id="home" role="banner">
+            <div class="hero-container">
+                <div class="hero-content">
+                    <h1>Starte deinen Tag mit <span>Energie & Geschmack</span></h1>
+                    <p>Erlebe die perfekte Kombination aus gesundem Essen, inspirierender Musik und positiver Atmosphäre. Dein Montag wird nie wieder derselbe sein.</p>
+                    
+                    <div class="booking-options">
+                        <div class="booking-card glass" tabindex="0" role="button">
+                            <div class="booking-card-icon" aria-hidden="true">👥</div>
+                            <h3>Freundinnen Brunch</h3>
+                            <p>Gemeinsam genießen<br>2-4 Personen</p>
+                            <span class="booking-card-price">15€ p.P.</span>
+                            <button onclick="showBooking('friends')">Jetzt buchen</button>
+                        </div>
+                        
+                        <div class="booking-card glass" tabindex="0" role="button">
+                            <div class="booking-card-icon" aria-hidden="true">💼</div>
+                            <h3>Firmen Event Brunch</h3>
+                            <p>Team-Building deluxe<br>(bis 10 Personen)</p>
+                            <span class="booking-card-price">25€ p.P.</span>
+                            <button onclick="showBooking('corporate')">Jetzt buchen</button>
+                        </div>
+                        
+                        <div class="booking-card glass" tabindex="0" role="button">
+                            <div class="booking-card-icon" aria-hidden="true">🧘‍♀️</div>
+                            <h3>Romantischer Brunch</h3>
+                            <p>Love is in the Air<br>(für 2 Personen)</p>
+                            <span class="booking-card-price">40€</span>
+                            <button onclick="showBooking('romantic')">Jetzt buchen</button>
+                        </div>
+
+			<div class="booking-card glass" tabindex="0" role="button">
+                            <div class="booking-card-icon" aria-hidden="true">🧘‍♀️</div>
+                            <h3>Luxus Brunch</h3>
+                            <p>Volles Programm!<br>(für 2 Personen)</p>
+                            <span class="booking-card-price">50€</span>
+                            <button onclick="showBooking('luxus')">Jetzt buchen</button>
+                        </div>
+
+                    </div>
+                </div>
+                
+                <!-- Video Section -->
+                <div class="hero-visual glass">
+                    <div class="video-loading" id="videoLoading" aria-hidden="true">
+                        <div class="video-loading-spinner"></div>
+                        <p>Loading video...</p>
+                    </div>
+                    
+                    <video
+                        autoplay 
+                        loop 
+                        muted
+                        poster="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 800 600'%3E%3Crect fill='%23F3E8DA' width='800' height='600'/%3E%3C/svg%3E" 
+                        class="hero-video" 
+                        id="heroVideo"
+                        playsinline
+                    >
+                        <source src="content/videos/intro.mp4" type="video/mp4">
+                    </video>
+                    
+                    <div class="video-overlay">
+                        <h2>Healthy Brunch</h2>
+                        <p>Fresh • Delicious • Energizing</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Menu Section -->
+        <section class="menu-section" id="menu">
+            <div class="menu-container">
+                <div class="menu-header">
+                    <h2>Unsere Speisekarte</h2>
+                    <p>Frische, biologische Zutaten aus der Region – jeden Montag neu zusammengestellt</p>
+                </div>
+                
+                <!-- Menu Filters -->
+                <div class="menu-filters">
+                    <button class="filter-btn active" data-filter="alle">
+                        <span class="filter-icon">🍽️</span>
+                        Alle
+                        <span class="filter-count" id="count-alle">12</span>
+                    </button>
+                    <button class="filter-btn" data-filter="vegan">
+                        <span class="filter-icon">🌱</span>
+                        Vegan
+                        <span class="filter-count" id="count-vegan">5</span>
+                    </button>
+                    <button class="filter-btn" data-filter="bio">
+                        <span class="filter-icon">🌿</span>
+                        Bio
+                        <span class="filter-count" id="count-bio">12</span>
+                    </button>
+                    <button class="filter-btn" data-filter="glutenfrei">
+                        <span class="filter-icon">🌾</span>
+                        Glutenfrei
+                        <span class="filter-count" id="count-glutenfrei">4</span>
+                    </button>
+                    <button class="filter-btn" data-filter="vegetarisch">
+                        <span class="filter-icon">🥗</span>
+                        Vegetarisch
+                        <span class="filter-count" id="count-vegetarisch">7</span>
+                    </button>
+                    <button class="filter-btn" data-filter="protein">
+                        <span class="filter-icon">💪</span>
+                        Protein
+                        <span class="filter-count" id="count-protein">3</span>
+                    </button>
+                </div>
+                
+                <div class="menu-categories">
+                    <!-- Healthy Bowls -->
+                    <div class="menu-category glass" data-category="bowls">
+                        <div class="category-header">
+                            <span class="category-icon" aria-hidden="true">🥗</span>
+                            <h3>Healthy Bowls</h3>
+                        </div>
+                        <div class="menu-item" data-tags="vegan,bio,glutenfrei">
+                            <div class="item-header">
+                                <span class="item-name">Power Bowl</span>
+                                <span class="item-price">14,50€</span>
+                            </div>
+                            <p class="item-description">Quinoa, Avocado, Grünkohl, Tahini-Dressing</p>
+                            <div class="item-tags">
+                                <span class="tag">vegan</span>
+                                <span class="tag">bio</span>
+                                <span class="tag">glutenfrei</span>
+                            </div>
+                        </div>
+                        <div class="menu-item" data-tags="vegetarisch,bio,protein">
+                            <div class="item-header">
+                                <span class="item-name">Protein Boost Bowl</span>
+                                <span class="item-price">15,90€</span>
+                            </div>
+                            <p class="item-description">Griechischer Joghurt, Nüsse, Beeren, Granola</p>
+                            <div class="item-tags">
+                                <span class="tag">vegetarisch</span>
+                                <span class="tag">bio</span>
+                                <span class="tag">protein</span>
+                            </div>
+                        </div>
+                        <div class="menu-item" data-tags="vegan,bio">
+                            <div class="item-header">
+                                <span class="item-name">Buddha Bowl</span>
+                                <span class="item-price">13,90€</span>
+                            </div>
+                            <p class="item-description">Süßkartoffel, Kichererbsen, Spinat, Erdnuss-Sauce</p>
+                            <div class="item-tags">
+                                <span class="tag">vegan</span>
+                                <span class="tag">bio</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Brunch Classics -->
+                    <div class="menu-category glass" data-category="classics">
+                        <div class="category-header">
+                            <span class="category-icon" aria-hidden="true">🍳</span>
+                            <h3>Brunch Classics</h3>
+                        </div>
+                        <div class="menu-item" data-tags="vegetarisch,bio">
+                            <div class="item-header">
+                                <span class="item-name">Avocado Toast Deluxe</span>
+                                <span class="item-price">12,50€</span>
+                            </div>
+                            <p class="item-description">Vollkornbrot, Avocado, pochiertes Ei, Microgreens</p>
+                            <div class="item-tags">
+                                <span class="tag">vegetarisch</span>
+                                <span class="tag">bio</span>
+                            </div>
+                        </div>
+                        <div class="menu-item" data-tags="vegetarisch,bio,protein">
+                            <div class="item-header">
+                                <span class="item-name">Farmers Omelette</span>
+                                <span class="item-price">13,90€</span>
+                            </div>
+                            <p class="item-description">Bio-Eier, Gemüse der Saison, Kräuter</p>
+                            <div class="item-tags">
+                                <span class="tag">vegetarisch</span>
+                                <span class="tag">bio</span>
+                                <span class="tag">protein</span>
+                            </div>
+                        </div>
+                        <div class="menu-item" data-tags="vegan,bio,glutenfrei">
+                            <div class="item-header">
+                                <span class="item-name">Veganer French Toast</span>
+                                <span class="item-price">11,90€</span>
+                            </div>
+                            <p class="item-description">Glutenfreies Brot, Mandelmilch, Beeren, Ahornsirup</p>
+                            <div class="item-tags">
+                                <span class="tag">vegan</span>
+                                <span class="tag">bio</span>
+                                <span class="tag">glutenfrei</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Sweet & Healthy -->
+                    <div class="menu-category glass" data-category="sweet">
+                        <div class="category-header">
+                            <span class="category-icon" aria-hidden="true">🥞</span>
+                            <h3>Sweet & Healthy</h3>
+                        </div>
+                        <div class="menu-item" data-tags="vegan,bio,glutenfrei">
+                            <div class="item-header">
+                                <span class="item-name">Acai Bowl</span>
+                                <span class="item-price">12,90€</span>
+                            </div>
+                            <p class="item-description">Acai, Banane, Granola, Kokosflocken</p>
+                            <div class="item-tags">
+                                <span class="tag">vegan</span>
+                                <span class="tag">bio</span>
+                                <span class="tag">glutenfrei</span>
+                            </div>
+                        </div>
+                        <div class="menu-item" data-tags="vegetarisch,bio">
+                            <div class="item-header">
+                                <span class="item-name">Protein Pancakes</span>
+                                <span class="item-price">10,90€</span>
+                            </div>
+                            <p class="item-description">Hafermehl, Banane, Blaubeeren, Honig</p>
+                            <div class="item-tags">
+                                <span class="tag">vegetarisch</span>
+                                <span class="tag">bio</span>
+                            </div>
+                        </div>
+                        <div class="menu-item" data-tags="vegan,bio">
+                            <div class="item-header">
+                                <span class="item-name">Chia Pudding</span>
+                                <span class="item-price">8,90€</span>
+                            </div>
+                            <p class="item-description">Chiasamen, Kokosmilch, Mango, Minze</p>
+                            <div class="item-tags">
+                                <span class="tag">vegan</span>
+                                <span class="tag">bio</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Beverages -->
+                    <div class="menu-category glass" data-category="drinks">
+                        <div class="category-header">
+                            <span class="category-icon" aria-hidden="true">☕</span>
+                            <h3>Getränke</h3>
+                        </div>
+                        <div class="menu-item" data-tags="vegan,bio">
+                            <div class="item-header">
+                                <span class="item-name">Green Power Smoothie</span>
+                                <span class="item-price">6,90€</span>
+                            </div>
+                            <p class="item-description">Spinat, Apfel, Ingwer, Zitrone</p>
+                            <div class="item-tags">
+                                <span class="tag">vegan</span>
+                                <span class="tag">bio</span>
+                            </div>
+                        </div>
+                        <div class="menu-item" data-tags="vegetarisch,bio">
+                            <div class="item-header">
+                                <span class="item-name">Golden Latte</span>
+                                <span class="item-price">5,50€</span>
+                            </div>
+                            <p class="item-description">Kurkuma, Hafermilch, Zimt, Honig</p>
+                            <div class="item-tags">
+                                <span class="tag">vegetarisch</span>
+                                <span class="tag">bio</span>
+                            </div>
+                        </div>
+                        <div class="menu-item" data-tags="vegan,bio">
+                            <div class="item-header">
+                                <span class="item-name">Fresh Orange Juice</span>
+                                <span class="item-price">4,90€</span>
+                            </div>
+                            <p class="item-description">Frisch gepresst, 100% Bio-Orangen</p>
+                            <div class="item-tags">
+                                <span class="tag">vegan</span>
+                                <span class="tag">bio</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- DJ Section -->
+        <section class="dj-section" id="djs">
+            <div class="dj-container">
+                <div class="dj-header">
+                    <h2>Live DJs & Events</h2>
+                    <p>Jeden Montag begleiten dich lokale DJs mit sanften Klängen durch deinen Morgen</p>
+                </div>
+                
+                <!-- Featured DJ Event -->
+                <div class="featured-dj glass-elevated">
+                    <div class="featured-content"> <img src="content/images/osive.png" alt="" width="30" height="30" class="featured-image"/>
+						
+                        <div class="featured-info">
+                          <h3>DJ Osive <span class="featured-badge">Nächstes Event</span></h3>
+                            <p>Deep House & Organic Beats - Perfekt für einen entspannten Morgen mit positiver Energie</p>
+                            
+                     <div class="music-player">
+                                <div class="player-controls">
+                                    <button class="play-button" id="playButton" aria-label="Play/Pause">
+                                        <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                                            <path d="M8 5v14l11-7z"/>
+                                        </svg>
+                                    </button>
+                                    <div class="track-info">
+                                        <div class="track-name">DJ OSIVE - MIX</div>
+                                        <div class="track-time">0:00 / 0:00</div>
+                                    </div>
+                                </div>
+                                <div class="progress-bar">
+                                    <div class="progress-fill" style="width: 0%;"></div>
+                                </div>
+                                <audio id="audioPlayer" preload="metadata">
+                                    <source src="content/audio/artist1.mp3" type="audio/mpeg">
+                                    Your browser does not support the audio element.
+                                </audio>
+                          </div>
+                      </div> 
+                        <div class="featured-date">
+                            <span class="featured-date-day">31</span>
+                            <span class="featured-date-month">Juni</span>
+                        </div>
+                  </div>
+                </div>
+                
+                <!-- Upcoming DJs -->
+                <div class="upcoming-djs">
+                    <div class="dj-card glass">
+                        <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 80 80'%3E%3Crect fill='%23DBAA89' width='80' height='80'/%3E%3C/svg%3E" 
+                             alt="Soul Café" 
+                             class="dj-avatar">
+                        <div class="dj-info">
+                            <h4 class="dj-name">Soul Café</h4>
+                            <p class="dj-style">Jazz & Nu-Jazz Fusion</p>
+                            <p class="dj-date">📅 7. Juli 2025</p>
+                        </div>
+                    </div>
+                    
+                    <div class="dj-card glass">
+                        <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 80 80'%3E%3Crect fill='%2381B14F' width='80' height='80'/%3E%3C/svg%3E" 
+                             alt="Green Wave" 
+                             class="dj-avatar">
+                        <div class="dj-info">
+                            <h4 class="dj-name">Green Wave</h4>
+                            <p class="dj-style">Ambient & Downtempo</p>
+                            <p class="dj-date">📅 14. Juli 2025</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Features Section -->
+        <section class="section" id="features">
+            <div class="section-container">
+                <div class="section-header">
+                    <h2>Was macht uns besonders?</h2>
+                    <p>Mehr als nur ein Brunch – ein Erlebnis für alle Sinne</p>
+                </div>
+                
+                <div class="features-grid">
+                    <div class="feature-card glass">
+                        <div class="feature-icon" aria-hidden="true">🌱</div>
+                        <h3>100% Bio & Regional</h3>
+                        <p>Alle unsere Zutaten stammen von lokalen Bio-Bauern. Frisch, nachhaltig und voller Geschmack.</p>
+                    </div>
+                    
+                    <div class="feature-card glass">
+                        <div class="feature-icon" aria-hidden="true">🎵</div>
+                        <h3>Live Musik</h3>
+                        <p>Jeden Montag begleiten dich lokale Künstler mit sanften Klängen durch deinen Morgen.</p>
+                    </div>
+                    
+                    <div class="feature-card glass">
+                        <div class="feature-icon" aria-hidden="true">☕</div>
+                        <h3>Barista Kaffee</h3>
+                        <p>Preisgekrönter Kaffee von unserem hauseigenen Barista-Team. Der perfekte Start in den Tag.</p>
+                    </div>
+                    
+                    <div class="feature-card glass">
+                        <div class="feature-icon" aria-hidden="true">🧘‍♀️</div>
+                        <h3>Morning Yoga</h3>
+                        <p>Optional: Starte mit einer 30-minütigen Yoga-Session vor dem Brunch (Feel-Well Package).</p>
+                    </div>
+                    
+                    <div class="feature-card glass">
+                        <div class="feature-icon" aria-hidden="true">🌍</div>
+                        <h3>Zero Waste</h3>
+                        <p>Nachhaltige Verpackungen, Kompostierung und bewusste Portionsgrößen für eine bessere Zukunft.</p>
+                    </div>
+                    
+                    <div class="feature-card glass">
+                        <div class="feature-icon" aria-hidden="true">📚</div>
+                        <h3>Ernährungs-Workshops</h3>
+                        <p>Lerne mehr über gesunde Ernährung in unseren monatlichen Workshops und Kochkursen.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+
+
+        <!-- About Section -->
+        <section class="section" id="about">
+            <div class="section-container">
+                <div class="section-header">
+                    <h2>Über uns</h2>
+                    <p>Eine Vision von gesundem Genuss und Gemeinschaft</p>
+                </div>
+                
+                <div class="about-content">
+                    <div class="about-text">
+                        <h3>Unsere Geschichte</h3>
+                        <p>Was einst als einfaches Geburtstagsritual begann, lebt heute in unserem Brunchlokal weiter. Drei Schwestern – eine Ärztin und zwei Flugbegleiterinnen – vereint durch die Liebe zur Familie, zum Reisen und natürlich: zum Brunchen.</p>
+                        <p>Ob in New York, Chicago, an der Amalfiküste oder aber auch ganz einfach in unserer Heimatstadt Wien – das gemeinsame Brunchen war immer ein besonderer Moment.</p>
+                        <p>Als bei Tina eine chronische Darmentzündung diagnostiziert wurde, wurde das Thema Ernährung für uns noch bedeutungsvoller. Seither setzen wir gezielt auf gesunde Alternativen und entzündungshemmende Zutaten.</p>
+                    </div>
+                    
+                    <div class="about-video-container glass">
+                        <div class="video-loading" id="aboutVideoLoading" aria-hidden="true">
+                            <div class="video-loading-spinner"></div>
+                            <p>Loading...</p>
+                        </div>
+                        
+                        <video 
+                            class="about-video" 
+                            id="aboutVideo"
+                            muted 
+                            loop 
+                            playsinline
+                            poster="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 600 400'%3E%3Crect fill='%23F3E8DA' width='600' height='400'/%3E%3C/svg%3E"
+                        >
+                            <source src="content/videos/sarmiento.mp4" type="video/mp4">
+                        </video>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Stats Section -->
+        <section class="stats-section">
+            <div class="section-container">
+                <h2 style="text-align: center; margin-bottom: 36px; font-size: clamp(28px, 4vw, 36px); font-weight: 800; color: var(--text-primary);">Unsere Erfolgsgeschichte</h2>
+                
+                <div class="stats-grid">
+                    <div class="stat-card glass">
+                        <span class="stat-number" id="visitors-count">0</span>
+                        <div class="stat-label">Glückliche Gäste</div>
+                    </div>
+                    <div class="stat-card glass">
+                        <span class="stat-number" id="rating-count">0.0</span>
+                        <div class="stat-label">Google Bewertung</div>
+                    </div>
+                    <div class="stat-card glass">
+                        <span class="stat-number" id="meals-count">0</span>
+                        <div class="stat-label">Servierte Mahlzeiten</div>
+                    </div>
+                    <div class="stat-card glass">
+                        <span class="stat-number" id="events-count">0</span>
+                        <div class="stat-label">Live-Events</div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Contact Section -->
+        <section class="section" id="contact">
+            <div class="section-container">
+                <div class="section-header">
+                    <h2>Kontakt & Anfahrt</h2>
+                    <p>Wir freuen uns auf deinen Besuch!</p>
+                </div>
+                
+                <div class="about-content">
+                    <div class="about-text">
+                        <h3>Besuche uns</h3>
+                        <p><strong>📍 Adresse:</strong><br>
+                        ra'mien restaurant GmbH<br>
+                        Gumpendorfer str. 9<br>
+                        1060 Wien</p>
+                        
+                        <p><strong>🕐 Öffnungszeiten:</strong><br>
+                        Montag: 08:00 - 14:00 Uhr<br>
+                        Dienstag - Sonntag: Geschlossen<br>
+                        <small>Reservierungen empfohlen</small></p>
+                        
+                        <p><strong>📞 Kontakt:</strong><br>
+                        Telefon: <a href="tel:+4367612345678" style="color: var(--earth-primary);">+43 676 123 456 78</a><br>
+                        E-Mail: <a href="mailto:hello@healthybrunchclub.at" style="color: var(--earth-primary);">hello@healthybrunchclub.at</a></p>
+                    </div>
+                    
+                    <div class="about-video-container glass">
+                        <div style="width: 100%; height: 100%; background: var(--earth-gradient); display: flex; align-items: center; justify-content: center; flex-direction: column; text-align: center; padding: 30px; border-radius: 16px;">
+                            <div style="font-size: 36px; margin-bottom: 14px;" aria-hidden="true">📍</div>
+                            <h3 style="color: var(--text-light); margin-bottom: 10px; font-size: 20px;">Wien Zentrum</h3>
+                            <p style="color: var(--text-light); margin-bottom: 16px; opacity: 0.9;">Gumpendorfer Straße 9<br>1060 Wien</p>
+                            <a href="https://maps.google.com/?q=Gumpendorfer+Straße+9,+1060+Wien" target="_blank" style="background: rgba(243, 232, 218, 0.2); color: var(--text-light); padding: 8px 18px; border-radius: 8px; text-decoration: none; font-weight: 600; transition: all 0.3s ease; border: 1px solid rgba(243, 232, 218, 0.3);">Route planen</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- Footer -->
+    <footer class="footer" role="contentinfo">
+        <div class="footer-container">
+            <div class="footer-section">
+                <h4>Healthy Brunch Club</h4>
+                <p>Start your Monday right with healthy food, good music, and positive vibes.</p>
+                <div class="social-links">
+                    <a href="#" aria-label="Instagram">📸</a>
+                    <a href="#" aria-label="Facebook">👍</a>
+                    <a href="#" aria-label="Twitter">🐦</a>
+                    <a href="#" aria-label="LinkedIn">💼</a>
+                </div>
+            </div>
+            
+            <div class="footer-section">
+                <h4>Quick Links</h4>
+                <a href="#menu">Speisekarte</a>
+                <a href="#djs">DJs & Events</a>
+                <a href="#features">Features</a>
+                <a href="#about">Über uns</a>
+                <a href="#contact">Kontakt</a>
+            </div>
+            
+            <div class="footer-section">
+                <h4>Öffnungszeiten</h4>
+                <p>Montag: 08:00 - 14:00</p>
+                <p>Dienstag - Sonntag: Geschlossen</p>
+                <p style="margin-top: 1rem;">📍 Wien, Österreich</p>
+            </div>
+            
+            <div class="footer-section">
+                <h4>Kontakt</h4>
+                <a href="mailto:hello@healthybrunchclub.at">hello@healthybrunchclub.at</a>
+                <a href="tel:+4367612345678">+43 676 123 456 78</a>
+                <p style="margin-top: 1rem;">
+                    <a href="/impressum">Impressum</a> | 
+                    <a href="/datenschutz">Datenschutz</a>
+                </p>
+            </div>
+        </div>
+        
+        <div class="footer-bottom">
+            <p>&copy; 2025 Healthy Brunch Club. Made with 💚 by Erwin Esener</p>
+        </div>
+    </footer>
+
+    <!-- JavaScript -->
+   <script>
+        if ('serviceWorker' in navigator) {
+            window.addEventListener('load', function() {
+                navigator.serviceWorker.register('/sw.js')
+                    .then(function(registration) {
+                        console.log('ServiceWorker registration successful');
+                    })
+                    .catch(function(err) {
+                        console.log('ServiceWorker registration failed: ', err);
+                    });
+            });
+        }
+
+        const mobileMenuToggle = document.getElementById('mobileMenuToggle');
+        const mobileMenu = document.getElementById('mobileMenu');
+        const navbar = document.getElementById('navbar');
+
+        mobileMenuToggle.addEventListener('click', function() {
+            const isExpanded = mobileMenu.classList.contains('show');
+            mobileMenu.classList.toggle('show');
+            mobileMenuToggle.setAttribute('aria-expanded', !isExpanded);
+            mobileMenuToggle.setAttribute('aria-label', isExpanded ? 'Menü öffnen' : 'Menü schließen');
+            mobileMenuToggle.innerHTML = mobileMenu.classList.contains('show') ? '✕' : '☰';
+            mobileMenuToggle.style.transform = mobileMenu.classList.contains('show') ? 'rotate(180deg)' : 'rotate(0deg)';
+        });
+
+        const mobileLinks = document.querySelectorAll('.mobile-menu-links a');
+        mobileLinks.forEach(link => {
+            link.addEventListener('click', () => {
+                mobileMenu.classList.remove('show');
+                mobileMenuToggle.setAttribute('aria-expanded', 'false');
+                mobileMenuToggle.setAttribute('aria-label', 'Menü öffnen');
+                mobileMenuToggle.innerHTML = '☰';
+                mobileMenuToggle.style.transform = 'rotate(0deg)';
+            });
+        });
+
+        document.addEventListener('click', function(e) {
+            if (!navbar.contains(e.target) && mobileMenu.classList.contains('show')) {
+                mobileMenu.classList.remove('show');
+                mobileMenuToggle.setAttribute('aria-expanded', 'false');
+                mobileMenuToggle.setAttribute('aria-label', 'Menü öffnen');
+                mobileMenuToggle.innerHTML = '☰';
+                mobileMenuToggle.style.transform = 'rotate(0deg)';
+            }
+        });
+
+        let lastScrollTop = 0;
+        window.addEventListener('scroll', function() {
+            const currentScroll = window.pageYOffset || document.documentElement.scrollTop;
+            if (currentScroll > 100) {
+                navbar.classList.add('scrolled');
+            } else {
+                navbar.classList.remove('scrolled');
+            }
+            if (window.innerWidth <= 768) {
+                if (currentScroll > lastScrollTop && currentScroll > 200) {
+                    navbar.style.transform = 'translateX(-50%) translateY(-100%)';
+                } else {
+                    navbar.style.transform = 'translateX(-50%) translateY(0)';
+                }
+            }
+            lastScrollTop = currentScroll <= 0 ? 0 : currentScroll;
+        });
+
+        const audioPlayer = document.getElementById('audioPlayer');
+        const playButton = document.getElementById('playButton');
+        const progressFill = document.querySelector('.progress-fill');
+        const trackTime = document.querySelector('.track-time');
+
+        if (audioPlayer && playButton) {
+            playButton.addEventListener('click', function() {
+                if (audioPlayer.paused) {
+                    audioPlayer.play();
+                    this.innerHTML = '<svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M6 4h4v16H6V4zm8 0h4v16h-4V4z"/></svg>';
+                } else {
+                    audioPlayer.pause();
+                    this.innerHTML = '<svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M8 5v14l11-7z"/></svg>';
+                }
+            });
+
+            audioPlayer.addEventListener('timeupdate', function() {
+                const progress = (audioPlayer.currentTime / audioPlayer.duration) * 100;
+                progressFill.style.width = progress + '%';
+                const currentTime = formatTime(audioPlayer.currentTime);
+                const duration = formatTime(audioPlayer.duration);
+                trackTime.textContent = `${currentTime} / ${duration}`;
+            });
+
+            audioPlayer.addEventListener('ended', function() {
+                playButton.innerHTML = '<svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M8 5v14l11-7z"/></svg>';
+                progressFill.style.width = '0%';
+            });
+        }
+
+        function formatTime(seconds) {
+            const minutes = Math.floor(seconds / 60);
+            const secs = Math.floor(seconds % 60);
+            return `${minutes}:${secs < 10 ? '0' : ''}${secs}`;
+        }
+
+        function initializeMenuFilters() {
+            const filterButtons = document.querySelectorAll('.filter-btn');
+            const menuItems = document.querySelectorAll('.menu-item');
+            const menuCategories = document.querySelectorAll('.menu-category');
+
+            function updateFilterCounts() {
+                const counts = {
+                    alle: menuItems.length,
+                    vegan: 0,
+                    bio: 0,
+                    glutenfrei: 0
+                };
+
+                menuItems.forEach(item => {
+                    const tags = item.dataset.tags ? item.dataset.tags.split(',') : [];
+                    tags.forEach(tag => {
+                        if (counts.hasOwnProperty(tag)) {
+                            counts[tag]++;
+                        }
+                    });
+                });
+
+                Object.keys(counts).forEach(filter => {
+                    const countElement = document.getElementById(`count-${filter}`);
+                    if (countElement) {
+                        countElement.textContent = counts[filter];
+                    }
+                });
+            }
+
+            function filterMenuItems(activeFilter) {
+                let visibleCount = 0;
+                menuItems.forEach(item => {
+                    const tags = item.dataset.tags ? item.dataset.tags.split(',') : [];
+                    const shouldShow = activeFilter === 'alle' || tags.includes(activeFilter);
+                    if (shouldShow) {
+                        item.classList.remove('hidden');
+                        visibleCount++;
+                    } else {
+                        item.classList.add('hidden');
+                    }
+                });
+
+                menuCategories.forEach(category => {
+                    const categoryItems = category.querySelectorAll('.menu-item:not(.hidden)');
+                    category.classList.toggle('hidden', categoryItems.length === 0);
+                });
+
+                return visibleCount;
+            }
+
+            filterButtons.forEach(button => {
+                button.addEventListener('click', function() {
+                    const filter = this.dataset.filter;
+                    filterButtons.forEach(btn => {
+                        btn.classList.remove('active');
+                        btn.setAttribute('aria-pressed', 'false');
+                    });
+                    this.classList.add('active');
+                    this.setAttribute('aria-pressed', 'true');
+                    const visibleCount = filterMenuItems(filter);
+                    if (filter !== 'alle') {
+                        showNotification('Filter angewendet', `${visibleCount} Gerichte gefunden für "${filter.charAt(0).toUpperCase() + filter.slice(1)}"`, 'success');
+                    }
+                });
+            });
+
+            updateFilterCounts();
+        }
+
+        function showVideoLoading() {
+            const loading = document.getElementById('videoLoading');
+            if (loading) loading.style.display = 'flex';
+        }
+
+        function hideVideoLoading() {
+            const loading = document.getElementById('videoLoading');
+            if (loading) loading.style.display = 'none';
+        }
+
+        function handleVideoError() {
+            const video = document.getElementById('heroVideo');
+            const loading = document.getElementById('videoLoading');
+            if (loading) loading.style.display = 'none';
+            if (video) {
+                video.style.display = 'none';
+                const fallback = document.createElement('div');
+                fallback.style.cssText = `
+                    position: absolute;
+                    top: 0;
+                    left: 0;
+                    width: 100%;
+                    height: 100%;
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                    flex-direction: column;
+                    text-align: center;
+                    background: var(--earth-gradient);
+                    border-radius: 28px;
+                    color: var(--text-light);
+                `;
+                fallback.innerHTML = `
+                    <h2 style="font-size: 28px; font-weight: 700; margin-bottom: 14px;">Healthy Brunch</h2>
+                    <p style="font-size: 16px; opacity: 0.9;">Fresh • Delicious • Energizing</p>
+                `;
+                video.parentNode.appendChild(fallback);
+            }
+        }
+
+        function showAboutVideoLoading() {
+            const loading = document.getElementById('aboutVideoLoading');
+            if (loading) loading.style.display = 'flex';
+        }
+
+        function hideAboutVideoLoading() {
+            const loading = document.getElementById('aboutVideoLoading');
+            if (loading) loading.style.display = 'none';
+        }
+
+        function handleAboutVideoError() {
+            const video = document.getElementById('aboutVideo');
+            const loading = document.getElementById('aboutVideoLoading');
+            if (loading) loading.style.display = 'none';
+            if (video) {
+                video.style.display = 'none';
+                const fallback = document.createElement('div');
+                fallback.style.cssText = `
+                    position: absolute;
+                    top: 0;
+                    left: 0;
+                    width: 100%;
+                    height: 100%;
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                    background: var(--earth-gradient);
+                    color: var(--text-light);
+                    text-align: center;
+                    padding: 36px;
+                    border-radius: 20px;
+                `;
+                fallback.innerHTML = `
+                    <div>
+                        <h3 style="font-size: 22px; margin-bottom: 14px;">Drei Schwestern</h3>
+                        <p style="opacity: 0.9;">Eine Geschichte von Familie,<br>Reisen und Leidenschaft</p>
+                    </div>
+                `;
+                video.parentNode.appendChild(fallback);
+            }
+        }
+
+        function initializeVideo() {
+            const video = document.getElementById('heroVideo');
+            if (!video) return;
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        video.play().catch(() => {});
+                    } else {
+                        video.pause();
+                    }
+                });
+            }, { threshold: 0.3 });
+            observer.observe(video);
+        }
+
+        function initializeAboutVideo() {
+            const video = document.getElementById('aboutVideo');
+            if (!video) return;
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        video.play().catch(() => {});
+                    } else {
+                        video.pause();
+                    }
+                });
+            }, { threshold: 0.5 });
+            observer.observe(video);
+        }
+
+        function showBooking(type) {
+            let message = '';
+            switch(type) {
+                case 'friends':
+                    message = 'Vielen Dank für Ihr Interesse am Freund:innen Brunch!';
+                    break;
+                case 'corporate':
+                    message = 'Vielen Dank für Ihr Interesse am Firmen Event Brunch!';
+                    break;
+                case 'romantic':
+                    message = 'Vielen Dank für Ihr Interesse am Romantischen Brunch!';
+                    break;
+                default:
+                    message = 'Vielen Dank für Ihr Interesse!';
+            }
+            showNotification('Buchungsanfrage', message, 'success');
+            setTimeout(() => {
+                console.log('Redirecting to booking page for:', type);
+            }, 2000);
+        }
+
+        function showNotification(title, message, type = 'success') {
+            const notification = document.getElementById('notification');
+            const icon = notification.querySelector('.notification-icon');
+            const titleEl = notification.querySelector('.notification-title');
+            const messageEl = notification.querySelector('.notification-message');
+            notification.className = `notification ${type}`;
+            icon.textContent = type === 'success' ? '✅' : '❌';
+            titleEl.textContent = title;
+            messageEl.textContent = message;
+            notification.classList.add('show');
+            setTimeout(() => {
+                notification.classList.remove('show');
+            }, 5000);
+        }
+
+        document.addEventListener('DOMContentLoaded', () => {
+            initializeVideo();
+            initializeAboutVideo();
+            initializeMenuFilters();
+        });
+    </script>
+</body>
+</html>
