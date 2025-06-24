@@ -41,7 +41,8 @@ exports.handler = async (event, context) => {
           description: "erlebe entspannte lounge-klänge während deines brunches mit unserem special guest dj cosmic kitchen!",
           musicStyle: "downtempo, organic house, world fusion",
           startTime: "9:00 uhr",
-          audioPreview: "/dj-preview.mp3",
+          audioPreview: "/content/audio/dj-preview.mp3",
+          image: "/content/images/dj-cosmic-kitchen.jpg",
           active: true
         }
       ];
@@ -73,6 +74,31 @@ exports.handler = async (event, context) => {
               return null;
             }
             
+            // Process image path - ensure it's properly formatted
+            let imagePath = '';
+            if (data.image) {
+              // Handle both relative and absolute paths
+              if (data.image.startsWith('http')) {
+                imagePath = data.image;
+              } else if (data.image.startsWith('/')) {
+                imagePath = data.image;
+              } else {
+                imagePath = `/content/images/${data.image}`;
+              }
+            }
+            
+            // Process audio preview path
+            let audioPath = '';
+            if (data.audioPreview) {
+              if (data.audioPreview.startsWith('http')) {
+                audioPath = data.audioPreview;
+              } else if (data.audioPreview.startsWith('/')) {
+                audioPath = data.audioPreview;
+              } else {
+                audioPath = `/content/audio/${data.audioPreview}`;
+              }
+            }
+            
             return {
               title: data.title,
               artist: data.artist || '',
@@ -80,7 +106,8 @@ exports.handler = async (event, context) => {
               description: data.description || '',
               musicStyle: data.musicStyle || '',
               startTime: data.startTime || '',
-              audioPreview: data.audioPreview || '',
+              audioPreview: audioPath,
+              image: imagePath,
               active: data.active !== false // Default to true unless explicitly set to false
             };
           } catch (error) {
