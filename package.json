@@ -1,0 +1,8 @@
+json{
+  "name": "healthy-brunch-club",
+  "version": "1.0.0",
+  "description": "Healthy Brunch Club Vienna Website",
+  "dependencies": {
+    "gray-matter": "^4.0.3"
+  }
+}
