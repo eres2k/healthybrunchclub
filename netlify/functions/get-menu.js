@@ -39,6 +39,7 @@ exports.handler = async (event, context) => {
           title: "morning rituals",
           icon: "🌅",
           order: 1,
+          image: "/content/images/morning-ritual.jpg",
           items: [
             {
               name: "warmes wasser mit bio-zitrone",
@@ -56,6 +57,7 @@ exports.handler = async (event, context) => {
           title: "power bowls",
           icon: "🥣",
           order: 2,
+          image: "/content/images/power-bowl.jpg",
           items: [
             {
               name: "açaí sunrise bowl",
@@ -98,10 +100,24 @@ exports.handler = async (event, context) => {
               return null;
             }
             
+            // Process image path - ensure it's properly formatted
+            let imagePath = '';
+            if (data.image) {
+              // Handle both relative and absolute paths
+              if (data.image.startsWith('http')) {
+                imagePath = data.image;
+              } else if (data.image.startsWith('/')) {
+                imagePath = data.image;
+              } else {
+                imagePath = `/content/images/${data.image}`;
+              }
+            }
+            
             return {
               title: data.title,
               icon: data.icon || '',
               order: data.order || 0,
+              image: imagePath,
               items: data.items || []
             };
           } catch (error) {
