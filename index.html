@@ -32,6 +32,303 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400..700;1,400..700&display=swap" rel="stylesheet">
+
+// cms-loader.js - Add this to your index.html before closing </body> tag
+
+// Function to parse frontmatter from markdown files
+function parseFrontmatter(content) {
+    const matches = content.match(/^---\n([\s\S]*?)\n---/);
+    if (matches) {
+        const frontmatter = matches[1];
+        const body = content.slice(matches[0].length);
+        
+        // Simple YAML parser for frontmatter
+        const data = {};
+        const lines = frontmatter.split('\n');
+        let currentKey = null;
+        let currentList = null;
+        
+        lines.forEach(line => {
+            const trimmed = line.trim();
+            if (!trimmed) return;
+            
+            // Handle list items
+            if (line.startsWith('  - ')) {
+                if (currentList) {
+                    const item = {};
+                    const itemContent = trimmed.slice(2);
+                    
+                    // Parse object in list
+                    if (currentKey === 'items') {
+                        // This is a menu item
+                        const itemLines = [];
+                        let i = lines.indexOf(line);
+                        while (i < lines.length && (lines[i].startsWith('    ') || lines[i].startsWith('  - '))) {
+                            itemLines.push(lines[i]);
+                            i++;
+                        }
+                        
+                        itemLines.forEach(itemLine => {
+                            const itemMatch = itemLine.match(/^\s*(\w+):\s*(.*)$/);
+                            if (itemMatch) {
+                                const [, key, value] = itemMatch;
+                                if (key === 'tags') {
+                                    item[key] = [];
+                                } else {
+                                    item[key] = value.replace(/^["']|["']$/g, '');
+                                }
+                            } else if (itemLine.trim().startsWith('- ')) {
+                                // This is a tag
+                                if (item.tags) {
+                                    item.tags.push(itemLine.trim().slice(2).replace(/^["']|["']$/g, ''));
+                                }
+                            }
+                        });
+                    }
+                    
+                    currentList.push(item);
+                }
+            } else {
+                // Handle key-value pairs
+                const match = line.match(/^(\w+):\s*(.*)$/);
+                if (match) {
+                    const [, key, value] = match;
+                    
+                    if (value === '' || value === '[]') {
+                        // This starts a list
+                        data[key] = [];
+                        currentKey = key;
+                        currentList = data[key];
+                    } else {
+                        data[key] = value.replace(/^["']|["']$/g, '');
+                        currentKey = key;
+                        currentList = null;
+                    }
+                }
+            }
+        });
+        
+        return { data, body };
+    }
+    
+    return { data: {}, body: content };
+}
+
+// Function to load menu categories
+async function loadMenuCategories() {
+    const menuGrid = document.getElementById('menuGrid');
+    if (!menuGrid) return;
+    
+    try {
+        // In a real implementation, you would fetch from your CMS API
+        // For now, we'll show example content
+        const menuCategories = [
+            {
+                title: "morning rituals",
+                icon: "🌅",
+                order: 1,
+                items: [
+                    {
+                        name: "warmes wasser mit bio-zitrone",
+                        description: "der perfekte start für deine verdauung",
+                        tags: ["detox", "vegan"]
+                    },
+                    {
+                        name: "golden milk latte",
+                        description: "kurkuma, ingwer, zimt & hafermilch",
+                        tags: ["anti-inflammatory", "lactosefrei"]
+                    }
+                ]
+            },
+            {
+                title: "power bowls",
+                icon: "🥣",
+                order: 2,
+                items: [
+                    {
+                        name: "açaí sunrise bowl",
+                        description: "açaí, banane, beeren, granola, kokosflocken",
+                        tags: ["superfood", "vegan"]
+                    },
+                    {
+                        name: "premium porridge",
+                        description: "haferflocken, chia, hanfsamen, heidelbeeren, mandeln",
+                        tags: ["glutenfrei", "protein"]
+                    }
+                ]
+            }
+        ];
+        
+        // Sort categories by order
+        menuCategories.sort((a, b) => a.order - b.order);
+        
+        // Clear loading message
+        menuGrid.innerHTML = '';
+        
+        // Render menu categories
+        menuCategories.forEach(category => {
+            const categoryCard = document.createElement('div');
+            categoryCard.className = 'menu-card';
+            categoryCard.innerHTML = `
+                <h3 class="menu-category-title">${category.title} ${category.icon}</h3>
+                <div class="menu-items">
+                    ${category.items.map(item => `
+                        <div class="menu-item">
+                            <div class="menu-item-header">
+                                <span class="menu-item-name">${item.name}</span>
+                            </div>
+                            <p class="menu-item-description">${item.description}</p>
+                            ${item.tags && item.tags.length > 0 ? `
+                                <div class="menu-tags">
+                                    ${item.tags.map(tag => `<span class="menu-tag">${tag}</span>`).join('')}
+                                </div>
+                            ` : ''}
+                        </div>
+                    `).join('')}
+                </div>
+            `;
+            
+            menuGrid.appendChild(categoryCard);
+        });
+        
+        // Re-apply animations to new menu cards
+        const cards = menuGrid.querySelectorAll('.menu-card');
+        cards.forEach((card, index) => {
+            card.style.opacity = '0';
+            card.style.transform = 'translateY(30px)';
+            card.style.transition = `all 0.6s ease ${index * 0.1}s`;
+            
+            // Trigger animation
+            setTimeout(() => {
+                card.style.opacity = '1';
+                card.style.transform = 'translateY(0)';
+            }, 100);
+        });
+        
+    } catch (error) {
+        console.error('Error loading menu:', error);
+        menuGrid.innerHTML = '<p class="no-menu-message">Menü konnte nicht geladen werden. Bitte versuchen Sie es später erneut.</p>';
+    }
+}
+
+// Function to load active events
+async function loadActiveEvents() {
+    const eventWindow = document.getElementById('eventWindow');
+    const eventContent = document.getElementById('eventContent');
+    
+    if (!eventWindow || !eventContent) return;
+    
+    try {
+        // In a real implementation, you would fetch from your CMS API
+        // For now, we'll show example content
+        const activeEvents = [
+            {
+                title: "Monday Special mit DJ Cosmic Kitchen",
+                date: "2025-01-27T09:00:00+01:00",
+                artist: "DJ Cosmic Kitchen",
+                description: "Erlebe entspannte lounge-klänge während deines brunches mit unserem special guest DJ Cosmic Kitchen!",
+                musicStyle: "Downtempo, Organic House, World Fusion",
+                startTime: "9:00 Uhr",
+                audioPreview: "/content/audio/dj-preview.mp3",
+                active: true
+            }
+        ];
+        
+        // Filter only active events
+        const currentEvents = activeEvents.filter(event => event.active);
+        
+        if (currentEvents.length > 0) {
+            const event = currentEvents[0]; // Show first active event
+            const eventDate = new Date(event.date);
+            const formattedDate = eventDate.toLocaleDateString('de-AT', {
+                weekday: 'long',
+                day: 'numeric',
+                month: 'long',
+                year: 'numeric'
+            });
+            
+            eventContent.innerHTML = `
+                <div class="event-header">
+                    <h3>${event.title}</h3>
+                    <p>${event.artist}</p>
+                </div>
+                <div class="event-details">
+                    <strong>📅 ${formattedDate}, ${event.startTime}</strong>
+                    ${event.description}
+                    
+                    <strong>🎵 musik-stil:</strong>
+                    ${event.musicStyle}
+                </div>
+                ${event.audioPreview ? `
+                    <div class="audio-player">
+                        <h4>hör rein in den sound:</h4>
+                        <audio controls>
+                            <source src="${event.audioPreview}" type="audio/mpeg">
+                            dein browser unterstützt kein audio.
+                        </audio>
+                    </div>
+                ` : ''}
+            `;
+            
+            eventWindow.style.display = 'block';
+        } else {
+            eventWindow.style.display = 'none';
+        }
+        
+    } catch (error) {
+        console.error('Error loading events:', error);
+        eventWindow.style.display = 'none';
+    }
+}
+
+// Initialize CMS content loading
+document.addEventListener('DOMContentLoaded', function() {
+    // Load menu and events when page loads
+    loadMenuCategories();
+    loadActiveEvents();
+    
+    // Reload content every 5 minutes to stay updated
+    setInterval(() => {
+        loadMenuCategories();
+        loadActiveEvents();
+    }, 300000); // 5 minutes
+});
+
+// netlify.toml configuration file content:
+/*
+[build]
+  publish = "/"
+
+[[headers]]
+  for = "/admin/*"
+  [headers.values]
+    X-Frame-Options = "DENY"
+    X-XSS-Protection = "1; mode=block"
+    X-Content-Type-Options = "nosniff"
+
+[[redirects]]
+  from = "/admin"
+  to = "/admin/"
+  status = 301
+
+[[redirects]]
+  from = "/*"
+  to = "/index.html"
+  status = 200
+
+[build.processing]
+  skip_processing = false
+[build.processing.css]
+  bundle = true
+  minify = true
+[build.processing.js]
+  bundle = true
+  minify = true
+[build.processing.html]
+  pretty_urls = true
+[build.processing.images]
+  compress = true
+*/
     
     <style>
         * {
