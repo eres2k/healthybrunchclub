@@ -3,8 +3,8 @@
 
     // Configuration
     const CONFIG = {
-        menuAPI: '/.netlify/functions/get-menu',
-        eventsAPI: '/.netlify/functions/get-events',
+        menuAPI: 'netlify/functions/get-menu',
+        eventsAPI: 'netlify/functions/get-events',
         refreshInterval: 300000, // 5 minutes
         animationDelay: 100
     };
