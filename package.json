@@ -4,9 +4,12 @@
   "description": "Healthy Brunch Club Vienna Website",
   "main": "index.js",
   "scripts": {
-    "build": "node build.js"
+    "build": "echo 'Build completed'"
   },
   "dependencies": {
     "gray-matter": "^4.0.3"
+  },
+  "devDependencies": {
+    "@netlify/functions": "^2.0.0"
   }
 }
