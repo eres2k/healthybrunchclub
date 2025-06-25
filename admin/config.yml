@@ -6,22 +6,23 @@ media_folder: "content/images"
 public_folder: "/images/uploads"
 
 collections:
-  # Menü-Kategorien (mit mehreren Items pro Kategorie)
-  - name: "menu-categories"
+  # Menü-Kategorien (eine Datei = eine komplette Kategorie mit mehreren Items)
+  - name: "menu"
     label: "Menü Kategorien"
-    folder: "content/menu-categories"
+    folder: "content/menu"
     create: true
     slug: "{{fields.slug}}"
     fields:
-      - {label: "Titel", name: "title", widget: "string"}
+      - {label: "Kategorie Titel", name: "title", widget: "string"}
       - {label: "URL Slug", name: "slug", widget: "string", pattern: ['^[a-z0-9]+(?:-[a-z0-9]+)*$', 'Slug kann nur Kleinbuchstaben, Zahlen und Bindestriche enthalten']}
       - {label: "Icon (Emoji)", name: "icon", widget: "string", required: false, hint: "z.B. 🍳 oder 🥗"}
       - {label: "Reihenfolge", name: "order", widget: "number", default: 1}
       - {label: "Kategorie Bild", name: "image", widget: "image", required: false}
-      - {label: "Beschreibung", name: "description", widget: "text", required: false}
+      - {label: "Kurze Beschreibung", name: "description", widget: "text", required: false}
       - label: "Menü Items"
         name: "items"
         widget: "list"
+        summary: "{{fields.name}} - {{fields.price}}"
         fields:
           - {label: "Gericht Name", name: "name", widget: "string"}
           - {label: "Beschreibung", name: "description", widget: "text"}
@@ -30,28 +31,13 @@ collections:
             name: "tags"
             widget: "list"
             default: []
+            allow_add: true
             field: {label: "Tag", name: "tag", widget: "string"}
           - {label: "Allergie Info", name: "allergens", widget: "string", required: false}
           - {label: "Verfügbar", name: "available", widget: "boolean", default: true}
-
-  # Einzelne Menü Items (für spezielle Gerichte)
-  - name: "menu-items"
-    label: "Einzelne Menü Items"
-    folder: "content/menu"
-    create: true
-    slug: "{{year}}-{{month}}-{{day}}-{{slug}}"
-    fields:
-      - {label: "Titel", name: "title", widget: "string"}
-      - {label: "Beschreibung", name: "description", widget: "text"}
-      - {label: "Preis", name: "price", widget: "string"}
-      - {label: "Kategorie", name: "category", widget: "select", 
-         options: ["Vorspeise", "Hauptgang", "Dessert", "Getränk", "Special"]}
-      - {label: "Bild", name: "image", widget: "image", required: false}
-      - {label: "Tags", name: "tags", widget: "list", required: false}
       - {label: "Verfügbar", name: "available", widget: "boolean", default: true}
-      - {label: "Audio Preview", name: "audioFile", widget: "file", required: false}
 
-  # Events bleiben unverändert
+  # Events
   - name: "events"
     label: "Veranstaltungen"
     folder: "content/events"
@@ -68,23 +54,3 @@ collections:
       - {label: "Event Bild", name: "image", widget: "image", required: false}
       - {label: "Audio Ankündigung", name: "audioPreview", widget: "file", required: false}
       - {label: "Aktiv", name: "active", widget: "boolean", default: true}
-
-  # Website Einstellungen
-  - name: "settings"
-    label: "Website Einstellungen"
-    files:
-      - label: "Allgemeine Einstellungen"
-        name: "general"
-        file: "content/settings/general.yml"
-        fields:
-          - {label: "Website Titel", name: "title", widget: "string"}
-          - {label: "Beschreibung", name: "description", widget: "text"}
-          - {label: "Öffnungszeiten", name: "hours", widget: "text"}
-          - {label: "Adresse", name: "address", widget: "text"}
-          - {label: "Telefon", name: "phone", widget: "string"}
-          - {label: "Email", name: "email", widget: "string"}
-          - {label: "Social Media Links", name: "social", widget: "object", fields: [
-              {label: "Instagram", name: "instagram", widget: "string", required: false},
-              {label: "Facebook", name: "facebook", widget: "string", required: false},
-              {label: "WhatsApp", name: "whatsapp", widget: "string", required: false}
-            ]}
