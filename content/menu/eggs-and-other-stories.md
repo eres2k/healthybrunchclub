@@ -1,22 +1,31 @@
 ---
-title: Eggs and other stories
-icon: 🍽️
+title: eggs & stories
+icon: 🍳
 order: 2
-image: /images/uploads/eggs.jpg
+image: /images/uploads/eggs-category.jpg
 items:
-  - name: BEGGS ENEDICT
-    description: |
-      (1 oder 2 Eier)
-
-      Sauerteig Brot (vom Öfferl) 
-      mit pochiertem Ei und Avocado Sauce
-
-      wähle mit:
-      Schinken/Speck/Lachs
-
-      Beilage: Champignons/Shiitake Pilze
-      garniert mit Rucula & Sprossen, Kresse & Pinienkerne
-    price: 1
+  - name: eggs benedict classic
+    description: pochierte bio-eier, sauce hollandaise, spinat auf brioche
+    price: €14
     tags:
+      - signature
       - vegetarisch
+  - name: shakshuka wien
+    description: eier in würziger tomatensauce mit feta & sauerteigbrot
+    price: €12
+    tags:
+      - spicy
+      - glutenfrei-option
+  - name: farmers omelette
+    description: bio-eier mit saisonalem gemüse & bergkäse
+    price: €11
+    tags:
+      - protein
+      - low-carb
+  - name: avocado toast deluxe
+    description: vollkornbrot, avocado, pochiertes ei, cherry tomaten
+    price: €13
+    tags:
+      - healthy
+      - instagram-worthy
 ---
