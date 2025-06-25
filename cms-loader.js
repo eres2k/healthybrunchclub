@@ -20,9 +20,11 @@ async function loadMenuFromCMS() {
         console.log('Menu data loaded:', menuData);
         
         displayMenu(menuData);
+        initializeFilters();
     } catch (error) {
         console.error('Error loading menu:', error);
         displayFallbackMenu();
+        initializeFilters();
     }
 }
 

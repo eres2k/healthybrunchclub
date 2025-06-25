@@ -1127,7 +1127,7 @@
         if (!menuGrid) return;
 
         try {
-            // In production, this would fetch from your CMS API endpoint
+           // In production, this would fetch from your CMS API endpoint
             // For now, using example data that matches your menu structure
             const menuData = [
                 {
@@ -1138,17 +1138,20 @@
                         {
                             name: "warmes wasser mit bio-zitrone",
                             description: "der perfekte start für deine verdauung",
-                            tags: ["detox", "vegan"]
+                            tags: ["detox", "vegan"],
+                            price: 4.9
                         },
                         {
                             name: "golden milk latte",
                             description: "kurkuma, ingwer, zimt & hafermilch",
-                            tags: ["anti-inflammatory", "lactosefrei"]
+                            tags: ["anti-inflammatory", "lactosefrei"],
+                            price: 6.5
                         },
                         {
                             name: "matcha zeremonie",
                             description: "ceremonial grade matcha, aufgeschäumt",
-                            tags: ["energy", "antioxidants"]
+                            tags: ["energy", "vegan"],
+                            price: 7.9
                         }
                     ]
                 },
@@ -1160,17 +1163,58 @@
                         {
                             name: "açaí sunrise bowl",
                             description: "açaí, banane, beeren, granola, kokosflocken",
-                            tags: ["superfood", "vegan"]
+                            tags: ["superfood", "vegan"],
+                            price: 12.9
                         },
                         {
                             name: "premium porridge",
                             description: "haferflocken, chia, hanfsamen, heidelbeeren, mandeln",
-                            tags: ["glutenfrei", "protein"]
+                            tags: ["glutenfrei", "protein"],
+                            price: 9.9
                         },
                         {
                             name: "buddha bowl deluxe",
                             description: "quinoa, hummus, grillgemüse, tahini-dressing",
-                            tags: ["protein-rich", "vegan"]
+                            tags: ["protein-rich", "vegan"],
+                            price: 14.9
+                        }
+                    ]
+                },
+                {
+                    title: "healthy toasts",
+                    icon: "🍞",
+                    order: 3,
+                    items: [
+                        {
+                            name: "avocado dream toast",
+                            description: "vollkornbrot, avocado, pochiertes ei, kresse",
+                            tags: ["vegetarisch", "protein"],
+                            price: 11.9
+                        },
+                        {
+                            name: "hummus power toast",
+                            description: "sauerteigbrot, hausgemachter hummus, grillgemüse",
+                            tags: ["vegan", "protein"],
+                            price: 10.9
+                        }
+                    ]
+                },
+                {
+                    title: "fresh juices",
+                    icon: "🥤",
+                    order: 4,
+                    items: [
+                        {
+                            name: "green detox",
+                            description: "spinat, gurke, apfel, sellerie, ingwer, zitrone",
+                            tags: ["detox", "vegan", "raw"],
+                            price: 7.9
+                        },
+                        {
+                            name: "immunity booster",
+                            description: "orange, karotte, ingwer, kurkuma",
+                            tags: ["vitamin-c", "vegan"],
+                            price: 7.5
                         }
                     ]
                 }

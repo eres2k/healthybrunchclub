@@ -33,7 +33,7 @@ exports.handler = async (event, context) => {
     } catch (error) {
       console.error('Menu directory not found:', menuDir);
       
-      // Return default menu data if directory doesn't exist
+// Return default menu data if directory doesn't exist
       const defaultMenu = [
         {
           title: "morning rituals",
@@ -44,12 +44,20 @@ exports.handler = async (event, context) => {
             {
               name: "warmes wasser mit bio-zitrone",
               description: "der perfekte start für deine verdauung",
-              tags: ["detox", "vegan"]
+              tags: ["detox", "vegan"],
+              price: 4.9
             },
             {
               name: "golden milk latte",
               description: "kurkuma, ingwer, zimt & hafermilch",
-              tags: ["anti-inflammatory", "lactosefrei"]
+              tags: ["anti-inflammatory", "lactosefrei"],
+              price: 6.5
+            },
+            {
+              name: "matcha zeremonie",
+              description: "ceremonial grade matcha, aufgeschäumt mit hafermilch",
+              tags: ["energy", "vegan"],
+              price: 7.9
             }
           ]
         },
@@ -62,12 +70,124 @@ exports.handler = async (event, context) => {
             {
               name: "açaí sunrise bowl",
               description: "açaí, banane, beeren, granola, kokosflocken",
-              tags: ["superfood", "vegan"]
+              tags: ["superfood", "vegan"],
+              price: 12.9
             },
             {
               name: "premium porridge",
               description: "haferflocken, chia, hanfsamen, heidelbeeren, mandeln",
-              tags: ["glutenfrei", "protein"]
+              tags: ["glutenfrei", "protein"],
+              price: 9.9
+            },
+            {
+              name: "buddha bowl deluxe",
+              description: "quinoa, hummus, grillgemüse, tahini-dressing",
+              tags: ["protein", "vegan"],
+              price: 14.9
+            }
+          ]
+        },
+        {
+          title: "healthy toasts",
+          icon: "🍞",
+          order: 3,
+          image: "/content/images/toast.jpg",
+          items: [
+            {
+              name: "avocado dream toast",
+              description: "vollkornbrot, avocado, pochiertes ei, kresse, limette",
+              tags: ["vegetarisch", "protein"],
+              price: 11.9
+            },
+            {
+              name: "hummus power toast",
+              description: "sauerteigbrot, hausgemachter hummus, gegrilltes gemüse, granatapfel",
+              tags: ["vegan", "protein"],
+              price: 10.9
+            },
+            {
+              name: "salmon wellness toast",
+              description: "dinkelbrot, frischkäse, räucherlachs, dill, kapern",
+              tags: ["omega-3", "protein"],
+              price: 13.9
+            }
+          ]
+        },
+        {
+          title: "fresh juices",
+          icon: "🥤",
+          order: 4,
+          image: "/content/images/juices.jpg",
+          items: [
+            {
+              name: "green detox",
+              description: "spinat, gurke, apfel, sellerie, ingwer, zitrone",
+              tags: ["detox", "vegan", "raw"],
+              price: 7.9
+            },
+            {
+              name: "immunity booster",
+              description: "orange, karotte, ingwer, kurkuma, schwarzer pfeffer",
+              tags: ["vitamin-c", "vegan"],
+              price: 7.5
+            },
+            {
+              name: "berry antioxidant",
+              description: "heidelbeeren, himbeeren, erdbeeren, acai, kokoswasser",
+              tags: ["antioxidants", "vegan", "superfood"],
+              price: 8.9
+            }
+          ]
+        },
+        {
+          title: "specialty coffee",
+          icon: "☕",
+          order: 5,
+          image: "/content/images/coffee.jpg",
+          items: [
+            {
+              name: "flat white",
+              description: "doppelter espresso mit samtiger mikromilch",
+              tags: ["koffein"],
+              price: 4.5
+            },
+            {
+              name: "oat cappuccino",
+              description: "single origin espresso mit cremiger hafermilch",
+              tags: ["lactosefrei"],
+              price: 4.9
+            },
+            {
+              name: "iced vanilla latte",
+              description: "cold brew, vanillesirup, mandelmilch, eiswürfel",
+              tags: ["koffein", "lactosefrei"],
+              price: 5.5
+            }
+          ]
+        },
+        {
+          title: "sweet treats",
+          icon: "🧁",
+          order: 6,
+          image: "/content/images/sweets.jpg",
+          items: [
+            {
+              name: "raw energy balls",
+              description: "datteln, mandeln, kakao, kokos (3 stück)",
+              tags: ["raw", "vegan", "glutenfrei"],
+              price: 6.9
+            },
+            {
+              name: "chia pudding deluxe",
+              description: "chiasamen, mandelmilch, beeren, mandelmus, agavensirup",
+              tags: ["vegan", "glutenfrei", "protein"],
+              price: 7.9
+            },
+            {
+              name: "banana bread slice",
+              description: "hausgemachtes bananenbrot mit walnüssen",
+              tags: ["vegetarisch"],
+              price: 4.5
             }
           ]
         }
