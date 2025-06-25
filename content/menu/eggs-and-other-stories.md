@@ -31,9 +31,20 @@ items:
 available: true
 slug: eggs
 order: 0
-title: eggs & stories
+title: EGGS any style
+category: Eggs and other stories
+tags:
+  - vegetarisch
 icon: 🍳
-description: test
-category: morning rituals
-image: /images/uploads/eggs-category.jpg
+description: |
+  (1 oder 2 Eier)
+  Eggs your style auf Süsskartoffel- und Avocadoscheiben
+
+  Beilage: Champignons/Shiitake Pilze
+  garniert mit Rucula & Sprossen und Kresse
+
+  Styles:
+  Spiegelei/pochiert/Eierspeise
+image: /images/uploads/p38.png
+special: true
 ---
