@@ -2,33 +2,56 @@ backend:
   name: git-gateway
   branch: main
 
-media_folder: "content/images/"
+media_folder: "content/images"
 public_folder: "/images/uploads"
 
 collections:
+  # Menü-Kategorien (mit mehreren Items pro Kategorie)
   - name: "menu-categories"
     label: "Menü Kategorien"
-    folder: "content/menu"
+    folder: "content/menu-categories"
     create: true
-    slug: "{{slug}}"
+    slug: "{{fields.slug}}"
     fields:
-      - {label: "Kategorie Name", name: "title", widget: "string"}
-      - {label: "Icon", name: "icon", widget: "string", required: false, hint: "Emoji für die Kategorie (z.B. 🍳)"}
+      - {label: "Titel", name: "title", widget: "string"}
+      - {label: "URL Slug", name: "slug", widget: "string", pattern: ['^[a-z0-9]+(?:-[a-z0-9]+)*$', 'Slug kann nur Kleinbuchstaben, Zahlen und Bindestriche enthalten']}
+      - {label: "Icon (Emoji)", name: "icon", widget: "string", required: false, hint: "z.B. 🍳 oder 🥗"}
       - {label: "Reihenfolge", name: "order", widget: "number", default: 1}
       - {label: "Kategorie Bild", name: "image", widget: "image", required: false}
+      - {label: "Beschreibung", name: "description", widget: "text", required: false}
       - label: "Menü Items"
         name: "items"
         widget: "list"
         fields:
-          - {label: "Name", name: "name", widget: "string"}
+          - {label: "Gericht Name", name: "name", widget: "string"}
           - {label: "Beschreibung", name: "description", widget: "text"}
-          - {label: "Preis", name: "price", widget: "string", hint: "z.B. €12 oder €12-15"}
+          - {label: "Preis", name: "price", widget: "string", hint: "z.B. €14 oder €12-16"}
           - label: "Tags"
             name: "tags"
             widget: "list"
-            hint: "z.B. vegan, glutenfrei, signature"
+            default: []
             field: {label: "Tag", name: "tag", widget: "string"}
+          - {label: "Allergie Info", name: "allergens", widget: "string", required: false}
+          - {label: "Verfügbar", name: "available", widget: "boolean", default: true}
 
+  # Einzelne Menü Items (für spezielle Gerichte)
+  - name: "menu-items"
+    label: "Einzelne Menü Items"
+    folder: "content/menu"
+    create: true
+    slug: "{{year}}-{{month}}-{{day}}-{{slug}}"
+    fields:
+      - {label: "Titel", name: "title", widget: "string"}
+      - {label: "Beschreibung", name: "description", widget: "text"}
+      - {label: "Preis", name: "price", widget: "string"}
+      - {label: "Kategorie", name: "category", widget: "select", 
+         options: ["Vorspeise", "Hauptgang", "Dessert", "Getränk", "Special"]}
+      - {label: "Bild", name: "image", widget: "image", required: false}
+      - {label: "Tags", name: "tags", widget: "list", required: false}
+      - {label: "Verfügbar", name: "available", widget: "boolean", default: true}
+      - {label: "Audio Preview", name: "audioFile", widget: "file", required: false}
+
+  # Events bleiben unverändert
   - name: "events"
     label: "Veranstaltungen"
     folder: "content/events"
@@ -36,35 +59,32 @@ collections:
     slug: "{{year}}-{{month}}-{{day}}-{{slug}}"
     fields:
       - {label: "Event Titel", name: "title", widget: "string"}
-      - {label: "Künstler/DJ", name: "artist", widget: "string"}
+      - {label: "Künstler/DJ", name: "artist", widget: "string", required: false}
       - {label: "Datum", name: "date", widget: "datetime"}
-      - {label: "Start Zeit", name: "startTime", widget: "string", default: "9:00 Uhr"}
+      - {label: "Startzeit", name: "startTime", widget: "string", required: false, hint: "z.B. 9:00 Uhr"}
+      - {label: "Ort", name: "location", widget: "string", default: "Gumpendorfer Straße 9, 1060 Wien"}
       - {label: "Beschreibung", name: "description", widget: "text"}
       - {label: "Musik Stil", name: "musicStyle", widget: "string", required: false}
-      - {label: "Bild", name: "image", widget: "image", required: false}
-      - {label: "Audio Preview", name: "audioPreview", widget: "file", required: false}
+      - {label: "Event Bild", name: "image", widget: "image", required: false}
+      - {label: "Audio Ankündigung", name: "audioPreview", widget: "file", required: false}
       - {label: "Aktiv", name: "active", widget: "boolean", default: true}
 
-  - name: "pages"
-    label: "Seiten"
+  # Website Einstellungen
+  - name: "settings"
+    label: "Website Einstellungen"
     files:
-      - label: "Startseite"
-        name: "home"
-        file: "content/pages/home.yml"
+      - label: "Allgemeine Einstellungen"
+        name: "general"
+        file: "content/settings/general.yml"
         fields:
-          - {label: "Titel", name: "title", widget: "string"}
-          - {label: "Hero Titel", name: "heroTitle", widget: "string"}
-          - {label: "Hero Beschreibung", name: "heroDescription", widget: "text"}
-          - label: "Öffnungszeiten"
-            name: "openingHours"
-            widget: "object"
-            fields:
-              - {label: "Montag", name: "monday", widget: "string", default: "08:00 - 14:00 Uhr"}
-              - {label: "Dienstag-Sonntag", name: "otherDays", widget: "string", default: "Geschlossen"}
-          - label: "Kontakt"
-            name: "contact"
-            widget: "object"
-            fields:
-              - {label: "Adresse", name: "address", widget: "text"}
-              - {label: "Telefon", name: "phone", widget: "string"}
-              - {label: "Email", name: "email", widget: "string"}
+          - {label: "Website Titel", name: "title", widget: "string"}
+          - {label: "Beschreibung", name: "description", widget: "text"}
+          - {label: "Öffnungszeiten", name: "hours", widget: "text"}
+          - {label: "Adresse", name: "address", widget: "text"}
+          - {label: "Telefon", name: "phone", widget: "string"}
+          - {label: "Email", name: "email", widget: "string"}
+          - {label: "Social Media Links", name: "social", widget: "object", fields: [
+              {label: "Instagram", name: "instagram", widget: "string", required: false},
+              {label: "Facebook", name: "facebook", widget: "string", required: false},
+              {label: "WhatsApp", name: "whatsapp", widget: "string", required: false}
+            ]}
