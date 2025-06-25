@@ -35,6 +35,188 @@
 
     <script src="cms-loader.js"></script>
 
+	<style>
+	/* Menu Card Image Support */
+.menu-card-image {
+    width: 100%;
+    height: 200px;
+    margin-bottom: 20px;
+    border-radius: 15px;
+    overflow: hidden;
+    background: var(--cream);
+}
+
+.menu-card-image img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.3s ease;
+}
+
+.menu-card:hover .menu-card-image img {
+    transform: scale(1.05);
+}
+
+/* Event Window Image Support */
+.event-image {
+    width: 100%;
+    height: 150px;
+    margin-bottom: 15px;
+    border-radius: 10px;
+    overflow: hidden;
+    background: var(--cream);
+}
+
+.event-image img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+/* Menu Category Filters */
+.menu-categories {
+    display: flex;
+    justify-content: center;
+    gap: 1rem;
+    margin-bottom: 3rem;
+    flex-wrap: wrap;
+}
+
+.category-btn {
+    padding: 0.75rem 1.5rem;
+    background: white;
+    border: 2px solid var(--sage-green);
+    border-radius: 25px;
+    color: var(--sage-green);
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    font-family: inherit;
+    font-size: 15px;
+}
+
+.category-btn:hover {
+    background: rgba(168, 192, 154, 0.1);
+    transform: translateY(-2px);
+}
+
+.category-btn.active {
+    background: var(--sage-green);
+    color: white;
+}
+
+/* Menu Item Improvements */
+.menu-item {
+    padding: 20px;
+    background: rgba(255, 255, 255, 0.8);
+    border-radius: 15px;
+    transition: all 0.3s ease;
+    border: 1px solid transparent;
+    margin-bottom: 15px;
+}
+
+.menu-item:last-child {
+    margin-bottom: 0;
+}
+
+.menu-item:hover {
+    border-color: var(--sage-green);
+    background: white;
+    transform: translateX(5px);
+}
+
+.menu-item-header {
+    margin-bottom: 8px;
+}
+
+.menu-item-name {
+    font-weight: 600;
+    color: var(--text-dark);
+    font-size: 17px;
+    margin: 0;
+}
+
+.menu-item-description {
+    font-size: 14px;
+    color: var(--text-medium);
+    line-height: 1.6;
+    margin: 0 0 10px 0;
+}
+
+.menu-tags {
+    display: flex;
+    gap: 6px;
+    flex-wrap: wrap;
+}
+
+.menu-tag {
+    background: var(--sage-green);
+    color: white;
+    padding: 4px 12px;
+    border-radius: 15px;
+    font-size: 12px;
+    font-weight: 500;
+}
+
+/* Hide menu cards when filtered */
+.menu-card[style*="display: none"] {
+    display: none !important;
+}
+
+/* Loading state for menu */
+.menu-grid.loading {
+    min-height: 400px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.menu-grid.loading::after {
+    content: "Menü wird geladen...";
+    color: var(--text-medium);
+    font-style: italic;
+}
+
+/* Special menu card styling */
+.menu-special {
+    grid-column: 1 / -1;
+    background: var(--morning-gradient);
+    color: white;
+    padding: 40px;
+    border-radius: 25px;
+    text-align: center;
+    margin: 40px 0;
+}
+
+.menu-special h3 {
+    font-family: var(--font-accent);
+    font-size: 36px;
+    margin-bottom: 10px;
+}
+
+.menu-special p {
+    font-size: 18px;
+    margin-bottom: 20px;
+    opacity: 0.95;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+    .menu-card-image {
+        height: 150px;
+    }
+    
+    .category-btn {
+        padding: 0.5rem 1rem;
+        font-size: 14px;
+    }
+    
+    .menu-categories {
+        gap: 0.5rem;
+    }
+}
+</style>
+
     
     <style>
         * {
@@ -1461,18 +1643,26 @@ These endpoints will be created when you set up Netlify Functions to read your C
 
         <!-- Menu Section -->
         <section class="menu-section" id="menu">
-            <div class="menu-header">
-                <h2>unsere liebevoll kuratierte speisekarte</h2>
-                <p>100% bio, regional und mit ganz viel liebe zubereitet</p>
-            </div>
+    <div class="menu-header">
+        <h2>unsere liebevoll kuratierte speisekarte</h2>
+        <p>100% bio, regional und mit ganz viel liebe zubereitet</p>
+    </div>
 
-            <div class="menu-grid" id="menuGrid">
-                <!-- Menu items will be loaded dynamically -->
-                <div class="no-menu-message">
-                    <p>Die Speisekarte wird geladen...</p>
-                </div>
-            </div>
-        </section>
+    <div class="menu-categories">
+        <button class="category-btn active" onclick="filterMenu('all')">Alle</button>
+        <button class="category-btn" onclick="filterMenu('morning')">Morning Rituals</button>
+        <button class="category-btn" onclick="filterMenu('bowls')">Power Bowls</button>
+        <button class="category-btn" onclick="filterMenu('klassiker')">Klassiker</button>
+        <button class="category-btn" onclick="filterMenu('drinks')">Getränke</button>
+    </div>
+
+    <div class="menu-grid" id="menuGrid">
+        <!-- Menu items will be loaded dynamically -->
+        <div class="no-menu-message">
+            <p>Die Speisekarte wird geladen...</p>
+        </div>
+    </div>
+</section>
 
         <!-- Features Section -->
         <section class="features-section" id="features">
