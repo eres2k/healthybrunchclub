@@ -61,7 +61,6 @@ exports.handler = async (event, context) => {
             
             return {
               title: data.title,
-              icon: data.icon || '🍴',
               order: data.order || 99,
               description: data.description || '',
               image: data.image || '',
