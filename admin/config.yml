@@ -2,8 +2,8 @@ backend:
   name: git-gateway
   branch: main
 
-media_folder: "/content/images"
-public_folder: "/content/images"
+media_folder: "content/images/"
+public_folder: "/images/uploads"
 
 collections:
   - name: "menu"
@@ -12,45 +12,22 @@ collections:
     create: true
     slug: "{{year}}-{{month}}-{{day}}-{{slug}}"
     fields:
-      - {label: "Titel", name: "title", widget: "string", required: true}
-      - {label: "Beschreibung", name: "description", widget: "text", required: true}
-      - {label: "Preis (in Cent, z.B. 550 für €5.50)", name: "price", widget: "number", required: true}
-      - {label: "Kategorie", name: "category", widget: "select", required: true,
+      - {label: "Titel", name: "title", widget: "string"}
+      - {label: "Beschreibung", name: "description", widget: "text"}
+      - {label: "Preis", name: "price", widget: "number", required: false}
+      - {label: "Kategorie", name: "category", widget: "select", 
          options: [
-           {label: "Morning Rituals", value: "morning-rituals"},
-           {label: "Vorspeise", value: "Vorspeise"}, 
-           {label: "Hauptgang", value: "Hauptgang"},
-           {label: "Power Bowls", value: "power-bowls"},
-           {label: "Dessert", value: "Dessert"},
-           {label: "Getränk", value: "Getränk"}
+           {label: "Morning Rituals", value: "morning rituals"},
+           {label: "Eggs & Stories", value: "eggs & stories"},
+           {label: "Power Bowls", value: "power bowls"},
+           {label: "Sweet Treats", value: "sweet treats"},
+           {label: "Drinks & Juices", value: "drinks & juices"},
+           {label: "Specials", value: "specials"}
          ]}
       - {label: "Bild", name: "image", widget: "image", required: false}
       - {label: "Verfügbar", name: "available", widget: "boolean", default: true}
-      - {label: "Tags", name: "tags", widget: "list", required: false, 
-         hint: "z.B. vegan, glutenfrei, bio, detox"}
-      - {label: "Allergene", name: "allergens", widget: "list", required: false,
-         hint: "z.B. nüsse, gluten, laktose"}
       - {label: "Audio Preview", name: "audioFile", widget: "file", required: false}
-
-  - name: "menu-categories"
-    label: "Menü Kategorien"
-    folder: "content/menu-categories"
-    create: true
-    slug: "{{slug}}"
-    fields:
-      - {label: "Kategorie Name", name: "title", widget: "string", required: true}
-      - {label: "Icon (Emoji)", name: "icon", widget: "string", required: false, hint: "z.B. 🌅, 🥣, ☕"}
-      - {label: "Reihenfolge", name: "order", widget: "number", default: 1}
-      - {label: "Beschreibung", name: "description", widget: "text", required: false}
-      - {label: "Kategorie Bild", name: "image", widget: "image", required: false}
-      - {label: "Menü Items", name: "items", widget: "list", fields: [
-          {label: "Name", name: "name", widget: "string", required: true},
-          {label: "Beschreibung", name: "description", widget: "text", required: true},
-          {label: "Preis", name: "price", widget: "string", required: true, hint: "z.B. €5.50"},
-          {label: "Tags", name: "tags", widget: "list", required: false},
-          {label: "Allergene", name: "allergens", widget: "list", required: false},
-          {label: "Verfügbar", name: "available", widget: "boolean", default: true}
-        ]}
+      - {label: "Tags", name: "tags", widget: "list", required: false}
 
   - name: "events"
     label: "Veranstaltungen"
@@ -58,54 +35,14 @@ collections:
     create: true
     slug: "{{year}}-{{month}}-{{day}}-{{slug}}"
     fields:
-      - {label: "Event Titel", name: "title", widget: "string", required: true}
-      - {label: "Künstler/DJ", name: "artist", widget: "string", required: true}
-      - {label: "Datum & Uhrzeit", name: "date", widget: "datetime", required: true}
-      - {label: "Ort", name: "location", widget: "string", default: "Wien"}
-      - {label: "Beschreibung", name: "description", widget: "markdown", required: true}
-      - {label: "Music Style", name: "musicStyle", widget: "string", required: false, 
-         hint: "z.B. downtempo, organic house, world fusion"}
-      - {label: "Start Zeit", name: "startTime", widget: "string", required: false,
-         hint: "z.B. 9:00 uhr"}
-      - {label: "Event Bild", name: "image", widget: "image", required: false}
-      - {label: "Audio Ankündigung", name: "audioPreview", widget: "file", required: false}
-      - {label: "Aktiv", name: "active", widget: "boolean", default: true}
+      - {label: "Event Titel", name: "title", widget: "string"}
+      - {label: "Datum", name: "date", widget: "datetime"}
+      - {label: "Ort", name: "location", widget: "string"}
+      - {label: "Künstler", name: "artist", widget: "string", required: false}
+      - {label: "Musik Stil", name: "musicStyle", widget: "string", required: false}
+      - {label: "Start Zeit", name: "startTime", widget: "string", default: "9:00 Uhr"}
+      - {label: "Beschreibung", name: "description", widget: "text"}
+      - {label: "Bild", name: "featuredImage", widget: "image", required: false}
       - {label: "Preis", name: "price", widget: "number", required: false}
-
-  - name: "settings"
-    label: "Website Einstellungen"
-    files:
-      - name: "general"
-        label: "Allgemeine Einstellungen"
-        file: "content/settings/general.yml"
-        fields:
-          - {label: "Website Titel", name: "title", widget: "string"}
-          - {label: "Beschreibung", name: "description", widget: "text"}
-          - {label: "Logo", name: "logo", widget: "image"}
-          - {label: "Öffnungszeiten", name: "opening_hours", widget: "object", fields: [
-              {label: "Montag", name: "monday", widget: "string", default: "08:00 - 14:00"},
-              {label: "Dienstag - Sonntag", name: "other_days", widget: "string", default: "Geschlossen"}
-            ]}
-          - {label: "Kontakt", name: "contact", widget: "object", fields: [
-              {label: "Adresse", name: "address", widget: "text"},
-              {label: "Telefon", name: "phone", widget: "string"},
-              {label: "E-Mail", name: "email", widget: "string"},
-              {label: "Instagram", name: "instagram", widget: "string", required: false},
-              {label: "Facebook", name: "facebook", widget: "string", required: false}
-            ]}
-
-  - name: "pages"
-    label: "Seiten"
-    files:
-      - name: "impressum"
-        label: "Impressum"
-        file: "content/pages/impressum.md"
-        fields:
-          - {label: "Titel", name: "title", widget: "string", default: "Impressum"}
-          - {label: "Inhalt", name: "body", widget: "markdown"}
-      - name: "datenschutz"
-        label: "Datenschutz"
-        file: "content/pages/datenschutz.md"
-        fields:
-          - {label: "Titel", name: "title", widget: "string", default: "Datenschutz"}
-          - {label: "Inhalt", name: "body", widget: "markdown"}
+      - {label: "Audio Ankündigung", name: "audioAnnouncement", widget: "file", required: false}
+      - {label: "Aktiv", name: "active", widget: "boolean", default: true}
