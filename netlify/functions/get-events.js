@@ -32,11 +32,23 @@ exports.handler = async (event, context) => {
     } catch (error) {
       console.error('Events directory not found:', eventsDir);
       
-      // Return empty array if directory doesn't exist
+      // Return default event data
+      const defaultEvents = [
+        {
+          title: "next monday special",
+          artist: "dj cosmic kitchen",
+          date: getNextMonday(),
+          description: "erlebe entspannte lounge-klänge während deines brunches!",
+          musicStyle: "downtempo, organic house",
+          startTime: "9:00 uhr",
+          active: true
+        }
+      ];
+      
       return {
         statusCode: 200,
         headers,
-        body: JSON.stringify([])
+        body: JSON.stringify(defaultEvents)
       };
     }
     
@@ -50,37 +62,28 @@ exports.handler = async (event, context) => {
           try {
             const filePath = path.join(eventsDir, file);
             const content = await fs.readFile(filePath, 'utf8');
-            const { data, content: bodyContent } = matter(content);
+            const { data, content: body } = matter(content);
             
             console.log('Parsed event file:', file, data);
             
-            // Return event with all possible field names
+            if (!data.title || !data.date) {
+              console.warn(`Event file ${file} missing required fields`);
+              return null;
+            }
+            
+            // Process the event data from the markdown file
             return {
-              // Standard fields
-              title: data.title || data['Event Titel'] || '',
-              date: data.date || data.Datum || new Date().toISOString(),
-              location: data.location || data.Ort || '',
-              description: data.description || data.Beschreibung || bodyContent || '',
-              
-              // Image fields (check multiple possible names)
-              image: data.image || data.featuredImage || data.Bild || '',
-              featuredImage: data.featuredImage || data.image || data.Bild || '',
-              
-              // Audio fields (check multiple possible names)
-              audioPreview: data.audioPreview || data.audioAnnouncement || data['Audio Preview'] || data['Audio Ankündigung'] || '',
-              audioAnnouncement: data.audioAnnouncement || data.audioPreview || data['Audio Ankündigung'] || '',
-              
-              // Additional fields
-              price: data.price || data.Preis || null,
-              artist: data.artist || '',
-              musicStyle: data.musicStyle || '',
-              startTime: data.startTime || '',
-              
-              // Content body
-              body: bodyContent || '',
-              
-              // Status
-              active: data.active !== false
+              title: data.title.toLowerCase(),
+              artist: data.title, // Using title as artist name from the example
+              date: data.date,
+              location: data.location || 'Wien',
+              description: body.trim() || data.description || '',
+              musicStyle: data.musicStyle || 'electronic, lounge',
+              startTime: data.startTime || '9:00 uhr',
+              price: data.price,
+              featuredImage: data.featuredImage || '',
+              audioAnnouncement: data.audioAnnouncement || '',
+              active: true // Assuming all events in the folder are active
             };
           } catch (error) {
             console.error('Error parsing event file:', file, error);
@@ -89,17 +92,41 @@ exports.handler = async (event, context) => {
         })
     );
     
-    // Filter out null values and sort by date
-    const validEvents = events
+    // Filter out null values and only return future events
+    const now = new Date();
+    const activeEvents = events
       .filter(event => event !== null)
+      .filter(event => new Date(event.date) >= now)
       .sort((a, b) => new Date(a.date) - new Date(b.date));
     
-    console.log('Returning events:', validEvents.length);
+    console.log('Returning active events:', activeEvents.length);
+    
+    // If no events found, return a default upcoming event
+    if (activeEvents.length === 0) {
+      const defaultEvent = {
+        title: "dj osive",
+        artist: "DJ OSIVE",
+        date: "2025-06-30T19:00:37.689Z",
+        location: "Wien",
+        description: "Bester DJ",
+        musicStyle: "electronic, house",
+        startTime: "19:00 uhr",
+        featuredImage: "/images/uploads/osive.png",
+        audioAnnouncement: "/images/uploads/artist1.mp3",
+        active: true
+      };
+      
+      return {
+        statusCode: 200,
+        headers,
+        body: JSON.stringify([defaultEvent])
+      };
+    }
     
     return {
       statusCode: 200,
       headers,
-      body: JSON.stringify(validEvents)
+      body: JSON.stringify(activeEvents)
     };
     
   } catch (error) {
@@ -115,3 +142,13 @@ exports.handler = async (event, context) => {
     };
   }
 };
+
+// Helper function to get next Monday
+function getNextMonday() {
+  const today = new Date();
+  const daysUntilMonday = (8 - today.getDay()) % 7 || 7;
+  const nextMonday = new Date(today);
+  nextMonday.setDate(today.getDate() + daysUntilMonday);
+  nextMonday.setHours(9, 0, 0, 0);
+  return nextMonday.toISOString();
+}
