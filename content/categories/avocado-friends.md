@@ -1,7 +1,7 @@
 ---
 title: Avocado Friends
 icon: 🍽️
-order: 1
+order: 3
 description: |
   Reich an gesunden ungesättigten Fettsäuren, Ballaststoffen und
   wichtigen Vitaminen unterstützt sie daher eine gesunde Darmflora!
