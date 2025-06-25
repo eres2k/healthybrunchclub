@@ -79,14 +79,21 @@ exports.handler = async (event, context) => {
     const categoryMap = new Map();
     
     // Define category metadata (icons and order)
+    // Map the CMS categories to your desired display categories
+    const categoryMapping = {
+      'Vorspeise': 'morning rituals',
+      'Hauptgang': 'eggs & stories', 
+      'Dessert': 'sweet treats',
+      'Getränk': 'drinks & juices'
+    };
+    
     const categoryMetadata = {
-      'Vorspeise': { icon: '🥗', order: 1, displayName: 'vorspeisen' },
-      'Hauptgang': { icon: '🍽️', order: 2, displayName: 'hauptgänge' },
-      'Dessert': { icon: '🍰', order: 3, displayName: 'desserts' },
-      'Getränk': { icon: '☕', order: 4, displayName: 'getränke' },
-      'morning rituals': { icon: '🌅', order: 0, displayName: 'morning rituals' },
-      'eggs & stories': { icon: '🍳', order: 1, displayName: 'eggs & stories' },
-      'power bowls': { icon: '🥣', order: 2, displayName: 'power bowls' }
+      'morning rituals': { icon: '🌅', order: 1, displayName: 'morning rituals' },
+      'eggs & stories': { icon: '🍳', order: 2, displayName: 'eggs & stories' },
+      'power bowls': { icon: '🥣', order: 3, displayName: 'power bowls' },
+      'sweet treats': { icon: '🍰', order: 4, displayName: 'sweet treats' },
+      'drinks & juices': { icon: '🥤', order: 5, displayName: 'drinks & juices' },
+      'sonstiges': { icon: '🍴', order: 99, displayName: 'sonstiges' }
     };
     
     // Process each menu item file
@@ -120,7 +127,13 @@ exports.handler = async (event, context) => {
             }
             
             // Get or create category
-            const category = data.category || 'Sonstiges';
+            let category = data.category || 'sonstiges';
+            
+            // Map CMS categories to display categories
+            if (categoryMapping[category]) {
+              category = categoryMapping[category];
+            }
+            
             if (!categoryMap.has(category)) {
               const metadata = categoryMetadata[category] || { 
                 icon: '🍴', 
