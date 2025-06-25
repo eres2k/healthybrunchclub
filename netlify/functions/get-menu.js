@@ -22,201 +22,133 @@ exports.handler = async (event, context) => {
   }
 
   try {
-    // First try to load from menu-categories (new structure)
-    const categoriesDir = path.join(process.cwd(), 'content', 'menu-categories');
+    const menuDir = path.join(process.cwd(), 'content', 'menu');
     
-    console.log('Looking for menu categories directory at:', categoriesDir);
-    
-    let menuData = [];
+    console.log('Looking for menu directory at:', menuDir);
     
     try {
-      await fs.access(categoriesDir);
-      const categoryFiles = await fs.readdir(categoriesDir);
-      console.log('Found category files:', categoryFiles);
+      await fs.access(menuDir);
+    } catch (error) {
+      console.error('Menu directory not found:', menuDir);
       
-      menuData = await Promise.all(
-        categoryFiles
-          .filter(file => file.endsWith('.md'))
-          .map(async (file) => {
-            try {
-              const filePath = path.join(categoriesDir, file);
-              const content = await fs.readFile(filePath, 'utf8');
-              const { data } = matter(content);
-              
-              console.log('Parsed category file:', file, data);
-              
-              if (!data.title) {
-                console.warn(`Category file ${file} missing title`);
-                return null;
+      // Return default menu data if directory doesn't exist
+      const defaultMenu = [
+        {
+          title: "morning rituals",
+          icon: "🌅",
+          order: 1,
+          available: true,
+          items: [
+            {
+              name: "warmes wasser mit bio-zitrone",
+              description: "der perfekte start für deine verdauung",
+              price: "€3",
+              tags: ["detox", "vegan"],
+              available: true
+            },
+            {
+              name: "golden milk latte",
+              description: "kurkuma, ingwer, zimt & hafermilch",
+              price: "€5",
+              tags: ["anti-inflammatory", "lactosefrei"],
+              available: true
+            }
+          ]
+        }
+      ];
+      
+      return {
+        statusCode: 200,
+        headers,
+        body: JSON.stringify(defaultMenu)
+      };
+    }
+    
+    const files = await fs.readdir(menuDir);
+    console.log('Found menu files:', files);
+    
+    const menuCategories = await Promise.all(
+      files
+        .filter(file => file.endsWith('.md'))
+        .map(async (file) => {
+          try {
+            const filePath = path.join(menuDir, file);
+            const content = await fs.readFile(filePath, 'utf8');
+            const { data, content: markdownContent } = matter(content);
+            
+            console.log('Parsed menu file:', file, data);
+            
+            // Skip if category is not available or missing title
+            if (!data.title || data.available === false) {
+              console.log(`Skipping unavailable category: ${file}`);
+              return null;
+            }
+            
+            // Process image path
+            let imagePath = '';
+            if (data.image) {
+              if (data.image.startsWith('http')) {
+                imagePath = data.image;
+              } else if (data.image.startsWith('/')) {
+                imagePath = data.image;
+              } else {
+                imagePath = `/content/images/${data.image}`;
               }
-              
-              // Process image path
-              let imagePath = '';
-              if (data.image) {
-                if (data.image.startsWith('http')) {
-                  imagePath = data.image;
-                } else if (data.image.startsWith('/')) {
-                  imagePath = data.image;
-                } else {
-                  imagePath = `/content/images/${data.image}`;
-                }
-              }
-              
-              // Process menu items
-              const items = (data.items || []).map(item => ({
+            }
+            
+            // Process menu items
+            const items = (data.items || [])
+              .filter(item => item.available !== false) // Only show available items
+              .map(item => ({
                 name: item.name || '',
                 description: item.description || '',
                 price: item.price || '',
-                tags: item.tags || [],
+                tags: Array.isArray(item.tags) ? item.tags : [],
                 allergens: item.allergens || '',
                 available: item.available !== false
               }));
-              
-              return {
-                title: data.title,
-                slug: data.slug || file.replace('.md', ''),
-                icon: data.icon || '',
-                order: data.order || 0,
-                image: imagePath,
-                description: data.description || '',
-                items: items
-              };
-            } catch (error) {
-              console.error('Error parsing category file:', file, error);
+            
+            // Skip categories with no available items
+            if (items.length === 0) {
+              console.log(`Skipping category with no available items: ${file}`);
               return null;
             }
-          })
-      );
-      
-      // Filter out null values and sort by order
-      menuData = menuData
-        .filter(cat => cat !== null)
-        .sort((a, b) => (a.order || 0) - (b.order || 0));
-        
-    } catch (error) {
-      console.log('Categories directory not found, trying legacy menu structure');
-      
-      // Fallback: Try to load from legacy menu structure
-      const menuDir = path.join(process.cwd(), 'content', 'menu');
-      
-      try {
-        await fs.access(menuDir);
-        const files = await fs.readdir(menuDir);
-        console.log('Found legacy menu files:', files);
-        
-        // Group legacy menu items by category
-        const categoryMap = new Map();
-        
-        await Promise.all(
-          files
-            .filter(file => file.endsWith('.md'))
-            .map(async (file) => {
-              try {
-                const filePath = path.join(menuDir, file);
-                const content = await fs.readFile(filePath, 'utf8');
-                const { data } = matter(content);
-                
-                if (!data.title || !data.category) {
-                  return;
-                }
-                
-                const category = data.category;
-                if (!categoryMap.has(category)) {
-                  categoryMap.set(category, {
-                    title: category.toLowerCase(),
-                    icon: getCategoryIcon(category),
-                    order: getCategoryOrder(category),
-                    items: []
-                  });
-                }
-                
-                // Process image path
-                let imagePath = '';
-                if (data.image) {
-                  if (data.image.startsWith('http')) {
-                    imagePath = data.image;
-                  } else if (data.image.startsWith('/')) {
-                    imagePath = data.image;
-                  } else {
-                    imagePath = `/content/images/${data.image}`;
-                  }
-                }
-                
-                categoryMap.get(category).items.push({
-                  name: data.title,
-                  description: data.description || '',
-                  price: data.price ? `€${data.price}` : '',
-                  tags: data.tags || [],
-                  image: imagePath,
-                  available: data.available !== false
-                });
-                
-              } catch (error) {
-                console.error('Error parsing legacy menu file:', file, error);
-              }
-            })
-        );
-        
-        menuData = Array.from(categoryMap.values())
-          .sort((a, b) => (a.order || 0) - (b.order || 0));
-          
-      } catch (legacyError) {
-        console.log('Legacy menu directory also not found, using default data');
-        
-        // Return default menu data if both directories don't exist
-        menuData = [
-          {
-            title: "morning rituals",
-            icon: "🌅",
-            order: 1,
-            items: [
-              {
-                name: "warmes wasser mit bio-zitrone",
-                description: "der perfekte start für deine verdauung",
-                tags: ["detox", "vegan"],
-                price: "€3",
-                available: true
-              },
-              {
-                name: "golden milk latte",
-                description: "kurkuma, ingwer, zimt & hafermilch",
-                tags: ["anti-inflammatory", "lactosefrei"],
-                price: "€5",
-                available: true
-              }
-            ]
-          },
-          {
-            title: "power bowls",
-            icon: "🥣",
-            order: 2,
-            items: [
-              {
-                name: "açaí sunrise bowl",
-                description: "açaí, banane, beeren, granola, kokosflocken",
-                tags: ["superfood", "vegan"],
-                price: "€12",
-                available: true
-              },
-              {
-                name: "premium porridge",
-                description: "haferflocken, chia, hanfsamen, heidelbeeren, mandeln",
-                tags: ["glutenfrei", "protein"],
-                price: "€9",
-                available: true
-              }
-            ]
+            
+            return {
+              title: data.title,
+              slug: data.slug || file.replace('.md', ''),
+              icon: data.icon || '🍴',
+              order: data.order || 0,
+              image: imagePath,
+              description: data.description || '',
+              content: markdownContent || '',
+              available: data.available !== false,
+              items: items
+            };
+            
+          } catch (error) {
+            console.error('Error parsing menu file:', file, error);
+            return null;
           }
-        ];
-      }
-    }
+        })
+    );
     
-    console.log('Returning menu categories:', menuData.length);
+    // Filter out null values and sort by order
+    const validCategories = menuCategories
+      .filter(cat => cat !== null)
+      .sort((a, b) => (a.order || 0) - (b.order || 0));
+    
+    console.log(`Returning ${validCategories.length} menu categories`);
+    
+    // Log the structure for debugging
+    validCategories.forEach(cat => {
+      console.log(`Category: ${cat.title}, Items: ${cat.items.length}`);
+    });
     
     return {
       statusCode: 200,
       headers,
-      body: JSON.stringify(menuData)
+      body: JSON.stringify(validCategories)
     };
     
   } catch (error) {
@@ -232,26 +164,3 @@ exports.handler = async (event, context) => {
     };
   }
 };
-
-// Helper functions for legacy menu structure
-function getCategoryIcon(category) {
-  const iconMap = {
-    'Vorspeise': '🥗',
-    'Hauptgang': '🍽️',
-    'Dessert': '🍰',
-    'Getränk': '☕',
-    'Special': '⭐'
-  };
-  return iconMap[category] || '🍴';
-}
-
-function getCategoryOrder(category) {
-  const orderMap = {
-    'Vorspeise': 1,
-    'Hauptgang': 2,
-    'Dessert': 3,
-    'Getränk': 4,
-    'Special': 5
-  };
-  return orderMap[category] || 0;
-}
