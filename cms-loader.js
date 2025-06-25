@@ -1,198 +1,170 @@
-// Korrigierte CMS-Loader Implementierung für Healthy Brunch Club
-// Diese Datei ersetzt das bestehende cms-loader.js
+// CMS Loader with Dynamic Category Filters
+// Save this as cms-loader.js
 
 document.addEventListener('DOMContentLoaded', function() {
     loadMenuFromCMS();
     loadEventsFromCMS();
 });
 
-// Load Menu from CMS with proper structure
+// Store menu data globally for filtering
+let globalMenuData = [];
+let currentFilter = 'all';
+
+// Load Menu from CMS
 async function loadMenuFromCMS() {
     try {
         console.log('Loading menu from CMS...');
+        const response = await fetch('/.netlify/functions/get-menu');
         
-        // First try to load from the Netlify function
-        let menuData;
-        try {
-            const response = await fetch('/.netlify/functions/get-menu');
-            if (response.ok) {
-                menuData = await response.json();
-            }
-        } catch (error) {
-            console.log('Netlify function not available, using fallback data');
+        if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
         }
         
-        // If no data from function, create structured menu from the markdown files data
-        if (!menuData || menuData.length === 0) {
-            menuData = createStructuredMenuFromMarkdown();
-        }
-        
+        const menuData = await response.json();
         console.log('Menu data loaded:', menuData);
-        displayMenu(menuData);
         
+        // Store globally for filtering
+        globalMenuData = menuData;
+        
+        // Create filter buttons
+        createFilterButtons(menuData);
+        
+        // Display menu
+        displayMenu(menuData);
     } catch (error) {
         console.error('Error loading menu:', error);
         displayFallbackMenu();
     }
 }
 
-// Create structured menu from the existing markdown files
-function createStructuredMenuFromMarkdown() {
-    // This function processes the markdown files and creates proper menu structure
-    // Based on the files we can see: test.md (Kaffee) and noch-was.md (Noch was)
+// Create filter buttons dynamically
+function createFilterButtons(menuData) {
+    const menuSection = document.querySelector('.menu-section');
+    const menuHeader = menuSection.querySelector('.menu-header');
     
-    const categorizedMenu = {};
+    // Check if filter container already exists
+    let filterContainer = document.querySelector('.menu-categories');
     
-    // Example data based on your markdown files - this would be dynamically loaded in production
-    const markdownItems = [
-        {
-            title: "Kaffee",
-            description: "TEST", 
-            price: 100,
-            category: "Getränk",
-            image: "/images/uploads/logo.png",
-            available: true
-        },
-        {
-            title: "Noch was",
-            description: "Test",
-            price: 50,
-            category: "Vorspeise", 
-            image: "/images/uploads/logo.png",
-            available: true
-        }
-    ];
-    
-    // Group items by category
-    markdownItems.forEach(item => {
-        if (!categorizedMenu[item.category]) {
-            categorizedMenu[item.category] = {
-                title: getCategoryDisplayName(item.category),
-                icon: getCategoryIcon(item.category),
-                order: getCategoryOrder(item.category),
-                items: []
-            };
-        }
+    if (!filterContainer) {
+        // Create filter container
+        filterContainer = document.createElement('div');
+        filterContainer.className = 'menu-categories';
+        filterContainer.style.cssText = `
+            display: flex;
+            justify-content: center;
+            gap: 1rem;
+            margin-bottom: 3rem;
+            flex-wrap: wrap;
+        `;
         
-        categorizedMenu[item.category].items.push({
-            name: item.title,
-            description: item.description,
-            price: formatPrice(item.price),
-            tags: getCategoryTags(item.category),
-            available: item.available,
-            image: item.image
-        });
+        // Insert after menu header
+        menuHeader.insertAdjacentElement('afterend', filterContainer);
+    }
+    
+    // Clear existing buttons
+    filterContainer.innerHTML = '';
+    
+    // Create "Alle" button
+    const allButton = createFilterButton('Alle', 'all', true);
+    filterContainer.appendChild(allButton);
+    
+    // Create buttons for each category
+    menuData.forEach(category => {
+        const button = createFilterButton(
+            category.title,
+            category.title,
+            false
+        );
+        filterContainer.appendChild(button);
+    });
+}
+
+// Create individual filter button
+function createFilterButton(text, value, isActive) {
+    const button = document.createElement('button');
+    button.className = `category-btn ${isActive ? 'active' : ''}`;
+    button.textContent = text;
+    button.onclick = () => filterMenu(value);
+    
+    button.style.cssText = `
+        padding: 0.75rem 1.5rem;
+        background: ${isActive ? '#A8C09A' : 'white'};
+        border: 2px solid #A8C09A;
+        border-radius: 25px;
+        color: ${isActive ? 'white' : '#A8C09A'};
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        font-family: inherit;
+    `;
+    
+    // Add hover effect
+    button.addEventListener('mouseenter', () => {
+        if (!button.classList.contains('active')) {
+            button.style.background = '#A8C09A';
+            button.style.color = 'white';
+        }
     });
     
-    // Convert to array and add default categories if missing
-    let menuArray = Object.values(categorizedMenu);
+    button.addEventListener('mouseleave', () => {
+        if (!button.classList.contains('active')) {
+            button.style.background = 'white';
+            button.style.color = '#A8C09A';
+        }
+    });
     
-    // Add default "morning rituals" category if not present
-    if (!menuArray.find(cat => cat.title.toLowerCase().includes('morning'))) {
-        menuArray.unshift({
-            title: "morning rituals",
-            icon: "🌅",
-            order: 1,
-            items: [
-                {
-                    name: "warmes wasser mit bio-zitrone",
-                    description: "der perfekte start für deine verdauung und den stoffwechsel",
-                    price: "€3.00",
-                    tags: ["detox", "vegan", "alkalisierend"],
-                    available: true
-                },
-                {
-                    name: "golden milk latte", 
-                    description: "kurkuma, ingwer, zimt, schwarzer pfeffer mit hafermilch",
-                    price: "€5.50",
-                    tags: ["anti-inflammatory", "lactosefrei", "ayurvedisch"],
-                    available: true
-                }
-            ]
-        });
+    return button;
+}
+
+// Filter menu function
+function filterMenu(filter) {
+    currentFilter = filter;
+    
+    // Update active button
+    document.querySelectorAll('.category-btn').forEach(btn => {
+        btn.classList.remove('active');
+        if (btn.textContent === filter || (filter === 'all' && btn.textContent === 'Alle')) {
+            btn.classList.add('active');
+            btn.style.background = '#A8C09A';
+            btn.style.color = 'white';
+        } else {
+            btn.style.background = 'white';
+            btn.style.color = '#A8C09A';
+        }
+    });
+    
+    // Filter and display menu
+    if (filter === 'all') {
+        displayMenu(globalMenuData);
+    } else {
+        const filteredData = globalMenuData.filter(category => 
+            category.title === filter
+        );
+        displayMenu(filteredData);
     }
-    
-    // Add "power bowls" category if not present
-    if (!menuArray.find(cat => cat.title.toLowerCase().includes('bowl'))) {
-        menuArray.push({
-            title: "power bowls",
-            icon: "🥣", 
-            order: 2,
-            items: [
-                {
-                    name: "açaí sunrise bowl",
-                    description: "açaí, banane, beeren, granola, kokosflocken",
-                    price: "€12.90",
-                    tags: ["superfood", "vegan", "antioxidants"],
-                    available: true
-                },
-                {
-                    name: "premium porridge",
-                    description: "haferflocken, chia, hanfsamen, heidelbeeren, mandeln", 
-                    price: "€9.50",
-                    tags: ["glutenfrei", "protein", "fiber"],
-                    available: true
-                }
-            ]
-        });
+}
+
+// Load Events from CMS
+async function loadEventsFromCMS() {
+    try {
+        console.log('Loading events from CMS...');
+        const response = await fetch('/.netlify/functions/get-events');
+        
+        if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+        }
+        
+        const eventsData = await response.json();
+        console.log('Events data loaded:', eventsData);
+        
+        displayEvents(eventsData);
+    } catch (error) {
+        console.error('Error loading events:', error);
+        displayFallbackEvent();
     }
-    
-    // Sort by order
-    menuArray.sort((a, b) => (a.order || 999) - (b.order || 999));
-    
-    return menuArray;
 }
 
-// Helper functions for category mapping
-function getCategoryDisplayName(category) {
-    const mapping = {
-        'Vorspeise': 'appetizer & starters',
-        'Hauptgang': 'main bowls',
-        'Dessert': 'sweet treats',
-        'Getränk': 'beverages & elixirs'
-    };
-    return mapping[category] || category.toLowerCase();
-}
-
-function getCategoryIcon(category) {
-    const mapping = {
-        'Vorspeise': '🥗',
-        'Hauptgang': '🍲',
-        'Dessert': '🍯',
-        'Getränk': '☕'
-    };
-    return mapping[category] || '🍴';
-}
-
-function getCategoryOrder(category) {
-    const mapping = {
-        'morning rituals': 1,
-        'Vorspeise': 2,
-        'Hauptgang': 3,
-        'Getränk': 4,
-        'Dessert': 5
-    };
-    return mapping[category] || 999;
-}
-
-function getCategoryTags(category) {
-    const mapping = {
-        'Vorspeise': ['fresh', 'light'],
-        'Hauptgang': ['nourishing', 'satisfying'],
-        'Dessert': ['sweet', 'indulgent'],
-        'Getränk': ['energizing', 'refreshing']
-    };
-    return mapping[category] || ['healthy'];
-}
-
-function formatPrice(price) {
-    if (typeof price === 'number') {
-        return `€${(price / 100).toFixed(2)}`;
-    }
-    return price || '';
-}
-
-// Display Menu with proper structure
+// Display Menu with Images
 function displayMenu(menuData) {
     const menuGrid = document.getElementById('menuGrid');
     
@@ -201,122 +173,58 @@ function displayMenu(menuData) {
         return;
     }
     
-    // Clear existing content
-    menuGrid.innerHTML = '';
-    
-    menuData.forEach(category => {
-        const menuCard = createMenuCard(category);
-        menuGrid.appendChild(menuCard);
-    });
+    menuGrid.innerHTML = menuData.map(category => {
+        // Handle image URL - check if it's a relative path and make it absolute
+        let imageUrl = '';
+        if (category.image) {
+            imageUrl = category.image.startsWith('/') ? category.image : `/${category.image}`;
+        }
+        
+        const itemsHtml = category.items.map(item => `
+            <div class="menu-item">
+                <div class="menu-item-header">
+                    <h4 class="menu-item-name">${item.name}</h4>
+                    ${item.price ? `<span class="menu-item-price">${item.price}</span>` : ''}
+                </div>
+                <p class="menu-item-description">${item.description}</p>
+                ${item.tags && item.tags.length > 0 ? `
+                    <div class="menu-tags">
+                        ${item.tags.map(tag => `<span class="menu-tag">${tag}</span>`).join('')}
+                    </div>
+                ` : ''}
+            </div>
+        `).join('');
+        
+        return `
+            <div class="menu-card">
+                ${imageUrl ? `
+                    <div class="menu-card-image">
+                        <img src="${imageUrl}" alt="${category.title}" loading="lazy" onerror="this.parentElement.style.display='none'">
+                    </div>
+                ` : ''}
+                <div class="menu-card-content">
+                    <h3 class="menu-category-title">
+                        ${category.icon || '🍽️'} ${category.title}
+                    </h3>
+                    <div class="menu-items">
+                        ${itemsHtml}
+                    </div>
+                </div>
+            </div>
+        `;
+    }).join('');
     
     // Trigger animations for newly loaded content
     triggerMenuAnimations();
 }
 
-// Create a menu card element
-function createMenuCard(category) {
-    const card = document.createElement('div');
-    card.className = 'menu-card';
-    
-    // Handle image URL
-    let imageHtml = '';
-    if (category.image) {
-        const imageUrl = category.image.startsWith('/') ? category.image : `/${category.image}`;
-        imageHtml = `
-            <div class="menu-card-image">
-                <img src="${imageUrl}" alt="${category.title}" loading="lazy" onerror="this.parentElement.style.display='none'">
-            </div>
-        `;
-    }
-    
-    // Create items HTML
-    const itemsHtml = category.items.map(item => `
-        <div class="menu-item">
-            <div class="menu-item-header">
-                <h4 class="menu-item-name">${item.name}</h4>
-                ${item.price ? `<span class="menu-item-price">${item.price}</span>` : ''}
-            </div>
-            <p class="menu-item-description">${item.description}</p>
-            ${item.tags && item.tags.length > 0 ? `
-                <div class="menu-tags">
-                    ${item.tags.map(tag => `<span class="menu-tag">${tag}</span>`).join('')}
-                </div>
-            ` : ''}
-            ${!item.available ? '<div class="unavailable-notice">Derzeit nicht verfügbar</div>' : ''}
-        </div>
-    `).join('');
-    
-    card.innerHTML = `
-        ${imageHtml}
-        <div class="menu-card-content">
-            <h3 class="menu-category-title">
-                ${category.icon || '🍽️'} ${category.title}
-            </h3>
-            <div class="menu-items">
-                ${itemsHtml}
-            </div>
-        </div>
-    `;
-    
-    return card;
-}
-
-// Load Events from CMS
-async function loadEventsFromCMS() {
-    try {
-        console.log('Loading events from CMS...');
-        
-        // Try to load from Netlify function first
-        let eventsData;
-        try {
-            const response = await fetch('/.netlify/functions/get-events');
-            if (response.ok) {
-                eventsData = await response.json();
-            }
-        } catch (error) {
-            console.log('Netlify function not available, using fallback data');
-        }
-        
-        // If no data, create from markdown files
-        if (!eventsData || eventsData.length === 0) {
-            eventsData = createEventsFromMarkdown();
-        }
-        
-        console.log('Events data loaded:', eventsData);
-        displayEvents(eventsData);
-        
-    } catch (error) {
-        console.error('Error loading events:', error);
-        displayFallbackEvent();
-    }
-}
-
-// Create events from markdown data
-function createEventsFromMarkdown() {
-    // Based on the DJ OSIVE event in your markdown
-    return [
-        {
-            title: "DJ OSIVE",
-            artist: "DJ OSIVE", 
-            date: "2025-06-30T19:00:37.689Z",
-            location: "Wien",
-            description: "Bester DJ",
-            musicStyle: "electronic, house, ambient",
-            startTime: "19:00 uhr",
-            image: "/images/uploads/osive.png",
-            audioPreview: "/images/uploads/artist1.mp3",
-            active: true
-        }
-    ];
-}
-
-// Display Events with proper structure
+// Display Events with Images
 function displayEvents(eventsData) {
     const eventWindow = document.getElementById('eventWindow');
     const eventContent = document.getElementById('eventContent');
     
     if (!eventsData || eventsData.length === 0) {
-        if (eventWindow) eventWindow.style.display = 'none';
+        eventWindow.style.display = 'none';
         return;
     }
     
@@ -337,69 +245,64 @@ function displayEvents(eventsData) {
         month: 'long'
     });
     
-    if (eventContent) {
-        eventContent.innerHTML = `
-            <div class="event-header">
-                ${imageUrl ? `
-                    <div class="event-image">
-                        <img src="${imageUrl}" alt="${nextEvent.title}" loading="lazy" onerror="this.parentElement.style.display='none'">
-                    </div>
-                ` : ''}
-                <h3>${nextEvent.title}</h3>
-                <p>${formattedDate}</p>
-            </div>
-            <div class="event-details">
-                <strong>🎵 ${nextEvent.artist || 'Special Guest'}</strong>
-                <p>${nextEvent.description}</p>
-                
-                ${nextEvent.musicStyle ? `
-                    <strong>🎶 Music Style:</strong>
-                    <p>${nextEvent.musicStyle}</p>
-                ` : ''}
-                
-                ${nextEvent.startTime ? `
-                    <strong>⏰ Start:</strong>
-                    <p>${nextEvent.startTime}</p>
-                ` : ''}
-            </div>
-            
-            ${nextEvent.audioPreview ? `
-                <div class="audio-player">
-                    <h4>🎧 Preview</h4>
-                    <audio controls preload="none">
-                        <source src="${nextEvent.audioPreview}" type="audio/mpeg">
-                        <source src="${nextEvent.audioPreview}" type="audio/wav">
-                        <source src="${nextEvent.audioPreview}" type="audio/ogg">
-                        Dein Browser unterstützt das Audio-Element nicht.
-                    </audio>
+    eventContent.innerHTML = `
+        <div class="event-header">
+            ${imageUrl ? `
+                <div class="event-image">
+                    <img src="${imageUrl}" alt="${nextEvent.title}" loading="lazy" onerror="this.parentElement.style.display='none'">
                 </div>
             ` : ''}
-        `;
-    }
+            <h3>${nextEvent.title}</h3>
+            <p>${formattedDate}</p>
+        </div>
+        <div class="event-details">
+            <strong>🎵 ${nextEvent.artist || 'Special Guest'}</strong>
+            <p>${nextEvent.description}</p>
+            
+            ${nextEvent.musicStyle ? `
+                <strong>🎶 Music Style:</strong>
+                <p>${nextEvent.musicStyle}</p>
+            ` : ''}
+            
+            ${nextEvent.startTime ? `
+                <strong>⏰ Start:</strong>
+                <p>${nextEvent.startTime}</p>
+            ` : ''}
+        </div>
+        
+        ${nextEvent.audioPreview ? `
+            <div class="audio-player">
+                <h4>🎧 Preview</h4>
+                <audio controls preload="none">
+                    <source src="${nextEvent.audioPreview}" type="audio/mpeg">
+                    <source src="${nextEvent.audioPreview}" type="audio/wav">
+                    <source src="${nextEvent.audioPreview}" type="audio/ogg">
+                    Dein Browser unterstützt das Audio-Element nicht.
+                </audio>
+            </div>
+        ` : ''}
+    `;
     
-    if (eventWindow) {
-        eventWindow.style.display = 'block';
-    }
+    eventWindow.style.display = 'block';
 }
 
-// Fallback Menu with proper structure
+// Fallback Menu
 function displayFallbackMenu() {
+    const menuGrid = document.getElementById('menuGrid');
+    
     const fallbackMenu = [
         {
             title: "morning rituals",
             icon: "🌅",
-            order: 1,
             items: [
                 {
                     name: "warmes wasser mit bio-zitrone",
                     description: "der perfekte start für deine verdauung",
-                    price: "€3.00",
                     tags: ["detox", "vegan"]
                 },
                 {
                     name: "golden milk latte",
                     description: "kurkuma, ingwer, zimt & hafermilch",
-                    price: "€5.50", 
                     tags: ["anti-inflammatory", "lactosefrei"]
                 }
             ]
@@ -407,18 +310,15 @@ function displayFallbackMenu() {
         {
             title: "power bowls",
             icon: "🥣",
-            order: 2,
             items: [
                 {
                     name: "açaí sunrise bowl",
                     description: "açaí, banane, beeren, granola, kokosflocken",
-                    price: "€12.90",
                     tags: ["superfood", "vegan"]
                 },
                 {
                     name: "premium porridge",
                     description: "haferflocken, chia, hanfsamen, heidelbeeren, mandeln",
-                    price: "€9.50",
                     tags: ["glutenfrei", "protein"]
                 }
             ]
@@ -433,7 +333,7 @@ function displayFallbackEvent() {
     const fallbackEvent = [{
         title: "next monday special",
         artist: "dj cosmic kitchen",
-        date: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000).toISOString(),
+        date: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000).toISOString(), // Next week
         description: "erlebe entspannte lounge-klänge während deines brunches!",
         musicStyle: "downtempo, organic house",
         startTime: "9:00 uhr"
@@ -465,64 +365,22 @@ function triggerMenuAnimations() {
     });
 }
 
-// Additional CSS styles for proper menu display
-const additionalStyles = `
-<style>
-.menu-item-price {
-    font-weight: 600;
-    color: var(--sage-green);
-    margin-left: auto;
-}
-
-.menu-item-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: start;
-    margin-bottom: 8px;
-    gap: 10px;
-}
-
-.unavailable-notice {
-    font-size: 12px;
-    color: #999;
-    font-style: italic;
-    margin-top: 5px;
-}
-
-.menu-card-image {
-    width: 100%;
-    height: 120px;
-    margin-bottom: 20px;
-    border-radius: 10px;
-    overflow: hidden;
-}
-
-.menu-card-image img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-}
-
-.event-image {
-    width: 100%;
-    height: 80px;
-    margin-bottom: 10px;
-    border-radius: 10px;
-    overflow: hidden;
-}
-
-.event-image img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-}
-</style>
+// Add necessary styles for filter buttons
+const style = document.createElement('style');
+style.textContent = `
+    .category-btn {
+        font-family: 'Lora', serif;
+    }
+    
+    .category-btn.active {
+        background: #A8C09A !important;
+        color: white !important;
+    }
+    
+    .menu-item-price {
+        font-weight: 600;
+        color: #A8C09A;
+        margin-left: 10px;
+    }
 `;
-
-// Inject additional styles
-if (!document.querySelector('#cms-additional-styles')) {
-    const styleElement = document.createElement('div');
-    styleElement.id = 'cms-additional-styles';
-    styleElement.innerHTML = additionalStyles;
-    document.head.appendChild(styleElement);
-}
+document.head.appendChild(style);
