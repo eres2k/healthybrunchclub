@@ -1,11 +1,4 @@
 ---
-title: morning rituals
-slug: morning-rituals
-icon: 🌅
-order: 1
-image: /images/uploads/morning-rituals.jpg
-description: starte deinen tag bewusst und energievoll
-available: true
 items:
   - name: warmes wasser mit bio-zitrone
     description: der perfekte start für deine verdauung und den stoffwechsel
@@ -14,7 +7,7 @@ items:
       - detox
       - vegan
       - alkalisierend
-    allergens: 
+    allergens: null
     available: true
   - name: golden milk latte
     description: kurkuma, ingwer, zimt, schwarzer pfeffer mit hafermilch
@@ -23,7 +16,7 @@ items:
       - anti-inflammatory
       - lactosefrei
       - ayurvedisch
-    allergens: 
+    allergens: null
     available: true
   - name: matcha zeremonie
     description: ceremonial grade matcha traditionell zubereitet
@@ -32,7 +25,7 @@ items:
       - antioxidants
       - energie
       - meditation
-    allergens: 
+    allergens: null
     available: true
   - name: chia-wasser infusion
     description: chia samen, gurke, minze, limette für hydration
@@ -41,8 +34,16 @@ items:
       - hydration
       - omega-3
       - vegan
-    allergens: 
+    allergens: null
     available: true
+available: true
+slug: morning-rituals
+order: 1
+title: morning rituals
+icon: 🌅
+description: starte deinen tag bewusst und energievoll
+category: morning rituals
+image: /images/uploads/morning-rituals.jpg
 ---
 
 Unsere morgendlichen Rituale sind darauf ausgelegt, deinen Körper sanft zu aktivieren und dich mit Energie für den Tag zu versorgen. Jedes Getränk wird frisch zubereitet und enthält wertvolle Nährstoffe.
