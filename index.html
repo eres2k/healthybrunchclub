@@ -128,20 +128,62 @@
             </div>
         </section>
 
-        <!-- Menu Section -->
-        <section class="menu-section" id="menu">
-            <div class="menu-header">
-                <h2>unsere liebevoll kuratierte speisekarte</h2>
-                <p>100% bio, regional und mit ganz viel liebe zubereitet</p>
-            </div>
+    <!-- Menu Section with Filter System -->
+<section class="menu-section" id="menu">
+    <div class="menu-header">
+        <h2>unsere liebevoll kuratierte speisekarte</h2>
+        <p>100% bio, regional und mit ganz viel liebe zubereitet</p>
+    </div>
 
-            <div class="menu-grid" id="menuGrid">
-                <!-- Menu items will be loaded dynamically -->
-                <div class="no-menu-message">
-                    <p>Die Speisekarte wird geladen...</p>
-                </div>
-            </div>
-        </section>
+    <!-- Filter Buttons -->
+    <div class="menu-filters">
+        <button class="category-filter active" data-category="all">Alle</button>
+        <button class="category-filter" data-category="Getränk">Getränke</button>
+        <button class="category-filter" data-category="Vorspeise">Vorspeisen</button>
+        <button class="category-filter" data-category="Hauptgang">Hauptgänge</button>
+        <button class="category-filter" data-category="Dessert">Desserts</button>
+    </div>
+
+    <div class="menu-grid" id="menuGrid">
+        <!-- Menu items will be loaded dynamically -->
+        <div class="no-menu-message">
+            <p>Die Speisekarte wird geladen...</p>
+        </div>
+    </div>
+</section>
+
+<style>
+.menu-filters {
+    display: flex;
+    justify-content: center;
+    gap: 15px;
+    margin: 40px 0;
+    flex-wrap: wrap;
+}
+
+.menu-grid {
+    max-width: 1200px;
+    margin: 0 auto;
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+    gap: 30px;
+}
+
+@media (max-width: 768px) {
+    .menu-grid {
+        grid-template-columns: 1fr;
+    }
+    
+    .menu-filters {
+        gap: 10px;
+    }
+    
+    .category-filter {
+        padding: 8px 16px;
+        font-size: 13px;
+    }
+}
+</style>
 
         <!-- Features Section -->
         <section class="features-section" id="features">
