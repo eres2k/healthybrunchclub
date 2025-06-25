@@ -1,7 +1,198 @@
-<style>
-	/* Menu Card Image Support */
+<!-- Menu Section with Dynamic Filter System -->
+<section class="menu-section" id="menu">
+    <div class="menu-header">
+        <h2>unsere liebevoll kuratierte speisekarte</h2>
+        <p>100% bio, regional und mit ganz viel liebe zubereitet</p>
+    </div>
 
-		/* Event Image Styles */
+    <!-- Filter Buttons - will be populated dynamically -->
+    <div class="menu-filters">
+        <!-- Buttons will be created dynamically based on actual CMS categories -->
+    </div>
+
+    <div class="menu-grid" id="menuGrid">
+        <!-- Menu items will be loaded dynamically -->
+        <div class="no-menu-message">
+            <p>Die Speisekarte wird geladen...</p>
+        </div>
+    </div>
+</section>
+
+<style>
+.menu-section {
+    padding: 80px 20px;
+    background: white;
+    position: relative;
+}
+
+.menu-header {
+    text-align: center;
+    margin-bottom: 60px;
+}
+
+.menu-header h2 {
+    font-family: var(--font-accent);
+    font-size: clamp(36px, 5vw, 56px);
+    color: var(--text-dark);
+    margin-bottom: 10px;
+}
+
+.menu-header p {
+    font-size: 18px;
+    color: var(--text-medium);
+}
+
+.menu-grid {
+    max-width: 1200px;
+    margin: 0 auto;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+    gap: 30px;
+}
+
+.menu-card {
+    background: var(--warm-white);
+    border-radius: 20px;
+    padding: 30px;
+    box-shadow: var(--card-shadow);
+    transition: all 0.3s ease;
+    position: relative;
+    overflow: hidden;
+}
+
+.menu-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 4px;
+    background: var(--nature-gradient);
+}
+
+.menu-card:hover {
+    transform: translateY(-5px);
+    box-shadow: var(--hover-shadow);
+}
+
+.menu-card-image {
+    margin: -30px -30px 20px;
+    height: 200px;
+    overflow: hidden;
+}
+
+.menu-card-image img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.menu-category-title {
+    font-family: var(--font-accent);
+    font-size: 28px;
+    color: var(--sage-green);
+    margin-bottom: 20px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.menu-items {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+.menu-item {
+    padding: 15px;
+    background: white;
+    border-radius: 15px;
+    transition: all 0.3s ease;
+    border: 1px solid transparent;
+}
+
+.menu-item:hover {
+    border-color: var(--sage-green);
+    background: rgba(168, 192, 154, 0.05);
+}
+
+.menu-item-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: start;
+    margin-bottom: 5px;
+}
+
+.menu-item-name {
+    font-weight: 600;
+    color: var(--text-dark);
+    font-size: 16px;
+    flex: 1;
+}
+
+.menu-item-price {
+    font-weight: 700;
+    color: var(--sage-green);
+    font-size: 16px;
+}
+
+.menu-item-description {
+    font-size: 14px;
+    color: var(--text-medium);
+    line-height: 1.5;
+}
+
+.menu-tags {
+    display: flex;
+    gap: 5px;
+    margin-top: 8px;
+    flex-wrap: wrap;
+}
+
+.menu-tag {
+    background: var(--sage-green);
+    color: white;
+    padding: 3px 10px;
+    border-radius: 12px;
+    font-size: 11px;
+    font-weight: 500;
+}
+
+.menu-audio-preview {
+    margin-top: 10px;
+}
+
+.menu-audio-preview audio {
+    width: 100%;
+    height: 30px;
+}
+
+.no-menu-message {
+    grid-column: 1 / -1;
+    text-align: center;
+    padding: 40px;
+    color: var(--text-medium);
+    font-style: italic;
+}
+
+@media (max-width: 768px) {
+    .menu-grid {
+        grid-template-columns: 1fr;
+    }
+    
+    .menu-card {
+        padding: 20px;
+    }
+    
+    .menu-category-title {
+        font-size: 24px;
+    }
+}
+</style>
+
+
+
+<style>
 .event-image {
     width: 100%;
     height: 150px;
