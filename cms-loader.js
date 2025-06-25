@@ -42,13 +42,21 @@ function createFilterButtons(menuData) {
     const menuSection = document.querySelector('.menu-section');
     const menuHeader = menuSection.querySelector('.menu-header');
     
+    // Hide any existing static filter buttons from the HTML
+    const existingFilters = menuSection.querySelectorAll('.menu-categories');
+    existingFilters.forEach(filter => {
+        if (!filter.classList.contains('cms-generated')) {
+            filter.style.display = 'none';
+        }
+    });
+    
     // Check if filter container already exists
-    let filterContainer = document.querySelector('.menu-categories');
+    let filterContainer = document.querySelector('.menu-categories.cms-generated');
     
     if (!filterContainer) {
         // Create filter container
         filterContainer = document.createElement('div');
-        filterContainer.className = 'menu-categories';
+        filterContainer.className = 'menu-categories cms-generated';
         filterContainer.style.cssText = `
             display: flex;
             justify-content: center;
@@ -382,5 +390,16 @@ style.textContent = `
         color: #A8C09A;
         margin-left: 10px;
     }
+    
+    /* Hide static menu categories that are not CMS-generated */
+    .menu-categories:not(.cms-generated) {
+        display: none !important;
+    }
 `;
 document.head.appendChild(style);
+
+// Also hide static filters immediately on load
+document.addEventListener('DOMContentLoaded', function() {
+    const staticFilters = document.querySelectorAll('.menu-categories:not(.cms-generated)');
+    staticFilters.forEach(filter => filter.style.display = 'none');
+});
