@@ -37,6 +37,58 @@
 
 	<style>
 	/* Menu Card Image Support */
+
+		/* Event Image Styles */
+.event-image {
+    width: 100%;
+    height: 150px;
+    border-radius: 15px;
+    overflow: hidden;
+    margin-bottom: 15px;
+}
+
+.event-image img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+/* Menu Card Image Styles */
+.menu-card-image {
+    width: 100%;
+    height: 200px;
+    border-radius: 15px;
+    overflow: hidden;
+    margin-bottom: 20px;
+}
+
+.menu-card-image img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.3s ease;
+}
+
+.menu-card:hover .menu-card-image img {
+    transform: scale(1.05);
+}
+
+/* Menu Card Content */
+.menu-card-content {
+    padding: 0;
+}
+
+/* Fix Audio Player Styles */
+.audio-player audio {
+    width: 100%;
+    height: 40px;
+    border-radius: 20px;
+}
+
+/* Event Window adjustments for images */
+.event-window.collapsed .event-image {
+    display: none;
+}
 .menu-card-image {
     width: 100%;
     height: 200px;
