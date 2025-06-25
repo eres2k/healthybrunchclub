@@ -1,3 +1,7 @@
+
+
+
+
 <!-- Menu Section with Dynamic Filter System -->
 <section class="menu-section" id="menu">
     <div class="menu-header">
@@ -1433,4 +1437,44 @@
         .skip-link:focus {
             top: 10px;
         }
+
+/* Custom Audio Player Styling */
+.audio-player audio {
+    width: 100%;
+    height: 40px;
+    outline: none;
+    background: transparent;
+}
+
+/* Webkit browsers (Chrome, Safari) */
+.audio-player audio::-webkit-media-controls-panel {
+    background: rgba(168, 192, 154, 0.1);
+    border-radius: 20px;
+}
+
+.audio-player audio::-webkit-media-controls-play-button {
+    background-color: var(--sage-green);
+    border-radius: 50%;
+}
+
+.audio-player audio::-webkit-media-controls-current-time-display,
+.audio-player audio::-webkit-media-controls-time-remaining-display {
+    color: var(--text-dark);
+    font-size: 12px;
+}
+
+/* Firefox */
+.audio-player audio::-moz-range-track {
+    background: rgba(168, 192, 154, 0.3);
+    height: 4px;
+    border-radius: 2px;
+}
+
+.audio-player audio::-moz-range-thumb {
+    background: var(--sage-green);
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    border: none;
+}
     </style>
