@@ -8,12 +8,19 @@
     <meta name="keywords" content="healthy brunch wien, bio brunch, gesund essen wien, montag brunch, gumpendorfer straße, vegetarisch vegan wien">
     <meta name="author" content="healthy brunch club">
     <link rel="canonical" href="https://healthybrunchclub.at/">
+
+   <!-- Style -->
+   <link rel="stylesheet" href="mystyle.css">
+	
     
+    <!-- Favicon 
+    <link rel="icon" type="image/x-icon" href="/favicon.ico">
+    <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+    -->
     <!-- Netlify Identity Widget -->
     <script type="text/javascript" src="https://identity.netlify.com/v1/netlify-identity-widget.js"></script>
-
-    <link rel="stylesheet" href="mystyle.css">
-	
+    
     <!-- Open Graph Tags -->
     <meta property="og:title" content="healthy brunch club - bio brunch wien">
     <meta property="og:description" content="gesunder bio-brunch jeden montag mit regionalen zutaten und live-musik">
@@ -24,52 +31,24 @@
     
     <!-- PWA Meta Tags -->
     <meta name="theme-color" content="#A8C09A">
-    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="default">
     <meta name="apple-mobile-web-app-title" content="healthy brunch">
-    <link rel="apple-touch-icon" href="/icon-192.png">
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png">
     <link rel="manifest" href="/manifest.json">
    
     <!-- Google Font Link -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400..700;1,400..700&display=swap" rel="stylesheet">
+    
 
-
-
-	
 </head>
+
 <body>
-
-
-	
-	<script>
-
-<!-- 
-INTEGRATION NOTES:
-
-1. This script automatically loads when the page loads
-2. It replaces the static menu content with dynamic content
-3. Events are loaded and displayed in the event window
-4. Content refreshes every 5 minutes automatically
-5. You can manually refresh by calling: window.cmsLoader.refresh()
-
-NETLIFY CMS API ENDPOINTS:
-
-Once Netlify CMS is set up, you'll need to update the fetchJSON calls to use actual API endpoints:
-- Menu: /api/menu or /.netlify/functions/get-menu
-- Events: /api/events or /.netlify/functions/get-events
-
-These endpoints will be created when you set up Netlify Functions to read your CMS content.
--->
-
-
-
-
-
     <!-- Loading Screen -->
     <div class="loading-screen" id="loadingScreen">
-        <div class="loading-logo"><img src="content/images/logo.png" width="356" height="194" alt=""/></div>
+        <div class="loading-logo"><img src="content/images/logo.png" width="356" height="194" alt="healthy brunch club logo"/></div>
         <div class="loading-bar">
             <div class="loading-progress"></div>
         </div>
@@ -81,10 +60,10 @@ These endpoints will be created when you set up Netlify Functions to read your C
     <!-- Navigation -->
     <nav class="nav fade-in" id="navbar">
         <div class="nav-container">
-            <a href="#home" class="logo"><img src="content/images/logo.png" alt=""  class="logo"/>&nbsp;</a>
+            <a href="#home" class="logo"><img src="content/images/logo.png" alt="healthy brunch club" class="logo-img"/></a>
             
             <ul class="nav-links">
-              <li><a href="#home">home</a></li>
+                <li><a href="#home">home</a></li>
                 <li><a href="#menu">speisekarte</a></li>
                 <li><a href="#features">features</a></li>
                 <li><a href="#about">über uns</a></li>
@@ -134,15 +113,15 @@ These endpoints will be created when you set up Netlify Functions to read your C
                         </video>
                     </div>
                     <div class="hero-image-container fade-in-up fade-in-delay-2"> 
-					 <video class="hero-video" autoplay muted loop playsinline>
+                        <video class="hero-video" autoplay muted loop playsinline>
                             <source src="/content/videos/teaser2.mp4" type="video/mp4">
                             <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 200 250'%3E%3Crect fill='%23FFB5A7' width='200' height='250'/%3E%3Ctext x='50%25' y='50%25' text-anchor='middle' fill='white' font-size='18'%3Eavocado toast%3C/text%3E%3C/svg%3E" alt="avocado toast">
                         </video>
-					</div>
+                    </div>
                     <div class="hero-image-container fade-in-up fade-in-delay-3">
                         <video class="hero-video" autoplay muted loop playsinline>
                             <source src="/content/videos/teaser3.mp4" type="video/mp4">
-                            <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 200 250'%3E%3Crect fill='%23FFB5A7' width='200' height='250'/%3E%3Ctext x='50%25' y='50%25' text-anchor='middle' fill='white' font-size='18'%3Eavocado toast%3C/text%3E%3C/svg%3E" alt="avocado toast">
+                            <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 200 250'%3E%3Crect fill='%23FFB5A7' width='200' height='250'/%3E%3Ctext x='50%25' y='50%25' text-anchor='middle' fill='white' font-size='18'%3Ematcha latte%3C/text%3E%3C/svg%3E" alt="matcha latte">
                         </video>
                     </div>
                 </div>
@@ -151,26 +130,18 @@ These endpoints will be created when you set up Netlify Functions to read your C
 
         <!-- Menu Section -->
         <section class="menu-section" id="menu">
-    <div class="menu-header">
-        <h2>unsere liebevoll kuratierte speisekarte</h2>
-        <p>100% bio, regional und mit ganz viel liebe zubereitet</p>
-    </div>
+            <div class="menu-header">
+                <h2>unsere liebevoll kuratierte speisekarte</h2>
+                <p>100% bio, regional und mit ganz viel liebe zubereitet</p>
+            </div>
 
-    <div class="menu-categories">
-        <button class="category-btn active" onclick="filterMenu('all')">Alle</button>
-        <button class="category-btn" onclick="filterMenu('morning')">Morning Rituals</button>
-        <button class="category-btn" onclick="filterMenu('bowls')">Power Bowls</button>
-        <button class="category-btn" onclick="filterMenu('klassiker')">Klassiker</button>
-        <button class="category-btn" onclick="filterMenu('drinks')">Getränke</button>
-    </div>
-
-    <div class="menu-grid" id="menuGrid">
-        <!-- Menu items will be loaded dynamically -->
-        <div class="no-menu-message">
-            <p>Die Speisekarte wird geladen...</p>
-        </div>
-    </div>
-</section>
+            <div class="menu-grid" id="menuGrid">
+                <!-- Menu items will be loaded dynamically -->
+                <div class="no-menu-message">
+                    <p>Die Speisekarte wird geladen...</p>
+                </div>
+            </div>
+        </section>
 
         <!-- Features Section -->
         <section class="features-section" id="features">
@@ -366,109 +337,47 @@ These endpoints will be created when you set up Netlify Functions to read your C
         </div>
     </footer>
 
+    <!-- Load CMS Script -->
+    <script src="cms-loader.js"></script>
 
-<!-- Scripts -->
+    <!-- Scripts -->
+    <script>
+        // Loading Screen
+        window.addEventListener('load', function() {
+            setTimeout(function() {
+                document.getElementById('loadingScreen').classList.add('hidden');
+            }, 2000);
+        });
 
-	
-	<script>
-        // Enhanced Loading Screen Handler - This MUST run first
-        (function() {
-            'use strict';
-            
-            function hideLoadingScreen() {
-                const loadingScreen = document.getElementById('loadingScreen');
-                if (loadingScreen) {
-                    loadingScreen.classList.add('hidden');
-                    console.log('Loading screen hidden');
-                }
-            }
-
-            // Multiple strategies to ensure loading screen hides
-            if (document.readyState === 'loading') {
-                document.addEventListener('DOMContentLoaded', () => {
-                    setTimeout(hideLoadingScreen, 1500);
-                });
-            } else {
-                setTimeout(hideLoadingScreen, 1500);
-            }
-
-            // Fallback timeout
-            setTimeout(hideLoadingScreen, 3000);
-
-            // Hide on any error to prevent stuck loading screen
-            window.addEventListener('error', hideLoadingScreen);
-        })();
-
-        // Toggle Event Window - Global function
+        // Toggle Event Window
         function toggleEventWindow() {
             const eventWindow = document.getElementById('eventWindow');
             const toggleIcon = document.getElementById('toggleIcon');
             
-            if (eventWindow && toggleIcon) {
-                eventWindow.classList.toggle('collapsed');
-                toggleIcon.textContent = eventWindow.classList.contains('collapsed') ? '🎵' : '−';
-            }
+            eventWindow.classList.toggle('collapsed');
+            toggleIcon.textContent = eventWindow.classList.contains('collapsed') ? '🎵' : '−';
         }
 
-        // Main initialization - Wait for DOM
-        document.addEventListener('DOMContentLoaded', function() {
-            console.log('DOM fully loaded - Initializing Healthy Brunch Club...');
+        // Show Admin Button for logged in users
+        if (window.netlifyIdentity) {
+            window.netlifyIdentity.on("init", user => {
+                if (user) {
+                    document.getElementById('adminEditBtn').classList.add('show');
+                }
+            });
             
-            // Fill Monday dates
-            fillMondayDates();
+            window.netlifyIdentity.on("login", () => {
+                document.getElementById('adminEditBtn').classList.add('show');
+            });
             
-            // Initialize smooth scrolling
-            initSmoothScrolling();
-            
-            // Initialize navigation effects
-            initNavigationEffects();
-            
-            // Initialize mobile menu
-            initMobileMenu();
-            
-            // Initialize animations
-            initAnimations();
-            
-            // Initialize Netlify Identity
-            initNetlifyIdentity();
-            
-            // Handle form success
-            handleFormSuccess();
-            
-            console.log('Initialization complete');
-        });
-
-        // Initialize Netlify Identity
-        function initNetlifyIdentity() {
-            if (window.netlifyIdentity) {
-                window.netlifyIdentity.on("init", user => {
-                    const adminBtn = document.getElementById('adminEditBtn');
-                    if (user && adminBtn) {
-                        adminBtn.classList.add('show');
-                    }
-                });
-                
-                window.netlifyIdentity.on("login", () => {
-                    const adminBtn = document.getElementById('adminEditBtn');
-                    if (adminBtn) {
-                        adminBtn.classList.add('show');
-                    }
-                });
-                
-                window.netlifyIdentity.on("logout", () => {
-                    const adminBtn = document.getElementById('adminEditBtn');
-                    if (adminBtn) {
-                        adminBtn.classList.remove('show');
-                    }
-                });
-            }
+            window.netlifyIdentity.on("logout", () => {
+                document.getElementById('adminEditBtn').classList.remove('show');
+            });
         }
 
         // Fill Monday dates in the select dropdown
         function fillMondayDates() {
             const dateSelect = document.getElementById('date');
-            if (!dateSelect) return;
-            
             const today = new Date();
             const daysUntilMonday = (8 - today.getDay()) % 7 || 7;
             
@@ -488,100 +397,96 @@ These endpoints will be created when you set up Netlify Functions to read your C
             }
         }
 
+        // Call function when page loads
+        document.addEventListener('DOMContentLoaded', fillMondayDates);
+
         // Handle form submission success
-        function handleFormSuccess() {
-            if (window.location.search.includes('success=true')) {
-                alert('vielen dank für deine reservierung! wir haben deine anfrage erhalten und melden uns in kürze bei dir.');
-                window.history.replaceState({}, document.title, window.location.pathname);
-            }
+        if (window.location.search.includes('success=true')) {
+            alert('vielen dank für deine reservierung! wir haben deine anfrage erhalten und melden uns in kürze bei dir.');
+            window.history.replaceState({}, document.title, window.location.pathname);
         }
 
-        // Initialize smooth scrolling
-        function initSmoothScrolling() {
-            document.querySelectorAll('a[href^="#"]').forEach(anchor => {
-                anchor.addEventListener('click', function (e) {
-                    e.preventDefault();
-                    const targetId = this.getAttribute('href');
-                    const target = document.querySelector(targetId);
-                    if (target) {
-                        target.scrollIntoView({
-                            behavior: 'smooth',
-                            block: 'start'
-                        });
-                    }
-                });
-            });
-        }
-
-        // Initialize navigation effects
-        function initNavigationEffects() {
-            const navbar = document.getElementById('navbar');
-            if (!navbar) return;
-            
-            window.addEventListener('scroll', function() {
-                if (window.scrollY > 100) {
-                    navbar.classList.add('scrolled');
-                } else {
-                    navbar.classList.remove('scrolled');
+        // Smooth scrolling for navigation links
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({
+                        behavior: 'smooth',
+                        block: 'start'
+                    });
                 }
             });
-        }
+        });
 
-        // Initialize mobile menu
-        function initMobileMenu() {
-            const mobileMenuToggle = document.querySelector('.mobile-menu-toggle');
-            const navLinks = document.querySelector('.nav-links');
-
-            if (mobileMenuToggle && navLinks) {
-                mobileMenuToggle.addEventListener('click', function() {
-                    navLinks.style.display = navLinks.style.display === 'flex' ? 'none' : 'flex';
-                    navLinks.style.flexDirection = 'column';
-                    navLinks.style.position = 'absolute';
-                    navLinks.style.top = '100%';
-                    navLinks.style.left = '0';
-                    navLinks.style.right = '0';
-                    navLinks.style.background = 'white';
-                    navLinks.style.padding = '20px';
-                    navLinks.style.boxShadow = '0 4px 20px rgba(0,0,0,0.1)';
-                });
+        // Navigation scroll effect
+        window.addEventListener('scroll', function() {
+            const navbar = document.getElementById('navbar');
+            if (window.scrollY > 100) {
+                navbar.classList.add('scrolled');
+            } else {
+                navbar.classList.remove('scrolled');
             }
+        });
+
+        // Mobile menu toggle
+        const mobileMenuToggle = document.querySelector('.mobile-menu-toggle');
+        const navLinks = document.querySelector('.nav-links');
+
+        if (mobileMenuToggle) {
+            mobileMenuToggle.addEventListener('click', function() {
+                navLinks.style.display = navLinks.style.display === 'flex' ? 'none' : 'flex';
+                navLinks.style.flexDirection = 'column';
+                navLinks.style.position = 'absolute';
+                navLinks.style.top = '100%';
+                navLinks.style.left = '0';
+                navLinks.style.right = '0';
+                navLinks.style.background = 'white';
+                navLinks.style.padding = '20px';
+                navLinks.style.boxShadow = '0 4px 20px rgba(0,0,0,0.1)';
+            });
         }
 
-        // Initialize animations
-        function initAnimations() {
-            const observerOptions = {
-                threshold: 0.1,
-                rootMargin: '0px 0px -50px 0px'
-            };
+        // Intersection Observer for fade-in animations
+        const observerOptions = {
+            threshold: 0.1,
+            rootMargin: '0px 0px -50px 0px'
+        };
 
-            const observer = new IntersectionObserver(function(entries) {
-                entries.forEach(entry => {
-                    if (entry.isIntersecting) {
-                        entry.target.style.opacity = '1';
-                        entry.target.style.transform = 'translateY(0)';
-                    }
-                });
-            }, observerOptions);
+        const observer = new IntersectionObserver(function(entries) {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.style.opacity = '1';
+                    entry.target.style.transform = 'translateY(0)';
+                }
+            });
+        }, observerOptions);
 
-            // Observe feature cards
-            const cards = document.querySelectorAll('.feature-card');
+        // Observe all menu cards and feature cards
+        document.addEventListener('DOMContentLoaded', function() {
+            const cards = document.querySelectorAll('.menu-card, .feature-card');
             cards.forEach((card, index) => {
                 card.style.opacity = '0';
                 card.style.transform = 'translateY(30px)';
                 card.style.transition = `all 0.6s ease ${index * 0.1}s`;
                 observer.observe(card);
             });
+        });
+
+        // Netlify CMS redirect after login
+        if (window.netlifyIdentity) {
+            window.netlifyIdentity.on("init", user => {
+                if (!user) {
+                    window.netlifyIdentity.on("login", () => {
+                        document.location.href = "/admin/";
+                    });
+                }
+            });
         }
 
-        // Error handler to prevent console errors from breaking the site
-        window.addEventListener('error', function(e) {
-            console.error('Error caught:', e.message);
-            // Don't let errors prevent the site from functioning
-            return true;
-        });
+        // Log when CMS loader integration completes
+        console.log('CMS Integration loaded. Use window.cmsLoader.refresh() to manually refresh content.');
     </script>
-
-    <!-- Load CMS Loader AFTER DOM is ready -->
-    <script src="cms-loader.js" defer></script>
 </body>
 </html>
