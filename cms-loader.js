@@ -1,7 +1,8 @@
-// CMS Loader with Image Support for Menu and Events
-// Save this as cms-loader.js
+// CMS Loader with proper Menu and Events handling
+// Save this as cms-loader.js (replace the existing one)
 
 document.addEventListener('DOMContentLoaded', function() {
+    console.log('CMS Loader initialized');
     loadMenuFromCMS();
     loadEventsFromCMS();
 });
@@ -10,16 +11,24 @@ document.addEventListener('DOMContentLoaded', function() {
 async function loadMenuFromCMS() {
     try {
         console.log('Loading menu from CMS...');
-        const response = await fetch('/.netlify/functions/get-menu');
         
-        if (!response.ok) {
-            throw new Error(`HTTP error! status: ${response.status}`);
+        // Try to fetch from Netlify Function first
+        try {
+            const response = await fetch('/.netlify/functions/get-menu');
+            
+            if (response.ok) {
+                const menuData = await response.json();
+                console.log('Menu loaded from Netlify function:', menuData);
+                displayMenu(menuData);
+                return;
+            }
+        } catch (error) {
+            console.log('Netlify function not available, using fallback data');
         }
         
-        const menuData = await response.json();
-        console.log('Menu data loaded:', menuData);
+        // Use fallback menu data
+        displayFallbackMenu();
         
-        displayMenu(menuData);
     } catch (error) {
         console.error('Error loading menu:', error);
         displayFallbackMenu();
@@ -30,42 +39,59 @@ async function loadMenuFromCMS() {
 async function loadEventsFromCMS() {
     try {
         console.log('Loading events from CMS...');
-        const response = await fetch('/.netlify/functions/get-events');
         
-        if (!response.ok) {
-            throw new Error(`HTTP error! status: ${response.status}`);
+        // Try to fetch from Netlify Function first
+        try {
+            const response = await fetch('/.netlify/functions/get-events');
+            
+            if (response.ok) {
+                const eventsData = await response.json();
+                console.log('Events loaded from Netlify function:', eventsData);
+                displayEvents(eventsData);
+                return;
+            }
+        } catch (error) {
+            console.log('Netlify function not available, using fallback data');
         }
         
-        const eventsData = await response.json();
-        console.log('Events data loaded:', eventsData);
+        // Use fallback event data
+        displayFallbackEvent();
         
-        displayEvents(eventsData);
     } catch (error) {
         console.error('Error loading events:', error);
         displayFallbackEvent();
     }
 }
 
-// Display Menu with Images
+// Display Menu Categories
 function displayMenu(menuData) {
     const menuGrid = document.getElementById('menuGrid');
+    
+    if (!menuGrid) {
+        console.error('Menu grid element not found');
+        return;
+    }
     
     if (!menuData || menuData.length === 0) {
         menuGrid.innerHTML = '<div class="no-menu-message"><p>Derzeit ist keine Speisekarte verfügbar.</p></div>';
         return;
     }
     
-    menuGrid.innerHTML = menuData.map(category => {
-        // Handle image URL - check if it's a relative path and make it absolute
-        let imageUrl = '';
-        if (category.image) {
-            imageUrl = category.image.startsWith('/') ? category.image : `/${category.image}`;
-        }
+    // Clear existing content
+    menuGrid.innerHTML = '';
+    
+    // Create menu cards for each category
+    menuData.forEach((category, index) => {
+        const card = document.createElement('div');
+        card.className = 'menu-card';
+        card.style.opacity = '0';
+        card.style.transform = 'translateY(30px)';
         
+        // Build items HTML
         const itemsHtml = category.items.map(item => `
             <div class="menu-item">
                 <div class="menu-item-header">
-                    <h4 class="menu-item-name">${item.name}</h4>
+                    <span class="menu-item-name">${item.name}</span>
                 </div>
                 <p class="menu-item-description">${item.description}</p>
                 ${item.tags && item.tags.length > 0 ? `
@@ -76,33 +102,36 @@ function displayMenu(menuData) {
             </div>
         `).join('');
         
-        return `
-            <div class="menu-card">
-                ${imageUrl ? `
-                    <div class="menu-card-image">
-                        <img src="${imageUrl}" alt="${category.title}" loading="lazy" onerror="this.parentElement.style.display='none'">
-                    </div>
-                ` : ''}
-                <div class="menu-card-content">
-                    <h3 class="menu-category-title">
-                        ${category.title}
-                    </h3>
-                    <div class="menu-items">
-                        ${itemsHtml}
-                    </div>
-                </div>
+        // Create the card HTML
+        card.innerHTML = `
+            <h3 class="menu-category-title">
+                ${category.icon || '🍽️'} ${category.title}
+            </h3>
+            <div class="menu-items">
+                ${itemsHtml}
             </div>
         `;
-    }).join('');
-    
-    // Trigger animations for newly loaded content
-    triggerMenuAnimations();
+        
+        menuGrid.appendChild(card);
+        
+        // Animate the card
+        setTimeout(() => {
+            card.style.transition = 'all 0.6s ease';
+            card.style.opacity = '1';
+            card.style.transform = 'translateY(0)';
+        }, index * 100);
+    });
 }
 
-// Display Events with Images
+// Display Events
 function displayEvents(eventsData) {
     const eventWindow = document.getElementById('eventWindow');
     const eventContent = document.getElementById('eventContent');
+    
+    if (!eventWindow || !eventContent) {
+        console.error('Event window elements not found');
+        return;
+    }
     
     if (!eventsData || eventsData.length === 0) {
         eventWindow.style.display = 'none';
@@ -111,12 +140,6 @@ function displayEvents(eventsData) {
     
     // Get the next upcoming event
     const nextEvent = eventsData[0];
-    
-    // Handle image URL
-    let imageUrl = '';
-    if (nextEvent.image) {
-        imageUrl = nextEvent.image.startsWith('/') ? nextEvent.image : `/${nextEvent.image}`;
-    }
     
     // Format the date
     const eventDate = new Date(nextEvent.date);
@@ -128,37 +151,33 @@ function displayEvents(eventsData) {
     
     eventContent.innerHTML = `
         <div class="event-header">
-            ${imageUrl ? `
-                <div class="event-image">
-                    <img src="${imageUrl}" alt="${nextEvent.title}" loading="lazy" onerror="this.parentElement.style.display='none'">
-                </div>
-            ` : ''}
-            <h3>${nextEvent.title}</h3>
+            <h3>${nextEvent.title || 'Special Event'}</h3>
             <p>${formattedDate}</p>
         </div>
         <div class="event-details">
-            <strong>🎵 ${nextEvent.artist || 'Special Guest'}</strong>
-            <p>${nextEvent.description}</p>
+            ${nextEvent.artist ? `<strong>🎵 ${nextEvent.artist}</strong>` : ''}
+            ${nextEvent.description ? `<p>${nextEvent.description}</p>` : ''}
             
             ${nextEvent.musicStyle ? `
-                <strong>🎶 Music Style:</strong>
+                <strong>🎶 musik-stil:</strong>
                 <p>${nextEvent.musicStyle}</p>
             ` : ''}
             
             ${nextEvent.startTime ? `
-                <strong>⏰ Start:</strong>
+                <strong>⏰ start:</strong>
                 <p>${nextEvent.startTime}</p>
             ` : ''}
         </div>
         
-        ${nextEvent.audioPreview ? `
+        ${nextEvent.audioAnnouncement ? `
             <div class="audio-player">
-                <h4>🎧 Preview</h4>
+                <h4>🎧 hör rein:</h4>
                 <audio controls preload="none">
-                    <source src="${nextEvent.audioPreview}" type="audio/mpeg">
-                    <source src="${nextEvent.audioPreview}" type="audio/wav">
-                    <source src="${nextEvent.audioPreview}" type="audio/ogg">
-                    Dein Browser unterstützt das Audio-Element nicht.
+                    <source src="${nextEvent.audioAnnouncement}" type="audio/mpeg">
+                    <source src="${nextEvent.audioAnnouncement}" type="audio/mp3">
+                    <source src="${nextEvent.audioAnnouncement}" type="audio/wav">
+                    <source src="${nextEvent.audioAnnouncement}" type="audio/ogg">
+                    dein browser unterstützt kein audio.
                 </audio>
             </div>
         ` : ''}
@@ -167,14 +186,13 @@ function displayEvents(eventsData) {
     eventWindow.style.display = 'block';
 }
 
-// Fallback Menu
+// Fallback Menu Data
 function displayFallbackMenu() {
-    const menuGrid = document.getElementById('menuGrid');
-    
     const fallbackMenu = [
         {
             title: "morning rituals",
             icon: "🌅",
+            order: 1,
             items: [
                 {
                     name: "warmes wasser mit bio-zitrone",
@@ -185,12 +203,18 @@ function displayFallbackMenu() {
                     name: "golden milk latte",
                     description: "kurkuma, ingwer, zimt & hafermilch",
                     tags: ["anti-inflammatory", "lactosefrei"]
+                },
+                {
+                    name: "matcha zeremonie",
+                    description: "ceremonial grade matcha, aufgeschäumt",
+                    tags: ["energy", "antioxidants"]
                 }
             ]
         },
         {
             title: "power bowls",
             icon: "🥣",
+            order: 2,
             items: [
                 {
                     name: "açaí sunrise bowl",
@@ -201,6 +225,55 @@ function displayFallbackMenu() {
                     name: "premium porridge",
                     description: "haferflocken, chia, hanfsamen, heidelbeeren, mandeln",
                     tags: ["glutenfrei", "protein"]
+                },
+                {
+                    name: "buddha bowl deluxe",
+                    description: "quinoa, hummus, grillgemüse, tahini-dressing",
+                    tags: ["protein-rich", "vegan"]
+                }
+            ]
+        },
+        {
+            title: "conscious classics",
+            icon: "🥐",
+            order: 3,
+            items: [
+                {
+                    name: "bio-avocado toast",
+                    description: "vollkornbrot, avocado, hanfsamen, kirschtomaten",
+                    tags: ["vegetarisch", "omega-3"]
+                },
+                {
+                    name: "french toast deluxe",
+                    description: "brioche, ahornsirup, saisonale früchte",
+                    tags: ["sweet treat"]
+                },
+                {
+                    name: "eggs benedict healthy",
+                    description: "pochierte bio-eier, spinat, hollandaise-leicht",
+                    tags: ["protein", "low-carb option"]
+                }
+            ]
+        },
+        {
+            title: "feel-good drinks",
+            icon: "🥤",
+            order: 4,
+            items: [
+                {
+                    name: "immunity booster",
+                    description: "ingwer, kurkuma, orange, schwarzer pfeffer",
+                    tags: ["fresh pressed", "vitamin c"]
+                },
+                {
+                    name: "green goddess juice",
+                    description: "spinat, apfel, gurke, zitrone, minze",
+                    tags: ["detox", "alkaline"]
+                },
+                {
+                    name: "specialty coffee",
+                    description: "fair-trade bohnen, optional mit pflanzenmilch",
+                    tags: ["organic", "barista made"]
                 }
             ]
         }
@@ -209,39 +282,62 @@ function displayFallbackMenu() {
     displayMenu(fallbackMenu);
 }
 
-// Fallback Event
+// Fallback Event Data
 function displayFallbackEvent() {
+    // Calculate next Monday
+    const today = new Date();
+    const daysUntilMonday = (8 - today.getDay()) % 7 || 7;
+    const nextMonday = new Date(today);
+    nextMonday.setDate(today.getDate() + daysUntilMonday);
+    nextMonday.setHours(9, 0, 0, 0);
+    
     const fallbackEvent = [{
-        title: "next monday special",
+        title: "monday vibes special",
         artist: "dj cosmic kitchen",
-        date: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000).toISOString(), // Next week
-        description: "erlebe entspannte lounge-klänge während deines brunches!",
-        musicStyle: "downtempo, organic house",
-        startTime: "9:00 uhr"
+        date: nextMonday.toISOString(),
+        description: "erlebe entspannte lounge-klänge während deines brunches mit unserem special guest!",
+        musicStyle: "downtempo, organic house, world fusion",
+        startTime: "9:00 uhr",
+        audioAnnouncement: "/images/uploads/artist1.mp3" // This matches your uploaded file
     }];
     
     displayEvents(fallbackEvent);
 }
 
-// Trigger animations for menu cards
-function triggerMenuAnimations() {
-    const cards = document.querySelectorAll('.menu-card');
-    const observer = new IntersectionObserver(function(entries) {
-        entries.forEach(entry => {
-            if (entry.isIntersecting) {
-                entry.target.style.opacity = '1';
-                entry.target.style.transform = 'translateY(0)';
-            }
-        });
-    }, {
-        threshold: 0.1,
-        rootMargin: '0px 0px -50px 0px'
-    });
-
-    cards.forEach((card, index) => {
-        card.style.opacity = '0';
-        card.style.transform = 'translateY(30px)';
-        card.style.transition = `all 0.6s ease ${index * 0.1}s`;
-        observer.observe(card);
-    });
+// Utility function to check if CMS content exists
+async function checkCMSContent() {
+    try {
+        // Check for menu items
+        const menuItems = document.querySelectorAll('meta[name="cms-menu-item"]');
+        if (menuItems.length > 0) {
+            console.log('Found CMS menu items in meta tags');
+            // Parse and display menu from meta tags
+        }
+        
+        // Check for events
+        const eventItems = document.querySelectorAll('meta[name="cms-event"]');
+        if (eventItems.length > 0) {
+            console.log('Found CMS events in meta tags');
+            // Parse and display events from meta tags
+        }
+    } catch (error) {
+        console.error('Error checking CMS content:', error);
+    }
 }
+
+// Initialize periodic refresh
+setInterval(() => {
+    console.log('Refreshing content...');
+    loadMenuFromCMS();
+    loadEventsFromCMS();
+}, 300000); // Refresh every 5 minutes
+
+// Export for debugging
+window.cmsLoader = {
+    loadMenu: loadMenuFromCMS,
+    loadEvents: loadEventsFromCMS,
+    refresh: () => {
+        loadMenuFromCMS();
+        loadEventsFromCMS();
+    }
+};
