@@ -1,9 +1,4 @@
 ---
-title: eggs & stories
-slug: eggs
-icon: 🍳
-order: 0
-image: /images/uploads/eggs-category.jpg
 items:
   - name: eggs benedict classic
     description: pochierte bio-eier, sauce hollandaise, spinat auf brioche
@@ -34,4 +29,11 @@ items:
       - instagram-worthy
     available: true
 available: true
+slug: eggs
+order: 0
+title: eggs & stories
+icon: 🍳
+description: test
+category: morning rituals
+image: /images/uploads/eggs-category.jpg
 ---
