@@ -1,38 +1,19 @@
-// CMS Loader with Image Support for Menu and Events
+// CMS Loader with Filter System for Menu Items
 // Save this as cms-loader.js
 
-// Wait for DOM to be ready
-if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', initCMSLoader);
-} else {
-    // DOM is already ready
-    initCMSLoader();
-}
+document.addEventListener('DOMContentLoaded', function() {
+    loadMenuFromCMS();
+    loadEventsFromCMS();
+    initializeFilterSystem();
+});
 
-function initCMSLoader() {
-    console.log('CMS Loader initialized');
-    // Small delay to ensure all elements are rendered
-    setTimeout(() => {
-        loadMenuFromCMS();
-        loadEventsFromCMS();
-    }, 100);
-}
+// Global variable to store all menu items
+let allMenuItems = [];
 
 // Load Menu from CMS
 async function loadMenuFromCMS() {
     try {
         console.log('Loading menu from CMS...');
-        
-        // Check if we're in development or production
-        const isDevelopment = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1';
-        
-        if (isDevelopment) {
-            // Use fallback data in development
-            console.log('Development mode - using fallback menu');
-            displayFallbackMenu();
-            return;
-        }
-        
         const response = await fetch('/.netlify/functions/get-menu');
         
         if (!response.ok) {
@@ -42,28 +23,130 @@ async function loadMenuFromCMS() {
         const menuData = await response.json();
         console.log('Menu data loaded:', menuData);
         
-        displayMenu(menuData);
+        // Store all items for filtering
+        allMenuItems = menuData;
+        
+        // Display all items initially
+        displayFilteredMenu('all');
     } catch (error) {
         console.error('Error loading menu:', error);
         displayFallbackMenu();
     }
 }
 
-// Load Events from CMS
+// Initialize filter system
+function initializeFilterSystem() {
+    // Add event listeners to filter buttons
+    document.querySelectorAll('.category-filter').forEach(button => {
+        button.addEventListener('click', function() {
+            const category = this.dataset.category;
+            
+            // Update active state
+            document.querySelectorAll('.category-filter').forEach(btn => {
+                btn.classList.remove('active');
+            });
+            this.classList.add('active');
+            
+            // Display filtered items
+            displayFilteredMenu(category);
+        });
+    });
+}
+
+// Display filtered menu items
+function displayFilteredMenu(category) {
+    const menuGrid = document.getElementById('menuGrid');
+    
+    if (!allMenuItems || allMenuItems.length === 0) {
+        menuGrid.innerHTML = '<div class="no-menu-message"><p>Keine Menüeinträge verfügbar.</p></div>';
+        return;
+    }
+    
+    // Filter items based on category
+    let filteredItems = allMenuItems;
+    if (category !== 'all') {
+        filteredItems = allMenuItems.filter(item => item.category === category);
+    }
+    
+    if (filteredItems.length === 0) {
+        menuGrid.innerHTML = `<div class="no-menu-message"><p>Keine Einträge in dieser Kategorie gefunden.</p></div>`;
+        return;
+    }
+    
+    // Clear existing content
+    menuGrid.innerHTML = '';
+    
+    // Create menu item cards
+    filteredItems.forEach((item, index) => {
+        const menuCard = createMenuItemCard(item);
+        menuCard.style.opacity = '0';
+        menuCard.style.transform = 'translateY(30px)';
+        menuCard.style.transition = `all 0.6s ease ${index * 0.1}s`;
+        
+        menuGrid.appendChild(menuCard);
+        
+        // Trigger animation
+        setTimeout(() => {
+            menuCard.style.opacity = '1';
+            menuCard.style.transform = 'translateY(0)';
+        }, 50);
+    });
+}
+
+// Create individual menu item card
+function createMenuItemCard(item) {
+    const card = document.createElement('div');
+    card.className = 'menu-card';
+    
+    // Determine icon based on category
+    const categoryIcons = {
+        'Getränk': '☕',
+        'Vorspeise': '🥗',
+        'Hauptgang': '🍽️',
+        'Dessert': '🍰'
+    };
+    
+    const icon = categoryIcons[item.category] || '🍴';
+    
+    card.innerHTML = `
+        ${item.image ? `
+            <div class="menu-card-image">
+                <img src="${item.image}" alt="${item.name}" loading="lazy" onerror="this.parentElement.style.display='none'">
+            </div>
+        ` : ''}
+        <div class="menu-card-content">
+            <div class="menu-item-header">
+                <h3 class="menu-item-name">
+                    <span class="menu-item-icon">${icon}</span>
+                    ${item.name}
+                </h3>
+                ${item.price ? `<span class="menu-item-price">${item.price}</span>` : ''}
+            </div>
+            <p class="menu-item-description">${item.description}</p>
+            ${item.tags && item.tags.length > 0 ? `
+                <div class="menu-tags">
+                    ${item.tags.map(tag => `<span class="menu-tag">${tag}</span>`).join('')}
+                </div>
+            ` : ''}
+            ${item.audioFile ? `
+                <div class="menu-audio-preview">
+                    <audio controls preload="none">
+                        <source src="${item.audioFile}" type="audio/mpeg">
+                        <source src="${item.audioFile}" type="audio/wav">
+                        Dein Browser unterstützt das Audio-Element nicht.
+                    </audio>
+                </div>
+            ` : ''}
+        </div>
+    `;
+    
+    return card;
+}
+
+// Load Events from CMS (unchanged)
 async function loadEventsFromCMS() {
     try {
         console.log('Loading events from CMS...');
-        
-        // Check if we're in development or production
-        const isDevelopment = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1';
-        
-        if (isDevelopment) {
-            // Use fallback data in development
-            console.log('Development mode - using fallback events');
-            displayFallbackEvent();
-            return;
-        }
-        
         const response = await fetch('/.netlify/functions/get-events');
         
         if (!response.ok) {
@@ -80,135 +163,10 @@ async function loadEventsFromCMS() {
     }
 }
 
-// Display Menu with Images
-function displayMenu(menuData) {
-    const menuGrid = document.getElementById('menuGrid');
-    
-    if (!menuGrid) {
-        console.error('Menu grid element not found');
-        return;
-    }
-    
-    if (!menuData || menuData.length === 0) {
-        menuGrid.innerHTML = '<div class="no-menu-message"><p>Derzeit ist keine Speisekarte verfügbar.</p></div>';
-        return;
-    }
-    
-    // Transform CMS data to match expected format
-    const transformedData = transformMenuData(menuData);
-    
-    menuGrid.innerHTML = transformedData.map(category => {
-        // Handle image URL - check if it's a relative path and make it absolute
-        let imageUrl = '';
-        if (category.image) {
-            imageUrl = category.image.startsWith('/') ? category.image : `/${category.image}`;
-        }
-        
-        const itemsHtml = category.items.map(item => `
-            <div class="menu-item">
-                <div class="menu-item-header">
-                    <h4 class="menu-item-name">${item.name}</h4>
-                </div>
-                <p class="menu-item-description">${item.description}</p>
-                ${item.tags && item.tags.length > 0 ? `
-                    <div class="menu-tags">
-                        ${item.tags.map(tag => `<span class="menu-tag">${tag}</span>`).join('')}
-                    </div>
-                ` : ''}
-            </div>
-        `).join('');
-        
-        return `
-            <div class="menu-card">
-                ${imageUrl ? `
-                    <div class="menu-card-image">
-                        <img src="${imageUrl}" alt="${category.title}" loading="lazy" onerror="this.parentElement.style.display='none'">
-                    </div>
-                ` : ''}
-                <div class="menu-card-content">
-                    <h3 class="menu-category-title">
-                        ${category.icon || '🍽️'} ${category.title}
-                    </h3>
-                    <div class="menu-items">
-                        ${itemsHtml}
-                    </div>
-                </div>
-            </div>
-        `;
-    }).join('');
-    
-    // Trigger animations for newly loaded content
-    triggerMenuAnimations();
-}
-
-// Transform menu data from CMS format
-function transformMenuData(cmsData) {
-    // If the data is already in the correct format, return it
-    if (Array.isArray(cmsData) && cmsData.length > 0 && cmsData[0].items) {
-        return cmsData;
-    }
-    
-    // Otherwise, transform individual menu items into categories
-    const categories = {
-        'Vorspeise': {
-            title: 'vorspeisen',
-            icon: '🥗',
-            items: [],
-            order: 1
-        },
-        'Hauptgang': {
-            title: 'hauptgänge',
-            icon: '🍽️',
-            items: [],
-            order: 2
-        },
-        'Dessert': {
-            title: 'desserts',
-            icon: '🍰',
-            items: [],
-            order: 3
-        },
-        'Getränk': {
-            title: 'getränke',
-            icon: '☕',
-            items: [],
-            order: 4
-        }
-    };
-    
-    // Group items by category
-    cmsData.forEach(item => {
-        if (item.category && categories[item.category]) {
-            categories[item.category].items.push({
-                name: item.title,
-                description: item.description,
-                price: item.price ? `€${item.price}` : '',
-                tags: item.tags || [],
-                available: item.available !== false
-            });
-            
-            // Use the first image of each category as the category image
-            if (item.image && !categories[item.category].image) {
-                categories[item.category].image = item.image;
-            }
-        }
-    });
-    
-    // Convert to array and filter out empty categories
-    return Object.values(categories)
-        .filter(cat => cat.items.length > 0)
-        .sort((a, b) => a.order - b.order);
-}
-
-// Display Events with Images
+// Display Events with Images (unchanged)
 function displayEvents(eventsData) {
     const eventWindow = document.getElementById('eventWindow');
     const eventContent = document.getElementById('eventContent');
-    
-    if (!eventWindow || !eventContent) {
-        console.error('Event window elements not found');
-        return;
-    }
     
     if (!eventsData || eventsData.length === 0) {
         eventWindow.style.display = 'none';
@@ -220,9 +178,8 @@ function displayEvents(eventsData) {
     
     // Handle image URL
     let imageUrl = '';
-    if (nextEvent.featuredImage || nextEvent.image) {
-        const img = nextEvent.featuredImage || nextEvent.image;
-        imageUrl = img.startsWith('/') ? img : `/${img}`;
+    if (nextEvent.image) {
+        imageUrl = nextEvent.image.startsWith('/') ? nextEvent.image : `/${nextEvent.image}`;
     }
     
     // Format the date
@@ -244,8 +201,8 @@ function displayEvents(eventsData) {
             <p>${formattedDate}</p>
         </div>
         <div class="event-details">
-            ${nextEvent.location ? `<strong>📍 ${nextEvent.location}</strong>` : ''}
-            <p>${nextEvent.body || nextEvent.description || ''}</p>
+            <strong>🎵 ${nextEvent.artist || 'Special Guest'}</strong>
+            <p>${nextEvent.description}</p>
             
             ${nextEvent.musicStyle ? `
                 <strong>🎶 Music Style:</strong>
@@ -256,20 +213,15 @@ function displayEvents(eventsData) {
                 <strong>⏰ Start:</strong>
                 <p>${nextEvent.startTime}</p>
             ` : ''}
-            
-            ${nextEvent.price ? `
-                <strong>💰 Preis:</strong>
-                <p>€${nextEvent.price}</p>
-            ` : ''}
         </div>
         
-        ${nextEvent.audioAnnouncement || nextEvent.audioPreview ? `
+        ${nextEvent.audioPreview ? `
             <div class="audio-player">
                 <h4>🎧 Preview</h4>
                 <audio controls preload="none">
-                    <source src="${nextEvent.audioAnnouncement || nextEvent.audioPreview}" type="audio/mpeg">
-                    <source src="${nextEvent.audioAnnouncement || nextEvent.audioPreview}" type="audio/wav">
-                    <source src="${nextEvent.audioAnnouncement || nextEvent.audioPreview}" type="audio/ogg">
+                    <source src="${nextEvent.audioPreview}" type="audio/mpeg">
+                    <source src="${nextEvent.audioPreview}" type="audio/wav">
+                    <source src="${nextEvent.audioPreview}" type="audio/ogg">
                     Dein Browser unterstützt das Audio-Element nicht.
                 </audio>
             </div>
@@ -283,55 +235,42 @@ function displayEvents(eventsData) {
 function displayFallbackMenu() {
     const menuGrid = document.getElementById('menuGrid');
     
-    const fallbackMenu = [
+    const fallbackItems = [
         {
-            title: "morning rituals",
-            icon: "🌅",
-            items: [
-                {
-                    name: "warmes wasser mit bio-zitrone",
-                    description: "der perfekte start für deine verdauung",
-                    tags: ["detox", "vegan"]
-                },
-                {
-                    name: "golden milk latte",
-                    description: "kurkuma, ingwer, zimt & hafermilch",
-                    tags: ["anti-inflammatory", "lactosefrei"]
-                },
-                {
-                    name: "matcha zeremonie",
-                    description: "ceremonial grade matcha, aufgeschäumt",
-                    tags: ["energy", "antioxidants"]
-                }
-            ]
+            name: "warmes wasser mit bio-zitrone",
+            description: "der perfekte start für deine verdauung",
+            category: "Getränk",
+            tags: ["detox", "vegan"],
+            price: "€4"
         },
         {
-            title: "power bowls",
-            icon: "🥣",
-            items: [
-                {
-                    name: "açaí sunrise bowl",
-                    description: "açaí, banane, beeren, granola, kokosflocken",
-                    tags: ["superfood", "vegan"]
-                },
-                {
-                    name: "premium porridge",
-                    description: "haferflocken, chia, hanfsamen, heidelbeeren, mandeln",
-                    tags: ["glutenfrei", "protein"]
-                },
-                {
-                    name: "buddha bowl deluxe",
-                    description: "quinoa, hummus, grillgemüse, tahini-dressing",
-                    tags: ["protein-rich", "vegan"]
-                }
-            ]
+            name: "golden milk latte",
+            description: "kurkuma, ingwer, zimt & hafermilch",
+            category: "Getränk",
+            tags: ["anti-inflammatory", "lactosefrei"],
+            price: "€6"
+        },
+        {
+            name: "açaí sunrise bowl",
+            description: "açaí, banane, beeren, granola, kokosflocken",
+            category: "Vorspeise",
+            tags: ["superfood", "vegan"],
+            price: "€12"
+        },
+        {
+            name: "eggs benedict",
+            description: "pochierte eier, spinat, hollandaise, vollkornbrot",
+            category: "Hauptgang",
+            tags: ["protein", "classic"],
+            price: "€14"
         }
     ];
     
-    displayMenu(fallbackMenu);
+    allMenuItems = fallbackItems;
+    displayFilteredMenu('all');
 }
 
-// Fallback Event
+// Fallback Event (unchanged)
 function displayFallbackEvent() {
     const fallbackEvent = [{
         title: "next monday special",
@@ -345,38 +284,26 @@ function displayFallbackEvent() {
     displayEvents(fallbackEvent);
 }
 
-// Trigger animations for menu cards
-function triggerMenuAnimations() {
-    const cards = document.querySelectorAll('.menu-card');
-    const observer = new IntersectionObserver(function(entries) {
-        entries.forEach(entry => {
-            if (entry.isIntersecting) {
-                entry.target.style.opacity = '1';
-                entry.target.style.transform = 'translateY(0)';
-            }
-        });
-    }, {
-        threshold: 0.1,
-        rootMargin: '0px 0px -50px 0px'
-    });
-
-    cards.forEach((card, index) => {
-        card.style.opacity = '0';
-        card.style.transform = 'translateY(30px)';
-        card.style.transition = `all 0.6s ease ${index * 0.1}s`;
-        observer.observe(card);
-    });
-}
-
-// Add styles for menu card images
+// Add some CSS for the menu items
 const style = document.createElement('style');
 style.textContent = `
+    .menu-card {
+        background: var(--warm-white);
+        border-radius: 20px;
+        overflow: hidden;
+        box-shadow: var(--card-shadow);
+        transition: all 0.3s ease;
+    }
+    
+    .menu-card:hover {
+        transform: translateY(-5px);
+        box-shadow: var(--hover-shadow);
+    }
+    
     .menu-card-image {
         width: 100%;
         height: 200px;
         overflow: hidden;
-        border-radius: 15px 15px 0 0;
-        margin: -30px -30px 20px -30px;
     }
     
     .menu-card-image img {
@@ -385,18 +312,71 @@ style.textContent = `
         object-fit: cover;
     }
     
-    .event-image {
-        width: 100%;
-        height: 150px;
-        overflow: hidden;
-        border-radius: 10px;
-        margin-bottom: 15px;
+    .menu-card-content {
+        padding: 25px;
     }
     
-    .event-image img {
+    .menu-item-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 10px;
+    }
+    
+    .menu-item-name {
+        font-size: 20px;
+        color: var(--text-dark);
+        font-weight: 600;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+    }
+    
+    .menu-item-icon {
+        font-size: 24px;
+    }
+    
+    .menu-item-price {
+        font-size: 18px;
+        color: var(--sage-green);
+        font-weight: 700;
+    }
+    
+    .menu-item-description {
+        color: var(--text-medium);
+        margin-bottom: 15px;
+        line-height: 1.6;
+    }
+    
+    .menu-audio-preview {
+        margin-top: 15px;
+    }
+    
+    .menu-audio-preview audio {
         width: 100%;
-        height: 100%;
-        object-fit: cover;
+        height: 35px;
+    }
+    
+    .category-filter {
+        padding: 10px 20px;
+        background: white;
+        border: 2px solid var(--sage-green);
+        border-radius: 25px;
+        color: var(--sage-green);
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        font-size: 14px;
+    }
+    
+    .category-filter:hover {
+        background: var(--sage-green);
+        color: white;
+    }
+    
+    .category-filter.active {
+        background: var(--sage-green);
+        color: white;
     }
 `;
 document.head.appendChild(style);
