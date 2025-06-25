@@ -32,109 +32,17 @@ exports.handler = async (event, context) => {
     } catch (error) {
       console.error('Menu directory not found:', menuDir);
       
-      // Return default menu data if directory doesn't exist
-      const defaultMenu = [
-        {
-          title: "morning rituals",
-          icon: "🌅",
-          order: 1,
-          items: [
-            {
-              name: "warmes wasser mit bio-zitrone",
-              description: "der perfekte start für deine verdauung",
-              tags: ["detox", "vegan"]
-            },
-            {
-              name: "golden milk latte",
-              description: "kurkuma, ingwer, zimt & hafermilch",
-              tags: ["anti-inflammatory", "lactosefrei"]
-            },
-            {
-              name: "matcha zeremonie",
-              description: "ceremonial grade matcha, aufgeschäumt",
-              tags: ["energy", "antioxidants"]
-            }
-          ]
-        },
-        {
-          title: "power bowls",
-          icon: "🥣",
-          order: 2,
-          items: [
-            {
-              name: "açaí sunrise bowl",
-              description: "açaí, banane, beeren, granola, kokosflocken",
-              tags: ["superfood", "vegan"]
-            },
-            {
-              name: "premium porridge",
-              description: "haferflocken, chia, hanfsamen, heidelbeeren, mandeln",
-              tags: ["glutenfrei", "protein"]
-            },
-            {
-              name: "buddha bowl deluxe",
-              description: "quinoa, hummus, grillgemüse, tahini-dressing",
-              tags: ["protein-rich", "vegan"]
-            }
-          ]
-        },
-        {
-          title: "klassiker neu interpretiert",
-          icon: "🍳",
-          order: 3,
-          items: [
-            {
-              name: "eggs benedict deluxe",
-              description: "bio-eier, avocado, spinat, hollandaise",
-              tags: ["protein", "vegetarisch"]
-            },
-            {
-              name: "french toast heaven",
-              description: "brioche, ahornsirup, beeren, vanillecreme",
-              tags: ["süß", "indulgent"]
-            },
-            {
-              name: "avocado toast supreme",
-              description: "vollkornbrot, avocado, pochiertes ei, dukkah",
-              tags: ["trendy", "instagram-worthy"]
-            }
-          ]
-        },
-        {
-          title: "drinks & elixiere",
-          icon: "🥤",
-          order: 4,
-          items: [
-            {
-              name: "immunity booster juice",
-              description: "ingwer, kurkuma, orange, karotte",
-              tags: ["vitamin c", "detox"]
-            },
-            {
-              name: "green goddess smoothie",
-              description: "spinat, banane, mango, spirulina",
-              tags: ["superfood", "energie"]
-            },
-            {
-              name: "kombucha selection",
-              description: "hausgemachte kombucha, verschiedene sorten",
-              tags: ["probiotisch", "erfrischend"]
-            }
-          ]
-        }
-      ];
-      
+      // Return empty array if directory doesn't exist
       return {
         statusCode: 200,
         headers,
-        body: JSON.stringify(defaultMenu)
+        body: JSON.stringify([])
       };
     }
     
     const files = await fs.readdir(menuDir);
     console.log('Found menu files:', files);
     
-    // First, let's try to parse individual menu items from the CMS
     const menuItems = await Promise.all(
       files
         .filter(file => file.endsWith('.md'))
@@ -142,26 +50,21 @@ exports.handler = async (event, context) => {
           try {
             const filePath = path.join(menuDir, file);
             const content = await fs.readFile(filePath, 'utf8');
-            const { data } = matter(content);
+            const { data, content: bodyContent } = matter(content);
             
             console.log('Parsed menu file:', file, data);
             
-            // Check if this is an individual menu item (has category field)
-            if (data.category && data.title) {
-              return {
-                category: data.category,
-                item: {
-                  name: data.title,
-                  description: data.description || '',
-                  price: data.price,
-                  available: data.available !== false,
-                  tags: data.tags || [],
-                  image: data.image
-                }
-              };
-            }
-            
-            return null;
+            // Return the menu item with all its data
+            return {
+              title: data.title || '',
+              description: data.description || '',
+              price: data.price || null,
+              category: data.category || 'Sonstiges',
+              image: data.image || '',
+              available: data.available !== false,
+              audioFile: data.audioFile || '',
+              body: bodyContent || ''
+            };
           } catch (error) {
             console.error('Error parsing menu file:', file, error);
             return null;
@@ -169,112 +72,28 @@ exports.handler = async (event, context) => {
         })
     );
     
-    // Filter out null values
-    const validItems = menuItems.filter(item => item !== null);
+    // Filter out null values and only return available items
+    const validMenuItems = menuItems
+      .filter(item => item !== null && item.available);
     
-    // Group items by category
-    const categoryMap = {
-      'Vorspeise': { title: 'vorspeisen', icon: '🥗', order: 1, items: [] },
-      'Hauptgang': { title: 'hauptgänge', icon: '🍳', order: 2, items: [] },
-      'Dessert': { title: 'desserts', icon: '🍰', order: 3, items: [] },
-      'Getränk': { title: 'getränke', icon: '☕', order: 4, items: [] }
-    };
-    
-    // Add default categories if they don't exist
-    const defaultCategories = {
-      'morning rituals': { title: 'morning rituals', icon: '🌅', order: 0, items: [] },
-      'power bowls': { title: 'power bowls', icon: '🥣', order: 1, items: [] }
-    };
-    
-    // Populate categories with items
-    validItems.forEach(({ category, item }) => {
-      if (categoryMap[category]) {
-        categoryMap[category].items.push(item);
-      }
-    });
-    
-    // Convert to array and filter out empty categories
-    let menuCategories = Object.values(categoryMap)
-      .filter(cat => cat.items.length > 0)
-      .sort((a, b) => a.order - b.order);
-    
-    // If no items found, return default menu
-    if (menuCategories.length === 0) {
-      const defaultMenu = [
-        {
-          title: "morning rituals",
-          icon: "🌅",
-          order: 1,
-          items: [
-            {
-              name: "warmes wasser mit bio-zitrone",
-              description: "der perfekte start für deine verdauung",
-              tags: ["detox", "vegan"]
-            },
-            {
-              name: "golden milk latte",
-              description: "kurkuma, ingwer, zimt & hafermilch",
-              tags: ["anti-inflammatory", "lactosefrei"]
-            }
-          ]
-        },
-        {
-          title: "power bowls",
-          icon: "🥣",
-          order: 2,
-          items: [
-            {
-              name: "açaí sunrise bowl",
-              description: "açaí, banane, beeren, granola, kokosflocken",
-              tags: ["superfood", "vegan"]
-            },
-            {
-              name: "premium porridge",
-              description: "haferflocken, chia, hanfsamen, heidelbeeren, mandeln",
-              tags: ["glutenfrei", "protein"]
-            }
-          ]
-        }
-      ];
-      
-      return {
-        statusCode: 200,
-        headers,
-        body: JSON.stringify(defaultMenu)
-      };
-    }
-    
-    console.log('Returning menu categories:', menuCategories.length);
+    console.log('Returning menu items:', validMenuItems.length);
     
     return {
       statusCode: 200,
       headers,
-      body: JSON.stringify(menuCategories)
+      body: JSON.stringify(validMenuItems)
     };
     
   } catch (error) {
     console.error('Error in get-menu function:', error);
     
-    // Return a minimal menu on error
-    const fallbackMenu = [
-      {
-        title: "today's specials",
-        icon: "🍽️",
-        order: 1,
-        items: [
-          {
-            name: "healthy breakfast bowl",
-            description: "a nutritious start to your day",
-            tags: ["healthy", "fresh"]
-          }
-        ]
-      }
-    ];
-    
     return {
-      statusCode: 200,
+      statusCode: 500,
       headers,
-      body: JSON.stringify(fallbackMenu)
+      body: JSON.stringify({ 
+        error: 'Failed to load menu', 
+        details: error.message 
+      })
     };
   }
 };
