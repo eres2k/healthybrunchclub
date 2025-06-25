@@ -22,97 +22,201 @@ exports.handler = async (event, context) => {
   }
 
   try {
-    const menuDir = path.join(process.cwd(), 'content', 'menu');
+    // First try to load from menu-categories (new structure)
+    const categoriesDir = path.join(process.cwd(), 'content', 'menu-categories');
     
-    console.log('Looking for menu directory at:', menuDir);
+    console.log('Looking for menu categories directory at:', categoriesDir);
     
-    // Check if directory exists
+    let menuData = [];
+    
     try {
-      await fs.access(menuDir);
-    } catch (error) {
-      console.error('Menu directory not found:', menuDir);
+      await fs.access(categoriesDir);
+      const categoryFiles = await fs.readdir(categoriesDir);
+      console.log('Found category files:', categoryFiles);
       
-      // Return empty array if directory doesn't exist
-      return {
-        statusCode: 200,
-        headers,
-        body: JSON.stringify([])
-      };
-    }
-    
-    const files = await fs.readdir(menuDir);
-    console.log('Found menu files:', files);
-    
-    // Parse individual menu items from CMS
-    const menuItems = await Promise.all(
-      files
-        .filter(file => file.endsWith('.md'))
-        .map(async (file) => {
-          try {
-            const filePath = path.join(menuDir, file);
-            const content = await fs.readFile(filePath, 'utf8');
-            const { data } = matter(content);
-            
-            console.log('Parsed menu file:', file, data);
-            
-            // Skip items that are not available
-            if (data.available === false) {
+      menuData = await Promise.all(
+        categoryFiles
+          .filter(file => file.endsWith('.md'))
+          .map(async (file) => {
+            try {
+              const filePath = path.join(categoriesDir, file);
+              const content = await fs.readFile(filePath, 'utf8');
+              const { data } = matter(content);
+              
+              console.log('Parsed category file:', file, data);
+              
+              if (!data.title) {
+                console.warn(`Category file ${file} missing title`);
+                return null;
+              }
+              
+              // Process image path
+              let imagePath = '';
+              if (data.image) {
+                if (data.image.startsWith('http')) {
+                  imagePath = data.image;
+                } else if (data.image.startsWith('/')) {
+                  imagePath = data.image;
+                } else {
+                  imagePath = `/content/images/${data.image}`;
+                }
+              }
+              
+              // Process menu items
+              const items = (data.items || []).map(item => ({
+                name: item.name || '',
+                description: item.description || '',
+                price: item.price || '',
+                tags: item.tags || [],
+                allergens: item.allergens || '',
+                available: item.available !== false
+              }));
+              
+              return {
+                title: data.title,
+                slug: data.slug || file.replace('.md', ''),
+                icon: data.icon || '',
+                order: data.order || 0,
+                image: imagePath,
+                description: data.description || '',
+                items: items
+              };
+            } catch (error) {
+              console.error('Error parsing category file:', file, error);
               return null;
             }
-            
-            // Process image path
-            let imagePath = '';
-            if (data.image) {
-              if (data.image.startsWith('http')) {
-                imagePath = data.image;
-              } else if (data.image.startsWith('/')) {
-                imagePath = data.image;
-              } else {
-                imagePath = `/content/images/${data.image}`;
+          })
+      );
+      
+      // Filter out null values and sort by order
+      menuData = menuData
+        .filter(cat => cat !== null)
+        .sort((a, b) => (a.order || 0) - (b.order || 0));
+        
+    } catch (error) {
+      console.log('Categories directory not found, trying legacy menu structure');
+      
+      // Fallback: Try to load from legacy menu structure
+      const menuDir = path.join(process.cwd(), 'content', 'menu');
+      
+      try {
+        await fs.access(menuDir);
+        const files = await fs.readdir(menuDir);
+        console.log('Found legacy menu files:', files);
+        
+        // Group legacy menu items by category
+        const categoryMap = new Map();
+        
+        await Promise.all(
+          files
+            .filter(file => file.endsWith('.md'))
+            .map(async (file) => {
+              try {
+                const filePath = path.join(menuDir, file);
+                const content = await fs.readFile(filePath, 'utf8');
+                const { data } = matter(content);
+                
+                if (!data.title || !data.category) {
+                  return;
+                }
+                
+                const category = data.category;
+                if (!categoryMap.has(category)) {
+                  categoryMap.set(category, {
+                    title: category.toLowerCase(),
+                    icon: getCategoryIcon(category),
+                    order: getCategoryOrder(category),
+                    items: []
+                  });
+                }
+                
+                // Process image path
+                let imagePath = '';
+                if (data.image) {
+                  if (data.image.startsWith('http')) {
+                    imagePath = data.image;
+                  } else if (data.image.startsWith('/')) {
+                    imagePath = data.image;
+                  } else {
+                    imagePath = `/content/images/${data.image}`;
+                  }
+                }
+                
+                categoryMap.get(category).items.push({
+                  name: data.title,
+                  description: data.description || '',
+                  price: data.price ? `€${data.price}` : '',
+                  tags: data.tags || [],
+                  image: imagePath,
+                  available: data.available !== false
+                });
+                
+              } catch (error) {
+                console.error('Error parsing legacy menu file:', file, error);
               }
-            }
-            
-            // Process audio file path
-            let audioPath = '';
-            if (data.audioFile) {
-              if (data.audioFile.startsWith('http')) {
-                audioPath = data.audioFile;
-              } else if (data.audioFile.startsWith('/')) {
-                audioPath = data.audioFile;
-              } else {
-                audioPath = `/content/audio/${data.audioFile}`;
+            })
+        );
+        
+        menuData = Array.from(categoryMap.values())
+          .sort((a, b) => (a.order || 0) - (b.order || 0));
+          
+      } catch (legacyError) {
+        console.log('Legacy menu directory also not found, using default data');
+        
+        // Return default menu data if both directories don't exist
+        menuData = [
+          {
+            title: "morning rituals",
+            icon: "🌅",
+            order: 1,
+            items: [
+              {
+                name: "warmes wasser mit bio-zitrone",
+                description: "der perfekte start für deine verdauung",
+                tags: ["detox", "vegan"],
+                price: "€3",
+                available: true
+              },
+              {
+                name: "golden milk latte",
+                description: "kurkuma, ingwer, zimt & hafermilch",
+                tags: ["anti-inflammatory", "lactosefrei"],
+                price: "€5",
+                available: true
               }
-            }
-            
-            // Determine tags based on category and content
-            const tags = generateTags(data.title, data.description, data.category);
-            
-            return {
-              name: data.title,
-              description: data.description,
-              price: data.price ? `€${data.price}` : null,
-              category: data.category,
-              image: imagePath,
-              audioFile: audioPath,
-              tags: tags,
-              available: data.available !== false
-            };
-          } catch (error) {
-            console.error('Error parsing menu file:', file, error);
-            return null;
+            ]
+          },
+          {
+            title: "power bowls",
+            icon: "🥣",
+            order: 2,
+            items: [
+              {
+                name: "açaí sunrise bowl",
+                description: "açaí, banane, beeren, granola, kokosflocken",
+                tags: ["superfood", "vegan"],
+                price: "€12",
+                available: true
+              },
+              {
+                name: "premium porridge",
+                description: "haferflocken, chia, hanfsamen, heidelbeeren, mandeln",
+                tags: ["glutenfrei", "protein"],
+                price: "€9",
+                available: true
+              }
+            ]
           }
-        })
-    );
+        ];
+      }
+    }
     
-    // Filter out null values and return flat array
-    const validItems = menuItems.filter(item => item !== null);
-    
-    console.log('Returning menu items:', validItems.length);
+    console.log('Returning menu categories:', menuData.length);
     
     return {
       statusCode: 200,
       headers,
-      body: JSON.stringify(validItems)
+      body: JSON.stringify(menuData)
     };
     
   } catch (error) {
@@ -129,40 +233,25 @@ exports.handler = async (event, context) => {
   }
 };
 
-// Helper function to generate tags based on item properties
-function generateTags(title, description, category) {
-  const tags = [];
-  const text = `${title} ${description}`.toLowerCase();
-  
-  // Category-based tags
-  if (category === 'Getränk') {
-    if (text.includes('kaffee') || text.includes('coffee')) tags.push('koffein');
-    if (text.includes('matcha')) tags.push('energy', 'antioxidants');
-    if (text.includes('golden milk') || text.includes('kurkuma')) tags.push('anti-inflammatory');
-    if (text.includes('wasser') || text.includes('zitrone')) tags.push('detox');
-    if (!text.includes('milch') && !text.includes('milk')) tags.push('vegan');
-    if (text.includes('hafermilch') || text.includes('soja') || text.includes('mandel')) tags.push('lactosefrei');
-  }
-  
-  if (category === 'Vorspeise' || category === 'Hauptgang') {
-    if (text.includes('açaí') || text.includes('acai')) tags.push('superfood');
-    if (text.includes('vegan') || (!text.includes('ei') && !text.includes('egg') && !text.includes('käse') && !text.includes('fleisch'))) tags.push('vegan');
-    if (text.includes('glutenfrei') || text.includes('gluten-free')) tags.push('glutenfrei');
-    if (text.includes('protein') || text.includes('ei') || text.includes('egg')) tags.push('protein');
-    if (text.includes('quinoa') || text.includes('hummus')) tags.push('protein-rich');
-  }
-  
-  if (category === 'Dessert') {
-    if (text.includes('raw') || text.includes('roh')) tags.push('raw');
-    if (text.includes('sugar-free') || text.includes('zuckerfrei')) tags.push('no-sugar');
-    if (text.includes('vegan')) tags.push('vegan');
-    tags.push('sweet');
-  }
-  
-  // General tags
-  if (text.includes('bio') || text.includes('organic')) tags.push('bio');
-  if (text.includes('regional') || text.includes('lokal')) tags.push('regional');
-  
-  // Return unique tags
-  return [...new Set(tags)];
+// Helper functions for legacy menu structure
+function getCategoryIcon(category) {
+  const iconMap = {
+    'Vorspeise': '🥗',
+    'Hauptgang': '🍽️',
+    'Dessert': '🍰',
+    'Getränk': '☕',
+    'Special': '⭐'
+  };
+  return iconMap[category] || '🍴';
+}
+
+function getCategoryOrder(category) {
+  const orderMap = {
+    'Vorspeise': 1,
+    'Hauptgang': 2,
+    'Dessert': 3,
+    'Getränk': 4,
+    'Special': 5
+  };
+  return orderMap[category] || 0;
 }
