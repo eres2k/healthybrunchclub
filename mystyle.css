@@ -736,7 +736,7 @@
             align-items: center;
         }
 
-        .logo {
+        .logo-img {
             font-family: var(--font-accent);
             font-size: 28px;
             font-weight: 700;
