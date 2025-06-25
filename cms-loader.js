@@ -1,14 +1,14 @@
-// CMS Loader with Filter System for Menu Items
+// CMS Loader with Dynamic Filter System based on actual CMS categories
 // Save this as cms-loader.js
 
 document.addEventListener('DOMContentLoaded', function() {
     loadMenuFromCMS();
     loadEventsFromCMS();
-    initializeFilterSystem();
 });
 
 // Global variable to store all menu items
 let allMenuItems = [];
+let allCategories = [];
 
 // Load Menu from CMS
 async function loadMenuFromCMS() {
@@ -26,12 +26,61 @@ async function loadMenuFromCMS() {
         // Store all items for filtering
         allMenuItems = menuData;
         
+        // Extract unique categories from the actual data
+        extractCategories();
+        
+        // Create filter buttons based on actual categories
+        createFilterButtons();
+        
         // Display all items initially
         displayFilteredMenu('all');
+        
+        // Initialize filter system after buttons are created
+        initializeFilterSystem();
     } catch (error) {
         console.error('Error loading menu:', error);
         displayFallbackMenu();
     }
+}
+
+// Extract unique categories from menu items
+function extractCategories() {
+    const categories = new Set();
+    allMenuItems.forEach(item => {
+        if (item.category) {
+            categories.add(item.category);
+        }
+    });
+    allCategories = Array.from(categories);
+    console.log('Found categories:', allCategories);
+}
+
+// Create filter buttons dynamically
+function createFilterButtons() {
+    const filterContainer = document.querySelector('.menu-filters');
+    if (!filterContainer) {
+        console.error('Filter container not found');
+        return;
+    }
+    
+    // Clear existing buttons
+    filterContainer.innerHTML = '';
+    
+    // Add "All" button
+    const allButton = document.createElement('button');
+    allButton.className = 'category-filter active';
+    allButton.dataset.category = 'all';
+    allButton.textContent = 'Alle';
+    filterContainer.appendChild(allButton);
+    
+    // Add buttons for each category
+    allCategories.forEach(category => {
+        const button = document.createElement('button');
+        button.className = 'category-filter';
+        button.dataset.category = category;
+        button.textContent = category;
+        filterContainer.appendChild(button);
+    });
 }
 
 // Initialize filter system
@@ -69,60 +118,58 @@ function displayFilteredMenu(category) {
     }
     
     if (filteredItems.length === 0) {
-        menuGrid.innerHTML = `<div class="no-menu-message"><p>Keine Einträge in dieser Kategorie gefunden.</p></div>`;
+        menuGrid.innerHTML = `<div class="no-menu-message"><p>Keine Einträge in der Kategorie "${category}" gefunden.</p></div>`;
         return;
     }
+    
+    // Group items by their actual category for display
+    const groupedItems = {};
+    filteredItems.forEach(item => {
+        const cat = item.category || 'Uncategorized';
+        if (!groupedItems[cat]) {
+            groupedItems[cat] = {
+                title: cat,
+                items: []
+            };
+        }
+        groupedItems[cat].items.push(item);
+    });
     
     // Clear existing content
     menuGrid.innerHTML = '';
     
-    // Create menu item cards
-    filteredItems.forEach((item, index) => {
-        const menuCard = createMenuItemCard(item);
-        menuCard.style.opacity = '0';
-        menuCard.style.transform = 'translateY(30px)';
-        menuCard.style.transition = `all 0.6s ease ${index * 0.1}s`;
+    // Create category cards
+    Object.values(groupedItems).forEach((categoryGroup, index) => {
+        const categoryCard = createCategoryCard(categoryGroup);
+        categoryCard.style.opacity = '0';
+        categoryCard.style.transform = 'translateY(30px)';
+        categoryCard.style.transition = `all 0.6s ease ${index * 0.1}s`;
         
-        menuGrid.appendChild(menuCard);
+        menuGrid.appendChild(categoryCard);
         
         // Trigger animation
         setTimeout(() => {
-            menuCard.style.opacity = '1';
-            menuCard.style.transform = 'translateY(0)';
+            categoryCard.style.opacity = '1';
+            categoryCard.style.transform = 'translateY(0)';
         }, 50);
     });
 }
 
-// Create individual menu item card
-function createMenuItemCard(item) {
+// Create category card with items
+function createCategoryCard(categoryGroup) {
     const card = document.createElement('div');
     card.className = 'menu-card';
     
-    // Determine icon based on category
-    const categoryIcons = {
-        'Getränk': '☕',
-        'Vorspeise': '🥗',
-        'Hauptgang': '🍽️',
-        'Dessert': '🍰'
-    };
+    // Determine icon based on category name
+    const icon = getCategoryIcon(categoryGroup.title);
     
-    const icon = categoryIcons[item.category] || '🍴';
-    
-    card.innerHTML = `
-        ${item.image ? `
-            <div class="menu-card-image">
-                <img src="${item.image}" alt="${item.name}" loading="lazy" onerror="this.parentElement.style.display='none'">
-            </div>
-        ` : ''}
-        <div class="menu-card-content">
+    const itemsHtml = categoryGroup.items.map(item => `
+        <div class="menu-item">
             <div class="menu-item-header">
-                <h3 class="menu-item-name">
-                    <span class="menu-item-icon">${icon}</span>
-                    ${item.name}
-                </h3>
+                <h4 class="menu-item-name">${item.name}</h4>
                 ${item.price ? `<span class="menu-item-price">${item.price}</span>` : ''}
             </div>
-            <p class="menu-item-description">${item.description}</p>
+            <p class="menu-item-description">${item.description || ''}</p>
             ${item.tags && item.tags.length > 0 ? `
                 <div class="menu-tags">
                     ${item.tags.map(tag => `<span class="menu-tag">${tag}</span>`).join('')}
@@ -132,15 +179,49 @@ function createMenuItemCard(item) {
                 <div class="menu-audio-preview">
                     <audio controls preload="none">
                         <source src="${item.audioFile}" type="audio/mpeg">
-                        <source src="${item.audioFile}" type="audio/wav">
                         Dein Browser unterstützt das Audio-Element nicht.
                     </audio>
                 </div>
             ` : ''}
         </div>
+    `).join('');
+    
+    card.innerHTML = `
+        ${categoryGroup.items[0]?.image ? `
+            <div class="menu-card-image">
+                <img src="${categoryGroup.items[0].image}" alt="${categoryGroup.title}" loading="lazy" onerror="this.parentElement.style.display='none'">
+            </div>
+        ` : ''}
+        <div class="menu-card-content">
+            <h3 class="menu-category-title">
+                ${icon} ${categoryGroup.title}
+            </h3>
+            <div class="menu-items">
+                ${itemsHtml}
+            </div>
+        </div>
     `;
     
     return card;
+}
+
+// Get icon for category
+function getCategoryIcon(category) {
+    const categoryLower = category.toLowerCase();
+    
+    // Check for specific keywords
+    if (categoryLower.includes('egg') || categoryLower.includes('ei')) return '🥚';
+    if (categoryLower.includes('drink') || categoryLower.includes('getränk')) return '☕';
+    if (categoryLower.includes('bowl')) return '🥣';
+    if (categoryLower.includes('sweet') || categoryLower.includes('dessert')) return '🍰';
+    if (categoryLower.includes('salad') || categoryLower.includes('vorspeise')) return '🥗';
+    if (categoryLower.includes('main') || categoryLower.includes('haupt')) return '🍽️';
+    if (categoryLower.includes('special')) return '⭐';
+    if (categoryLower.includes('vegan')) return '🌱';
+    if (categoryLower.includes('breakfast') || categoryLower.includes('frühstück')) return '🌅';
+    
+    // Default icon
+    return '🍴';
 }
 
 // Load Events from CMS (unchanged)
@@ -163,7 +244,7 @@ async function loadEventsFromCMS() {
     }
 }
 
-// Display Events with Images (unchanged)
+// Display Events with Images
 function displayEvents(eventsData) {
     const eventWindow = document.getElementById('eventWindow');
     const eventContent = document.getElementById('eventContent');
@@ -173,16 +254,13 @@ function displayEvents(eventsData) {
         return;
     }
     
-    // Get the next upcoming event
     const nextEvent = eventsData[0];
     
-    // Handle image URL
     let imageUrl = '';
     if (nextEvent.image) {
         imageUrl = nextEvent.image.startsWith('/') ? nextEvent.image : `/${nextEvent.image}`;
     }
     
-    // Format the date
     const eventDate = new Date(nextEvent.date);
     const formattedDate = eventDate.toLocaleDateString('de-AT', {
         weekday: 'long',
@@ -220,8 +298,6 @@ function displayEvents(eventsData) {
                 <h4>🎧 Preview</h4>
                 <audio controls preload="none">
                     <source src="${nextEvent.audioPreview}" type="audio/mpeg">
-                    <source src="${nextEvent.audioPreview}" type="audio/wav">
-                    <source src="${nextEvent.audioPreview}" type="audio/ogg">
                     Dein Browser unterstützt das Audio-Element nicht.
                 </audio>
             </div>
@@ -237,45 +313,48 @@ function displayFallbackMenu() {
     
     const fallbackItems = [
         {
-            name: "warmes wasser mit bio-zitrone",
-            description: "der perfekte start für deine verdauung",
-            category: "Getränk",
-            tags: ["detox", "vegan"],
-            price: "€4"
+            name: "Eggs Benedict",
+            description: "pochierte eier, spinat, hollandaise, vollkornbrot",
+            category: "Eggs & other stories",
+            tags: ["protein", "classic"],
+            price: "€14"
         },
         {
-            name: "golden milk latte",
+            name: "Green Shakshuka",
+            description: "eier in grüner sauce mit spinat, kräutern und feta",
+            category: "Eggs & other stories",
+            tags: ["vegetarisch", "glutenfrei"],
+            price: "€12"
+        },
+        {
+            name: "Golden Milk Latte",
             description: "kurkuma, ingwer, zimt & hafermilch",
-            category: "Getränk",
+            category: "Morning Drinks",
             tags: ["anti-inflammatory", "lactosefrei"],
             price: "€6"
         },
         {
-            name: "açaí sunrise bowl",
+            name: "Açaí Sunrise Bowl",
             description: "açaí, banane, beeren, granola, kokosflocken",
-            category: "Vorspeise",
+            category: "Power Bowls",
             tags: ["superfood", "vegan"],
             price: "€12"
-        },
-        {
-            name: "eggs benedict",
-            description: "pochierte eier, spinat, hollandaise, vollkornbrot",
-            category: "Hauptgang",
-            tags: ["protein", "classic"],
-            price: "€14"
         }
     ];
     
     allMenuItems = fallbackItems;
+    extractCategories();
+    createFilterButtons();
     displayFilteredMenu('all');
+    initializeFilterSystem();
 }
 
-// Fallback Event (unchanged)
+// Fallback Event
 function displayFallbackEvent() {
     const fallbackEvent = [{
         title: "next monday special",
         artist: "dj cosmic kitchen",
-        date: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000).toISOString(), // Next week
+        date: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000).toISOString(),
         description: "erlebe entspannte lounge-klänge während deines brunches!",
         musicStyle: "downtempo, organic house",
         startTime: "9:00 uhr"
@@ -284,81 +363,20 @@ function displayFallbackEvent() {
     displayEvents(fallbackEvent);
 }
 
-// Add some CSS for the menu items
+// Add some CSS for better styling
 const style = document.createElement('style');
 style.textContent = `
-    .menu-card {
-        background: var(--warm-white);
-        border-radius: 20px;
-        overflow: hidden;
-        box-shadow: var(--card-shadow);
-        transition: all 0.3s ease;
-    }
-    
-    .menu-card:hover {
-        transform: translateY(-5px);
-        box-shadow: var(--hover-shadow);
-    }
-    
-    .menu-card-image {
-        width: 100%;
-        height: 200px;
-        overflow: hidden;
-    }
-    
-    .menu-card-image img {
-        width: 100%;
-        height: 100%;
-        object-fit: cover;
-    }
-    
-    .menu-card-content {
-        padding: 25px;
-    }
-    
-    .menu-item-header {
+    .menu-filters {
         display: flex;
-        justify-content: space-between;
-        align-items: center;
-        margin-bottom: 10px;
-    }
-    
-    .menu-item-name {
-        font-size: 20px;
-        color: var(--text-dark);
-        font-weight: 600;
-        display: flex;
-        align-items: center;
-        gap: 10px;
-    }
-    
-    .menu-item-icon {
-        font-size: 24px;
-    }
-    
-    .menu-item-price {
-        font-size: 18px;
-        color: var(--sage-green);
-        font-weight: 700;
-    }
-    
-    .menu-item-description {
-        color: var(--text-medium);
-        margin-bottom: 15px;
-        line-height: 1.6;
-    }
-    
-    .menu-audio-preview {
-        margin-top: 15px;
-    }
-    
-    .menu-audio-preview audio {
-        width: 100%;
-        height: 35px;
+        justify-content: center;
+        gap: 15px;
+        margin: 40px auto;
+        flex-wrap: wrap;
+        max-width: 1200px;
     }
     
     .category-filter {
-        padding: 10px 20px;
+        padding: 10px 24px;
         background: white;
         border: 2px solid var(--sage-green);
         border-radius: 25px;
@@ -367,16 +385,59 @@ style.textContent = `
         cursor: pointer;
         transition: all 0.3s ease;
         font-size: 14px;
+        text-transform: lowercase;
+        letter-spacing: 0.5px;
     }
     
     .category-filter:hover {
         background: var(--sage-green);
         color: white;
+        transform: translateY(-2px);
     }
     
     .category-filter.active {
         background: var(--sage-green);
         color: white;
+    }
+    
+    .menu-card {
+        background: var(--warm-white);
+        border-radius: 20px;
+        overflow: hidden;
+        box-shadow: var(--card-shadow);
+        transition: all 0.3s ease;
+        position: relative;
+    }
+    
+    .menu-card::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        height: 4px;
+        background: var(--nature-gradient);
+    }
+    
+    .menu-category-title {
+        font-family: var(--font-accent);
+        font-size: 28px;
+        color: var(--sage-green);
+        margin-bottom: 20px;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+    }
+    
+    @media (max-width: 768px) {
+        .menu-filters {
+            gap: 10px;
+        }
+        
+        .category-filter {
+            padding: 8px 16px;
+            font-size: 13px;
+        }
     }
 `;
 document.head.appendChild(style);
