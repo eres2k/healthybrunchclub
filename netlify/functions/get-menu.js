@@ -22,6 +22,7 @@ exports.handler = async (event, context) => {
   }
 
   try {
+    // Use the correct path for Netlify build environment
     const menuDir = path.join(process.cwd(), 'content', 'menu');
     
     console.log('Looking for menu directory at:', menuDir);
@@ -32,41 +33,23 @@ exports.handler = async (event, context) => {
     } catch (error) {
       console.error('Menu directory not found:', menuDir);
       
-      // Return default menu data
+      // Return default menu data if directory doesn't exist
       const defaultMenu = [
         {
-          title: "morning rituals",
-          icon: "🌅",
-          order: 1,
-          items: [
-            {
-              name: "warmes wasser mit bio-zitrone",
-              description: "der perfekte start für deine verdauung",
-              tags: ["detox", "vegan"]
-            },
-            {
-              name: "golden milk latte",
-              description: "kurkuma, ingwer, zimt & hafermilch",
-              tags: ["anti-inflammatory", "lactosefrei"]
-            }
-          ]
+          title: "Kaffee",
+          description: "TEST", 
+          price: 100,
+          category: "Getränk",
+          image: "/images/uploads/logo.png",
+          available: true
         },
         {
-          title: "power bowls",
-          icon: "🥣",
-          order: 2,
-          items: [
-            {
-              name: "açaí sunrise bowl",
-              description: "açaí, banane, beeren, granola, kokosflocken",
-              tags: ["superfood", "vegan"]
-            },
-            {
-              name: "premium porridge",
-              description: "haferflocken, chia, hanfsamen, heidelbeeren, mandeln",
-              tags: ["glutenfrei", "protein"]
-            }
-          ]
+          title: "Noch was",
+          description: "Test",
+          price: 50,
+          category: "Vorspeise", 
+          image: "/images/uploads/logo.png",
+          available: true
         }
       ];
       
@@ -80,7 +63,6 @@ exports.handler = async (event, context) => {
     const files = await fs.readdir(menuDir);
     console.log('Found menu files:', files);
     
-    // Parse individual menu items from markdown files
     const menuItems = await Promise.all(
       files
         .filter(file => file.endsWith('.md'))
@@ -88,25 +70,20 @@ exports.handler = async (event, context) => {
           try {
             const filePath = path.join(menuDir, file);
             const content = await fs.readFile(filePath, 'utf8');
-            const { data } = matter(content);
+            const { data, content: body } = matter(content);
             
             console.log('Parsed menu file:', file, data);
             
-            if (!data.title) {
-              console.warn(`Menu file ${file} missing title`);
-              return null;
-            }
-            
-            // Create a menu item from the markdown frontmatter
+            // Return the menu item in the format expected by the CMS loader
             return {
-              name: data.title,
+              title: data.title || '',
               description: data.description || '',
-              category: data.category || 'Sonstiges',
-              price: data.price,
-              available: data.available !== false,
+              price: data.price || 0,
+              category: data.category || 'Hauptgang',
               image: data.image || '',
+              available: data.available !== false,
               audioFile: data.audioFile || '',
-              tags: [] // You could derive tags from category or other fields
+              tags: data.tags || []
             };
           } catch (error) {
             console.error('Error parsing menu file:', file, error);
@@ -115,80 +92,15 @@ exports.handler = async (event, context) => {
         })
     );
     
-    // Filter out null values
-    const validItems = menuItems.filter(item => item !== null && item.available);
+    // Filter out null values and return all menu items
+    const validItems = menuItems.filter(item => item !== null);
     
-    // Group items by category
-    const categoriesMap = new Map();
-    
-    validItems.forEach(item => {
-      const category = item.category.toLowerCase();
-      
-      if (!categoriesMap.has(category)) {
-        categoriesMap.set(category, {
-          title: category,
-          icon: getCategoryIcon(category),
-          order: getCategoryOrder(category),
-          items: []
-        });
-      }
-      
-      categoriesMap.get(category).items.push({
-        name: item.name.toLowerCase(),
-        description: item.description.toLowerCase(),
-        price: item.price ? `€${item.price}` : '',
-        tags: getTags(item)
-      });
-    });
-    
-    // Convert map to array and sort by order
-    const menuCategories = Array.from(categoriesMap.values())
-      .sort((a, b) => a.order - b.order);
-    
-    console.log('Returning menu categories:', menuCategories);
-    
-    // If no categories found, return default menu
-    if (menuCategories.length === 0) {
-      const defaultMenu = [
-        {
-          title: "morning rituals",
-          icon: "🌅",
-          order: 1,
-          items: [
-            {
-              name: "kaffee",
-              description: "TEST",
-              price: "€100",
-              tags: ["heißgetränk"]
-            }
-          ]
-        },
-        {
-          title: "vorspeisen",
-          icon: "🥗",
-          order: 2,
-          items: [
-            {
-              name: "noch was",
-              description: "test",
-              price: "€50",
-              tags: ["starter"]
-            }
-          ]
-        }
-      ];
-      
-      return {
-        statusCode: 200,
-        headers,
-        body: JSON.stringify(defaultMenu)
-      };
-    }
+    console.log('Returning menu items:', validItems.length);
     
     return {
       statusCode: 200,
       headers,
-      body: JSON.stringify(menuCategories)
+      body: JSON.stringify(validItems)
     };
     
   } catch (error) {
@@ -204,56 +116,3 @@ exports.handler = async (event, context) => {
     };
   }
 };
-
-// Helper function to get category icon
-function getCategoryIcon(category) {
-  const icons = {
-    'vorspeise': '🥗',
-    'hauptgang': '🍽️',
-    'dessert': '🍰',
-    'getränk': '☕',
-    'frühstück': '🌅',
-    'bowl': '🥣',
-    'smoothie': '🥤'
-  };
-  
-  return icons[category.toLowerCase()] || '🍴';
-}
-
-// Helper function to get category order
-function getCategoryOrder(category) {
-  const order = {
-    'frühstück': 1,
-    'vorspeise': 2,
-    'bowl': 3,
-    'hauptgang': 4,
-    'dessert': 5,
-    'getränk': 6,
-    'smoothie': 7
-  };
-  
-  return order[category.toLowerCase()] || 99;
-}
-
-// Helper function to generate tags
-function getTags(item) {
-  const tags = [];
-  
-  // Add tags based on category
-  if (item.category === 'Getränk') {
-    if (item.name.includes('kaffee') || item.name.includes('coffee')) {
-      tags.push('koffein');
-    }
-    if (item.name.includes('tee') || item.name.includes('tea')) {
-      tags.push('teein');
-    }
-  }
-  
-  // Add price range tags
-  if (item.price) {
-    if (item.price < 10) tags.push('budget');
-    else if (item.price > 50) tags.push('premium');
-  }
-  
-  return tags;
-}
