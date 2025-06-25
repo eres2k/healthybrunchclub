@@ -32,7 +32,7 @@ exports.handler = async (event, context) => {
     } catch (error) {
       console.error('Menu directory not found:', menuDir);
       
-      // Return empty array if directory doesn't exist
+      // Return default categories if directory doesn't exist
       return {
         statusCode: 200,
         headers,
@@ -43,28 +43,47 @@ exports.handler = async (event, context) => {
     const files = await fs.readdir(menuDir);
     console.log('Found menu files:', files);
     
-    const menuItems = await Promise.all(
+    const menuCategories = await Promise.all(
       files
         .filter(file => file.endsWith('.md'))
         .map(async (file) => {
           try {
             const filePath = path.join(menuDir, file);
             const content = await fs.readFile(filePath, 'utf8');
-            const { data, content: bodyContent } = matter(content);
+            const { data } = matter(content);
             
             console.log('Parsed menu file:', file, data);
             
-            // Return the menu item with all its data
-            return {
-              title: data.title || '',
-              description: data.description || '',
-              price: data.price || null,
-              category: data.category || 'Sonstiges',
-              image: data.image || '',
-              available: data.available !== false,
-              audioFile: data.audioFile || '',
-              body: bodyContent || ''
-            };
+            // Check if this is a category with items or a single item
+            if (data.items && Array.isArray(data.items)) {
+              // This is a category with multiple items
+              return {
+                title: data.title || '',
+                icon: data.icon || '',
+                order: data.order || 999,
+                image: data.image || '',
+                items: data.items.map(item => ({
+                  name: item.name || '',
+                  description: item.description || '',
+                  price: item.price ? `€${item.price}` : '',
+                  tags: item.tags || []
+                }))
+              };
+            } else {
+              // This is a single item - convert to category format
+              return {
+                title: data.category || 'Sonstiges',
+                icon: '',
+                order: 999,
+                image: data.image || '',
+                items: [{
+                  name: data.title || '',
+                  description: data.description || '',
+                  price: data.price ? `€${data.price}` : '',
+                  tags: data.available ? ['verfügbar'] : []
+                }]
+              };
+            }
           } catch (error) {
             console.error('Error parsing menu file:', file, error);
             return null;
@@ -72,16 +91,33 @@ exports.handler = async (event, context) => {
         })
     );
     
-    // Filter out null values and only return available items
-    const validMenuItems = menuItems
-      .filter(item => item !== null && item.available);
+    // Filter out null values and merge categories with same title
+    const validCategories = menuCategories.filter(cat => cat !== null);
     
-    console.log('Returning menu items:', validMenuItems.length);
+    // Merge categories with the same title
+    const mergedCategories = {};
+    validCategories.forEach(cat => {
+      if (!mergedCategories[cat.title]) {
+        mergedCategories[cat.title] = cat;
+      } else {
+        // Merge items
+        mergedCategories[cat.title].items = [
+          ...mergedCategories[cat.title].items,
+          ...cat.items
+        ];
+      }
+    });
+    
+    // Convert back to array and sort by order
+    const finalCategories = Object.values(mergedCategories)
+      .sort((a, b) => (a.order || 999) - (b.order || 999));
+    
+    console.log('Returning menu categories:', finalCategories.length);
     
     return {
       statusCode: 200,
       headers,
-      body: JSON.stringify(validMenuItems)
+      body: JSON.stringify(finalCategories)
     };
     
   } catch (error) {
