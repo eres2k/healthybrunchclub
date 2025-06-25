@@ -22,7 +22,6 @@ exports.handler = async (event, context) => {
   }
 
   try {
-    // Use the correct path for Netlify build environment
     const menuDir = path.join(process.cwd(), 'content', 'menu');
     
     console.log('Looking for menu directory at:', menuDir);
@@ -33,31 +32,27 @@ exports.handler = async (event, context) => {
     } catch (error) {
       console.error('Menu directory not found:', menuDir);
       
-// Return default menu data if directory doesn't exist
+      // Return default menu data if directory doesn't exist
       const defaultMenu = [
         {
           title: "morning rituals",
           icon: "🌅",
           order: 1,
-          image: "/content/images/morning-ritual.jpg",
           items: [
             {
               name: "warmes wasser mit bio-zitrone",
               description: "der perfekte start für deine verdauung",
-              tags: ["detox", "vegan"],
-              price: 4.9
+              tags: ["detox", "vegan"]
             },
             {
               name: "golden milk latte",
               description: "kurkuma, ingwer, zimt & hafermilch",
-              tags: ["anti-inflammatory", "lactosefrei"],
-              price: 6.5
+              tags: ["anti-inflammatory", "lactosefrei"]
             },
             {
               name: "matcha zeremonie",
-              description: "ceremonial grade matcha, aufgeschäumt mit hafermilch",
-              tags: ["energy", "vegan"],
-              price: 7.9
+              description: "ceremonial grade matcha, aufgeschäumt",
+              tags: ["energy", "antioxidants"]
             }
           ]
         },
@@ -65,129 +60,65 @@ exports.handler = async (event, context) => {
           title: "power bowls",
           icon: "🥣",
           order: 2,
-          image: "/content/images/power-bowl.jpg",
           items: [
             {
               name: "açaí sunrise bowl",
               description: "açaí, banane, beeren, granola, kokosflocken",
-              tags: ["superfood", "vegan"],
-              price: 12.9
+              tags: ["superfood", "vegan"]
             },
             {
               name: "premium porridge",
               description: "haferflocken, chia, hanfsamen, heidelbeeren, mandeln",
-              tags: ["glutenfrei", "protein"],
-              price: 9.9
+              tags: ["glutenfrei", "protein"]
             },
             {
               name: "buddha bowl deluxe",
               description: "quinoa, hummus, grillgemüse, tahini-dressing",
-              tags: ["protein", "vegan"],
-              price: 14.9
+              tags: ["protein-rich", "vegan"]
             }
           ]
         },
         {
-          title: "healthy toasts",
-          icon: "🍞",
+          title: "klassiker neu interpretiert",
+          icon: "🍳",
           order: 3,
-          image: "/content/images/toast.jpg",
           items: [
             {
-              name: "avocado dream toast",
-              description: "vollkornbrot, avocado, pochiertes ei, kresse, limette",
-              tags: ["vegetarisch", "protein"],
-              price: 11.9
+              name: "eggs benedict deluxe",
+              description: "bio-eier, avocado, spinat, hollandaise",
+              tags: ["protein", "vegetarisch"]
             },
             {
-              name: "hummus power toast",
-              description: "sauerteigbrot, hausgemachter hummus, gegrilltes gemüse, granatapfel",
-              tags: ["vegan", "protein"],
-              price: 10.9
+              name: "french toast heaven",
+              description: "brioche, ahornsirup, beeren, vanillecreme",
+              tags: ["süß", "indulgent"]
             },
             {
-              name: "salmon wellness toast",
-              description: "dinkelbrot, frischkäse, räucherlachs, dill, kapern",
-              tags: ["omega-3", "protein"],
-              price: 13.9
+              name: "avocado toast supreme",
+              description: "vollkornbrot, avocado, pochiertes ei, dukkah",
+              tags: ["trendy", "instagram-worthy"]
             }
           ]
         },
         {
-          title: "fresh juices",
+          title: "drinks & elixiere",
           icon: "🥤",
           order: 4,
-          image: "/content/images/juices.jpg",
           items: [
             {
-              name: "green detox",
-              description: "spinat, gurke, apfel, sellerie, ingwer, zitrone",
-              tags: ["detox", "vegan", "raw"],
-              price: 7.9
+              name: "immunity booster juice",
+              description: "ingwer, kurkuma, orange, karotte",
+              tags: ["vitamin c", "detox"]
             },
             {
-              name: "immunity booster",
-              description: "orange, karotte, ingwer, kurkuma, schwarzer pfeffer",
-              tags: ["vitamin-c", "vegan"],
-              price: 7.5
+              name: "green goddess smoothie",
+              description: "spinat, banane, mango, spirulina",
+              tags: ["superfood", "energie"]
             },
             {
-              name: "berry antioxidant",
-              description: "heidelbeeren, himbeeren, erdbeeren, acai, kokoswasser",
-              tags: ["antioxidants", "vegan", "superfood"],
-              price: 8.9
-            }
-          ]
-        },
-        {
-          title: "specialty coffee",
-          icon: "☕",
-          order: 5,
-          image: "/content/images/coffee.jpg",
-          items: [
-            {
-              name: "flat white",
-              description: "doppelter espresso mit samtiger mikromilch",
-              tags: ["koffein"],
-              price: 4.5
-            },
-            {
-              name: "oat cappuccino",
-              description: "single origin espresso mit cremiger hafermilch",
-              tags: ["lactosefrei"],
-              price: 4.9
-            },
-            {
-              name: "iced vanilla latte",
-              description: "cold brew, vanillesirup, mandelmilch, eiswürfel",
-              tags: ["koffein", "lactosefrei"],
-              price: 5.5
-            }
-          ]
-        },
-        {
-          title: "sweet treats",
-          icon: "🧁",
-          order: 6,
-          image: "/content/images/sweets.jpg",
-          items: [
-            {
-              name: "raw energy balls",
-              description: "datteln, mandeln, kakao, kokos (3 stück)",
-              tags: ["raw", "vegan", "glutenfrei"],
-              price: 6.9
-            },
-            {
-              name: "chia pudding deluxe",
-              description: "chiasamen, mandelmilch, beeren, mandelmus, agavensirup",
-              tags: ["vegan", "glutenfrei", "protein"],
-              price: 7.9
-            },
-            {
-              name: "banana bread slice",
-              description: "hausgemachtes bananenbrot mit walnüssen",
-              tags: ["vegetarisch"],
-              price: 4.5
+              name: "kombucha selection",
+              description: "hausgemachte kombucha, verschiedene sorten",
+              tags: ["probiotisch", "erfrischend"]
             }
           ]
         }
@@ -203,7 +134,8 @@ exports.handler = async (event, context) => {
     const files = await fs.readdir(menuDir);
     console.log('Found menu files:', files);
     
-    const menuCategories = await Promise.all(
+    // First, let's try to parse individual menu items from the CMS
+    const menuItems = await Promise.all(
       files
         .filter(file => file.endsWith('.md'))
         .map(async (file) => {
@@ -214,32 +146,22 @@ exports.handler = async (event, context) => {
             
             console.log('Parsed menu file:', file, data);
             
-            // Ensure the category has the required structure
-            if (!data.title) {
-              console.warn(`Menu file ${file} missing title`);
-              return null;
+            // Check if this is an individual menu item (has category field)
+            if (data.category && data.title) {
+              return {
+                category: data.category,
+                item: {
+                  name: data.title,
+                  description: data.description || '',
+                  price: data.price,
+                  available: data.available !== false,
+                  tags: data.tags || [],
+                  image: data.image
+                }
+              };
             }
             
-            // Process image path - ensure it's properly formatted
-            let imagePath = '';
-            if (data.image) {
-              // Handle both relative and absolute paths
-              if (data.image.startsWith('http')) {
-                imagePath = data.image;
-              } else if (data.image.startsWith('/')) {
-                imagePath = data.image;
-              } else {
-                imagePath = `/content/images/${data.image}`;
-              }
-            }
-            
-            return {
-              title: data.title,
-              icon: data.icon || '',
-              order: data.order || 0,
-              image: imagePath,
-              items: data.items || []
-            };
+            return null;
           } catch (error) {
             console.error('Error parsing menu file:', file, error);
             return null;
@@ -247,29 +169,112 @@ exports.handler = async (event, context) => {
         })
     );
     
-    // Filter out null values and sort by order
-    const validCategories = menuCategories
-      .filter(cat => cat !== null)
-      .sort((a, b) => (a.order || 0) - (b.order || 0));
+    // Filter out null values
+    const validItems = menuItems.filter(item => item !== null);
     
-    console.log('Returning menu categories:', validCategories.length);
+    // Group items by category
+    const categoryMap = {
+      'Vorspeise': { title: 'vorspeisen', icon: '🥗', order: 1, items: [] },
+      'Hauptgang': { title: 'hauptgänge', icon: '🍳', order: 2, items: [] },
+      'Dessert': { title: 'desserts', icon: '🍰', order: 3, items: [] },
+      'Getränk': { title: 'getränke', icon: '☕', order: 4, items: [] }
+    };
+    
+    // Add default categories if they don't exist
+    const defaultCategories = {
+      'morning rituals': { title: 'morning rituals', icon: '🌅', order: 0, items: [] },
+      'power bowls': { title: 'power bowls', icon: '🥣', order: 1, items: [] }
+    };
+    
+    // Populate categories with items
+    validItems.forEach(({ category, item }) => {
+      if (categoryMap[category]) {
+        categoryMap[category].items.push(item);
+      }
+    });
+    
+    // Convert to array and filter out empty categories
+    let menuCategories = Object.values(categoryMap)
+      .filter(cat => cat.items.length > 0)
+      .sort((a, b) => a.order - b.order);
+    
+    // If no items found, return default menu
+    if (menuCategories.length === 0) {
+      const defaultMenu = [
+        {
+          title: "morning rituals",
+          icon: "🌅",
+          order: 1,
+          items: [
+            {
+              name: "warmes wasser mit bio-zitrone",
+              description: "der perfekte start für deine verdauung",
+              tags: ["detox", "vegan"]
+            },
+            {
+              name: "golden milk latte",
+              description: "kurkuma, ingwer, zimt & hafermilch",
+              tags: ["anti-inflammatory", "lactosefrei"]
+            }
+          ]
+        },
+        {
+          title: "power bowls",
+          icon: "🥣",
+          order: 2,
+          items: [
+            {
+              name: "açaí sunrise bowl",
+              description: "açaí, banane, beeren, granola, kokosflocken",
+              tags: ["superfood", "vegan"]
+            },
+            {
+              name: "premium porridge",
+              description: "haferflocken, chia, hanfsamen, heidelbeeren, mandeln",
+              tags: ["glutenfrei", "protein"]
+            }
+          ]
+        }
+      ];
+      
+      return {
+        statusCode: 200,
+        headers,
+        body: JSON.stringify(defaultMenu)
+      };
+    }
+    
+    console.log('Returning menu categories:', menuCategories.length);
     
     return {
       statusCode: 200,
       headers,
-      body: JSON.stringify(validCategories)
+      body: JSON.stringify(menuCategories)
     };
     
   } catch (error) {
     console.error('Error in get-menu function:', error);
     
+    // Return a minimal menu on error
+    const fallbackMenu = [
+      {
+        title: "today's specials",
+        icon: "🍽️",
+        order: 1,
+        items: [
+          {
+            name: "healthy breakfast bowl",
+            description: "a nutritious start to your day",
+            tags: ["healthy", "fresh"]
+          }
+        ]
+      }
+    ];
+    
     return {
-      statusCode: 500,
+      statusCode: 200,
       headers,
-      body: JSON.stringify({ 
-        error: 'Failed to load menu', 
-        details: error.message 
-      })
+      body: JSON.stringify(fallbackMenu)
     };
   }
 };
