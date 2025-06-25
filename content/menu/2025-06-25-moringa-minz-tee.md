@@ -2,6 +2,6 @@
 title: "Moringa-Minz-Tee "
 description: " basisch & entgiftend"
 category: HealthTea
-available: true
+available: false
 special: false
 ---
