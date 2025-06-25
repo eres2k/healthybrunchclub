@@ -79,21 +79,14 @@ exports.handler = async (event, context) => {
     const categoryMap = new Map();
     
     // Define category metadata (icons and order)
-    // Map the CMS categories to your desired display categories
-    const categoryMapping = {
-      'Vorspeise': 'morning rituals',
-      'Hauptgang': 'eggs & stories', 
-      'Dessert': 'sweet treats',
-      'Getränk': 'drinks & juices'
-    };
-    
     const categoryMetadata = {
-      'morning rituals': { icon: '🌅', order: 1, displayName: 'morning rituals' },
-      'eggs & stories': { icon: '🍳', order: 2, displayName: 'eggs & stories' },
-      'power bowls': { icon: '🥣', order: 3, displayName: 'power bowls' },
-      'sweet treats': { icon: '🍰', order: 4, displayName: 'sweet treats' },
-      'drinks & juices': { icon: '🥤', order: 5, displayName: 'drinks & juices' },
-      'sonstiges': { icon: '🍴', order: 99, displayName: 'sonstiges' }
+      'morning rituals': { icon: '🌅', order: 1 },
+      'eggs & stories': { icon: '🍳', order: 2 },
+      'power bowls': { icon: '🥣', order: 3 },
+      'sweet treats': { icon: '🍰', order: 4 },
+      'drinks & juices': { icon: '🥤', order: 5 },
+      'specials': { icon: '✨', order: 6 },
+      'sonstiges': { icon: '🍴', order: 99 }
     };
     
     // Process each menu item file
@@ -127,22 +120,16 @@ exports.handler = async (event, context) => {
             }
             
             // Get or create category
-            let category = data.category || 'sonstiges';
-            
-            // Map CMS categories to display categories
-            if (categoryMapping[category]) {
-              category = categoryMapping[category];
-            }
+            const category = data.category || 'sonstiges';
             
             if (!categoryMap.has(category)) {
               const metadata = categoryMetadata[category] || { 
                 icon: '🍴', 
-                order: 99, 
-                displayName: category.toLowerCase() 
+                order: 99
               };
               
               categoryMap.set(category, {
-                title: metadata.displayName,
+                title: category,
                 icon: metadata.icon,
                 order: metadata.order,
                 items: []
