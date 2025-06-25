@@ -36,30 +36,41 @@ exports.handler = async (event, context) => {
       const defaultMenu = [
         {
           title: "morning rituals",
-          icon: "🌅",
           order: 1,
+          image: "/images/uploads/morning-ritual.jpg",
+          visible: true,
           items: [
             {
               name: "warmes wasser mit bio-zitrone",
               description: "der perfekte start für deine verdauung",
-              tags: ["detox", "vegan"]
+              tags: ["detox", "vegan"],
+              available: true
             },
             {
               name: "golden milk latte",
               description: "kurkuma, ingwer, zimt & hafermilch",
-              tags: ["anti-inflammatory", "lactosefrei"]
+              tags: ["anti-inflammatory", "lactosefrei"],
+              available: true
             }
           ]
         },
         {
-          title: "eggs & stories",
-          icon: "🍳",
+          title: "power bowls",
           order: 2,
+          image: "/images/uploads/power-bowl.jpg",
+          visible: true,
           items: [
             {
-              name: "classic eggs benedict",
-              description: "pochierte bio-eier, sauce hollandaise, spinat",
-              tags: ["protein", "klassiker"]
+              name: "açaí sunrise bowl",
+              description: "açaí, banane, beeren, granola, kokosflocken",
+              tags: ["superfood", "vegan"],
+              available: true
+            },
+            {
+              name: "premium porridge",
+              description: "haferflocken, chia, hanfsamen, heidelbeeren, mandeln",
+              tags: ["glutenfrei", "protein"],
+              available: true
             }
           ]
         }
@@ -75,56 +86,7 @@ exports.handler = async (event, context) => {
     const files = await fs.readdir(menuDir);
     console.log('Found menu files:', files);
     
-    // Create a map to group items by category
-    const categoryMap = new Map();
-    
-    // Load categories from the categories collection
-    let categoryMetadata = {};
-    
-    try {
-      const categoriesDir = path.join(process.cwd(), 'content', 'categories');
-      
-      try {
-        await fs.access(categoriesDir);
-        const categoryFiles = await fs.readdir(categoriesDir);
-        
-        await Promise.all(
-          categoryFiles
-            .filter(file => file.endsWith('.md'))
-            .map(async (file) => {
-              const filePath = path.join(categoriesDir, file);
-              const content = await fs.readFile(filePath, 'utf8');
-              const { data } = matter(content);
-              
-              if (data.active !== false) {
-                categoryMetadata[data.title] = {
-                  icon: data.icon || '🍴',
-                  order: data.order || 99
-                };
-              }
-            })
-        );
-      } catch (error) {
-        console.log('Categories directory not found, using defaults');
-      }
-    } catch (error) {
-      console.log('Error loading categories:', error);
-    }
-    
-    // Fallback to default categories if none found
-    if (Object.keys(categoryMetadata).length === 0) {
-      categoryMetadata = {
-        'morning rituals': { icon: '🌅', order: 1 },
-        'eggs & stories': { icon: '🍳', order: 2 },
-        'power bowls': { icon: '🥣', order: 3 },
-        'sweet treats': { icon: '🍰', order: 4 },
-        'drinks & juices': { icon: '🥤', order: 5 },
-        'sonstiges': { icon: '🍴', order: 99 }
-      };
-    }
-    
-    // Process each menu item file
-    await Promise.all(
+    const menuCategories = await Promise.all(
       files
         .filter(file => file.endsWith('.md'))
         .map(async (file) => {
@@ -135,60 +97,44 @@ exports.handler = async (event, context) => {
             
             console.log('Parsed menu file:', file, data);
             
-            // Skip items that are not available
-            if (data.available === false) {
-              return;
+            // Skip if not visible
+            if (data.visible === false) {
+              return null;
             }
             
-            // Create menu item object
-            const menuItem = {
-              name: data.title || '',
-              description: data.description || '',
-              price: data.price ? `€${data.price}` : '',
-              tags: []
+            // Ensure the category has the required structure
+            if (!data.title) {
+              console.warn(`Menu file ${file} missing title`);
+              return null;
+            }
+            
+            // Process image path - the image is already properly formatted from CMS
+            const imagePath = data.image || '';
+            
+            return {
+              title: data.title,
+              order: data.order || 0,
+              image: imagePath,
+              items: data.items || []
             };
-            
-            // Add tags based on data
-            if (data.audioFile) {
-              menuItem.tags.push('audio preview');
-            }
-            
-            // Get or create category
-            const category = data.category || 'sonstiges';
-            
-            if (!categoryMap.has(category)) {
-              const metadata = categoryMetadata[category] || { 
-                icon: '🍴', 
-                order: 99
-              };
-              
-              categoryMap.set(category, {
-                title: category,
-                icon: metadata.icon,
-                order: metadata.order,
-                items: []
-              });
-            }
-            
-            // Add item to category
-            categoryMap.get(category).items.push(menuItem);
-            
           } catch (error) {
             console.error('Error parsing menu file:', file, error);
+            return null;
           }
         })
     );
     
-    // Convert map to array and sort
-    const menuCategories = Array.from(categoryMap.values())
-      .sort((a, b) => a.order - b.order);
+    // Filter out null values and sort by order
+    const validCategories = menuCategories
+      .filter(cat => cat !== null)
+      .sort((a, b) => (a.order || 0) - (b.order || 0));
     
-    console.log('Returning menu categories:', menuCategories.length);
+    console.log('Returning menu categories:', validCategories.length);
     
     return {
       statusCode: 200,
       headers,
-      body: JSON.stringify(menuCategories)
+      body: JSON.stringify(validCategories)
     };
     
   } catch (error) {
