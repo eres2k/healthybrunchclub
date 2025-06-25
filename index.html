@@ -1,0 +1,1852 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>healthy brunch club - start your monday right | bio brunch wien</title>
+    <meta name="description" content="gesunder bio-brunch jeden montag in wien. regionale zutaten, live-musik und positive vibes. jetzt buchen in der gumpendorfer straße 9.">
+    <meta name="keywords" content="healthy brunch wien, bio brunch, gesund essen wien, montag brunch, gumpendorfer straße, vegetarisch vegan wien">
+    <meta name="author" content="healthy brunch club">
+    <link rel="canonical" href="https://healthybrunchclub.at/">
+    
+    <!-- Netlify Identity Widget -->
+    <script type="text/javascript" src="https://identity.netlify.com/v1/netlify-identity-widget.js"></script>
+    
+    <!-- Open Graph Tags -->
+    <meta property="og:title" content="healthy brunch club - bio brunch wien">
+    <meta property="og:description" content="gesunder bio-brunch jeden montag mit regionalen zutaten und live-musik">
+    <meta property="og:image" content="/og-image.jpg">
+    <meta property="og:url" content="https://healthybrunchclub.at/">
+    <meta property="og:type" content="website">
+    <meta property="og:locale" content="de_AT">
+    
+    <!-- PWA Meta Tags -->
+    <meta name="theme-color" content="#A8C09A">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="default">
+    <meta name="apple-mobile-web-app-title" content="healthy brunch">
+    <link rel="apple-touch-icon" href="/icon-192.png">
+    <link rel="manifest" href="/manifest.json">
+   
+    <!-- Google Font Link -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400..700;1,400..700&display=swap" rel="stylesheet">
+
+    <script src="cms-loader.js"></script>
+
+    
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            /* Warm, Natural Color Palette */
+            --sage-green: #A8C09A;
+            --mint-green: #B8D4B2;
+            --peach: #FFB5A7;
+            --coral: #F8AD9D;
+            --cream: #FFF5EB;
+            --warm-white: #FFFBF5;
+            --terracotta: #D4735E;
+            --olive: #8B9474;
+            --sand: #E8DCC4;
+            --blush: #FCD5CE;
+            
+            /* Text Colors */
+            --text-dark: #3A3A3A;
+            --text-medium: #6B6B6B;
+            --text-light: #9A9A9A;
+            
+            /* Gradients */
+            --morning-gradient: linear-gradient(135deg, #FFE5D9 0%, #FEC89A 50%, #F8AD9D 100%);
+            --nature-gradient: linear-gradient(135deg, #B8D4B2 0%, #A8C09A 50%, #8B9474 100%);
+            --warm-gradient: linear-gradient(180deg, #FFF5EB 0%, #FFE5D9 50%, #FCD5CE 100%);
+            
+            /* Typography */
+            --font-primary: 'lora', sans-serif;
+            --font-accent: 'lora', cursive;
+            
+            /* Shadows */
+            --soft-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+            --hover-shadow: 0 8px 30px rgba(0, 0, 0, 0.12);
+            --card-shadow: 0 2px 15px rgba(0, 0, 0, 0.06);
+        }
+
+        body {
+            font-family: var(--font-primary);
+            line-height: 1.6;
+            color: var(--text-dark);
+            background: var(--warm-white);
+            overflow-x: hidden;
+            min-height: 100vh;
+        }
+
+        /* Loading Screen */
+        .loading-screen {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: var(--cream);
+            z-index: 9999;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            transition: opacity 0.8s ease, visibility 0.8s ease;
+        }
+
+        .loading-screen.hidden {
+            opacity: 0;
+            visibility: hidden;
+        }
+
+        .loading-logo {
+            font-family: var(--font-accent);
+            font-size: 48px;
+            color: var(--sage-green);
+            margin-bottom: 30px;
+            animation: pulse 2s ease-in-out infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); opacity: 0.8; }
+            50% { transform: scale(1.05); opacity: 1; }
+        }
+
+        .loading-bar {
+            width: 200px;
+            height: 4px;
+            background: rgba(168, 192, 154, 0.2);
+            border-radius: 2px;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .loading-progress {
+            height: 100%;
+            background: var(--sage-green);
+            width: 0%;
+            animation: loadProgress 2s ease forwards;
+            border-radius: 2px;
+        }
+
+        @keyframes loadProgress {
+            0% { width: 0%; }
+            100% { width: 100%; }
+        }
+
+        /* Entrance Animation Classes */
+        .fade-in {
+            opacity: 0;
+            animation: fadeIn 1s ease forwards;
+        }
+
+        .fade-in-up {
+            opacity: 0;
+            transform: translateY(30px);
+            animation: fadeInUp 0.8s ease forwards;
+        }
+
+        .fade-in-delay-1 { animation-delay: 0.2s; }
+        .fade-in-delay-2 { animation-delay: 0.4s; }
+        .fade-in-delay-3 { animation-delay: 0.6s; }
+
+        @keyframes fadeIn {
+            to {
+                opacity: 1;
+            }
+        }
+
+        @keyframes fadeInUp {
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* Texture Overlay */
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-image: 
+                repeating-linear-gradient(45deg, transparent, transparent 35px, rgba(255, 245, 235, 0.5) 35px, rgba(255, 245, 235, 0.5) 70px),
+                repeating-linear-gradient(-45deg, transparent, transparent 35px, rgba(255, 229, 217, 0.3) 35px, rgba(255, 229, 217, 0.3) 70px);
+            pointer-events: none;
+            z-index: 1;
+            opacity: 0.3;
+        }
+
+        /* Floating Event Window */
+        .event-window {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            width: 320px;
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.15);
+            z-index: 999;
+            transition: all 0.3s ease;
+            overflow: hidden;
+        }
+
+        .event-window.collapsed {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            cursor: pointer;
+        }
+
+        .event-window.collapsed .event-content {
+            display: none;
+        }
+
+        .event-toggle {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            background: var(--sage-green);
+            color: white;
+            border: none;
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s ease;
+            z-index: 10;
+        }
+
+        .event-window.collapsed .event-toggle {
+            width: 60px;
+            height: 60px;
+            top: 0;
+            right: 0;
+            font-size: 24px;
+        }
+
+        .event-content {
+            padding: 25px;
+        }
+
+        .event-header {
+            background: var(--morning-gradient);
+            color: white;
+            padding: 20px;
+            margin: -25px -25px 20px;
+        }
+
+        .event-header h3 {
+            font-family: var(--font-accent);
+            font-size: 22px;
+            margin-bottom: 5px;
+        }
+
+        .event-header p {
+            font-size: 14px;
+            opacity: 0.9;
+        }
+
+        .event-details {
+            font-size: 14px;
+            line-height: 1.6;
+            color: var(--text-medium);
+            margin-bottom: 20px;
+        }
+
+        .event-details strong {
+            color: var(--text-dark);
+            display: block;
+            margin-top: 10px;
+        }
+
+        .audio-player {
+            background: var(--cream);
+            border-radius: 15px;
+            padding: 15px;
+            margin-top: 20px;
+        }
+
+        .audio-player h4 {
+            font-size: 14px;
+            color: var(--sage-green);
+            margin-bottom: 10px;
+        }
+
+        .audio-player audio {
+            width: 100%;
+            height: 35px;
+        }
+
+        /* Admin Edit Button */
+        .admin-edit-btn {
+            position: fixed;
+            bottom: 100px;
+            right: 30px;
+            background: var(--sage-green);
+            color: white;
+            padding: 12px 20px;
+            border-radius: 25px;
+            text-decoration: none;
+            font-size: 14px;
+            font-weight: 600;
+            box-shadow: var(--soft-shadow);
+            transition: all 0.3s ease;
+            z-index: 998;
+            display: none;
+        }
+
+        .admin-edit-btn:hover {
+            background: var(--olive);
+            transform: translateY(-2px);
+            box-shadow: var(--hover-shadow);
+        }
+
+        .admin-edit-btn.show {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        /* Navigation */
+        .nav {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            z-index: 1000;
+            padding: 15px 0;
+            box-shadow: 0 2px 20px rgba(0, 0, 0, 0.05);
+            transition: all 0.3s ease;
+        }
+
+        .nav.scrolled {
+            padding: 10px 0;
+            box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+        }
+
+        .nav-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            font-family: var(--font-accent);
+            font-size: 28px;
+            font-weight: 700;
+            color: var(--sage-green);
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .nav-links {
+            display: flex;
+            list-style: none;
+            gap: 30px;
+            align-items: center;
+        }
+
+        .nav-links a {
+            text-decoration: none;
+            color: var(--text-medium);
+            font-weight: 500;
+            font-size: 15px;
+            transition: color 0.3s ease;
+            position: relative;
+        }
+
+        .nav-links a::after {
+            content: '';
+            position: absolute;
+            bottom: -5px;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background: var(--sage-green);
+            transition: width 0.3s ease;
+        }
+
+        .nav-links a:hover {
+            color: var(--sage-green);
+        }
+
+        .nav-links a:hover::after {
+            width: 100%;
+        }
+
+        .book-btn {
+            background: var(--morning-gradient);
+            color: white !important;
+            padding: 10px 25px;
+            border-radius: 25px;
+            font-weight: 600;
+            box-shadow: var(--soft-shadow);
+            transition: all 0.3s ease;
+        }
+
+        .book-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: var(--hover-shadow);
+        }
+
+        .book-btn::after {
+            display: none;
+        }
+
+        /* Mobile Menu */
+        .mobile-menu-toggle {
+            display: none;
+            background: none;
+            border: none;
+            font-size: 24px;
+            color: var(--sage-green);
+            cursor: pointer;
+        }
+
+        /* Hero Section */
+        .hero {
+            padding: 120px 20px 80px;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            background: var(--warm-gradient);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hero::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            right: -20%;
+            width: 600px;
+            height: 600px;
+            background: radial-gradient(circle, var(--peach) 0%, transparent 70%);
+            opacity: 0.3;
+            animation: float 20s ease-in-out infinite;
+        }
+
+        .hero::after {
+            content: '';
+            position: absolute;
+            bottom: -30%;
+            left: -10%;
+            width: 400px;
+            height: 400px;
+            background: radial-gradient(circle, var(--mint-green) 0%, transparent 70%);
+            opacity: 0.3;
+            animation: float 25s ease-in-out infinite reverse;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translate(0, 0) scale(1); }
+            33% { transform: translate(30px, -30px) scale(1.1); }
+            66% { transform: translate(-20px, 20px) scale(0.9); }
+        }
+
+        .hero-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 60px;
+            align-items: center;
+            position: relative;
+            z-index: 2;
+        }
+
+        .hero-content h1 {
+            font-family: var(--font-accent);
+            font-size: clamp(48px, 6vw, 72px);
+            font-weight: 700;
+            color: var(--text-dark);
+            margin-bottom: 20px;
+            line-height: 1.1;
+        }
+
+        .hero-content h1 span {
+            color: var(--sage-green);
+        }
+
+        .hero-content p {
+            font-size: 18px;
+            color: var(--text-medium);
+            margin-bottom: 30px;
+            line-height: 1.8;
+        }
+
+        .hero-buttons {
+            display: flex;
+            gap: 20px;
+            flex-wrap: wrap;
+        }
+
+        .btn-primary {
+            background: var(--morning-gradient);
+            color: white;
+            padding: 15px 35px;
+            border-radius: 30px;
+            text-decoration: none;
+            font-weight: 600;
+            box-shadow: var(--soft-shadow);
+            transition: all 0.3s ease;
+            display: inline-block;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-3px);
+            box-shadow: var(--hover-shadow);
+        }
+
+        .btn-secondary {
+            background: white;
+            color: var(--sage-green);
+            padding: 15px 35px;
+            border-radius: 30px;
+            text-decoration: none;
+            font-weight: 600;
+            border: 2px solid var(--sage-green);
+            transition: all 0.3s ease;
+            display: inline-block;
+        }
+
+        .btn-secondary:hover {
+            background: var(--sage-green);
+            color: white;
+            transform: translateY(-3px);
+        }
+
+        .hero-visual {
+            position: relative;
+            height: 500px;
+        }
+
+        .hero-image-container {
+            position: absolute;
+            background: white;
+            border-radius: 30px;
+            overflow: hidden;
+            box-shadow: var(--hover-shadow);
+            transition: all 0.3s ease;
+        }
+
+        .hero-image-container:nth-child(1) {
+	top: 0;
+	left: 0;
+	width: 259px;
+	height: 302px;
+	z-index: 3;
+        }
+
+        .hero-image-container:nth-child(2) {
+	top: 50px;
+	right: 0;
+	width: 250px;
+	height: 242px;
+	z-index: 2;
+        }
+
+        .hero-image-container:nth-child(3) {
+	bottom: 0;
+	left: 31%;
+	transform: translateX(-50%);
+	width: 315px;
+	height: 250px;
+	z-index: 1;
+	top: 324px;
+        }
+
+        .hero-image-container:hover {
+            transform: scale(1.05);
+            z-index: 4;
+        }
+
+        .hero-image-container:nth-child(3):hover {
+            transform: translateX(-50%) scale(1.05);
+        }
+
+        .hero-video {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        /* Menu Section */
+        .menu-section {
+            padding: 80px 20px;
+            background: white;
+            position: relative;
+        }
+
+        .menu-header {
+            text-align: center;
+            margin-bottom: 60px;
+        }
+
+        .menu-header h2 {
+            font-family: var(--font-accent);
+            font-size: clamp(36px, 5vw, 56px);
+            color: var(--text-dark);
+            margin-bottom: 10px;
+        }
+
+        .menu-header p {
+            font-size: 18px;
+            color: var(--text-medium);
+        }
+
+        /* Menu Grid */
+        .menu-grid {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 30px;
+        }
+
+        .menu-card {
+            background: var(--warm-white);
+            border-radius: 20px;
+            padding: 30px;
+            box-shadow: var(--card-shadow);
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .menu-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: var(--nature-gradient);
+        }
+
+        .menu-card:hover {
+            transform: translateY(-5px);
+            box-shadow: var(--hover-shadow);
+        }
+
+        .menu-category-title {
+            font-family: var(--font-accent);
+            font-size: 28px;
+            color: var(--sage-green);
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .menu-items {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        .menu-item {
+            padding: 15px;
+            background: white;
+            border-radius: 15px;
+            transition: all 0.3s ease;
+            border: 1px solid transparent;
+        }
+
+        .menu-item:hover {
+            border-color: var(--sage-green);
+            background: rgba(168, 192, 154, 0.05);
+        }
+
+        .menu-item-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: start;
+            margin-bottom: 5px;
+        }
+
+        .menu-item-name {
+            font-weight: 600;
+            color: var(--text-dark);
+            font-size: 16px;
+            flex: 1;
+        }
+
+        .menu-item-description {
+            font-size: 14px;
+            color: var(--text-medium);
+            line-height: 1.5;
+        }
+
+        .menu-tags {
+            display: flex;
+            gap: 5px;
+            margin-top: 8px;
+            flex-wrap: wrap;
+        }
+
+        .menu-tag {
+            background: var(--sage-green);
+            color: white;
+            padding: 3px 10px;
+            border-radius: 12px;
+            font-size: 11px;
+            font-weight: 500;
+        }
+
+        /* Special Menu Items */
+        .menu-special {
+            grid-column: 1 / -1;
+            background: var(--morning-gradient);
+            color: white;
+            padding: 40px;
+            border-radius: 25px;
+            text-align: center;
+            margin: 40px 0;
+        }
+
+        .menu-special h3 {
+            font-family: var(--font-accent);
+            font-size: 36px;
+            margin-bottom: 10px;
+        }
+
+        .menu-special p {
+            font-size: 18px;
+            margin-bottom: 20px;
+            opacity: 0.95;
+        }
+
+        /* Features Section */
+        .features-section {
+            padding: 80px 20px;
+            background: var(--cream);
+        }
+
+        .features-grid {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 40px;
+            margin-top: 50px;
+        }
+
+        .feature-card {
+            text-align: center;
+            padding: 40px 30px;
+            background: white;
+            border-radius: 25px;
+            box-shadow: var(--card-shadow);
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .feature-card::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: var(--nature-gradient);
+            opacity: 0;
+            transition: opacity 0.3s ease;
+            transform: rotate(45deg);
+        }
+
+        .feature-card:hover::before {
+            opacity: 0.05;
+        }
+
+        .feature-card:hover {
+            transform: translateY(-5px);
+            box-shadow: var(--hover-shadow);
+        }
+
+        .feature-icon {
+            width: 80px;
+            height: 80px;
+            background: var(--morning-gradient);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 20px;
+            font-size: 36px;
+        }
+
+        .feature-card h3 {
+            font-size: 22px;
+            color: var(--text-dark);
+            margin-bottom: 15px;
+        }
+
+        .feature-card p {
+            color: var(--text-medium);
+            line-height: 1.6;
+        }
+
+        /* Contact Form Section */
+        .contact-section {
+            padding: 80px 20px;
+            background: white;
+        }
+
+        .contact-container {
+            max-width: 800px;
+            margin: 0 auto;
+            background: var(--warm-white);
+            padding: 50px;
+            border-radius: 30px;
+            box-shadow: var(--hover-shadow);
+        }
+
+        .contact-header {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+
+        .contact-header h2 {
+            font-family: var(--font-accent);
+            font-size: clamp(36px, 5vw, 48px);
+            color: var(--text-dark);
+            margin-bottom: 10px;
+        }
+
+        .contact-form {
+            display: grid;
+            gap: 25px;
+        }
+
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 25px;
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .form-group label {
+            font-weight: 600;
+            color: var(--text-dark);
+            margin-bottom: 8px;
+            font-size: 14px;
+        }
+
+        .form-group input,
+        .form-group textarea,
+        .form-group select {
+            padding: 15px;
+            border: 2px solid #f0f0f0;
+            border-radius: 15px;
+            font-family: inherit;
+            font-size: 15px;
+            transition: all 0.3s ease;
+            background: white;
+        }
+
+        .form-group input:focus,
+        .form-group textarea:focus,
+        .form-group select:focus {
+            outline: none;
+            border-color: var(--sage-green);
+            box-shadow: 0 0 0 3px rgba(168, 192, 154, 0.1);
+        }
+
+        .form-group textarea {
+            resize: vertical;
+            min-height: 120px;
+        }
+
+        .form-submit {
+            background: var(--morning-gradient);
+            color: white;
+            padding: 18px 40px;
+            border: none;
+            border-radius: 25px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: var(--soft-shadow);
+            margin-top: 10px;
+        }
+
+        .form-submit:hover {
+            transform: translateY(-3px);
+            box-shadow: var(--hover-shadow);
+        }
+
+        /* Netlify Honeypot */
+        .netlify-honeypot {
+            position: absolute;
+            left: -5000px;
+        }
+
+        /* Footer */
+        .footer {
+            background: var(--text-dark);
+            color: white;
+            padding: 60px 20px 30px;
+        }
+
+        .footer-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 40px;
+            margin-bottom: 40px;
+        }
+
+        .footer-section h4 {
+            font-family: var(--font-accent);
+            font-size: 24px;
+            margin-bottom: 20px;
+            color: var(--peach);
+        }
+
+        .footer-section p,
+        .footer-section a {
+            color: rgba(255, 255, 255, 0.8);
+            text-decoration: none;
+            line-height: 1.8;
+            transition: color 0.3s ease;
+        }
+
+        .footer-section a:hover {
+            color: var(--peach);
+        }
+
+        .social-links {
+            display: flex;
+            gap: 15px;
+            margin-top: 20px;
+        }
+
+        .social-link {
+            width: 45px;
+            height: 45px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s ease;
+            font-size: 20px;
+        }
+
+        .social-link:hover {
+            background: var(--peach);
+            transform: translateY(-3px);
+        }
+
+        .footer-bottom {
+            text-align: center;
+            padding-top: 40px;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            color: rgba(255, 255, 255, 0.6);
+        }
+
+        .logo {
+            height: 50px;
+        }
+
+        /* No menu message */
+        .no-menu-message {
+            text-align: center;
+            padding: 40px;
+            color: var(--text-medium);
+            font-style: italic;
+        }
+
+        /* Mobile Responsive */
+        @media (max-width: 768px) {
+            .nav-links {
+                display: none;
+            }
+
+            .mobile-menu-toggle {
+                display: block;
+            }
+
+            .hero-container {
+                grid-template-columns: 1fr;
+                text-align: center;
+            }
+
+            .hero-visual {
+                display: none;
+            }
+
+            .menu-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .form-row {
+                grid-template-columns: 1fr;
+            }
+
+            .contact-container {
+                padding: 30px 20px;
+            }
+
+            .event-window {
+                right: 20px;
+                bottom: 20px;
+                width: 280px;
+            }
+
+            .admin-edit-btn {
+                bottom: 90px;
+                right: 20px;
+            }
+        }
+
+        /* Skip link for accessibility */
+        .skip-link {
+            position: absolute;
+            top: -40px;
+            left: 10px;
+            background: var(--sage-green);
+            color: white;
+            padding: 8px 16px;
+            text-decoration: none;
+            border-radius: 4px;
+            z-index: 10000;
+        }
+
+        .skip-link:focus {
+            top: 10px;
+        }
+    </style>
+</head>
+
+
+<body>
+
+<!-- Add this script section to your index.html before closing </body> tag -->
+<script>
+// CMS Content Loader for Healthy Brunch Club
+(function() {
+    'use strict';
+
+    // Configuration
+    const CONFIG = {
+        contentPath: '/content',
+        refreshInterval: 300000, // 5 minutes
+        animationDelay: 100
+    };
+
+    // Utility function to fetch JSON data
+    async function fetchJSON(url) {
+        try {
+            const response = await fetch(url);
+            if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
+            return await response.json();
+        } catch (error) {
+            console.error('Error fetching data:', error);
+            return null;
+        }
+    }
+
+    // Function to create menu item HTML
+    function createMenuItemHTML(item) {
+        return `
+            <div class="menu-item">
+                <div class="menu-item-header">
+                    <span class="menu-item-name">${item.name || ''}</span>
+                </div>
+                <p class="menu-item-description">${item.description || ''}</p>
+                ${item.tags && item.tags.length > 0 ? `
+                    <div class="menu-tags">
+                        ${item.tags.map(tag => `<span class="menu-tag">${tag}</span>`).join('')}
+                    </div>
+                ` : ''}
+            </div>
+        `;
+    }
+
+    // Function to create menu category card
+    function createMenuCategoryCard(category) {
+        const card = document.createElement('div');
+        card.className = 'menu-card';
+        card.style.opacity = '0';
+        card.style.transform = 'translateY(30px)';
+        
+        card.innerHTML = `
+            <h3 class="menu-category-title">${category.title} ${category.icon || ''}</h3>
+            <div class="menu-items">
+                ${category.items.map(item => createMenuItemHTML(item)).join('')}
+            </div>
+        `;
+        
+        return card;
+    }
+
+    // Function to animate cards
+    function animateCards(cards) {
+        cards.forEach((card, index) => {
+            card.style.transition = `all 0.6s ease ${index * 0.1}s`;
+            
+            setTimeout(() => {
+                card.style.opacity = '1';
+                card.style.transform = 'translateY(0)';
+            }, CONFIG.animationDelay);
+        });
+    }
+
+    // Function to load and display menu
+    async function loadMenu() {
+        const menuGrid = document.getElementById('menuGrid');
+        if (!menuGrid) return;
+
+        try {
+           // In production, this would fetch from your CMS API endpoint
+            // For now, using example data that matches your menu structure
+            const menuData = [
+                {
+                    title: "morning rituals",
+                    icon: "🌅",
+                    order: 1,
+                    items: [
+                        {
+                            name: "warmes wasser mit bio-zitrone",
+                            description: "der perfekte start für deine verdauung",
+                            tags: ["detox", "vegan"],
+                            price: 4.9
+                        },
+                        {
+                            name: "golden milk latte",
+                            description: "kurkuma, ingwer, zimt & hafermilch",
+                            tags: ["anti-inflammatory", "lactosefrei"],
+                            price: 6.5
+                        },
+                        {
+                            name: "matcha zeremonie",
+                            description: "ceremonial grade matcha, aufgeschäumt",
+                            tags: ["energy", "vegan"],
+                            price: 7.9
+                        }
+                    ]
+                },
+                {
+                    title: "power bowls",
+                    icon: "🥣",
+                    order: 2,
+                    items: [
+                        {
+                            name: "açaí sunrise bowl",
+                            description: "açaí, banane, beeren, granola, kokosflocken",
+                            tags: ["superfood", "vegan"],
+                            price: 12.9
+                        },
+                        {
+                            name: "premium porridge",
+                            description: "haferflocken, chia, hanfsamen, heidelbeeren, mandeln",
+                            tags: ["glutenfrei", "protein"],
+                            price: 9.9
+                        },
+                        {
+                            name: "buddha bowl deluxe",
+                            description: "quinoa, hummus, grillgemüse, tahini-dressing",
+                            tags: ["protein-rich", "vegan"],
+                            price: 14.9
+                        }
+                    ]
+                },
+                {
+                    title: "healthy toasts",
+                    icon: "🍞",
+                    order: 3,
+                    items: [
+                        {
+                            name: "avocado dream toast",
+                            description: "vollkornbrot, avocado, pochiertes ei, kresse",
+                            tags: ["vegetarisch", "protein"],
+                            price: 11.9
+                        },
+                        {
+                            name: "hummus power toast",
+                            description: "sauerteigbrot, hausgemachter hummus, grillgemüse",
+                            tags: ["vegan", "protein"],
+                            price: 10.9
+                        }
+                    ]
+                },
+                {
+                    title: "fresh juices",
+                    icon: "🥤",
+                    order: 4,
+                    items: [
+                        {
+                            name: "green detox",
+                            description: "spinat, gurke, apfel, sellerie, ingwer, zitrone",
+                            tags: ["detox", "vegan", "raw"],
+                            price: 7.9
+                        },
+                        {
+                            name: "immunity booster",
+                            description: "orange, karotte, ingwer, kurkuma",
+                            tags: ["vitamin-c", "vegan"],
+                            price: 7.5
+                        }
+                    ]
+                }
+            ];
+
+            // Sort categories by order
+            menuData.sort((a, b) => (a.order || 0) - (b.order || 0));
+
+            // Clear existing content
+            menuGrid.innerHTML = '';
+
+            // Create and append category cards
+            const cards = menuData.map(category => createMenuCategoryCard(category));
+            cards.forEach(card => menuGrid.appendChild(card));
+
+            // Animate cards
+            animateCards(cards);
+
+        } catch (error) {
+            console.error('Error loading menu:', error);
+            menuGrid.innerHTML = `
+                <div class="no-menu-message">
+                    <p>Menü wird geladen...</p>
+                    <p style="font-size: 14px; margin-top: 10px;">Bitte aktivieren Sie Netlify CMS für dynamische Inhalte.</p>
+                </div>
+            `;
+        }
+    }
+
+    // Function to format event date
+    function formatEventDate(dateString) {
+        const date = new Date(dateString);
+        return date.toLocaleDateString('de-AT', {
+            weekday: 'long',
+            day: 'numeric',
+            month: 'long',
+            year: 'numeric'
+        });
+    }
+
+    // Function to load and display events
+    async function loadEvents() {
+        const eventWindow = document.getElementById('eventWindow');
+        const eventContent = document.getElementById('eventContent');
+        
+        if (!eventWindow || !eventContent) return;
+
+        try {
+            // In production, this would fetch from your CMS API endpoint
+            const eventsData = [
+                {
+                    title: "next monday special",
+                    artist: "dj cosmic kitchen",
+                    date: "2025-01-27T09:00:00+01:00",
+                    description: "erlebe entspannte lounge-klänge während deines brunches mit unserem special guest dj cosmic kitchen!",
+                    musicStyle: "downtempo, organic house, world fusion",
+                    startTime: "9:00 uhr",
+                    audioPreview: "/dj-preview.mp3",
+                    active: true
+                }
+            ];
+
+            // Filter active events
+            const activeEvents = eventsData.filter(event => event.active);
+
+            if (activeEvents.length > 0) {
+                const event = activeEvents[0];
+                
+                eventContent.innerHTML = `
+                    <div class="event-header">
+                        <h3>${event.title}</h3>
+                        <p>${event.artist}</p>
+                    </div>
+                    <div class="event-details">
+                        <strong>📅 ${formatEventDate(event.date)}, ${event.startTime}</strong>
+                        ${event.description}
+                        
+                        <strong>🎵 musik-stil:</strong>
+                        ${event.musicStyle}
+                    </div>
+                    ${event.audioPreview ? `
+                        <div class="audio-player">
+                            <h4>hör rein in den sound:</h4>
+                            <audio controls>
+                                <source src="${event.audioPreview}" type="audio/mpeg">
+                                dein browser unterstützt kein audio.
+                            </audio>
+                        </div>
+                    ` : ''}
+                `;
+                
+                eventWindow.style.display = 'block';
+            } else {
+                eventWindow.style.display = 'none';
+            }
+
+        } catch (error) {
+            console.error('Error loading events:', error);
+            eventWindow.style.display = 'none';
+        }
+    }
+
+    // Function to initialize content loading
+    function initializeContent() {
+        // Load content immediately
+        loadMenu();
+        loadEvents();
+
+        // Set up periodic refresh
+        setInterval(() => {
+            loadMenu();
+            loadEvents();
+        }, CONFIG.refreshInterval);
+    }
+
+    // Wait for DOM to be ready
+    if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', initializeContent);
+    } else {
+        initializeContent();
+    }
+
+    // Expose functions globally if needed for debugging
+    window.cmsLoader = {
+        loadMenu,
+        loadEvents,
+        refresh: initializeContent
+    };
+
+})();
+
+// Integration with existing code
+document.addEventListener('DOMContentLoaded', function() {
+    // Your existing initialization code remains here
+    
+    // The CMS loader will automatically handle menu and event loading
+    console.log('CMS Integration loaded. Use window.cmsLoader.refresh() to manually refresh content.');
+});
+</script>
+
+<!-- 
+INTEGRATION NOTES:
+
+1. This script automatically loads when the page loads
+2. It replaces the static menu content with dynamic content
+3. Events are loaded and displayed in the event window
+4. Content refreshes every 5 minutes automatically
+5. You can manually refresh by calling: window.cmsLoader.refresh()
+
+NETLIFY CMS API ENDPOINTS:
+
+Once Netlify CMS is set up, you'll need to update the fetchJSON calls to use actual API endpoints:
+- Menu: /api/menu or /.netlify/functions/get-menu
+- Events: /api/events or /.netlify/functions/get-events
+
+These endpoints will be created when you set up Netlify Functions to read your CMS content.
+-->
+
+
+
+
+
+    <!-- Loading Screen -->
+    <div class="loading-screen" id="loadingScreen">
+        <div class="loading-logo"><img src="content/images/logo.png" width="356" height="194" alt=""/></div>
+        <div class="loading-bar">
+            <div class="loading-progress"></div>
+        </div>
+    </div>
+
+    <!-- Skip Link -->
+    <a href="#main-content" class="skip-link">zum hauptinhalt springen</a>
+
+    <!-- Navigation -->
+    <nav class="nav fade-in" id="navbar">
+        <div class="nav-container">
+            <a href="#home" class="logo"><img src="content/images/logo.png" alt=""  class="logo"/>&nbsp;</a>
+            
+            <ul class="nav-links">
+              <li><a href="#home">home</a></li>
+                <li><a href="#menu">speisekarte</a></li>
+                <li><a href="#features">features</a></li>
+                <li><a href="#about">über uns</a></li>
+                <li><a href="#contact">kontakt</a></li>
+                <li><a href="#booking" class="book-btn">tisch reservieren</a></li>
+            </ul>
+
+            <button class="mobile-menu-toggle" aria-label="menu öffnen">☰</button>
+        </div>
+    </nav>
+
+    <!-- Floating Event Window -->
+    <div class="event-window" id="eventWindow" style="display: none;">
+        <button class="event-toggle" onclick="toggleEventWindow()">
+            <span id="toggleIcon">−</span>
+        </button>
+        <div class="event-content" id="eventContent">
+            <!-- Event content will be loaded dynamically -->
+        </div>
+    </div>
+
+    <!-- Admin Edit Button -->
+    <a href="/admin" class="admin-edit-btn" id="adminEditBtn">
+        ✏️ menü bearbeiten
+    </a>
+
+    <!-- Main Content -->
+    <main id="main-content">
+        <!-- Hero Section -->
+        <section class="hero" id="home">
+            <div class="hero-container">
+                <div class="hero-content fade-in-up">
+                    <h1>start your monday with <span>healthy vibes</span></h1>
+                    <p>erlebe die perfekte kombination aus bio-zutaten, liebevoll zubereiteten speisen und entspannter atmosphäre. jeden montag von 8-14 uhr.</p>
+                    
+                    <div class="hero-buttons">
+                        <a href="#booking" class="btn-primary">jetzt reservieren</a>
+                        <a href="#menu" class="btn-secondary">speisekarte ansehen</a>
+                    </div>
+                </div>
+                
+                <div class="hero-visual">
+                    <div class="hero-image-container fade-in-up fade-in-delay-1">
+                        <video class="hero-video" autoplay muted loop playsinline>
+                            <source src="/content/videos/teaser1.mp4" type="video/mp4">
+                            <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 280 350'%3E%3Crect fill='%23FFE5D9' width='280' height='350'/%3E%3Ctext x='50%25' y='50%25' text-anchor='middle' fill='%23A8C09A' font-size='20'%3Ehealthy bowl%3C/text%3E%3C/svg%3E" alt="healthy bowl">
+                        </video>
+                    </div>
+                    <div class="hero-image-container fade-in-up fade-in-delay-2"> 
+					 <video class="hero-video" autoplay muted loop playsinline>
+                            <source src="/content/videos/teaser2.mp4" type="video/mp4">
+                            <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 200 250'%3E%3Crect fill='%23FFB5A7' width='200' height='250'/%3E%3Ctext x='50%25' y='50%25' text-anchor='middle' fill='white' font-size='18'%3Eavocado toast%3C/text%3E%3C/svg%3E" alt="avocado toast">
+                        </video>
+					</div>
+                    <div class="hero-image-container fade-in-up fade-in-delay-3">
+                        <video class="hero-video" autoplay muted loop playsinline>
+                            <source src="/content/videos/teaser3.mp4" type="video/mp4">
+                            <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 200 250'%3E%3Crect fill='%23FFB5A7' width='200' height='250'/%3E%3Ctext x='50%25' y='50%25' text-anchor='middle' fill='white' font-size='18'%3Eavocado toast%3C/text%3E%3C/svg%3E" alt="avocado toast">
+                        </video>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Menu Section -->
+        <section class="menu-section" id="menu">
+            <div class="menu-header">
+                <h2>unsere liebevoll kuratierte speisekarte</h2>
+                <p>100% bio, regional und mit ganz viel liebe zubereitet</p>
+            </div>
+
+            <div class="menu-grid" id="menuGrid">
+                <!-- Menu items will be loaded dynamically -->
+                <div class="no-menu-message">
+                    <p>Die Speisekarte wird geladen...</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Features Section -->
+        <section class="features-section" id="features">
+            <div class="menu-header">
+                <h2>was uns besonders macht</h2>
+                <p>mehr als nur frühstück – eine philosophie</p>
+            </div>
+
+            <div class="features-grid">
+                <div class="feature-card">
+                    <div class="feature-icon">🌱</div>
+                    <h3>100% bio & regional</h3>
+                    <p>alle zutaten stammen von lokalen bio-bauern aus der umgebung. frisch, nachhaltig und voller nährstoffe.</p>
+                </div>
+
+                <div class="feature-card">
+                    <div class="feature-icon">🎵</div>
+                    <h3>live dj sets</h3>
+                    <p>jeden montag begleiten dich sanfte lounge-klänge durch deinen morgen. musik zum wohlfühlen.</p>
+                </div>
+
+                <div class="feature-card">
+                    <div class="feature-icon">💚</div>
+                    <h3>darmgesundheit</h3>
+                    <p>spezielle zutaten und kombinationen, die deine verdauung unterstützen und für innere balance sorgen.</p>
+                </div>
+
+                <div class="feature-card">
+                    <div class="feature-icon">☕</div>
+                    <h3>specialty coffee</h3>
+                    <p>fair-trade kaffee von lokalen röstern, mit liebe zubereitet. auch mit pflanzlichen milchalternativen.</p>
+                </div>
+
+                <div class="feature-card">
+                    <div class="feature-icon">♻️</div>
+                    <h3>zero waste</h3>
+                    <p>nachhaltige verpackungen, kompostierung und bewusster umgang mit ressourcen für unsere umwelt.</p>
+                </div>
+
+                <div class="feature-card">
+                    <div class="feature-icon">👥</div>
+                    <h3>community</h3>
+                    <p>ein ort der begegnung, wo gleichgesinnte zusammenkommen und den tag gemeinsam beginnen.</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- About Section -->
+        <section class="contact-section" id="about">
+            <div class="contact-container">
+                <div class="contact-header">
+                    <h2>unsere geschichte</h2>
+                </div>
+                <div style="text-align: center; max-width: 600px; margin: 0 auto 40px;">
+                    <p style="font-size: 18px; line-height: 1.8; color: var(--text-medium);">
+                        drei schwestern, eine vision: gesundes essen zugänglich machen. was als familientradition begann, ist heute ein ort der begegnung für alle, die wert auf bewusste ernährung legen.
+                    </p>
+                    <p style="font-size: 16px; line-height: 1.8; color: var(--text-medium); margin-top: 20px;">
+                        nach tinas diagnose einer chronischen darmentzündung haben wir uns intensiv mit entzündungshemmender ernährung beschäftigt. diese erfahrung teilen wir nun mit euch – jeden montag in unserem gemütlichen lokal in der gumpendorfer straße.
+                    </p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Contact Form Section -->
+        <section class="contact-section" id="contact" id="booking">
+            <div class="contact-container">
+                <div class="contact-header">
+                    <h2>reserviere deinen tisch</h2>
+                    <p>sichere dir deinen platz für ein unvergessliches brunch-erlebnis</p>
+                </div>
+
+                <form name="reservierung" method="POST" data-netlify="true" data-netlify-honeypot="bot-field" class="contact-form">
+                    <!-- Netlify Honeypot field -->
+                    <p class="netlify-honeypot">
+                        <label>don't fill this out if you're human: <input name="bot-field" /></label>
+                    </p>
+
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="name">name *</label>
+                            <input type="text" id="name" name="name" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="email">e-mail *</label>
+                            <input type="email" id="email" name="email" required>
+                        </div>
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="phone">telefon</label>
+                            <input type="tel" id="phone" name="phone">
+                        </div>
+                        <div class="form-group">
+                            <label for="date">datum *</label>
+                            <select id="date" name="date" required>
+                                <option value="">montag wählen</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="time">uhrzeit *</label>
+                            <select id="time" name="time" required>
+                                <option value="08:00">08:00</option>
+                                <option value="08:30">08:30</option>
+                                <option value="09:00">09:00</option>
+                                <option value="09:30">09:30</option>
+                                <option value="10:00">10:00</option>
+                                <option value="10:30">10:30</option>
+                                <option value="11:00">11:00</option>
+                                <option value="11:30">11:30</option>
+                                <option value="12:00">12:00</option>
+                                <option value="12:30">12:30</option>
+                                <option value="13:00">13:00</option>
+                                <option value="13:30">13:30</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="guests">anzahl personen *</label>
+                            <select id="guests" name="guests" required>
+                                <option value="">bitte wählen</option>
+                                <option value="1">1 person</option>
+                                <option value="2">2 personen</option>
+                                <option value="3">3 personen</option>
+                                <option value="4">4 personen</option>
+                                <option value="5">5 personen</option>
+                                <option value="6">6 personen</option>
+                                <option value="7+">7+ personen</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="allergies">allergien / unverträglichkeiten</label>
+                        <textarea id="allergies" name="allergies" placeholder="bitte teile uns eventuelle allergien oder spezielle wünsche mit..."></textarea>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="newsletter">
+                            <input type="checkbox" id="newsletter" name="newsletter" style="width: auto; margin-right: 10px;">
+                            ich möchte den newsletter mit aktuellen events und specials erhalten
+                        </label>
+                    </div>
+
+                    <button type="submit" class="form-submit">tisch reservieren</button>
+                </form>
+            </div>
+        </section>
+    </main>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="footer-container">
+            <div class="footer-section">
+                <h4>öffnungszeiten</h4>
+                <p>montag: 08:00 - 14:00 uhr</p>
+                <p>dienstag - sonntag: geschlossen</p>
+                <p style="margin-top: 15px;">reservierungen empfohlen!</p>
+            </div>
+
+            <div class="footer-section">
+                <h4>kontakt</h4>
+                <p>gumpendorfer straße 9<br>1060 wien</p>
+                <p><a href="tel:+4367612345678">+43 676 123 456 78</a></p>
+                <p><a href="mailto:hello@healthybrunchclub.at">hello@healthybrunchclub.at</a></p>
+            </div>
+
+            <div class="footer-section">
+                <h4>healthy brunch club</h4>
+                <p>start your monday right with healthy food, good vibes, and amazing people.</p>
+                <div class="social-links">
+                    <a href="#" class="social-link" aria-label="instagram">📷</a>
+                    <a href="#" class="social-link" aria-label="facebook">👍</a>
+                    <a href="#" class="social-link" aria-label="pinterest">📌</a>
+                </div>
+            </div>
+
+            <div class="footer-section">
+                <h4>newsletter</h4>
+                <p>bleibe auf dem laufenden über events, neue gerichte und special offers!</p>
+                <form name="newsletter" method="POST" data-netlify="true" style="margin-top: 15px;">
+                    <input type="email" name="email" placeholder="deine e-mail" required style="padding: 10px; border: none; border-radius: 5px; width: 100%; margin-bottom: 10px;">
+                    <button type="submit" style="background: var(--peach); border: none; color: white; padding: 10px 20px; border-radius: 5px; cursor: pointer; width: 100%;">anmelden</button>
+                </form>
+            </div>
+        </div>
+
+        <div class="footer-bottom">
+            <p>&copy; 2025 healthy brunch club wien. made with love in vienna. | <a href="/impressum" style="color: inherit;">impressum</a> | <a href="/datenschutz" style="color: inherit;">datenschutz</a></p>
+        </div>
+    </footer>
+
+    <!-- Scripts -->
+    <script>
+        // Loading Screen
+        window.addEventListener('load', function() {
+            setTimeout(function() {
+                document.getElementById('loadingScreen').classList.add('hidden');
+            }, 2000);
+        });
+
+        // Toggle Event Window
+        function toggleEventWindow() {
+            const eventWindow = document.getElementById('eventWindow');
+            const toggleIcon = document.getElementById('toggleIcon');
+            
+            eventWindow.classList.toggle('collapsed');
+            toggleIcon.textContent = eventWindow.classList.contains('collapsed') ? '🎵' : '−';
+        }
+
+        // Show Admin Button for logged in users
+        if (window.netlifyIdentity) {
+            window.netlifyIdentity.on("init", user => {
+                if (user) {
+                    document.getElementById('adminEditBtn').classList.add('show');
+                }
+            });
+            
+            window.netlifyIdentity.on("login", () => {
+                document.getElementById('adminEditBtn').classList.add('show');
+            });
+            
+            window.netlifyIdentity.on("logout", () => {
+                document.getElementById('adminEditBtn').classList.remove('show');
+            });
+        }
+
+        // Fill Monday dates in the select dropdown
+        function fillMondayDates() {
+            const dateSelect = document.getElementById('date');
+            const today = new Date();
+            const daysUntilMonday = (8 - today.getDay()) % 7 || 7;
+            
+            for (let i = 0; i < 4; i++) {
+                const monday = new Date(today);
+                monday.setDate(today.getDate() + daysUntilMonday + (i * 7));
+                
+                const option = document.createElement('option');
+                option.value = monday.toISOString().split('T')[0];
+                option.textContent = monday.toLocaleDateString('de-AT', { 
+                    weekday: 'long', 
+                    day: 'numeric', 
+                    month: 'long' 
+                });
+                
+                dateSelect.appendChild(option);
+            }
+        }
+
+        // Call function when page loads
+        document.addEventListener('DOMContentLoaded', fillMondayDates);
+
+        // Handle form submission success
+        if (window.location.search.includes('success=true')) {
+            alert('vielen dank für deine reservierung! wir haben deine anfrage erhalten und melden uns in kürze bei dir.');
+            window.history.replaceState({}, document.title, window.location.pathname);
+        }
+
+        // Smooth scrolling for navigation links
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({
+                        behavior: 'smooth',
+                        block: 'start'
+                    });
+                }
+            });
+        });
+
+        // Navigation scroll effect
+        window.addEventListener('scroll', function() {
+            const navbar = document.getElementById('navbar');
+            if (window.scrollY > 100) {
+                navbar.classList.add('scrolled');
+            } else {
+                navbar.classList.remove('scrolled');
+            }
+        });
+
+        // Mobile menu toggle
+        const mobileMenuToggle = document.querySelector('.mobile-menu-toggle');
+        const navLinks = document.querySelector('.nav-links');
+
+        if (mobileMenuToggle) {
+            mobileMenuToggle.addEventListener('click', function() {
+                navLinks.style.display = navLinks.style.display === 'flex' ? 'none' : 'flex';
+                navLinks.style.flexDirection = 'column';
+                navLinks.style.position = 'absolute';
+                navLinks.style.top = '100%';
+                navLinks.style.left = '0';
+                navLinks.style.right = '0';
+                navLinks.style.background = 'white';
+                navLinks.style.padding = '20px';
+                navLinks.style.boxShadow = '0 4px 20px rgba(0,0,0,0.1)';
+            });
+        }
+
+        // Intersection Observer for fade-in animations
+        const observerOptions = {
+            threshold: 0.1,
+            rootMargin: '0px 0px -50px 0px'
+        };
+
+        const observer = new IntersectionObserver(function(entries) {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.style.opacity = '1';
+                    entry.target.style.transform = 'translateY(0)';
+                }
+            });
+        }, observerOptions);
+
+        // Load menu data
+        async function loadMenuData() {
+            try {
+                const response = await fetch('/content/menu/');
+                const files = await response.text();
+                const menuGrid = document.getElementById('menuGrid');
+                
+                // Parse markdown files and render menu
+                // This is a simplified version - you would need to implement proper markdown parsing
+                menuGrid.innerHTML = '<p class="no-menu-message">Bitte benutzen Sie das Admin-Panel, um Menü-Einträge hinzuzufügen.</p>';
+            } catch (error) {
+                console.log('Menu will be loaded from CMS');
+            }
+        }
+
+        // Load event data
+        async function loadEventData() {
+            try {
+                const response = await fetch('/content/events/');
+                const files = await response.text();
+                const eventWindow = document.getElementById('eventWindow');
+                const eventContent = document.getElementById('eventContent');
+                
+                // This is a simplified version - you would need to implement proper event loading
+                // For now, hide the event window if no events
+                eventWindow.style.display = 'none';
+            } catch (error) {
+                console.log('Events will be loaded from CMS');
+            }
+        }
+
+        // Observe all menu cards and feature cards
+        document.addEventListener('DOMContentLoaded', function() {
+            const cards = document.querySelectorAll('.menu-card, .feature-card');
+            cards.forEach((card, index) => {
+                card.style.opacity = '0';
+                card.style.transform = 'translateY(30px)';
+                card.style.transition = `all 0.6s ease ${index * 0.1}s`;
+                observer.observe(card);
+            });
+
+            // Load dynamic content
+            loadMenuData();
+            loadEventData();
+        });
+
+        // Netlify CMS redirect after login
+        if (window.netlifyIdentity) {
+            window.netlifyIdentity.on("init", user => {
+                if (!user) {
+                    window.netlifyIdentity.on("login", () => {
+                        document.location.href = "/admin/";
+                    });
+                }
+            });
+        }
+    </script>
+</body>
+</html>

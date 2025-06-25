@@ -1,0 +1,46 @@
+backend:
+  name: git-gateway
+  branch: main
+
+media_folder: "/content"
+public_folder: "/images/uploads"
+
+collections:
+  - name: "menu"
+    label: "Menü Kategorien"
+    folder: "content/menu"
+    create: true
+    slug: "{{slug}}"
+    fields:
+      - {label: "Titel", name: "title", widget: "string"}
+      - {label: "Icon", name: "icon", widget: "string", default: "🍽️"}
+      - {label: "Reihenfolge", name: "order", widget: "number", default: 0}
+      - {label: "Kategorie Bild", name: "image", widget: "image", required: false}
+      - label: "Menü Items"
+        name: "items"
+        widget: "list"
+        fields:
+          - {label: "Name", name: "name", widget: "string"}
+          - {label: "Beschreibung", name: "description", widget: "text"}
+          - {label: "Preis (€)", name: "price", widget: "number", value_type: "float", min: 0, step: 0.1}
+          - label: "Tags"
+            name: "tags"
+            widget: "list"
+            field: {label: "Tag", name: "tag", widget: "string"}
+            hint: "z.B. vegan, vegetarisch, glutenfrei, lactosefrei, protein, superfood"
+
+  - name: "events"
+    label: "Veranstaltungen"
+    folder: "content/events"
+    create: true
+    slug: "{{year}}-{{month}}-{{day}}-{{slug}}"
+    fields:
+      - {label: "Event Titel", name: "title", widget: "string"}
+      - {label: "Künstler/DJ", name: "artist", widget: "string", required: false}
+      - {label: "Datum", name: "date", widget: "datetime"}
+      - {label: "Beschreibung", name: "description", widget: "text"}
+      - {label: "Musik Stil", name: "musicStyle", widget: "string", required: false}
+      - {label: "Start Zeit", name: "startTime", widget: "string", default: "9:00 Uhr"}
+      - {label: "Event Bild", name: "image", widget: "image", required: false}
+      - {label: "Audio Preview", name: "audioPreview", widget: "file", required: false}
+      - {label: "Aktiv", name: "active", widget: "boolean", default: true}
