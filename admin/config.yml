@@ -1,0 +1,36 @@
+backend:
+  name: git-gateway
+  branch: main
+
+media_folder: "content/images/"
+public_folder: "/images/uploads"
+
+collections:
+  - name: "menu"
+    label: "Menü Items"
+    folder: "content/menu"
+    create: true
+    slug: "{{year}}-{{month}}-{{day}}-{{slug}}"
+    fields:
+      - {label: "Titel", name: "title", widget: "string"}
+      - {label: "Beschreibung", name: "description", widget: "text"}
+      - {label: "Preis", name: "price", widget: "number"}
+      - {label: "Kategorie", name: "category", widget: "select", 
+         options: ["Vorspeise", "Hauptgang", "Dessert", "Getränk"]}
+      - {label: "Bild", name: "image", widget: "image"}
+      - {label: "Verfügbar", name: "available", widget: "boolean", default: true}
+      - {label: "Audio Preview", name: "audioFile", widget: "file", required: false}
+
+  - name: "events"
+    label: "Veranstaltungen"
+    folder: "content/events"
+    create: true
+    slug: "{{year}}-{{month}}-{{day}}-{{slug}}"
+    fields:
+      - {label: "Event Titel", name: "title", widget: "string"}
+      - {label: "Datum", name: "date", widget: "datetime"}
+      - {label: "Ort", name: "location", widget: "string"}
+      - {label: "Beschreibung", name: "body", widget: "markdown"}
+      - {label: "Bild", name: "featuredImage", widget: "image"}
+      - {label: "Preis", name: "price", widget: "number", required: false}
+      - {label: "Audio Ankündigung", name: "audioAnnouncement", widget: "file", required: false}

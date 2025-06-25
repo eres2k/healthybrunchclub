@@ -1,0 +1,15 @@
+{
+  "name": "healthy-brunch-club",
+  "version": "1.0.0",
+  "description": "Healthy Brunch Club Vienna Website",
+  "main": "index.js",
+  "scripts": {
+    "build": "echo 'Build completed'"
+  },
+  "dependencies": {
+    "gray-matter": "^4.0.3"
+  },
+  "devDependencies": {
+    "@netlify/functions": "^2.0.0"
+  }
+}
