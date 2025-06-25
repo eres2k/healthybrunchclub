@@ -33,7 +33,7 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400..700;1,400..700&display=swap" rel="stylesheet">
 
-    <script src="cms-loader.js"></script>
+
 
 	<style>
 	/* Menu Card Image Support */
@@ -1981,36 +1981,7 @@ These endpoints will be created when you set up Netlify Functions to read your C
             });
         }, observerOptions);
 
-        // Load menu data
-        async function loadMenuData() {
-            try {
-                const response = await fetch('/content/menu/');
-                const files = await response.text();
-                const menuGrid = document.getElementById('menuGrid');
-                
-                // Parse markdown files and render menu
-                // This is a simplified version - you would need to implement proper markdown parsing
-                menuGrid.innerHTML = '<p class="no-menu-message">Bitte benutzen Sie das Admin-Panel, um Menü-Einträge hinzuzufügen.</p>';
-            } catch (error) {
-                console.log('Menu will be loaded from CMS');
-            }
-        }
-
-        // Load event data
-        async function loadEventData() {
-            try {
-                const response = await fetch('/content/events/');
-                const files = await response.text();
-                const eventWindow = document.getElementById('eventWindow');
-                const eventContent = document.getElementById('eventContent');
-                
-                // This is a simplified version - you would need to implement proper event loading
-                // For now, hide the event window if no events
-                eventWindow.style.display = 'none';
-            } catch (error) {
-                console.log('Events will be loaded from CMS');
-            }
-        }
+   
 
         // Observe all menu cards and feature cards
         document.addEventListener('DOMContentLoaded', function() {
@@ -2022,9 +1993,7 @@ These endpoints will be created when you set up Netlify Functions to read your C
                 observer.observe(card);
             });
 
-            // Load dynamic content
-            loadMenuData();
-            loadEventData();
+    
         });
 
         // Netlify CMS redirect after login
@@ -2038,5 +2007,6 @@ These endpoints will be created when you set up Netlify Functions to read your C
             });
         }
     </script>
+<script src="cms-loader.js"></script>
 </body>
 </html>
