@@ -78,16 +78,50 @@ exports.handler = async (event, context) => {
     // Create a map to group items by category
     const categoryMap = new Map();
     
-    // Define category metadata (icons and order)
-    const categoryMetadata = {
-      'morning rituals': { icon: '🌅', order: 1 },
-      'eggs & stories': { icon: '🍳', order: 2 },
-      'power bowls': { icon: '🥣', order: 3 },
-      'sweet treats': { icon: '🍰', order: 4 },
-      'drinks & juices': { icon: '🥤', order: 5 },
-      'specials': { icon: '✨', order: 6 },
-      'sonstiges': { icon: '🍴', order: 99 }
-    };
+    // Load categories from the categories collection
+    let categoryMetadata = {};
+    
+    try {
+      const categoriesDir = path.join(process.cwd(), 'content', 'categories');
+      
+      try {
+        await fs.access(categoriesDir);
+        const categoryFiles = await fs.readdir(categoriesDir);
+        
+        await Promise.all(
+          categoryFiles
+            .filter(file => file.endsWith('.md'))
+            .map(async (file) => {
+              const filePath = path.join(categoriesDir, file);
+              const content = await fs.readFile(filePath, 'utf8');
+              const { data } = matter(content);
+              
+              if (data.active !== false) {
+                categoryMetadata[data.title] = {
+                  icon: data.icon || '🍴',
+                  order: data.order || 99
+                };
+              }
+            })
+        );
+      } catch (error) {
+        console.log('Categories directory not found, using defaults');
+      }
+    } catch (error) {
+      console.log('Error loading categories:', error);
+    }
+    
+    // Fallback to default categories if none found
+    if (Object.keys(categoryMetadata).length === 0) {
+      categoryMetadata = {
+        'morning rituals': { icon: '🌅', order: 1 },
+        'eggs & stories': { icon: '🍳', order: 2 },
+        'power bowls': { icon: '🥣', order: 3 },
+        'sweet treats': { icon: '🍰', order: 4 },
+        'drinks & juices': { icon: '🥤', order: 5 },
+        'sonstiges': { icon: '🍴', order: 99 }
+      };
+    }
     
     // Process each menu item file
     await Promise.all(
