@@ -20,11 +20,9 @@ async function loadMenuFromCMS() {
         console.log('Menu data loaded:', menuData);
         
         displayMenu(menuData);
-        initializeFilters();
     } catch (error) {
         console.error('Error loading menu:', error);
         displayFallbackMenu();
-        initializeFilters();
     }
 }
 
@@ -57,48 +55,67 @@ function displayMenu(menuData) {
         return;
     }
     
-    menuGrid.innerHTML = menuData.map(category => {
-        // Handle image URL - check if it's a relative path and make it absolute
-        let imageUrl = '';
-        if (category.image) {
-            imageUrl = category.image.startsWith('/') ? category.image : `/${category.image}`;
-        }
-        
-        const itemsHtml = category.items.map(item => `
-            <div class="menu-item">
-                <div class="menu-item-header">
-                    <h4 class="menu-item-name">${item.name}</h4>
-                </div>
-                <p class="menu-item-description">${item.description}</p>
-                ${item.tags && item.tags.length > 0 ? `
-                    <div class="menu-tags">
-                        ${item.tags.map(tag => `<span class="menu-tag">${tag}</span>`).join('')}
-                    </div>
-                ` : ''}
-            </div>
-        `).join('');
-        
-        return `
-            <div class="menu-card">
-                ${imageUrl ? `
-                    <div class="menu-card-image">
-                        <img src="${imageUrl}" alt="${category.title}" loading="lazy" onerror="this.parentElement.style.display='none'">
-                    </div>
-                ` : ''}
-                <div class="menu-card-content">
-                    <h3 class="menu-category-title">
-                        ${category.icon || '🍽️'} ${category.title}
-                    </h3>
-                    <div class="menu-items">
-                        ${itemsHtml}
-                    </div>
-                </div>
-            </div>
-        `;
-    }).join('');
+    // Clear existing content
+    menuGrid.innerHTML = '';
+    
+    // Store all menu items for filtering
+    window.allMenuItems = menuData;
+    
+    // Display all categories
+    menuData.forEach(category => {
+        const categoryCard = createMenuCategoryCard(category);
+        menuGrid.appendChild(categoryCard);
+    });
     
     // Trigger animations for newly loaded content
     triggerMenuAnimations();
+}
+
+// Create menu category card
+function createMenuCategoryCard(category) {
+    const card = document.createElement('div');
+    card.className = 'menu-card';
+    card.setAttribute('data-category', category.title.toLowerCase());
+    
+    // Handle image URL - check if it's a relative path and make it absolute
+    let imageHtml = '';
+    if (category.image) {
+        const imageUrl = category.image.startsWith('/') ? category.image : `/${category.image}`;
+        imageHtml = `
+            <div class="menu-card-image">
+                <img src="${imageUrl}" alt="${category.title}" loading="lazy" onerror="this.parentElement.style.display='none'">
+            </div>
+        `;
+    }
+    
+    // Create items HTML
+    const itemsHtml = category.items ? category.items.map(item => `
+        <div class="menu-item">
+            <div class="menu-item-header">
+                <h4 class="menu-item-name">${item.name}</h4>
+            </div>
+            <p class="menu-item-description">${item.description}</p>
+            ${item.tags && item.tags.length > 0 ? `
+                <div class="menu-tags">
+                    ${item.tags.map(tag => `<span class="menu-tag">${tag}</span>`).join('')}
+                </div>
+            ` : ''}
+        </div>
+    `).join('') : '';
+    
+    card.innerHTML = `
+        ${imageHtml}
+        <div class="menu-card-content">
+            <h3 class="menu-category-title">
+                ${category.icon || '🍽️'} ${category.title}
+            </h3>
+            <div class="menu-items">
+                ${itemsHtml}
+            </div>
+        </div>
+    `;
+    
+    return card;
 }
 
 // Display Events with Images
@@ -115,9 +132,16 @@ function displayEvents(eventsData) {
     const nextEvent = eventsData[0];
     
     // Handle image URL
-    let imageUrl = '';
-    if (nextEvent.image) {
-        imageUrl = nextEvent.image.startsWith('/') ? nextEvent.image : `/${nextEvent.image}`;
+    let imageHtml = '';
+    if (nextEvent.image || nextEvent.featuredImage) {
+        const imageUrl = (nextEvent.image || nextEvent.featuredImage).startsWith('/') 
+            ? (nextEvent.image || nextEvent.featuredImage) 
+            : `/${nextEvent.image || nextEvent.featuredImage}`;
+        imageHtml = `
+            <div class="event-image">
+                <img src="${imageUrl}" alt="${nextEvent.title}" loading="lazy" onerror="this.parentElement.style.display='none'">
+            </div>
+        `;
     }
     
     // Format the date
@@ -130,17 +154,13 @@ function displayEvents(eventsData) {
     
     eventContent.innerHTML = `
         <div class="event-header">
-            ${imageUrl ? `
-                <div class="event-image">
-                    <img src="${imageUrl}" alt="${nextEvent.title}" loading="lazy" onerror="this.parentElement.style.display='none'">
-                </div>
-            ` : ''}
+            ${imageHtml}
             <h3>${nextEvent.title}</h3>
             <p>${formattedDate}</p>
         </div>
         <div class="event-details">
             <strong>🎵 ${nextEvent.artist || 'Special Guest'}</strong>
-            <p>${nextEvent.description}</p>
+            <p>${nextEvent.description || nextEvent.body || ''}</p>
             
             ${nextEvent.musicStyle ? `
                 <strong>🎶 Music Style:</strong>
@@ -153,13 +173,13 @@ function displayEvents(eventsData) {
             ` : ''}
         </div>
         
-        ${nextEvent.audioPreview ? `
+        ${(nextEvent.audioPreview || nextEvent.audioAnnouncement) ? `
             <div class="audio-player">
                 <h4>🎧 Preview</h4>
                 <audio controls preload="none">
-                    <source src="${nextEvent.audioPreview}" type="audio/mpeg">
-                    <source src="${nextEvent.audioPreview}" type="audio/wav">
-                    <source src="${nextEvent.audioPreview}" type="audio/ogg">
+                    <source src="${nextEvent.audioPreview || nextEvent.audioAnnouncement}" type="audio/mpeg">
+                    <source src="${nextEvent.audioPreview || nextEvent.audioAnnouncement}" type="audio/wav">
+                    <source src="${nextEvent.audioPreview || nextEvent.audioAnnouncement}" type="audio/ogg">
                     Dein Browser unterstützt das Audio-Element nicht.
                 </audio>
             </div>
@@ -205,6 +225,38 @@ function displayFallbackMenu() {
                     tags: ["glutenfrei", "protein"]
                 }
             ]
+        },
+        {
+            title: "klassiker neu interpretiert",
+            icon: "🍳",
+            items: [
+                {
+                    name: "eggs benedict deluxe",
+                    description: "bio-eier, avocado, spinat, hollandaise",
+                    tags: ["protein", "vegetarisch"]
+                },
+                {
+                    name: "french toast heaven",
+                    description: "brioche, ahornsirup, beeren, vanillecreme",
+                    tags: ["süß", "indulgent"]
+                }
+            ]
+        },
+        {
+            title: "drinks & elixiere",
+            icon: "🥤",
+            items: [
+                {
+                    name: "immunity booster juice",
+                    description: "ingwer, kurkuma, orange, karotte",
+                    tags: ["vitamin c", "detox"]
+                },
+                {
+                    name: "green goddess smoothie",
+                    description: "spinat, banane, mango, spirulina",
+                    tags: ["superfood", "energie"]
+                }
+            ]
         }
     ];
     
@@ -247,3 +299,57 @@ function triggerMenuAnimations() {
         observer.observe(card);
     });
 }
+
+// Filter menu functionality
+window.filterMenu = function(category) {
+    const menuGrid = document.getElementById('menuGrid');
+    const buttons = document.querySelectorAll('.category-btn');
+    
+    // Update active button
+    buttons.forEach(btn => {
+        btn.classList.remove('active');
+        if (btn.getAttribute('onclick').includes(category)) {
+            btn.classList.add('active');
+        }
+    });
+    
+    // Show/hide menu cards based on category
+    const cards = menuGrid.querySelectorAll('.menu-card');
+    
+    cards.forEach(card => {
+        if (category === 'all') {
+            card.style.display = 'block';
+        } else {
+            const cardCategory = card.getAttribute('data-category');
+            if (cardCategory && cardCategory.includes(category.toLowerCase())) {
+                card.style.display = 'block';
+            } else {
+                card.style.display = 'none';
+            }
+        }
+    });
+    
+    // Re-trigger animations for visible cards
+    const visibleCards = Array.from(cards).filter(card => card.style.display !== 'none');
+    visibleCards.forEach((card, index) => {
+        card.style.opacity = '0';
+        card.style.transform = 'translateY(30px)';
+        setTimeout(() => {
+            card.style.opacity = '1';
+            card.style.transform = 'translateY(0)';
+        }, index * 100);
+    });
+};
+
+// Initialize filter buttons
+document.addEventListener('DOMContentLoaded', function() {
+    // Set up filter button event listeners
+    const filterButtons = document.querySelectorAll('.category-btn');
+    filterButtons.forEach(button => {
+        button.addEventListener('click', function(e) {
+            e.preventDefault();
+            const filterValue = this.getAttribute('onclick').match(/filterMenu\('(.+)'\)/)[1];
+            window.filterMenu(filterValue);
+        });
+    });
+});
