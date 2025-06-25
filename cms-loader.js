@@ -1,11 +1,22 @@
 // CMS Loader with Image Support for Menu and Events
 // Save this as cms-loader.js
 
-document.addEventListener('DOMContentLoaded', function() {
+// Wait for DOM to be ready
+if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', initCMSLoader);
+} else {
+    // DOM is already ready
+    initCMSLoader();
+}
+
+function initCMSLoader() {
     console.log('CMS Loader initialized');
-    loadMenuFromCMS();
-    loadEventsFromCMS();
-});
+    // Small delay to ensure all elements are rendered
+    setTimeout(() => {
+        loadMenuFromCMS();
+        loadEventsFromCMS();
+    }, 100);
+}
 
 // Load Menu from CMS
 async function loadMenuFromCMS() {
