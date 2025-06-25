@@ -32,18 +32,56 @@ exports.handler = async (event, context) => {
     } catch (error) {
       console.error('Menu directory not found:', menuDir);
       
-      // Return default categories if directory doesn't exist
+      // Return default menu data
+      const defaultMenu = [
+        {
+          title: "morning rituals",
+          icon: "🌅",
+          order: 1,
+          items: [
+            {
+              name: "warmes wasser mit bio-zitrone",
+              description: "der perfekte start für deine verdauung",
+              tags: ["detox", "vegan"]
+            },
+            {
+              name: "golden milk latte",
+              description: "kurkuma, ingwer, zimt & hafermilch",
+              tags: ["anti-inflammatory", "lactosefrei"]
+            }
+          ]
+        },
+        {
+          title: "power bowls",
+          icon: "🥣",
+          order: 2,
+          items: [
+            {
+              name: "açaí sunrise bowl",
+              description: "açaí, banane, beeren, granola, kokosflocken",
+              tags: ["superfood", "vegan"]
+            },
+            {
+              name: "premium porridge",
+              description: "haferflocken, chia, hanfsamen, heidelbeeren, mandeln",
+              tags: ["glutenfrei", "protein"]
+            }
+          ]
+        }
+      ];
+      
       return {
         statusCode: 200,
         headers,
-        body: JSON.stringify([])
+        body: JSON.stringify(defaultMenu)
       };
     }
     
     const files = await fs.readdir(menuDir);
     console.log('Found menu files:', files);
     
-    const menuCategories = await Promise.all(
+    // Parse individual menu items from markdown files
+    const menuItems = await Promise.all(
       files
         .filter(file => file.endsWith('.md'))
         .map(async (file) => {
@@ -54,36 +92,22 @@ exports.handler = async (event, context) => {
             
             console.log('Parsed menu file:', file, data);
             
-            // Check if this is a category with items or a single item
-            if (data.items && Array.isArray(data.items)) {
-              // This is a category with multiple items
-              return {
-                title: data.title || '',
-                icon: data.icon || '',
-                order: data.order || 999,
-                image: data.image || '',
-                items: data.items.map(item => ({
-                  name: item.name || '',
-                  description: item.description || '',
-                  price: item.price ? `€${item.price}` : '',
-                  tags: item.tags || []
-                }))
-              };
-            } else {
-              // This is a single item - convert to category format
-              return {
-                title: data.category || 'Sonstiges',
-                icon: '',
-                order: 999,
-                image: data.image || '',
-                items: [{
-                  name: data.title || '',
-                  description: data.description || '',
-                  price: data.price ? `€${data.price}` : '',
-                  tags: data.available ? ['verfügbar'] : []
-                }]
-              };
+            if (!data.title) {
+              console.warn(`Menu file ${file} missing title`);
+              return null;
             }
+            
+            // Create a menu item from the markdown frontmatter
+            return {
+              name: data.title,
+              description: data.description || '',
+              category: data.category || 'Sonstiges',
+              price: data.price,
+              available: data.available !== false,
+              image: data.image || '',
+              audioFile: data.audioFile || '',
+              tags: [] // You could derive tags from category or other fields
+            };
           } catch (error) {
             console.error('Error parsing menu file:', file, error);
             return null;
@@ -91,33 +115,80 @@ exports.handler = async (event, context) => {
         })
     );
     
-    // Filter out null values and merge categories with same title
-    const validCategories = menuCategories.filter(cat => cat !== null);
+    // Filter out null values
+    const validItems = menuItems.filter(item => item !== null && item.available);
     
-    // Merge categories with the same title
-    const mergedCategories = {};
-    validCategories.forEach(cat => {
-      if (!mergedCategories[cat.title]) {
-        mergedCategories[cat.title] = cat;
-      } else {
-        // Merge items
-        mergedCategories[cat.title].items = [
-          ...mergedCategories[cat.title].items,
-          ...cat.items
-        ];
+    // Group items by category
+    const categoriesMap = new Map();
+    
+    validItems.forEach(item => {
+      const category = item.category.toLowerCase();
+      
+      if (!categoriesMap.has(category)) {
+        categoriesMap.set(category, {
+          title: category,
+          icon: getCategoryIcon(category),
+          order: getCategoryOrder(category),
+          items: []
+        });
       }
+      
+      categoriesMap.get(category).items.push({
+        name: item.name.toLowerCase(),
+        description: item.description.toLowerCase(),
+        price: item.price ? `€${item.price}` : '',
+        tags: getTags(item)
+      });
     });
     
-    // Convert back to array and sort by order
-    const finalCategories = Object.values(mergedCategories)
-      .sort((a, b) => (a.order || 999) - (b.order || 999));
+    // Convert map to array and sort by order
+    const menuCategories = Array.from(categoriesMap.values())
+      .sort((a, b) => a.order - b.order);
     
-    console.log('Returning menu categories:', finalCategories.length);
+    console.log('Returning menu categories:', menuCategories);
+    
+    // If no categories found, return default menu
+    if (menuCategories.length === 0) {
+      const defaultMenu = [
+        {
+          title: "morning rituals",
+          icon: "🌅",
+          order: 1,
+          items: [
+            {
+              name: "kaffee",
+              description: "TEST",
+              price: "€100",
+              tags: ["heißgetränk"]
+            }
+          ]
+        },
+        {
+          title: "vorspeisen",
+          icon: "🥗",
+          order: 2,
+          items: [
+            {
+              name: "noch was",
+              description: "test",
+              price: "€50",
+              tags: ["starter"]
+            }
+          ]
+        }
+      ];
+      
+      return {
+        statusCode: 200,
+        headers,
+        body: JSON.stringify(defaultMenu)
+      };
+    }
     
     return {
       statusCode: 200,
       headers,
-      body: JSON.stringify(finalCategories)
+      body: JSON.stringify(menuCategories)
     };
     
   } catch (error) {
@@ -133,3 +204,56 @@ exports.handler = async (event, context) => {
     };
   }
 };
+
+// Helper function to get category icon
+function getCategoryIcon(category) {
+  const icons = {
+    'vorspeise': '🥗',
+    'hauptgang': '🍽️',
+    'dessert': '🍰',
+    'getränk': '☕',
+    'frühstück': '🌅',
+    'bowl': '🥣',
+    'smoothie': '🥤'
+  };
+  
+  return icons[category.toLowerCase()] || '🍴';
+}
+
+// Helper function to get category order
+function getCategoryOrder(category) {
+  const order = {
+    'frühstück': 1,
+    'vorspeise': 2,
+    'bowl': 3,
+    'hauptgang': 4,
+    'dessert': 5,
+    'getränk': 6,
+    'smoothie': 7
+  };
+  
+  return order[category.toLowerCase()] || 99;
+}
+
+// Helper function to generate tags
+function getTags(item) {
+  const tags = [];
+  
+  // Add tags based on category
+  if (item.category === 'Getränk') {
+    if (item.name.includes('kaffee') || item.name.includes('coffee')) {
+      tags.push('koffein');
+    }
+    if (item.name.includes('tee') || item.name.includes('tea')) {
+      tags.push('teein');
+    }
+  }
+  
+  // Add price range tags
+  if (item.price) {
+    if (item.price < 10) tags.push('budget');
+    else if (item.price > 50) tags.push('premium');
+  }
+  
+  return tags;
+}
