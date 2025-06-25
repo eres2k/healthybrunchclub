@@ -2,7 +2,7 @@
 title: eggs & stories
 slug: eggs
 icon: 🍳
-order: 2
+order: 0
 image: /images/uploads/eggs-category.jpg
 items:
   - name: eggs benedict classic
