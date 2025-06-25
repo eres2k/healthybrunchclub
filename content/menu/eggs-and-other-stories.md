@@ -1,7 +1,7 @@
 ---
 title: Eggs and other stories
 icon: 🍽️
-order: 1
+order: 2
 image: /images/uploads/eggs.jpg
 items:
   - name: BEGGS ENEDICT
