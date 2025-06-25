@@ -6,6 +6,21 @@ media_folder: "content/images/"
 public_folder: "/images/uploads"
 
 collections:
+  - name: "categories"
+    label: "Menü Kategorien"
+    folder: "content/categories"
+    create: true
+    slug: "{{slug}}"
+    summary: "{{title}} - Reihenfolge: {{order}}"
+    sortable_fields: ['order', 'title']
+    fields:
+      - {label: "Kategorie Name", name: "title", widget: "string", hint: "z.B. 'morning rituals', 'eggs & stories'"}
+      - {label: "Icon", name: "icon", widget: "string", default: "🍽️", hint: "Ein Emoji für diese Kategorie"}
+      - {label: "Reihenfolge", name: "order", widget: "number", default: 1, hint: "Niedrigere Zahlen erscheinen zuerst"}
+      - {label: "Beschreibung", name: "description", widget: "text", required: false, hint: "Optionale Beschreibung der Kategorie"}
+      - {label: "Kategorie Bild", name: "image", widget: "image", required: false}
+      - {label: "Aktiv", name: "active", widget: "boolean", default: true}
+
   - name: "menu"
     label: "Menü Items"
     folder: "content/menu"
@@ -15,19 +30,20 @@ collections:
       - {label: "Titel", name: "title", widget: "string"}
       - {label: "Beschreibung", name: "description", widget: "text"}
       - {label: "Preis", name: "price", widget: "number", required: false}
-      - {label: "Kategorie", name: "category", widget: "select", 
-         options: [
-           {label: "Morning Rituals", value: "morning rituals"},
-           {label: "Eggs & Stories", value: "eggs & stories"},
-           {label: "Power Bowls", value: "power bowls"},
-           {label: "Sweet Treats", value: "sweet treats"},
-           {label: "Drinks & Juices", value: "drinks & juices"},
-           {label: "Specials", value: "specials"}
-         ]}
+      - label: "Kategorie"
+        name: "category"
+        widget: "relation"
+        collection: "categories"
+        search_fields: ["title"]
+        value_field: "title"
+        display_fields: ["title"]
+        hint: "Wähle eine Kategorie oder erstelle zuerst eine neue unter 'Menü Kategorien'"
       - {label: "Bild", name: "image", widget: "image", required: false}
       - {label: "Verfügbar", name: "available", widget: "boolean", default: true}
       - {label: "Audio Preview", name: "audioFile", widget: "file", required: false}
-      - {label: "Tags", name: "tags", widget: "list", required: false}
+      - {label: "Tags", name: "tags", widget: "list", required: false, hint: "z.B. vegan, glutenfrei, etc."}
+      - {label: "Spezial", name: "special", widget: "boolean", default: false, hint: "Als Spezial-Gericht markieren"}
+      - {label: "Allergene", name: "allergens", widget: "list", required: false}
 
   - name: "events"
     label: "Veranstaltungen"
@@ -37,7 +53,7 @@ collections:
     fields:
       - {label: "Event Titel", name: "title", widget: "string"}
       - {label: "Datum", name: "date", widget: "datetime"}
-      - {label: "Ort", name: "location", widget: "string"}
+      - {label: "Ort", name: "location", widget: "string", default: "Healthy Brunch Club"}
       - {label: "Künstler", name: "artist", widget: "string", required: false}
       - {label: "Musik Stil", name: "musicStyle", widget: "string", required: false}
       - {label: "Start Zeit", name: "startTime", widget: "string", default: "9:00 Uhr"}
