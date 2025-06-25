@@ -1,6 +1,6 @@
 ---
-title: "Chaga Cold Brew  "
-description: antioxidativ & entgiftend
+title: "Kurkuma Espresso Latte "
+description: antioxidativ & entzündungshemmend
 category: Coffercorner
 available: true
 special: false
