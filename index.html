@@ -1792,76 +1792,143 @@ These endpoints will be created when you set up Netlify Functions to read your C
     </footer>
 
     <!-- Scripts -->
-    <script>
-        // Loading Screen
-        window.addEventListener('load', function() {
-            setTimeout(function() {
-                document.getElementById('loadingScreen').classList.add('hidden');
-            }, 2000);
-        });
+<script>
+    // Enhanced Loading Screen Handler
+    (function() {
+        'use strict';
+        
+        function hideLoadingScreen() {
+            const loadingScreen = document.getElementById('loadingScreen');
+            if (loadingScreen) {
+                loadingScreen.classList.add('hidden');
+                console.log('Loading screen hidden');
+            }
+        }
 
-        // Toggle Event Window
-        function toggleEventWindow() {
-            const eventWindow = document.getElementById('eventWindow');
-            const toggleIcon = document.getElementById('toggleIcon');
-            
+        // Multiple strategies to ensure loading screen hides
+        if (document.readyState === 'loading') {
+            document.addEventListener('DOMContentLoaded', () => {
+                setTimeout(hideLoadingScreen, 1500);
+            });
+        } else {
+            setTimeout(hideLoadingScreen, 1500);
+        }
+
+        // Fallback timeout
+        setTimeout(hideLoadingScreen, 3000);
+
+        // Hide on any error to prevent stuck loading screen
+        window.addEventListener('error', hideLoadingScreen);
+    })();
+
+    // Remove the duplicate CMS loader that's inline in the HTML
+    // and use only the external cms-loader.js file
+
+    // Initialize everything when DOM is ready
+    document.addEventListener('DOMContentLoaded', function() {
+        console.log('Initializing Healthy Brunch Club...');
+        
+        // Fill Monday dates
+        fillMondayDates();
+        
+        // Initialize smooth scrolling
+        initSmoothScrolling();
+        
+        // Initialize navigation effects
+        initNavigationEffects();
+        
+        // Initialize mobile menu
+        initMobileMenu();
+        
+        // Initialize animations
+        initAnimations();
+        
+        // Initialize Netlify Identity
+        initNetlifyIdentity();
+        
+        // Handle form success
+        handleFormSuccess();
+        
+        // The CMS loader will be initialized by cms-loader.js
+        console.log('Initialization complete');
+    });
+
+    // Toggle Event Window
+    function toggleEventWindow() {
+        const eventWindow = document.getElementById('eventWindow');
+        const toggleIcon = document.getElementById('toggleIcon');
+        
+        if (eventWindow && toggleIcon) {
             eventWindow.classList.toggle('collapsed');
             toggleIcon.textContent = eventWindow.classList.contains('collapsed') ? '🎵' : '−';
         }
+    }
 
-        // Show Admin Button for logged in users
+    // Initialize Netlify Identity
+    function initNetlifyIdentity() {
         if (window.netlifyIdentity) {
             window.netlifyIdentity.on("init", user => {
-                if (user) {
-                    document.getElementById('adminEditBtn').classList.add('show');
+                const adminBtn = document.getElementById('adminEditBtn');
+                if (user && adminBtn) {
+                    adminBtn.classList.add('show');
                 }
             });
             
             window.netlifyIdentity.on("login", () => {
-                document.getElementById('adminEditBtn').classList.add('show');
+                const adminBtn = document.getElementById('adminEditBtn');
+                if (adminBtn) {
+                    adminBtn.classList.add('show');
+                }
             });
             
             window.netlifyIdentity.on("logout", () => {
-                document.getElementById('adminEditBtn').classList.remove('show');
+                const adminBtn = document.getElementById('adminEditBtn');
+                if (adminBtn) {
+                    adminBtn.classList.remove('show');
+                }
             });
         }
+    }
 
-        // Fill Monday dates in the select dropdown
-        function fillMondayDates() {
-            const dateSelect = document.getElementById('date');
-            const today = new Date();
-            const daysUntilMonday = (8 - today.getDay()) % 7 || 7;
+    // Fill Monday dates in the select dropdown
+    function fillMondayDates() {
+        const dateSelect = document.getElementById('date');
+        if (!dateSelect) return;
+        
+        const today = new Date();
+        const daysUntilMonday = (8 - today.getDay()) % 7 || 7;
+        
+        for (let i = 0; i < 4; i++) {
+            const monday = new Date(today);
+            monday.setDate(today.getDate() + daysUntilMonday + (i * 7));
             
-            for (let i = 0; i < 4; i++) {
-                const monday = new Date(today);
-                monday.setDate(today.getDate() + daysUntilMonday + (i * 7));
-                
-                const option = document.createElement('option');
-                option.value = monday.toISOString().split('T')[0];
-                option.textContent = monday.toLocaleDateString('de-AT', { 
-                    weekday: 'long', 
-                    day: 'numeric', 
-                    month: 'long' 
-                });
-                
-                dateSelect.appendChild(option);
-            }
+            const option = document.createElement('option');
+            option.value = monday.toISOString().split('T')[0];
+            option.textContent = monday.toLocaleDateString('de-AT', { 
+                weekday: 'long', 
+                day: 'numeric', 
+                month: 'long' 
+            });
+            
+            dateSelect.appendChild(option);
         }
+    }
 
-        // Call function when page loads
-        document.addEventListener('DOMContentLoaded', fillMondayDates);
-
-        // Handle form submission success
+    // Handle form submission success
+    function handleFormSuccess() {
         if (window.location.search.includes('success=true')) {
             alert('vielen dank für deine reservierung! wir haben deine anfrage erhalten und melden uns in kürze bei dir.');
             window.history.replaceState({}, document.title, window.location.pathname);
         }
+    }
 
-        // Smooth scrolling for navigation links
+    // Initialize smooth scrolling
+    function initSmoothScrolling() {
         document.querySelectorAll('a[href^="#"]').forEach(anchor => {
             anchor.addEventListener('click', function (e) {
                 e.preventDefault();
-                const target = document.querySelector(this.getAttribute('href'));
+                const targetId = this.getAttribute('href');
+                const target = document.querySelector(targetId);
                 if (target) {
                     target.scrollIntoView({
                         behavior: 'smooth',
@@ -1870,22 +1937,28 @@ These endpoints will be created when you set up Netlify Functions to read your C
                 }
             });
         });
+    }
 
-        // Navigation scroll effect
+    // Initialize navigation effects
+    function initNavigationEffects() {
+        const navbar = document.getElementById('navbar');
+        if (!navbar) return;
+        
         window.addEventListener('scroll', function() {
-            const navbar = document.getElementById('navbar');
             if (window.scrollY > 100) {
                 navbar.classList.add('scrolled');
             } else {
                 navbar.classList.remove('scrolled');
             }
         });
+    }
 
-        // Mobile menu toggle
+    // Initialize mobile menu
+    function initMobileMenu() {
         const mobileMenuToggle = document.querySelector('.mobile-menu-toggle');
         const navLinks = document.querySelector('.nav-links');
 
-        if (mobileMenuToggle) {
+        if (mobileMenuToggle && navLinks) {
             mobileMenuToggle.addEventListener('click', function() {
                 navLinks.style.display = navLinks.style.display === 'flex' ? 'none' : 'flex';
                 navLinks.style.flexDirection = 'column';
@@ -1898,8 +1971,10 @@ These endpoints will be created when you set up Netlify Functions to read your C
                 navLinks.style.boxShadow = '0 4px 20px rgba(0,0,0,0.1)';
             });
         }
+    }
 
-        // Intersection Observer for fade-in animations
+    // Initialize animations
+    function initAnimations() {
         const observerOptions = {
             threshold: 0.1,
             rootMargin: '0px 0px -50px 0px'
@@ -1914,32 +1989,23 @@ These endpoints will be created when you set up Netlify Functions to read your C
             });
         }, observerOptions);
 
-   
-
-        // Observe all menu cards and feature cards
-        document.addEventListener('DOMContentLoaded', function() {
-            const cards = document.querySelectorAll('.menu-card, .feature-card');
-            cards.forEach((card, index) => {
-                card.style.opacity = '0';
-                card.style.transform = 'translateY(30px)';
-                card.style.transition = `all 0.6s ease ${index * 0.1}s`;
-                observer.observe(card);
-            });
-
-    
+        // Observe feature cards
+        const cards = document.querySelectorAll('.feature-card');
+        cards.forEach((card, index) => {
+            card.style.opacity = '0';
+            card.style.transform = 'translateY(30px)';
+            card.style.transition = `all 0.6s ease ${index * 0.1}s`;
+            observer.observe(card);
         });
+    }
 
-        // Netlify CMS redirect after login
-        if (window.netlifyIdentity) {
-            window.netlifyIdentity.on("init", user => {
-                if (!user) {
-                    window.netlifyIdentity.on("login", () => {
-                        document.location.href = "/admin/";
-                    });
-                }
-            });
-        }
-    </script>
+    // Error handler to prevent console errors from breaking the site
+    window.addEventListener('error', function(e) {
+        console.error('Error caught:', e.message);
+        // Don't let errors prevent the site from functioning
+        return true;
+    });
+</script>
 <script src="cms-loader.js"></script>
 </body>
 </html>
