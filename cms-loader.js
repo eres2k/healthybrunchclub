@@ -1,4 +1,4 @@
-// CMS Loader with Image Support and Filters
+// CMS Loader with Fixed Layout and Filters
 // Save this as cms-loader.js
 
 let allMenuCategories = [];
@@ -36,25 +36,26 @@ function createFilterButtons(menuData) {
     const filtersContainer = document.getElementById('menuFilters');
     if (!filtersContainer) return;
     
-    // Clear existing filters except "all"
-    const existingButtons = filtersContainer.querySelectorAll('.filter-btn:not([data-filter="all"])');
-    existingButtons.forEach(btn => btn.remove());
+    // Clear container
+    filtersContainer.innerHTML = '';
+    
+    // Add "all" button
+    const allBtn = document.createElement('button');
+    allBtn.className = 'filter-btn active';
+    allBtn.setAttribute('data-filter', 'all');
+    allBtn.textContent = 'alle anzeigen';
+    allBtn.addEventListener('click', handleFilterClick);
+    filtersContainer.appendChild(allBtn);
     
     // Add category filters
     menuData.forEach(category => {
         const filterBtn = document.createElement('button');
         filterBtn.className = 'filter-btn';
         filterBtn.setAttribute('data-filter', category.title.toLowerCase().replace(/\s+/g, '-'));
-        filterBtn.textContent = category.title;
+        filterBtn.textContent = category.title.toLowerCase();
         filterBtn.addEventListener('click', handleFilterClick);
         filtersContainer.appendChild(filterBtn);
     });
-    
-    // Add click handler to "all" button
-    const allBtn = filtersContainer.querySelector('[data-filter="all"]');
-    if (allBtn) {
-        allBtn.addEventListener('click', handleFilterClick);
-    }
 }
 
 // Handle Filter Click
@@ -78,12 +79,12 @@ function handleFilterClick(e) {
     }
 }
 
-// Display Menu with Images
+// Display Menu with Fixed Layout
 function displayMenu(menuData) {
     const menuGrid = document.getElementById('menuGrid');
     
     if (!menuData || menuData.length === 0) {
-        menuGrid.innerHTML = '<div class="no-menu-message"><p>Keine Einträge in dieser Kategorie.</p></div>';
+        menuGrid.innerHTML = '<div class="no-menu-message"><p>Keine Einträge gefunden.</p></div>';
         return;
     }
     
@@ -109,22 +110,20 @@ function displayMenu(menuData) {
         `).join('');
         
         return `
-            <div class="menu-card" data-category="${category.title.toLowerCase().replace(/\s+/g, '-')}" style="animation-delay: ${index * 0.1}s">
-                ${imageUrl ? `
-                    <div class="menu-card-image">
-                        <img src="${imageUrl}" alt="${category.title}" loading="lazy" onerror="this.parentElement.style.display='none'">
-                    </div>
-                ` : `
-                    <div class="menu-card-image">
-                        <div style="width: 100%; height: 100%; background: var(--sage-green); opacity: 0.1; display: flex; align-items: center; justify-content: center; font-size: 48px; color: var(--sage-green);">
+            <div class="menu-card" data-category="${category.title.toLowerCase().replace(/\s+/g, '-')}">
+                <div class="menu-card-header">
+                    ${imageUrl ? `
+                        <div class="menu-card-image">
+                            <img src="${imageUrl}" alt="${category.title}" loading="lazy" onerror="this.parentElement.classList.add('no-image'); this.parentElement.innerHTML='🍽️';">
+                        </div>
+                    ` : `
+                        <div class="menu-card-image no-image">
                             🍽️
                         </div>
-                    </div>
-                `}
+                    `}
+                    <h3 class="menu-category-title">${category.title}</h3>
+                </div>
                 <div class="menu-card-content">
-                    <h3 class="menu-category-title">
-                        ${category.title}
-                    </h3>
                     <div class="menu-items">
                         ${itemsHtml}
                     </div>
@@ -132,9 +131,55 @@ function displayMenu(menuData) {
             </div>
         `;
     }).join('');
+}
+
+// Fallback Menu with correct data
+function displayFallbackMenu() {
+    const fallbackMenu = [
+        {
+            title: "Eggs and other stories",
+            order: 1,
+            image: "/images/uploads/eggs.jpg",
+            items: [
+                {
+                    name: "EGGS ANY STYLE",
+                    description: "(1 oder 2 Eier) Eggs your style auf Süsskartoffel- und Avocadoscheiben. Beilage: Champignons/Shiitake Pilze garniert mit Rucula & Sprossen und Kresse. Styles: Spiegelei/pochiert/Eierspeise",
+                    tags: ["vegetarisch"]
+                },
+                {
+                    name: "OMELETTE CREATION",
+                    description: "(2 Eier) Basic: Sauerteigbrot (vom Öfferl) Zwiebel, Shiitake-Champignonspilze, Spinat. Add ons: Tomaten/Speckwürfel/Käse/Avocado garniert mit Rucula & Sprossen und Kresse",
+                    tags: ["vegetarisch"]
+                },
+                {
+                    name: "BEGGS ENEDICT",
+                    description: "(1 oder 2 Eier) Sauerteigbrot (vom Öfferl), pochierte Eier, Sauce Hollandaise, Spinat Add ons: Räucherlachs/BioSpeck/Shiitake-Champignonspilze garniert mit Rucula & Sprossen und Kresse",
+                    tags: []
+                }
+            ]
+        },
+        {
+            title: "Avocado Friends",
+            order: 2,
+            image: "/images/uploads/avocado.jpg",
+            items: [
+                {
+                    name: "Avocado Bowl",
+                    description: "Avocado Bowl Smashed Avocado mit geriebenem Apfel und gehobelte Mandeln",
+                    tags: ["vegetarisch"]
+                },
+                {
+                    name: "Avocado Bread",
+                    description: "Sauerteigbrot (vom Öfferl) mit smashed Avocado garniert mit Sprossen und Kresse. Extras: Ei (any style)/BioSpeck/BioLachs/Shiitake-Champignons Pilze",
+                    tags: ["vegetarisch"]
+                }
+            ]
+        }
+    ];
     
-    // Trigger animations for newly loaded content
-    triggerMenuAnimations();
+    allMenuCategories = fallbackMenu;
+    displayMenu(fallbackMenu);
+    createFilterButtons(fallbackMenu);
 }
 
 // Load Events from CMS
@@ -157,22 +202,17 @@ async function loadEventsFromCMS() {
     }
 }
 
-// Display Events with Images
+// Display Events
 function displayEvents(eventsData) {
     const eventWindow = document.getElementById('eventWindow');
     const eventContent = document.getElementById('eventContent');
     
     if (!eventsData || eventsData.length === 0) {
-        eventWindow.style.display = 'none';
+        if (eventWindow) eventWindow.style.display = 'none';
         return;
     }
     
     const nextEvent = eventsData[0];
-    
-    let imageUrl = '';
-    if (nextEvent.image) {
-        imageUrl = nextEvent.image.startsWith('/') ? nextEvent.image : `/${nextEvent.image}`;
-    }
     
     const eventDate = new Date(nextEvent.date);
     const formattedDate = eventDate.toLocaleDateString('de-AT', {
@@ -181,89 +221,20 @@ function displayEvents(eventsData) {
         month: 'long'
     });
     
-    eventContent.innerHTML = `
-        <div class="event-header">
-            ${imageUrl ? `
-                <div class="event-image">
-                    <img src="${imageUrl}" alt="${nextEvent.title}" loading="lazy" onerror="this.parentElement.style.display='none'">
-                </div>
-            ` : ''}
-            <h3>${nextEvent.title}</h3>
-            <p>${formattedDate}</p>
-        </div>
-        <div class="event-details">
-            <strong>🎵 ${nextEvent.artist || 'Special Guest'}</strong>
-            <p>${nextEvent.description}</p>
-            
-            ${nextEvent.musicStyle ? `
-                <strong>🎶 Music Style:</strong>
-                <p>${nextEvent.musicStyle}</p>
-            ` : ''}
-            
-            ${nextEvent.startTime ? `
-                <strong>⏰ Start:</strong>
-                <p>${nextEvent.startTime}</p>
-            ` : ''}
-        </div>
-        
-        ${nextEvent.audioPreview ? `
-            <div class="audio-player">
-                <h4>🎧 Preview</h4>
-                <audio controls preload="none">
-                    <source src="${nextEvent.audioPreview}" type="audio/mpeg">
-                    <source src="${nextEvent.audioPreview}" type="audio/wav">
-                    <source src="${nextEvent.audioPreview}" type="audio/ogg">
-                    Dein Browser unterstützt das Audio-Element nicht.
-                </audio>
+    if (eventContent) {
+        eventContent.innerHTML = `
+            <div class="event-header">
+                <h3>${nextEvent.title}</h3>
+                <p>${formattedDate}</p>
             </div>
-        ` : ''}
-    `;
+            <div class="event-details">
+                <strong>🎵 ${nextEvent.artist || 'Special Guest'}</strong>
+                <p>${nextEvent.description || ''}</p>
+            </div>
+        `;
+    }
     
-    eventWindow.style.display = 'block';
-}
-
-// Fallback Menu
-function displayFallbackMenu() {
-    const menuGrid = document.getElementById('menuGrid');
-    
-    const fallbackMenu = [
-        {
-            title: "eggs and other stories",
-            image: "/images/uploads/eggs.jpg",
-            items: [
-                {
-                    name: "eggs any style",
-                    description: "2 eier nach wahl, süßkartoffel- und avocadoscheiben, champignons, shiitake pilze, rucula & sprossen, kresse",
-                    tags: ["vegetarisch"]
-                },
-                {
-                    name: "omelette creation",
-                    description: "2 eier basic: sauerteigbrot, zwiebel, shiitake-champignonspilze, spinat",
-                    tags: ["vegetarisch"]
-                }
-            ]
-        },
-        {
-            title: "avocado friends",
-            image: "/images/uploads/avocado.jpg",
-            items: [
-                {
-                    name: "avocado bowl",
-                    description: "avocado bowl smashed avocado mit geriebenem apfel und gehobelte mandeln",
-                    tags: ["vegetarisch"]
-                },
-                {
-                    name: "avocado bread",
-                    description: "sauerteigbrot mit smashed avocado garniert mit sprossen und kresse",
-                    tags: ["vegetarisch"]
-                }
-            ]
-        }
-    ];
-    
-    allMenuCategories = fallbackMenu;
-    displayMenu(fallbackMenu);
-    createFilterButtons(fallbackMenu);
+    if (eventWindow) eventWindow.style.display = 'block';
 }
 
 // Fallback Event
@@ -272,33 +243,8 @@ function displayFallbackEvent() {
         title: "next monday special",
         artist: "dj cosmic kitchen",
         date: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000).toISOString(),
-        description: "erlebe entspannte lounge-klänge während deines brunches!",
-        musicStyle: "downtempo, organic house",
-        startTime: "9:00 uhr"
+        description: "erlebe entspannte lounge-klänge während deines brunches!"
     }];
     
     displayEvents(fallbackEvent);
-}
-
-// Trigger animations for menu cards
-function triggerMenuAnimations() {
-    const cards = document.querySelectorAll('.menu-card');
-    const observer = new IntersectionObserver(function(entries) {
-        entries.forEach(entry => {
-            if (entry.isIntersecting) {
-                entry.target.style.opacity = '1';
-                entry.target.style.transform = 'translateY(0)';
-            }
-        });
-    }, {
-        threshold: 0.1,
-        rootMargin: '0px 0px -50px 0px'
-    });
-
-    cards.forEach((card, index) => {
-        card.style.opacity = '0';
-        card.style.transform = 'translateY(30px)';
-        card.style.transition = `all 0.6s ease ${index * 0.1}s`;
-        observer.observe(card);
-    });
 }
