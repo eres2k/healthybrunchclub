@@ -192,7 +192,6 @@ function displayMenu(menuData) {
             <div class="menu-item">
                 <div class="menu-item-header">
                     <h4 class="menu-item-name">${item.name}</h4>
-                    ${item.price ? `<span class="menu-item-price">${item.price}</span>` : ''}
                 </div>
                 <p class="menu-item-description">${item.description}</p>
                 ${item.tags && item.tags.length > 0 ? `
@@ -212,7 +211,7 @@ function displayMenu(menuData) {
                 ` : ''}
                 <div class="menu-card-content">
                     <h3 class="menu-category-title">
-                        ${category.icon || '🍽️'} ${category.title}
+                        ${category.title}
                     </h3>
                     <div class="menu-items">
                         ${itemsHtml}
@@ -224,7 +223,6 @@ function displayMenu(menuData) {
     
     // Trigger animations for newly loaded content
     triggerMenuAnimations();
-}
 
 // Display Events with Images
 function displayEvents(eventsData) {
