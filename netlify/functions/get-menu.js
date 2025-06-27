@@ -204,3 +204,26 @@ exports.handler = async (event, context) => {
     };
   }
 };
+
+// In netlify/functions/get-menu.js
+// Der relevante Teil für die Bildverarbeitung:
+
+// Process image path - ensure it's properly formatted
+let imagePath = '';
+if (data.image) {
+    // Entferne führende Schrägstriche für relative Pfade
+    imagePath = data.image;
+    
+    // Stelle sicher, dass der Pfad korrekt formatiert ist
+    if (!imagePath.startsWith('http') && !imagePath.startsWith('/')) {
+        imagePath = '/' + imagePath;
+    }
+}
+
+return {
+    title: data.title,
+    icon: data.icon || '', // Icon kann jetzt leer bleiben
+    order: data.order || 0,
+    image: imagePath, // Das verarbeitete Bild
+    items: data.items || []
+};
