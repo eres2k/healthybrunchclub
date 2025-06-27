@@ -1,10 +1,18 @@
-/* Menu Card Images */
+/* Menu Card Image Styles - füge diese in den <style> Bereich ein */
+
+.menu-card {
+    background: var(--warm-white);
+    border-radius: 20px;
+    box-shadow: var(--card-shadow);
+    transition: all 0.3s ease;
+    position: relative;
+    overflow: hidden;
+}
+
 .menu-card-image {
     width: 100%;
     height: 200px;
     overflow: hidden;
-    border-radius: 15px 15px 0 0;
-    margin: -30px -30px 20px -30px;
     position: relative;
 }
 
@@ -20,7 +28,28 @@
 }
 
 .menu-card-content {
-    padding: 0;
+    padding: 30px;
+}
+
+/* Entferne die icon aus dem Titel */
+.menu-category-title {
+    font-family: var(--font-accent);
+    font-size: 28px;
+    color: var(--sage-green);
+    margin-bottom: 20px;
+    /* Entferne display: flex und gap, da wir keine Icons mehr brauchen */
+}
+
+/* Fallback wenn kein Bild vorhanden */
+.menu-card:not(:has(.menu-card-image)) .menu-card-content {
+    padding-top: 40px;
+}
+
+/* Responsive Anpassung */
+@media (max-width: 768px) {
+    .menu-card-image {
+        height: 150px;
+    }
 }
 
 /* Event Window Images */
