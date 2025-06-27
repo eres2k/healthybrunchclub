@@ -1,14 +1,10 @@
-// CMS Loader with Dynamic Category Filters
+// CMS Loader with Image Support for Menu and Events
 // Save this as cms-loader.js
 
 document.addEventListener('DOMContentLoaded', function() {
     loadMenuFromCMS();
     loadEventsFromCMS();
 });
-
-// Store menu data globally for filtering
-let globalMenuData = [];
-let currentFilter = 'all';
 
 // Load Menu from CMS
 async function loadMenuFromCMS() {
@@ -23,132 +19,10 @@ async function loadMenuFromCMS() {
         const menuData = await response.json();
         console.log('Menu data loaded:', menuData);
         
-        // Store globally for filtering
-        globalMenuData = menuData;
-        
-        // Create filter buttons
-        createFilterButtons(menuData);
-        
-        // Display menu
         displayMenu(menuData);
     } catch (error) {
         console.error('Error loading menu:', error);
         displayFallbackMenu();
-    }
-}
-
-// Create filter buttons dynamically
-function createFilterButtons(menuData) {
-    const menuSection = document.querySelector('.menu-section');
-    const menuHeader = menuSection.querySelector('.menu-header');
-    
-    // Hide any existing static filter buttons from the HTML
-    const existingFilters = menuSection.querySelectorAll('.menu-categories');
-    existingFilters.forEach(filter => {
-        if (!filter.classList.contains('cms-generated')) {
-            filter.style.display = 'none';
-        }
-    });
-    
-    // Check if filter container already exists
-    let filterContainer = document.querySelector('.menu-categories.cms-generated');
-    
-    if (!filterContainer) {
-        // Create filter container
-        filterContainer = document.createElement('div');
-        filterContainer.className = 'menu-categories cms-generated';
-        filterContainer.style.cssText = `
-            display: flex;
-            justify-content: center;
-            gap: 1rem;
-            margin-bottom: 3rem;
-            flex-wrap: wrap;
-        `;
-        
-        // Insert after menu header
-        menuHeader.insertAdjacentElement('afterend', filterContainer);
-    }
-    
-    // Clear existing buttons
-    filterContainer.innerHTML = '';
-    
-    // Create "Alle" button
-    const allButton = createFilterButton('Alle', 'all', true);
-    filterContainer.appendChild(allButton);
-    
-    // Create buttons for each category
-    menuData.forEach(category => {
-        const button = createFilterButton(
-            category.title,
-            category.title,
-            false
-        );
-        filterContainer.appendChild(button);
-    });
-}
-
-// Create individual filter button
-function createFilterButton(text, value, isActive) {
-    const button = document.createElement('button');
-    button.className = `category-btn ${isActive ? 'active' : ''}`;
-    button.textContent = text;
-    button.onclick = () => filterMenu(value);
-    
-    button.style.cssText = `
-        padding: 0.75rem 1.5rem;
-        background: ${isActive ? '#A8C09A' : 'white'};
-        border: 2px solid #A8C09A;
-        border-radius: 25px;
-        color: ${isActive ? 'white' : '#A8C09A'};
-        font-weight: 600;
-        cursor: pointer;
-        transition: all 0.3s ease;
-        font-family: inherit;
-    `;
-    
-    // Add hover effect
-    button.addEventListener('mouseenter', () => {
-        if (!button.classList.contains('active')) {
-            button.style.background = '#A8C09A';
-            button.style.color = 'white';
-        }
-    });
-    
-    button.addEventListener('mouseleave', () => {
-        if (!button.classList.contains('active')) {
-            button.style.background = 'white';
-            button.style.color = '#A8C09A';
-        }
-    });
-    
-    return button;
-}
-
-// Filter menu function
-function filterMenu(filter) {
-    currentFilter = filter;
-    
-    // Update active button
-    document.querySelectorAll('.category-btn').forEach(btn => {
-        btn.classList.remove('active');
-        if (btn.textContent === filter || (filter === 'all' && btn.textContent === 'Alle')) {
-            btn.classList.add('active');
-            btn.style.background = '#A8C09A';
-            btn.style.color = 'white';
-        } else {
-            btn.style.background = 'white';
-            btn.style.color = '#A8C09A';
-        }
-    });
-    
-    // Filter and display menu
-    if (filter === 'all') {
-        displayMenu(globalMenuData);
-    } else {
-        const filteredData = globalMenuData.filter(category => 
-            category.title === filter
-        );
-        displayMenu(filteredData);
     }
 }
 
@@ -182,7 +56,7 @@ function displayMenu(menuData) {
     }
     
     menuGrid.innerHTML = menuData.map(category => {
-        // Handle image URL - check if it's a relative path and make it absolute
+        // Handle image URL
         let imageUrl = '';
         if (category.image) {
             imageUrl = category.image.startsWith('/') ? category.image : `/${category.image}`;
@@ -223,6 +97,7 @@ function displayMenu(menuData) {
     
     // Trigger animations for newly loaded content
     triggerMenuAnimations();
+}
 
 // Display Events with Images
 function displayEvents(eventsData) {
@@ -299,7 +174,7 @@ function displayFallbackMenu() {
     const fallbackMenu = [
         {
             title: "morning rituals",
-            icon: "🌅",
+            image: "/images/uploads/morning-ritual.jpg",
             items: [
                 {
                     name: "warmes wasser mit bio-zitrone",
@@ -315,7 +190,7 @@ function displayFallbackMenu() {
         },
         {
             title: "power bowls",
-            icon: "🥣",
+            image: "/images/uploads/power-bowl.jpg",
             items: [
                 {
                     name: "açaí sunrise bowl",
@@ -370,34 +245,3 @@ function triggerMenuAnimations() {
         observer.observe(card);
     });
 }
-
-// Add necessary styles for filter buttons
-const style = document.createElement('style');
-style.textContent = `
-    .category-btn {
-        font-family: 'Lora', serif;
-    }
-    
-    .category-btn.active {
-        background: #A8C09A !important;
-        color: white !important;
-    }
-    
-    .menu-item-price {
-        font-weight: 600;
-        color: #A8C09A;
-        margin-left: 10px;
-    }
-    
-    /* Hide static menu categories that are not CMS-generated */
-    .menu-categories:not(.cms-generated) {
-        display: none !important;
-    }
-`;
-document.head.appendChild(style);
-
-// Also hide static filters immediately on load
-document.addEventListener('DOMContentLoaded', function() {
-    const staticFilters = document.querySelectorAll('.menu-categories:not(.cms-generated)');
-    staticFilters.forEach(filter => filter.style.display = 'none');
-});
