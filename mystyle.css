@@ -90,55 +90,67 @@
 </section>
 
 <style>
+/* Aktualisierte Menu Section Styles */
 .menu-section {
     padding: 80px 20px;
     background: white;
     position: relative;
 }
 
-.menu-header {
-    text-align: center;
-    margin-bottom: 60px;
+/* Filter Buttons */
+.menu-filters {
+    display: flex;
+    justify-content: center;
+    gap: 15px;
+    margin-bottom: 50px;
+    flex-wrap: wrap;
 }
 
-.menu-header h2 {
-    font-family: var(--font-accent);
-    font-size: clamp(36px, 5vw, 56px);
-    color: var(--text-dark);
-    margin-bottom: 10px;
+.filter-btn {
+    padding: 12px 30px;
+    background: white;
+    border: 2px solid var(--sage-green);
+    border-radius: 25px;
+    color: var(--sage-green);
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    font-size: 14px;
+    text-transform: lowercase;
 }
 
-.menu-header p {
-    font-size: 18px;
-    color: var(--text-medium);
+.filter-btn:hover {
+    background: var(--sage-green);
+    color: white;
+    transform: translateY(-2px);
 }
 
+.filter-btn.active {
+    background: var(--sage-green);
+    color: white;
+}
+
+/* Menu Grid - 2 Spalten Layout */
 .menu-grid {
     max-width: 1200px;
     margin: 0 auto;
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
-    gap: 30px;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 40px;
 }
 
+/* Menu Card mit zentriertem Bild */
 .menu-card {
     background: var(--warm-white);
     border-radius: 20px;
-    padding: 30px;
     box-shadow: var(--card-shadow);
     transition: all 0.3s ease;
     position: relative;
     overflow: hidden;
-}
-
-.menu-card::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    height: 4px;
-    background: var(--nature-gradient);
+    display: flex;
+    align-items: center;
+    padding: 30px;
+    gap: 30px;
 }
 
 .menu-card:hover {
@@ -146,38 +158,51 @@
     box-shadow: var(--hover-shadow);
 }
 
+/* Kleineres, rundes Bild */
 .menu-card-image {
-    margin: -30px -30px 20px;
-    height: 200px;
+    width: 150px;
+    height: 150px;
+    min-width: 150px;
     overflow: hidden;
+    position: relative;
+    border-radius: 50%;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
 }
 
 .menu-card-image img {
     width: 100%;
     height: 100%;
     object-fit: cover;
+    transition: transform 0.3s ease;
+}
+
+.menu-card:hover .menu-card-image img {
+    transform: scale(1.1);
+}
+
+/* Content neben dem Bild */
+.menu-card-content {
+    flex: 1;
 }
 
 .menu-category-title {
     font-family: var(--font-accent);
-    font-size: 28px;
+    font-size: 26px;
     color: var(--sage-green);
     margin-bottom: 20px;
-    display: flex;
-    align-items: center;
-    gap: 10px;
 }
 
+/* Menu Items kompakter */
 .menu-items {
     display: flex;
     flex-direction: column;
-    gap: 15px;
+    gap: 12px;
 }
 
 .menu-item {
-    padding: 15px;
+    padding: 12px 15px;
     background: white;
-    border-radius: 15px;
+    border-radius: 12px;
     transition: all 0.3s ease;
     border: 1px solid transparent;
 }
@@ -188,75 +213,76 @@
 }
 
 .menu-item-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: start;
-    margin-bottom: 5px;
+    margin-bottom: 3px;
 }
 
 .menu-item-name {
     font-weight: 600;
     color: var(--text-dark);
-    font-size: 16px;
-    flex: 1;
-}
-
-.menu-item-price {
-    font-weight: 700;
-    color: var(--sage-green);
-    font-size: 16px;
+    font-size: 15px;
 }
 
 .menu-item-description {
-    font-size: 14px;
+    font-size: 13px;
     color: var(--text-medium);
-    line-height: 1.5;
+    line-height: 1.4;
 }
 
 .menu-tags {
     display: flex;
-    gap: 5px;
-    margin-top: 8px;
+    gap: 4px;
+    margin-top: 6px;
     flex-wrap: wrap;
 }
 
 .menu-tag {
     background: var(--sage-green);
     color: white;
-    padding: 3px 10px;
-    border-radius: 12px;
-    font-size: 11px;
+    padding: 2px 8px;
+    border-radius: 10px;
+    font-size: 10px;
     font-weight: 500;
 }
 
-.menu-audio-preview {
-    margin-top: 10px;
+/* Animation für Filter */
+.menu-card {
+    opacity: 1;
+    transition: all 0.3s ease;
 }
 
-.menu-audio-preview audio {
-    width: 100%;
-    height: 30px;
+.menu-card.hidden {
+    opacity: 0;
+    transform: scale(0.95);
+    position: absolute;
+    visibility: hidden;
 }
 
-.no-menu-message {
-    grid-column: 1 / -1;
-    text-align: center;
-    padding: 40px;
-    color: var(--text-medium);
-    font-style: italic;
-}
-
-@media (max-width: 768px) {
+/* Responsive Design */
+@media (max-width: 968px) {
     .menu-grid {
         grid-template-columns: 1fr;
     }
-    
+}
+
+@media (max-width: 600px) {
     .menu-card {
-        padding: 20px;
+        flex-direction: column;
+        text-align: center;
     }
     
-    .menu-category-title {
-        font-size: 24px;
+    .menu-card-image {
+        width: 120px;
+        height: 120px;
+        min-width: 120px;
+    }
+    
+    .menu-filters {
+        gap: 10px;
+    }
+    
+    .filter-btn {
+        padding: 8px 20px;
+        font-size: 13px;
     }
 }
 </style>
