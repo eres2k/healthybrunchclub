@@ -2,10 +2,9 @@ backend:
   name: git-gateway
   branch: main
 
-media_folder: "/images/uploads"
+media_folder: "content/images/"
 public_folder: "/images/uploads"
 
-collections:
 collections:
   - name: "menu-categories"
     label: "Menü Kategorien"
@@ -24,30 +23,6 @@ collections:
           - {label: "Beschreibung", name: "description", widget: "text"}
           - {label: "Tags", name: "tags", widget: "list", default: []}
 
-  - name: "menu"
-    label: "Menü Items"
-    folder: "content/menu"
-    create: true
-    slug: "{{year}}-{{month}}-{{day}}-{{slug}}"
-    fields:
-      - {label: "Titel", name: "title", widget: "string"}
-      - {label: "Beschreibung", name: "description", widget: "text"}
-      - {label: "Preis", name: "price", widget: "number", required: false}
-      - label: "Kategorie"
-        name: "category"
-        widget: "relation"
-        collection: "categories"
-        search_fields: ["title"]
-        value_field: "title"
-        display_fields: ["title"]
-        hint: "Wähle eine Kategorie oder erstelle zuerst eine neue unter 'Menü Kategorien'"
-      - {label: "Bild", name: "image", widget: "image", required: false}
-      - {label: "Verfügbar", name: "available", widget: "boolean", default: true}
-      - {label: "Audio Preview", name: "audioFile", widget: "file", required: false}
-      - {label: "Tags", name: "tags", widget: "list", required: false, hint: "z.B. vegan, glutenfrei, etc."}
-      - {label: "Spezial", name: "special", widget: "boolean", default: false, hint: "Als Spezial-Gericht markieren"}
-      - {label: "Allergene", name: "allergens", widget: "list", required: false}
-
   - name: "events"
     label: "Veranstaltungen"
     folder: "content/events"
@@ -56,12 +31,8 @@ collections:
     fields:
       - {label: "Event Titel", name: "title", widget: "string"}
       - {label: "Datum", name: "date", widget: "datetime"}
-      - {label: "Ort", name: "location", widget: "string", default: "Healthy Brunch Club"}
-      - {label: "Künstler", name: "artist", widget: "string", required: false}
-      - {label: "Musik Stil", name: "musicStyle", widget: "string", required: false}
-      - {label: "Start Zeit", name: "startTime", widget: "string", default: "9:00 Uhr"}
-      - {label: "Beschreibung", name: "description", widget: "text"}
-      - {label: "Bild", name: "featuredImage", widget: "image", required: false}
+      - {label: "Ort", name: "location", widget: "string"}
+      - {label: "Beschreibung", name: "body", widget: "markdown"}
+      - {label: "Bild", name: "featuredImage", widget: "image"}
       - {label: "Preis", name: "price", widget: "number", required: false}
       - {label: "Audio Ankündigung", name: "audioAnnouncement", widget: "file", required: false}
-      - {label: "Aktiv", name: "active", widget: "boolean", default: true}
