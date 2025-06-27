@@ -6,20 +6,23 @@ media_folder: "/images/uploads"
 public_folder: "/images/uploads"
 
 collections:
-  - name: "categories"
+collections:
+  - name: "menu-categories"
     label: "Menü Kategorien"
-    folder: "content/categories"
+    folder: "content/menu-categories"
     create: true
     slug: "{{slug}}"
-    summary: "{{title}} - Reihenfolge: {{order}}"
-    sortable_fields: ['order', 'title']
     fields:
-      - {label: "Kategorie Name", name: "title", widget: "string", hint: "z.B. 'morning rituals', 'eggs & stories'"}
-      - {label: "Icon", name: "icon", widget: "string", default: "🍽️", hint: "Ein Emoji für diese Kategorie"}
-      - {label: "Reihenfolge", name: "order", widget: "number", default: 1, hint: "Niedrigere Zahlen erscheinen zuerst"}
-      - {label: "Beschreibung", name: "description", widget: "text", required: false, hint: "Optionale Beschreibung der Kategorie"}
-      - {label: "Kategorie Bild", name: "image", widget: "image", required: false}
-      - {label: "Aktiv", name: "active", widget: "boolean", default: true}
+      - {label: "Kategorie Name", name: "title", widget: "string"}
+      - {label: "Reihenfolge", name: "order", widget: "number", default: 0}
+      - {label: "Kategorie Bild", name: "image", widget: "image"}
+      - label: "Menü Items"
+        name: "items"
+        widget: "list"
+        fields:
+          - {label: "Name", name: "name", widget: "string"}
+          - {label: "Beschreibung", name: "description", widget: "text"}
+          - {label: "Tags", name: "tags", widget: "list", default: []}
 
   - name: "menu"
     label: "Menü Items"
