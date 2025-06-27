@@ -1,7 +1,7 @@
 ---
 title: Eggs and other stories
 order: 0
-image: /images/uploads/eggs.jpg
+image: /images/eggs.jpg
 items:
   - tags:
       - Vegetarisch
