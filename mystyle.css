@@ -216,7 +216,7 @@
 
 /* Menu Items Container */
 .menu-card-content {
-    padding: 25px 30px 30px;
+    padding: 25px 0px 0px;
 }
 
 .menu-items {
@@ -558,7 +558,7 @@
 
         .event-header h3 {
             font-family: var(--font-accent);
-            font-size: 22px;
+            font-size: 16px;
             margin-bottom: 5px;
         }
 
