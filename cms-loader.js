@@ -203,18 +203,32 @@ async function loadEventsFromCMS() {
     }
 }
 
-// Display Events
+// Display Events with Images
 function displayEvents(eventsData) {
     const eventWindow = document.getElementById('eventWindow');
     const eventContent = document.getElementById('eventContent');
     
     if (!eventsData || eventsData.length === 0) {
-        if (eventWindow) eventWindow.style.display = 'none';
+        eventWindow.style.display = 'none';
         return;
     }
     
+    // Get the next upcoming event
     const nextEvent = eventsData[0];
     
+    // Handle image URL
+    let imageUrl = '';
+    if (nextEvent.featuredImage) {
+        imageUrl = nextEvent.featuredImage.startsWith('/') ? nextEvent.featuredImage : `/${nextEvent.featuredImage}`;
+    }
+    
+    // Handle audio URL
+    let audioUrl = '';
+    if (nextEvent.audioAnnouncement) {
+        audioUrl = nextEvent.audioAnnouncement.startsWith('/') ? nextEvent.audioAnnouncement : `/${nextEvent.audioAnnouncement}`;
+    }
+    
+    // Format the date
     const eventDate = new Date(nextEvent.date);
     const formattedDate = eventDate.toLocaleDateString('de-AT', {
         weekday: 'long',
@@ -222,20 +236,44 @@ function displayEvents(eventsData) {
         month: 'long'
     });
     
-    if (eventContent) {
-        eventContent.innerHTML = `
-            <div class="event-header">
-                <h3>${nextEvent.title}</h3>
-                <p>${formattedDate}</p>
+    eventContent.innerHTML = `
+        ${imageUrl ? `
+            <div class="event-image" style="margin: -25px -25px 20px -25px; height: 150px; overflow: hidden; border-radius: 15px 15px 0 0;">
+                <img src="${imageUrl}" alt="${nextEvent.title}" style="width: 100%; height: 100%; object-fit: cover;" loading="lazy" onerror="this.parentElement.style.display='none'">
             </div>
-            <div class="event-details">
-                <strong>🎵 ${nextEvent.artist || 'Special Guest'}</strong>
-                <p>${nextEvent.description || ''}</p>
+        ` : ''}
+        <div class="event-header" style="${imageUrl ? 'background: none; color: var(--text-dark); padding: 0; margin: 0 0 15px 0;' : ''}">
+            <h3>${nextEvent.title}</h3>
+            <p style="${imageUrl ? 'color: var(--text-medium);' : ''}">${formattedDate}</p>
+        </div>
+        <div class="event-details">
+            <p style="margin-bottom: 10px;">${nextEvent.body || ''}</p>
+            
+            ${nextEvent.location ? `
+                <strong>📍 Location:</strong>
+                <p>${nextEvent.location}</p>
+            ` : ''}
+            
+            ${nextEvent.price ? `
+                <strong>💶 Eintritt:</strong>
+                <p>${nextEvent.price}€</p>
+            ` : ''}
+        </div>
+        
+        ${audioUrl ? `
+            <div class="audio-player">
+                <h4>🎧 Preview</h4>
+                <audio controls preload="none" style="width: 100%;">
+                    <source src="${audioUrl}" type="audio/mpeg">
+                    <source src="${audioUrl}" type="audio/wav">
+                    <source src="${audioUrl}" type="audio/ogg">
+                    Dein Browser unterstützt das Audio-Element nicht.
+                </audio>
             </div>
-        `;
-    }
+        ` : ''}
+    `;
     
-    if (eventWindow) eventWindow.style.display = 'block';
+    eventWindow.style.display = 'block';
 }
 
 // Fallback Event
