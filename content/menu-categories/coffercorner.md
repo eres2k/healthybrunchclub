@@ -18,7 +18,8 @@ items:
     name: "Chaga Cold Brew  "
     description: mit Adaptogene
   - tags:
-      - antioxidativ entzündungshemmend
+      - antidoxativ
+      - entzündungshemmend
     name: "Kurkuma Espresso Latte "
     description: mit Adaptogene
   - tags: []
