@@ -12,7 +12,9 @@ items:
     name: Melisse-Verbene-Laendel
     description: Tee von Sonnentor
   - tags:
-      - antioxidativ entzündungshemmend immunstärkend
+      - antioxidativ
+      - entzündungshemmend
+      - immunstärkend
     name: "Chaga Tee "
     description: tee von myapotheke
 ---
