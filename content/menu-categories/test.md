@@ -1,10 +1,14 @@
 ---
-title: Test
+title: Eggs and other stories
 order: 0
-image: /images/uploads/p38.png
+image: /images/uploads/eggs.jpg
 items:
   - tags:
-      - Gesund
-    name: Cola
-    description: Cola
+      - Vegetarisch
+    name: EGGS ANY STYLE
+    description: |
+      Eggs your style auf Süsskartoffel- und Avocadoscheiben
+
+      Beilage: Champignons/Shiitake Pilze
+      garniert mit Rucula & Sprossen und Kresse
 ---
