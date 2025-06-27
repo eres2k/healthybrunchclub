@@ -80,6 +80,9 @@ function handleFilterClick(e) {
 }
 
 // Display Menu with Fixed Layout
+// Aktualisierte displayMenu Funktion in cms-loader.js
+// Ersetze die bestehende displayMenu Funktion mit dieser:
+
 function displayMenu(menuData) {
     const menuGrid = document.getElementById('menuGrid');
     
@@ -97,9 +100,7 @@ function displayMenu(menuData) {
         
         const itemsHtml = category.items.map(item => `
             <div class="menu-item">
-                <div class="menu-item-header">
-                    <h4 class="menu-item-name">${item.name}</h4>
-                </div>
+                <span class="menu-item-name">${item.name}</span>
                 <p class="menu-item-description">${item.description}</p>
                 ${item.tags && item.tags.length > 0 ? `
                     <div class="menu-tags">
@@ -111,13 +112,13 @@ function displayMenu(menuData) {
         
         return `
             <div class="menu-card" data-category="${category.title.toLowerCase().replace(/\s+/g, '-')}">
-                <div class="menu-card-header">
+                <div class="menu-card-header ${!imageUrl ? 'no-image' : ''}">
                     ${imageUrl ? `
-                        <div class="menu-card-image">
-                            <img src="${imageUrl}" alt="${category.title}" loading="lazy" onerror="this.parentElement.classList.add('no-image'); this.parentElement.innerHTML='🍽️';">
+                        <div class="menu-card-bg-image">
+                            <img src="${imageUrl}" alt="${category.title}" loading="lazy">
                         </div>
                     ` : `
-                        <div class="menu-card-image no-image">
+                        <div class="menu-card-bg-image">
                             🍽️
                         </div>
                     `}
