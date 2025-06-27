@@ -72,18 +72,16 @@ exports.handler = async (event, context) => {
             }
             
             // Process the event data from the markdown file
-            return {
-              title: data.title.toLowerCase(),
-              artist: data.title, // Using title as artist name from the example
+                       return {
+              title: data.title,
+              artist: data.artist || '',
               date: data.date,
-              location: data.location || 'Wien',
-              description: body.trim() || data.description || '',
-              musicStyle: data.musicStyle || 'electronic, lounge',
-              startTime: data.startTime || '9:00 uhr',
-              price: data.price,
-              featuredImage: data.featuredImage || '',
-              audioAnnouncement: data.audioAnnouncement || '',
-              active: true // Assuming all events in the folder are active
+              location: data.location || '',
+              body: data.body || content.replace(/^---[\s\S]*?---/, '').trim(), // Get markdown body content
+              price: data.price || '',
+              featuredImage: data.featuredImage || data.image || '',
+              audioAnnouncement: data.audioAnnouncement || data.audioPreview || '',
+              active: data.active !== false // Default to true unless explicitly set to false
             };
           } catch (error) {
             console.error('Error parsing event file:', file, error);
