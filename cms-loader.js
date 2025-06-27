@@ -1,5 +1,7 @@
-// CMS Loader with Image Support for Menu and Events
+// CMS Loader with Image Support and Filters
 // Save this as cms-loader.js
+
+let allMenuCategories = [];
 
 document.addEventListener('DOMContentLoaded', function() {
     loadMenuFromCMS();
@@ -19,11 +21,120 @@ async function loadMenuFromCMS() {
         const menuData = await response.json();
         console.log('Menu data loaded:', menuData);
         
+        allMenuCategories = menuData;
         displayMenu(menuData);
+        createFilterButtons(menuData);
+        
     } catch (error) {
         console.error('Error loading menu:', error);
         displayFallbackMenu();
     }
+}
+
+// Create Filter Buttons
+function createFilterButtons(menuData) {
+    const filtersContainer = document.getElementById('menuFilters');
+    if (!filtersContainer) return;
+    
+    // Clear existing filters except "all"
+    const existingButtons = filtersContainer.querySelectorAll('.filter-btn:not([data-filter="all"])');
+    existingButtons.forEach(btn => btn.remove());
+    
+    // Add category filters
+    menuData.forEach(category => {
+        const filterBtn = document.createElement('button');
+        filterBtn.className = 'filter-btn';
+        filterBtn.setAttribute('data-filter', category.title.toLowerCase().replace(/\s+/g, '-'));
+        filterBtn.textContent = category.title;
+        filterBtn.addEventListener('click', handleFilterClick);
+        filtersContainer.appendChild(filterBtn);
+    });
+    
+    // Add click handler to "all" button
+    const allBtn = filtersContainer.querySelector('[data-filter="all"]');
+    if (allBtn) {
+        allBtn.addEventListener('click', handleFilterClick);
+    }
+}
+
+// Handle Filter Click
+function handleFilterClick(e) {
+    const filterValue = e.target.getAttribute('data-filter');
+    
+    // Update active state
+    document.querySelectorAll('.filter-btn').forEach(btn => {
+        btn.classList.remove('active');
+    });
+    e.target.classList.add('active');
+    
+    // Filter menu
+    if (filterValue === 'all') {
+        displayMenu(allMenuCategories);
+    } else {
+        const filtered = allMenuCategories.filter(category => 
+            category.title.toLowerCase().replace(/\s+/g, '-') === filterValue
+        );
+        displayMenu(filtered);
+    }
+}
+
+// Display Menu with Images
+function displayMenu(menuData) {
+    const menuGrid = document.getElementById('menuGrid');
+    
+    if (!menuData || menuData.length === 0) {
+        menuGrid.innerHTML = '<div class="no-menu-message"><p>Keine Einträge in dieser Kategorie.</p></div>';
+        return;
+    }
+    
+    menuGrid.innerHTML = menuData.map((category, index) => {
+        // Handle image URL
+        let imageUrl = '';
+        if (category.image) {
+            imageUrl = category.image.startsWith('/') ? category.image : `/${category.image}`;
+        }
+        
+        const itemsHtml = category.items.map(item => `
+            <div class="menu-item">
+                <div class="menu-item-header">
+                    <h4 class="menu-item-name">${item.name}</h4>
+                </div>
+                <p class="menu-item-description">${item.description}</p>
+                ${item.tags && item.tags.length > 0 ? `
+                    <div class="menu-tags">
+                        ${item.tags.map(tag => `<span class="menu-tag">${tag}</span>`).join('')}
+                    </div>
+                ` : ''}
+            </div>
+        `).join('');
+        
+        return `
+            <div class="menu-card" data-category="${category.title.toLowerCase().replace(/\s+/g, '-')}" style="animation-delay: ${index * 0.1}s">
+                ${imageUrl ? `
+                    <div class="menu-card-image">
+                        <img src="${imageUrl}" alt="${category.title}" loading="lazy" onerror="this.parentElement.style.display='none'">
+                    </div>
+                ` : `
+                    <div class="menu-card-image">
+                        <div style="width: 100%; height: 100%; background: var(--sage-green); opacity: 0.1; display: flex; align-items: center; justify-content: center; font-size: 48px; color: var(--sage-green);">
+                            🍽️
+                        </div>
+                    </div>
+                `}
+                <div class="menu-card-content">
+                    <h3 class="menu-category-title">
+                        ${category.title}
+                    </h3>
+                    <div class="menu-items">
+                        ${itemsHtml}
+                    </div>
+                </div>
+            </div>
+        `;
+    }).join('');
+    
+    // Trigger animations for newly loaded content
+    triggerMenuAnimations();
 }
 
 // Load Events from CMS
@@ -46,59 +157,6 @@ async function loadEventsFromCMS() {
     }
 }
 
-// Display Menu with Images
-function displayMenu(menuData) {
-    const menuGrid = document.getElementById('menuGrid');
-    
-    if (!menuData || menuData.length === 0) {
-        menuGrid.innerHTML = '<div class="no-menu-message"><p>Derzeit ist keine Speisekarte verfügbar.</p></div>';
-        return;
-    }
-    
-    menuGrid.innerHTML = menuData.map(category => {
-        // Handle image URL
-        let imageUrl = '';
-        if (category.image) {
-            imageUrl = category.image.startsWith('/') ? category.image : `/${category.image}`;
-        }
-        
-        const itemsHtml = category.items.map(item => `
-            <div class="menu-item">
-                <div class="menu-item-header">
-                    <h4 class="menu-item-name">${item.name}</h4>
-                </div>
-                <p class="menu-item-description">${item.description}</p>
-                ${item.tags && item.tags.length > 0 ? `
-                    <div class="menu-tags">
-                        ${item.tags.map(tag => `<span class="menu-tag">${tag}</span>`).join('')}
-                    </div>
-                ` : ''}
-            </div>
-        `).join('');
-        
-        return `
-            <div class="menu-card">
-                ${imageUrl ? `
-                    <div class="menu-card-image">
-                        <img src="${imageUrl}" alt="${category.title}" loading="lazy" onerror="this.parentElement.style.display='none'">
-                    </div>
-                ` : ''}
-                <div class="menu-card-content">
-                    <h3 class="menu-category-title">
-                        ${category.title}
-                    </h3>
-                    <div class="menu-items">
-                        ${itemsHtml}
-                    </div>
-                </div>
-            </div>
-        `;
-    }).join('');
-    
-    // Trigger animations for newly loaded content
-    triggerMenuAnimations();
-}
-
 // Display Events with Images
 function displayEvents(eventsData) {
     const eventWindow = document.getElementById('eventWindow');
@@ -109,16 +167,13 @@ function displayEvents(eventsData) {
         return;
     }
     
-    // Get the next upcoming event
     const nextEvent = eventsData[0];
     
-    // Handle image URL
     let imageUrl = '';
     if (nextEvent.image) {
         imageUrl = nextEvent.image.startsWith('/') ? nextEvent.image : `/${nextEvent.image}`;
     }
     
-    // Format the date
     const eventDate = new Date(nextEvent.date);
     const formattedDate = eventDate.toLocaleDateString('de-AT', {
         weekday: 'long',
@@ -173,40 +228,42 @@ function displayFallbackMenu() {
     
     const fallbackMenu = [
         {
-            title: "morning rituals",
-            image: "/images/uploads/morning-ritual.jpg",
+            title: "eggs and other stories",
+            image: "/images/uploads/eggs.jpg",
             items: [
                 {
-                    name: "warmes wasser mit bio-zitrone",
-                    description: "der perfekte start für deine verdauung",
-                    tags: ["detox", "vegan"]
+                    name: "eggs any style",
+                    description: "2 eier nach wahl, süßkartoffel- und avocadoscheiben, champignons, shiitake pilze, rucula & sprossen, kresse",
+                    tags: ["vegetarisch"]
                 },
                 {
-                    name: "golden milk latte",
-                    description: "kurkuma, ingwer, zimt & hafermilch",
-                    tags: ["anti-inflammatory", "lactosefrei"]
+                    name: "omelette creation",
+                    description: "2 eier basic: sauerteigbrot, zwiebel, shiitake-champignonspilze, spinat",
+                    tags: ["vegetarisch"]
                 }
             ]
         },
         {
-            title: "power bowls",
-            image: "/images/uploads/power-bowl.jpg",
+            title: "avocado friends",
+            image: "/images/uploads/avocado.jpg",
             items: [
                 {
-                    name: "açaí sunrise bowl",
-                    description: "açaí, banane, beeren, granola, kokosflocken",
-                    tags: ["superfood", "vegan"]
+                    name: "avocado bowl",
+                    description: "avocado bowl smashed avocado mit geriebenem apfel und gehobelte mandeln",
+                    tags: ["vegetarisch"]
                 },
                 {
-                    name: "premium porridge",
-                    description: "haferflocken, chia, hanfsamen, heidelbeeren, mandeln",
-                    tags: ["glutenfrei", "protein"]
+                    name: "avocado bread",
+                    description: "sauerteigbrot mit smashed avocado garniert mit sprossen und kresse",
+                    tags: ["vegetarisch"]
                 }
             ]
         }
     ];
     
+    allMenuCategories = fallbackMenu;
     displayMenu(fallbackMenu);
+    createFilterButtons(fallbackMenu);
 }
 
 // Fallback Event
@@ -214,7 +271,7 @@ function displayFallbackEvent() {
     const fallbackEvent = [{
         title: "next monday special",
         artist: "dj cosmic kitchen",
-        date: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000).toISOString(), // Next week
+        date: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000).toISOString(),
         description: "erlebe entspannte lounge-klänge während deines brunches!",
         musicStyle: "downtempo, organic house",
         startTime: "9:00 uhr"
