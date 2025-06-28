@@ -4,28 +4,38 @@ order: 7
 image: /content/images/image-34-.jpg
 items:
   - tags:
-      - beruhigend stresslindernd
+      - beruhigend
+      - stresslindernd
+      - adaptogen
     name: ashwaganda latte
     description: |-
-      ein samtiger latte, angereichert mit adaptogenem ashwaganda, der beruhigt und stress lindert – ein wohltuender genussmoment.
+      ein geschmeidiger latte, durchzogen von adaptogenem ashwaganda, der sanft beruhigt und stress schmelzen lässt – purer wohlfühlgenuss.
   - tags:
       - immunstärkend
+      - ausgleichend
+      - adaptogen
     name: reishi cappuccino
-    description: cremiger cappuccino mit adaptogenem reishi, der das immunsystem stärkt und für ausgewogenen kaffeegenuss sorgt.
+    description: samtiger cappuccino mit adaptogenem reishi, der das immunsystem unterstützt und harmonischen kaffeegenuss verspricht.
   - tags:
-      - antioxidativ entgiftend
+      - antioxidativ
+      - entgiftend
+      - erfrischend
     name: chaga cold brew
-    description: erfrischender cold brew mit adaptogenem chaga, antioxidativ und entgiftend – perfekt für einen klaren kopf.
+    description: kühler cold brew mit adaptogenem chaga, antioxidativ und reinigend – ein klarer, belebender schluck für den tag.
   - tags:
-      - antidoxativ
+      - antioxidativ
       - entzündungshemmend
+      - würzig
     name: kurkuma espresso latte
-    description: würziger espresso latte mit adaptogenem kurkuma, entzündungshemmend und antioxidativ – ein belebender kick.
-  - tags: []
+    description: feuriger espresso latte mit adaptogenem kurkuma, entzündungshemmend und antioxidativ – ein kraftvoller energieschub.
+  - tags:
+      - klassisch
+      - traditionell
+      - aromatisch
     name: wiener klassiker
     description: |
       kleiner/großer schwarzer
       kleiner/großer brauner
       verlängerter
-      melange – traditioneller wiener kaffeegenuss in seiner reinsten form.
+      melange – zeitloser wiener kaffee, der tradition und geschmack vereint.
 ---
