@@ -1,5 +1,5 @@
 ---
-title: HealthTea
+title: health tea
 order: 6
 image: /content/images/image-35-.jpg
 items:
