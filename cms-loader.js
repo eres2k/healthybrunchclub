@@ -238,7 +238,7 @@ function displayEvents(eventsData) {
     
     eventContent.innerHTML = `
         ${imageUrl ? `
-            <div class="event-image" style="margin: -25px -25px 20px -25px; height: 150px; overflow: hidden; border-radius: 15px 15px 0 0;">
+            <div class="event-image";">
                 <img src="${imageUrl}" alt="${nextEvent.title}" style="width: 100%; height: 100%; object-fit: cover;" loading="lazy" onerror="this.parentElement.style.display='none'">
             </div>
         ` : ''}
