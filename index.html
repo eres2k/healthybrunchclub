@@ -75,14 +75,16 @@
     </nav>
 
     <!-- Floating Event Window -->
-    <div class="event-window" id="eventWindow" style="display: none;">
-        <button class="event-toggle" onclick="toggleEventWindow()">
-            <span id="toggleIcon">−</span>
-        </button>
-        <div class="event-content" id="eventContent">
-            <!-- Event content will be loaded dynamically -->
-        </div>
+
+<div class="event-window collapsed" id="eventWindow" style="display: block;">
+    <button class="event-toggle" onclick="toggleEventWindow()">
+        <span id="toggleIcon">🎵</span>
+    </button>
+    <div class="event-content" id="eventContent">
+        <!-- Event content will be loaded dynamically -->
     </div>
+</div>
+
 
     <!-- Admin Edit Button -->
     <a href="/admin" class="admin-edit-btn" id="adminEditBtn">
@@ -386,13 +388,24 @@
         });
 
         // Toggle Event Window
-        function toggleEventWindow() {
-            const eventWindow = document.getElementById('eventWindow');
-            const toggleIcon = document.getElementById('toggleIcon');
-            
-            eventWindow.classList.toggle('collapsed');
-            toggleIcon.textContent = eventWindow.classList.contains('collapsed') ? '🎵' : '−';
-        }
+       function toggleEventWindow() {
+    const eventWindow = document.getElementById('eventWindow');
+    const toggleIcon = document.getElementById('toggleIcon');
+    
+    eventWindow.classList.toggle('collapsed');
+    toggleIcon.textContent = eventWindow.classList.contains('collapsed') ? '🎵' : '−';
+}
+
+// Show event window on page load (but keep it collapsed)
+document.addEventListener('DOMContentLoaded', function() {
+    // Make sure event window is visible but collapsed
+    const eventWindow = document.getElementById('eventWindow');
+    if (eventWindow) {
+        eventWindow.style.display = 'block';
+        eventWindow.classList.add('collapsed');
+        document.getElementById('toggleIcon').textContent = '🎵';
+    }
+});
 
         // Show Admin Button for logged in users
         if (window.netlifyIdentity) {
