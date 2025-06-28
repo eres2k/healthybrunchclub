@@ -1,5 +1,5 @@
 ---
-title: Coffercorner
+title: coffee corner
 order: 7
 image: /content/images/image-34-.jpg
 items:
