@@ -5,16 +5,20 @@ image: /content/images/avocado.jpg
 items:
   - tags:
       - vegetarisch
+      - leicht
+      - nahrhaft
     name: avocado bowl
     description: |+
       avocado bowl
-      eine cremige komposition aus frisch zerdrückter avocado, verfeinert mit fein geriebenem apfel, der eine süß-frische note einbringt, gekrönt von zarten, gerösteten mandeln, die für einen knackigen biss sorgen. ein leichtes, nährendes vergnügen, das den tag erhellt.
+      eine samtige kreation aus frisch zerdrückter avocado, veredelt mit fein geriebenem apfel für eine süß-frische note, gekrönt von zart gerösteten mandeln, die einen knackigen akzent setzen. ein belebendes, nahrhaftes vergnügen für jeden moment.
 
   - tags:
       - vegetarisch
+      - herzhaft
+      - anpassbar
     description: |-
       sauerteigbrot (vom öfferl) mit smashed avocado
-      knuspriges, handwerklich gebackenes sauerteigbrot vom öfferl, großzügig belegt mit samtiger, zerdrückter avocado, liebevoll garniert mit frischen sprossen und würziger kresse, die dem gericht eine lebendige, grüne note verleihen.
+      knuspriges sauerteigbrot vom öfferl, handwerklich gebacken, großzügig bestrichen mit cremiger, zerdrückter avocado, verfeinert mit frischen sprossen und aromatischer kresse für eine lebendige, grüne frische.
 
       extras:
       ei (nach wunsch zubereitet)/biospeck/biolachs/shiitake-champignons pilze
