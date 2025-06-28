@@ -1,5 +1,5 @@
 ---
-title: Erfrischende Begleiter
+title: erfrischende begleiter
 order: 6
 image: /content/images/888910fc-02ef-430d-9b96-a22c9c0de434.jpg
 items:
