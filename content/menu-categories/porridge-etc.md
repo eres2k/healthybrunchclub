@@ -7,18 +7,14 @@ items:
       - glutenfrei
       - lactosefrei
       - darmfreundlich
-    name: Premium-Porridge (warm)
+    name: premium-porridge (warm)
     description: |
-      Zarte Haferflocken, Hanfsamen,
-      Chiasamen, Kokosflocken, geriebener Apfel, 
-      Zimt, garniert mit gehobelte Mandeln Heidelbeeren
+      ein wärmender genuss aus zarten haferflocken, verfeinert mit hanfsamen, chiasamen, kokosflocken und geriebenem apfel. ein hauch von zimt rundet das geschmackserlebnis ab, gekrönt mit knackigen, gehobelten mandeln und frischen heidelbeeren.
   - tags:
       - glutenfrei
       - lactosefrei
       - darmfreundlich
-    name: Kokoscreme Power-oats
+    name: kokoscreme power-oats
     description: |
-      Zarte Haferflocken, Hanfsamen, 
-      Chiasamen, Kokosflocken in Kokoscreme
-       garniert mit Heidel-und Himbeeren
+      kraftvolle haferflocken, umhüllt von cremiger kokoscreme, kombiniert mit hanfsamen, chiasamen und kokosflocken. garniert mit saftigen heidel- und himbeeren für einen fruchtig-frischen start in den tag.
 ---
