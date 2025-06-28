@@ -1,5 +1,5 @@
 ---
-title: Porridge etc.
+title: porridge etc.
 order: 3
 image: /content/images/image-32-.jpg
 items:
