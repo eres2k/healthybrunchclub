@@ -1,23 +1,22 @@
 ---
-title: Avocado Friends
+title: avocado friends
 order: 2
 image: /content/images/avocado.jpg
 items:
   - tags:
       - vegetarisch
-    name: Avocado Bowl
+    name: avocado bowl
     description: |+
-      Avocado Bowl
-      Smashed Avocado mit geriebenem Apfel
-      und gehobelte Mandeln
+      avocado bowl
+      eine cremige komposition aus frisch zerdrückter avocado, verfeinert mit fein geriebenem apfel, der eine süß-frische note einbringt, gekrönt von zarten, gerösteten mandeln, die für einen knackigen biss sorgen. ein leichtes, nährendes vergnügen, das den tag erhellt.
 
   - tags:
       - vegetarisch
     description: |-
-      Sauerteigbrot (vom Öfferl) mit smashed Avocado
-       garniert mit Sprossen und Kresse
+      sauerteigbrot (vom öfferl) mit smashed avocado
+      knuspriges, handwerklich gebackenes sauerteigbrot vom öfferl, großzügig belegt mit samtiger, zerdrückter avocado, liebevoll garniert mit frischen sprossen und würziger kresse, die dem gericht eine lebendige, grüne note verleihen.
 
-      Extras:
-      Ei (any style)/BioSpeck/BioLachs/Shiitake- Champignons Pilze
-    name: Avocado Bread
+      extras:
+      ei (nach wunsch zubereitet)/biospeck/biolachs/shiitake-champignons pilze
+    name: avocado bread
 ---
