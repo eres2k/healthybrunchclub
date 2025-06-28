@@ -1,5 +1,5 @@
 ---
-title: Eggs and other stories
+title: egg stories
 order: 1
 image: /content/images/eggs.jpg
 items:
