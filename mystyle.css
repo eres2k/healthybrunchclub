@@ -27,9 +27,7 @@
     transform: scale(1.05);
 }
 
-.menu-card-content {
-    padding: 25px 0px 0px;
-}
+
 
 /* Entferne die icon aus dem Titel */
 .menu-category-title {
@@ -216,7 +214,7 @@
 
 /* Menu Items Container */
 .menu-card-content {
-    padding: 0 30px 30px;
+    padding: 0 5px 30px;
 }
 
 .menu-items {
@@ -1503,7 +1501,7 @@
     }
     
     .menu-card-content {
-        padding: 0 20px 25px;
+        padding: 0 5px 25px;
     }
     
     .menu-item {
