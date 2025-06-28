@@ -55,9 +55,8 @@
 /* Event Window Images */
 .event-image {
     width: 100%;
-    height: 150px;
+    height: 100px;
     overflow: hidden;
-    border-radius: 10px;
     margin-bottom: 15px;
 }
 
