@@ -8,26 +8,29 @@ items:
       - stresslindernd
       - adaptogen
     name: ashwaganda latte
-    description: |-
-      ein geschmeidiger latte, durchzogen von adaptogenem ashwaganda, der sanft beruhigt und stress schmelzen lässt – purer wohlfühlgenuss.
+    description: ein geschmeidiger latte, durchzogen von adaptogenem ashwaganda, der
+      sanft beruhigt und stress schmelzen lässt – purer wohlfühlgenuss.
   - tags:
       - immunstärkend
       - ausgleichend
       - adaptogen
     name: reishi cappuccino
-    description: samtiger cappuccino mit adaptogenem reishi, der das immunsystem unterstützt und harmonischen kaffeegenuss verspricht.
+    description: samtiger cappuccino mit adaptogenem reishi, der das immunsystem
+      unterstützt und harmonischen kaffeegenuss verspricht.
   - tags:
       - antioxidativ
-      - entgiftend
-      - erfrischend
+      - reinigend
+      - adaptogen
     name: chaga cold brew
-    description: kühler cold brew mit adaptogenem chaga, antioxidativ und reinigend – ein klarer, belebender schluck für den tag.
+    description: kühler cold brew mit adaptogenem chaga, antioxidativ und reinigend
+      – ein klarer, belebender schluck für den tag.
   - tags:
       - antioxidativ
       - entzündungshemmend
-      - würzig
+      - adaptogen
     name: kurkuma espresso latte
-    description: feuriger espresso latte mit adaptogenem kurkuma, entzündungshemmend und antioxidativ – ein kraftvoller energieschub.
+    description: feuriger espresso latte mit adaptogenem kurkuma, entzündungshemmend
+      und antioxidativ – ein kraftvoller energieschub.
   - tags:
       - klassisch
       - traditionell
