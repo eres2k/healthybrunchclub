@@ -348,7 +348,7 @@
 
         :root {
             /* Updated Color Palette based on CD */
-            --cream: #FAF000;
+            --cream: #F5F0E8;
             --taupe: #DAC196;
             --forest-green: #1E4A3C;
             --sage-green: #8B9474;
@@ -360,17 +360,17 @@
             --olive: #8B9474;
             --sand: #E8DCC4;
             --blush: #FCD5CE;
-            --light-cream: #FFF8E7;
+            --light-cream: #FAF8F3;
             
             /* Text Colors */
             --text-dark: #3A3A3A;
             --text-medium: #6B6B6B;
             --text-light: #9A9A9A;
             
-            /* Gradients - Updated for CD */
-            --morning-gradient: linear-gradient(135deg, var(--cream) 0%, var(--taupe) 50%, var(--forest-green) 100%);
+            /* Updated Gradients - Updated for CD */
+            --morning-gradient: linear-gradient(135deg, var(--light-cream) 0%, var(--taupe) 50%, var(--sand) 100%);
             --nature-gradient: linear-gradient(135deg, var(--taupe) 0%, var(--forest-green) 100%);
-            --warm-gradient: linear-gradient(180deg, var(--warm-white) 0%, var(--cream) 100%);
+            --warm-gradient: linear-gradient(180deg, var(--warm-white) 0%, var(--light-cream) 100%);
             
             /* Typography */
             --font-primary: 'lora', sans-serif;
