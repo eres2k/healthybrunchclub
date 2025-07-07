@@ -781,6 +781,7 @@
 
         /* Subtle overlay with radial gradient focused on text area */
         .hero-overlay {
+	    display: none:	
             position: absolute;
             top: 0;
             left: 0;
@@ -808,9 +809,9 @@
             max-width: 800px;
             margin: 0 auto;
             padding: 40px;
-            background: rgba(0, 0, 0, 0.3);
+            background: rgba(0, 0, 0, 0.1);
             backdrop-filter: blur(10px);
-            -webkit-backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(30px);
             border-radius: 20px;
             box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
         }
