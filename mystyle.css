@@ -849,8 +849,7 @@
         }
 
         .hero-image-container:hover {
-            transform: scale(1.02);
-            box-shadow: var(--hover-shadow);
+            transform: scale(1.1);
         }
 
         .hero-image-container:nth-child(1) {
