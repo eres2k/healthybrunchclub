@@ -1,7 +1,7 @@
 ---
 title: eggcitements
 order: 1
-image: /content/images/eggs.jpg
+image: /content/images/dsc00161.jpg
 items:
   - tags:
       - vegetarisch
