@@ -832,18 +832,27 @@
             transform: translateY(-3px);
         }
 
-        .hero-visual {
+               .hero-visual {
             position: relative;
-            height: 500px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
         }
 
         .hero-image-container {
-            position: absolute;
             background: white;
             border-radius: 8px;
             overflow: hidden;
             box-shadow: var(--soft-shadow);
             transition: all 0.3s ease;
+            width: 100%;
+            max-width: 450px;
+            aspect-ratio: 1;
+        }
+
+        .hero-image-container:hover {
+            transform: scale(1.02);
+            box-shadow: var(--hover-shadow);
         }
 
         .hero-image-container:nth-child(1) {
