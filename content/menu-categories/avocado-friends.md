@@ -1,5 +1,5 @@
 ---
-title: avocado friends
+title: avo-lution
 order: 2
 image: /content/images/avocado.jpg
 items:
