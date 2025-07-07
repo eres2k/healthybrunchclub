@@ -412,17 +412,29 @@
             visibility: hidden;
         }
 
-        .loading-logo {
+      .loading-logo {
             font-family: var(--font-accent);
             font-size: 48px;
             color: var(--forest-green);
             margin-bottom: 30px;
-            animation: pulse 2s ease-in-out infinite;
+            opacity: 0;
+            animation: fadeIn 1.5s ease-in-out forwards;
+        }
+        
+        .loading-logo img {
+            width: 250px;
+            height: auto;
         }
 
-        @keyframes pulse {
-            0%, 100% { transform: scale(1); opacity: 0.8; }
-            50% { transform: scale(1.05); opacity: 1; }
+        @keyframes fadeIn {
+            0% { 
+                opacity: 0;
+                transform: translateY(-20px);
+            }
+            100% { 
+                opacity: 1;
+                transform: translateY(0);
+            }
         }
 
         .loading-bar {
