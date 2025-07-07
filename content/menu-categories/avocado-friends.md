@@ -20,11 +20,11 @@ items:
     description: >-
       knuspriges sauerteigbrot vom öfferl, handwerklich gebacken, großzügig
       bestrichen mit cremiger, zerdrückter avocado, verfeinert mit frischen
-      sprossen und aromatischer kresse für eine lebendige, grüne frische.
+      sprossen und kresse für eine lebendige, grüne frische.
 
 
-      extras:
+      your style:
 
-      ei (nach wunsch zubereitet)/biospeck/biolachs/shiitake-champignons pilze
+      ei (nach wunsch zubereitet)/biospeck/biolachs/shiitake und hampignons pilze
     name: avocado bread
 ---
