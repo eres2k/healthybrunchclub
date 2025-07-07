@@ -15,7 +15,7 @@ items:
       veredelt mit frischem rucula, sprossen und kresse.
 
 
-      styles:
+      your style:
 
       spiegelei/pochiert/eierspeise
   - tags:
@@ -23,17 +23,29 @@ items:
       - anpassbar
       - herzhaft
     name: omelette creation
-    description: >
-      (2 eier)
+    description: >-
+      ein luftig-lockeres omelette bestehend aus zwei eiern, präsentiert auf
+      knusprigem sauerteigbrot vom öfferl, gefüllt mit zwiebeln,
+      shiitake-spilzen und frischem spinat und gekrönt mit rucula, sprossen und
+      kresse.
 
-      ein luftig-lockeres omelette, präsentiert auf knusprigem sauerteigbrot (vom öfferl), gefüllt mit karamellisierten zwiebeln, shiitake-champignonspilzen und frischem spinat. gestalte es nach deinem geschmack mit tomaten, speckwürfeln, käse oder avocado. gekrönt mit rucula, sprossen und kresse.
+
+      your style:
+
+      tomaten/speckwürfeln/käse/avocado
   - tags:
       - vegetarisch
       - gourmet
       - aromatisch
     name: beggs enedict
     description: >
-      (1 oder 2 eier)
+      ein oder zwei pochierte eier auf knusprigem sauerteigbrot vom öfferl und
+      einer samtigen avocadosauce, serviert mit champignons oder
+      shiitake-pilzen, garniert mit frischem rucula, sprossen, kresse und
+      knusprigen pinienkernen.
 
-      knuspriges sauerteigbrot (vom öfferl) mit zart pochierten eiern und einer samtigen avocadosauce, wahlweise verfeinert mit schinken, speck oder lachs. serviert mit champignons oder shiitake-pilzen, garniert mit frischem rucula, sprossen, kresse und knusprigen pinienkernen.
+
+      your style:
+
+      schinken/speck/lachs.
 ---
