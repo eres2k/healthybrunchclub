@@ -94,7 +94,19 @@
     <!-- Main Content -->
     <main id="main-content">
         <!-- Hero Section -->
+    
         <section class="hero" id="home">
+            <!-- Full-screen video background -->
+            <div class="hero-video-background">
+                <video class="hero-video" autoplay muted loop playsinline>
+                    <source src="/content/videos/healthybrunchclub.mp4" type="video/mp4">
+                    <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1920 1080'%3E%3Crect fill='%23F5F0E8' width='1920' height='1080'/%3E%3Ctext x='50%25' y='50%25' text-anchor='middle' fill='%23A8C09A' font-size='40'%3Ehealthy brunch club%3C/text%3E%3C/svg%3E" alt="healthy brunch club">
+                </video>
+                <!-- Dark overlay for better text readability -->
+                <div class="hero-overlay"></div>
+            </div>
+            
+            <!-- Content over video -->
             <div class="hero-container">
                 <div class="hero-content fade-in-up">
                     <h1>start your monday with <span>healthy vibes</span></h1>
@@ -105,16 +117,11 @@
                         <a href="#menu" class="btn-secondary">speisekarte ansehen</a>
                     </div>
                 </div>
-                
-                <div class="hero-visual">
-                    <div class="hero-image-container fade-in-up fade-in-delay-1">
-                        <video class="hero-video" autoplay muted loop playsinline>
-                            <source src="/content/videos/healthybrunchclub.mp4" type="video/mp4">
-                            <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 280 350'%3E%3Crect fill='%23FFE5D9' width='500' height='500'/%3E%3Ctext x='50%25' y='50%25' text-anchor='middle' fill='%23A8C09A' font-size='20'%3Ehealthy bowl%3C/text%3E%3C/svg%3E" alt="healthy bowl">
-                        </video>
-                    </div>
-                
-                </div>
+            </div>
+            
+            <!-- Scroll indicator -->
+            <div class="scroll-indicator">
+                <span></span>
             </div>
         </section>
 
