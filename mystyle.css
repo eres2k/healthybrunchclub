@@ -841,12 +841,10 @@
 
         .hero-image-container {
             background: white;
-            border-radius: 8px;
             overflow: hidden;
-            box-shadow: var(--soft-shadow);
             transition: all 0.3s ease;
             width: 100%;
-            max-width: 450px;
+            max-width: 600px;
             aspect-ratio: 1;
         }
 
