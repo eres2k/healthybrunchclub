@@ -1,5 +1,5 @@
 ---
-title: coffee corner
+title: coffee, tea or me
 order: 7
 image: /content/images/image-34-.jpg
 items:
@@ -8,8 +8,11 @@ items:
       - stresslindernd
       - adaptogen
     name: ashwaganda latte
-    description: ein geschmeidiger latte, durchzogen von adaptogenem ashwaganda, der
-      sanft beruhigt und stress schmelzen lässt – purer wohlfühlgenuss.
+    description: >-
+      ein geschmeidiger latte, durchzogen von adaptogenem ashwaganda, der sanft
+      beruhigt und stress schmelzen lässt.
+
+      ein purer wohlfühlgenuss.
   - tags:
       - immunstärkend
       - ausgleichend
@@ -22,23 +25,30 @@ items:
       - reinigend
       - adaptogen
     name: chaga cold brew
-    description: kühler cold brew mit adaptogenem chaga, antioxidativ und reinigend
-      – ein klarer, belebender schluck für den tag.
+    description: |-
+      kühler cold brew mit adaptogenem chaga, antioxidativ und reinigend. 
+      ein klarer, belebender schluck für den tag.
   - tags:
       - antioxidativ
       - entzündungshemmend
       - adaptogen
     name: kurkuma espresso latte
-    description: feuriger espresso latte mit adaptogenem kurkuma, entzündungshemmend
-      und antioxidativ – ein kraftvoller energieschub.
+    description: >-
+      feuriger espresso latte mit adaptogenem kurkuma, entzündungshemmend und
+      antioxidativ.
+
+      ein kraftvoller energieschub.
   - tags:
       - klassisch
       - traditionell
       - aromatisch
     name: wiener klassiker
     description: |
-      kleiner/großer schwarzer
-      kleiner/großer brauner
-      verlängerter
-      melange – zeitloser wiener kaffee, der tradition und geschmack vereint.
+      kleiner espresso
+      großer espresso 
+      kleiner brauner
+      großer brauner
+      melange
+      café latte
+      heiße schokolade
 ---
