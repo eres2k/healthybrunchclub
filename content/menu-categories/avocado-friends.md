@@ -1,7 +1,7 @@
 ---
 title: avo-lution
 order: 2
-image: /content/images/avocado.jpg
+image: /content/images/dsc00161.jpg
 items:
   - tags:
       - vegetarisch
