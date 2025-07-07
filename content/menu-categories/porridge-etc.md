@@ -1,7 +1,7 @@
 ---
-title: porridge
+title: hafer dich lieb
 order: 3
-image: /content/images/image-32-.jpg
+image: /content/images/dsc00254.jpg
 items:
   - tags:
       - glutenfrei
