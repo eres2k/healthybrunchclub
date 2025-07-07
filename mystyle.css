@@ -809,7 +809,7 @@
             max-width: 800px;
             margin: 0 auto;
             padding: 40px;
-            background: rgba(0, 0, 0, 0.1);
+            background: rgba(0, 0, 0, 0.2);
             backdrop-filter: blur(10px);
             -webkit-backdrop-filter: blur(30px);
             border-radius: 20px;
