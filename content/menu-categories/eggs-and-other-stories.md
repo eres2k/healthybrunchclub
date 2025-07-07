@@ -9,9 +9,10 @@ items:
       - gesund
     name: eggs any style
     description: >
-      (1 oder 2 eier)
-
-      meisterhaft zubereitete eier nach deiner wahl, kunstvoll serviert auf süßkartoffel- und avocadoscheiben. begleitet von aromatisch sautierten champignons oder shiitake-pilzen, veredelt mit frischem rucula, sprossen und würziger kresse.
+      bestehend aus einem oder zwei eiern, meisterhaft zubereitete eier nach
+      deiner wahl, kunstvoll serviert auf süßkartoffel- und avocadoscheiben.
+      begleitet von aromatisch sautierten champignons und shiitake-pilzen,
+      veredelt mit frischem rucula, sprossen und kresse.
 
 
       styles:
