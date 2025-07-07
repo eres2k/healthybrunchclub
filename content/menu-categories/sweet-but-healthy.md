@@ -1,5 +1,5 @@
 ---
-title: sweet but healthy
+title: berry good choice
 order: 4
 image: /content/images/image-33-.jpg
 items:
