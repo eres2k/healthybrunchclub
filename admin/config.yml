@@ -14,14 +14,32 @@ collections:
     fields:
       - {label: "Kategorie Name", name: "title", widget: "string"}
       - {label: "Reihenfolge", name: "order", widget: "number", default: 0}
-      - {label: "Kategorie Bild", name: "image", widget: "image"}
+      - {label: "Kategorie Bild", name: "image", widget: "image", required: false}
+      - {label: "Kategorie Beschreibung", name: "description", widget: "text", required: false}
       - label: "Menü Items"
         name: "items"
         widget: "list"
         fields:
           - {label: "Name", name: "name", widget: "string"}
-          - {label: "Beschreibung", name: "description", widget: "text"}
-          - {label: "Tags", name: "tags", widget: "list", default: []}
+          - {label: "Preis (€)", name: "price", widget: "string", required: false, pattern: ["^[0-9]+\\.?[0-9]*$", "Bitte nur Zahlen eingeben (z.B. 12.90)"]}
+          - label: "Beschreibung"
+            name: "description"
+            widget: "markdown"
+            minimal: true
+            buttons: ["bold", "italic", "link", "bulleted-list", "numbered-list"]
+            editor_components: []
+            modes: ["rich_text"]
+          - label: "Nährwerte"
+            name: "nutrition"
+            widget: "object"
+            collapsed: true
+            fields:
+              - {label: "Kalorien", name: "calories", widget: "string", hint: "z.B. 320", required: false}
+              - {label: "Protein", name: "protein", widget: "string", hint: "z.B. 18g", required: false}
+              - {label: "Kohlenhydrate", name: "carbs", widget: "string", hint: "z.B. 22g", required: false}
+              - {label: "Fett", name: "fat", widget: "string", hint: "z.B. 16g", required: false}
+          - {label: "Tags", name: "tags", widget: "list", default: [], required: false}
+          - {label: "Als Empfehlung markieren", name: "special", widget: "boolean", default: false, required: false}
 
   - name: "events"
     label: "Veranstaltungen"
