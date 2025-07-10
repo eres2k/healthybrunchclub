@@ -1,5 +1,5 @@
-// CMS Loader with Fixed Layout and Filters
-// Save this as cms-loader.js
+// CMS Loader with Compact Menu Design
+// Supports nutrition values and rich text formatting
 
 let allMenuCategories = [];
 
@@ -22,7 +22,7 @@ async function loadMenuFromCMS() {
         console.log('Menu data loaded:', menuData);
         
         allMenuCategories = menuData;
-        displayMenu(menuData);
+        displayCompactMenu(menuData);
         createFilterButtons(menuData);
         
     } catch (error) {
@@ -70,120 +70,250 @@ function handleFilterClick(e) {
     
     // Filter menu
     if (filterValue === 'all') {
-        displayMenu(allMenuCategories);
+        displayCompactMenu(allMenuCategories);
     } else {
         const filtered = allMenuCategories.filter(category => 
             category.title.toLowerCase().replace(/\s+/g, '-') === filterValue
         );
-        displayMenu(filtered);
+        displayCompactMenu(filtered);
     }
 }
 
-// Display Menu with Fixed Layout
-// Aktualisierte displayMenu Funktion in cms-loader.js
-// Ersetze die bestehende displayMenu Funktion mit dieser:
-
-function displayMenu(menuData) {
-    const menuGrid = document.getElementById('menuGrid');
+// Display Compact Menu
+function displayCompactMenu(menuData) {
+    const menuContainer = document.getElementById('menuGrid') || document.getElementById('menuContainer');
     
     if (!menuData || menuData.length === 0) {
-        menuGrid.innerHTML = '<div class="no-menu-message"><p>Keine Einträge gefunden.</p></div>';
+        menuContainer.innerHTML = '<div class="menu-loading">Keine Einträge gefunden.</div>';
         return;
     }
     
-    menuGrid.innerHTML = menuData.map((category, index) => {
+    menuContainer.innerHTML = menuData.map(category => {
         // Handle image URL
         let imageUrl = '';
         if (category.image) {
             imageUrl = category.image.startsWith('/') ? category.image : `/${category.image}`;
         }
         
-        const itemsHtml = category.items.map(item => `
-            <div class="menu-item">
-                <span class="menu-item-name">${item.name}</span>
-                <p class="menu-item-description">${item.description}</p>
-                ${item.tags && item.tags.length > 0 ? `
-                    <div class="menu-tags">
-                        ${item.tags.map(tag => `<span class="menu-tag">${tag}</span>`).join('')}
-                    </div>
-                ` : ''}
-            </div>
-        `).join('');
-        
         return `
-            <div class="menu-card" data-category="${category.title.toLowerCase().replace(/\s+/g, '-')}">
-                <div class="menu-card-header ${!imageUrl ? 'no-image' : ''}">
+            <div class="menu-category" data-category="${category.title.toLowerCase().replace(/\s+/g, '-')}">
+                <div class="category-header">
                     ${imageUrl ? `
-                        <div class="menu-card-bg-image">
-                            <img src="${imageUrl}" alt="${category.title}" loading="lazy">
+                        <div class="category-image">
+                            <img src="${imageUrl}" alt="${category.title}" loading="lazy" onerror="this.parentElement.style.display='none'">
                         </div>
-                    ` : `
-                        <div class="menu-card-bg-image">
-                            🍽️
-                        </div>
-                    `}
-                    <h3 class="menu-category-title">${category.title}</h3>
-                </div>
-                <div class="menu-card-content">
-                    <div class="menu-items">
-                        ${itemsHtml}
+                    ` : ''}
+                    <div class="category-info">
+                        <h3 class="category-title">${category.title}</h3>
+                        ${category.description ? `<p class="category-description">${category.description}</p>` : ''}
                     </div>
+                </div>
+                
+                <div class="menu-items-grid">
+                    ${category.items.map((item, index) => `
+                        <div class="menu-item-card">
+                            ${item.special ? '<div class="menu-item-badge">Empfehlung</div>' : ''}
+                            
+                            <div class="menu-item-header">
+                                <h4 class="menu-item-name">${item.name}</h4>
+                                ${item.price ? `<span class="menu-item-price">€${item.price}</span>` : ''}
+                            </div>
+                            
+                            <div class="menu-item-description" id="desc-${category.order}-${index}">
+                                ${processRichText(item.description)}
+                            </div>
+                            
+                            <button class="read-more-btn" onclick="toggleDescription('desc-${category.order}-${index}', this)">
+                                Mehr lesen
+                            </button>
+                            
+                            ${item.nutrition ? `
+                                <div class="nutrition-info">
+                                    ${item.nutrition.calories ? `
+                                        <div class="nutrition-item">
+                                            <span class="nutrition-value">${item.nutrition.calories}</span>
+                                            <span class="nutrition-label">kcal</span>
+                                        </div>
+                                    ` : ''}
+                                    ${item.nutrition.protein ? `
+                                        <div class="nutrition-item">
+                                            <span class="nutrition-value">${item.nutrition.protein}</span>
+                                            <span class="nutrition-label">Protein</span>
+                                        </div>
+                                    ` : ''}
+                                    ${item.nutrition.carbs ? `
+                                        <div class="nutrition-item">
+                                            <span class="nutrition-value">${item.nutrition.carbs}</span>
+                                            <span class="nutrition-label">Kohlenh.</span>
+                                        </div>
+                                    ` : ''}
+                                    ${item.nutrition.fat ? `
+                                        <div class="nutrition-item">
+                                            <span class="nutrition-value">${item.nutrition.fat}</span>
+                                            <span class="nutrition-label">Fett</span>
+                                        </div>
+                                    ` : ''}
+                                </div>
+                            ` : ''}
+                            
+                            ${item.tags && item.tags.length > 0 ? `
+                                <div class="menu-item-tags">
+                                    ${item.tags.map(tag => `<span class="menu-tag">${tag}</span>`).join('')}
+                                </div>
+                            ` : ''}
+                        </div>
+                    `).join('')}
                 </div>
             </div>
         `;
     }).join('');
+    
+    // Initialize read more buttons after content is loaded
+    setTimeout(initializeReadMoreButtons, 100);
 }
 
-// Fallback Menu with correct data
+// Process rich text from markdown
+function processRichText(text) {
+    if (!text) return '';
+    
+    // Convert markdown to HTML
+    let html = text;
+    
+    // Convert bold text
+    html = html.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>');
+    
+    // Convert italic text
+    html = html.replace(/\*(.*?)\*/g, '<em>$1</em>');
+    
+    // Convert line breaks
+    html = html.replace(/\n\n/g, '</p><p>');
+    html = html.replace(/\n/g, '<br>');
+    
+    // Wrap in paragraph if not already
+    if (!html.startsWith('<p>')) {
+        html = `<p>${html}</p>`;
+    }
+    
+    // Convert lists
+    html = html.replace(/^- (.+)$/gm, '<li>$1</li>');
+    html = html.replace(/(<li>.*<\/li>)/s, '<ul>$1</ul>');
+    
+    return html;
+}
+
+// Initialize read more buttons
+function initializeReadMoreButtons() {
+    document.querySelectorAll('.menu-item-description').forEach(desc => {
+        const btn = desc.nextElementSibling;
+        if (btn && btn.classList.contains('read-more-btn')) {
+            if (desc.scrollHeight > desc.clientHeight + 5) {
+                btn.classList.add('show');
+            } else {
+                btn.classList.remove('show');
+            }
+        }
+    });
+}
+
+// Toggle description expansion
+window.toggleDescription = function(id, button) {
+    const desc = document.getElementById(id);
+    desc.classList.toggle('expanded');
+    button.textContent = desc.classList.contains('expanded') ? 'Weniger' : 'Mehr lesen';
+}
+
+// Fallback Menu with nutrition data
 function displayFallbackMenu() {
     const fallbackMenu = [
         {
-            title: "Eggs and other stories",
+            title: "eggcitements",
             order: 1,
-            image: "/images/uploads/eggs.jpg",
+            image: "/content/images/eggs.jpg",
+            description: "Proteinreiche Frühstücksklassiker mit Bio-Eiern",
             items: [
                 {
-                    name: "EGGS ANY STYLE",
-                    description: "(1 oder 2 Eier) Eggs your style auf Süsskartoffel- und Avocadoscheiben. Beilage: Champignons/Shiitake Pilze garniert mit Rucula & Sprossen und Kresse. Styles: Spiegelei/pochiert/Eierspeise",
-                    tags: ["vegetarisch"]
+                    name: "eggs any style",
+                    price: "12.90",
+                    description: "Wähle zwischen **Spiegelei**, **pochiert** oder **Rührei**\n\n- Serviert auf Süßkartoffel- und Avocadoscheiben\n- Mit sautierten Champignons oder Shiitake-Pilzen\n- Garniert mit frischem Rucola, Sprossen und Kresse",
+                    nutrition: {
+                        calories: "320",
+                        protein: "18g",
+                        carbs: "22g",
+                        fat: "16g"
+                    },
+                    tags: ["vegetarisch", "proteinreich"],
+                    special: false
                 },
                 {
-                    name: "OMELETTE CREATION",
-                    description: "(2 Eier) Basic: Sauerteigbrot (vom Öfferl) Zwiebel, Shiitake-Champignonspilze, Spinat. Add ons: Tomaten/Speckwürfel/Käse/Avocado garniert mit Rucula & Sprossen und Kresse",
-                    tags: ["vegetarisch"]
+                    name: "omelette creation",
+                    price: "13.90",
+                    description: "Fluffiges Omelette aus 2 Bio-Eiern auf knusprigem Sauerteigbrot\n\n**Basis:** Zwiebel, Shiitake-Pilze, Spinat\n**Add-ons:** Tomaten, Speckwürfel, Käse oder Avocado",
+                    nutrition: {
+                        calories: "380",
+                        protein: "20g",
+                        carbs: "26g",
+                        fat: "22g"
+                    },
+                    tags: ["vegetarisch", "anpassbar"],
+                    special: false
                 },
                 {
-                    name: "BEGGS ENEDICT",
-                    description: "(1 oder 2 Eier) Sauerteigbrot (vom Öfferl), pochierte Eier, Sauce Hollandaise, Spinat Add ons: Räucherlachs/BioSpeck/Shiitake-Champignonspilze garniert mit Rucula & Sprossen und Kresse",
-                    tags: []
+                    name: "beggs enedict",
+                    price: "14.90",
+                    description: "Pochierte Bio-Eier auf Sauerteigbrot mit cremiger Avocado-Hollandaise\n\n*Wähle deine Beilage:*\n- Bio-Schinken\n- Räucherlachs\n- Gegrilltes Gemüse",
+                    nutrition: {
+                        calories: "420",
+                        protein: "22g",
+                        carbs: "28g",
+                        fat: "24g"
+                    },
+                    tags: ["signature"],
+                    special: true
                 }
             ]
         },
         {
-            title: "Avocado Friends",
+            title: "hafer dich lieb",
             order: 2,
-            image: "/images/uploads/avocado.jpg",
+            image: "/content/images/porridge.jpg",
+            description: "Glutenfreie, lactosefreie & besonders darmfreundliche Kreationen",
             items: [
                 {
-                    name: "Avocado Bowl",
-                    description: "Avocado Bowl Smashed Avocado mit geriebenem Apfel und gehobelte Mandeln",
-                    tags: ["vegetarisch"]
+                    name: "premium-porridge",
+                    price: "9.90",
+                    description: "Ein wärmender Genuss aus zarten **Bio-Haferflocken**\n\nVerfeinert mit:\n- Hanf- und Chiasamen\n- Kokosflocken und geriebenem Apfel\n- Ceylon-Zimt\n- Geröstete Mandeln und frische Beeren",
+                    nutrition: {
+                        calories: "380",
+                        protein: "12g",
+                        carbs: "45g",
+                        fat: "18g"
+                    },
+                    tags: ["glutenfrei", "lactosefrei", "darmfreundlich"],
+                    special: false
                 },
                 {
-                    name: "Avocado Bread",
-                    description: "Sauerteigbrot (vom Öfferl) mit smashed Avocado garniert mit Sprossen und Kresse. Extras: Ei (any style)/BioSpeck/BioLachs/Shiitake-Champignons Pilze",
-                    tags: ["vegetarisch"]
+                    name: "kokoscreme power-oats",
+                    price: "11.90",
+                    description: "Kraftvolle Haferflocken in cremiger Kokosmilch\n\n*Getoppt mit:*\n- Hanf- und Chiasamen\n- Frische Heidel- und Himbeeren\n- Kokosflocken\n- Ahornsirup",
+                    nutrition: {
+                        calories: "410",
+                        protein: "14g",
+                        carbs: "48g",
+                        fat: "20g"
+                    },
+                    tags: ["vegan", "energizing"],
+                    special: false
                 }
             ]
         }
     ];
     
     allMenuCategories = fallbackMenu;
-    displayMenu(fallbackMenu);
+    displayCompactMenu(fallbackMenu);
     createFilterButtons(fallbackMenu);
 }
 
-// Load Events from CMS
+// Load Events from CMS (unchanged)
 async function loadEventsFromCMS() {
     try {
         console.log('Loading events from CMS...');
@@ -203,7 +333,7 @@ async function loadEventsFromCMS() {
     }
 }
 
-// Display Events with Images
+// Display Events (unchanged)
 function displayEvents(eventsData) {
     const eventWindow = document.getElementById('eventWindow');
     const eventContent = document.getElementById('eventContent');
@@ -213,22 +343,18 @@ function displayEvents(eventsData) {
         return;
     }
     
-    // Get the next upcoming event
     const nextEvent = eventsData[0];
     
-    // Handle image URL
     let imageUrl = '';
     if (nextEvent.featuredImage) {
         imageUrl = nextEvent.featuredImage.startsWith('/') ? nextEvent.featuredImage : `/${nextEvent.featuredImage}`;
     }
     
-    // Handle audio URL
     let audioUrl = '';
     if (nextEvent.audioAnnouncement) {
         audioUrl = nextEvent.audioAnnouncement.startsWith('/') ? nextEvent.audioAnnouncement : `/${nextEvent.audioAnnouncement}`;
     }
     
-    // Format the date
     const eventDate = new Date(nextEvent.date);
     const formattedDate = eventDate.toLocaleDateString('de-AT', {
         weekday: 'long',
@@ -238,7 +364,7 @@ function displayEvents(eventsData) {
     
     eventContent.innerHTML = `
         ${imageUrl ? `
-            <div class="event-image";">
+            <div class="event-image">
                 <img src="${imageUrl}" alt="${nextEvent.title}" style="width: 100%; height: 100%; object-fit: cover;" loading="lazy" onerror="this.parentElement.style.display='none'">
             </div>
         ` : ''}
@@ -276,7 +402,7 @@ function displayEvents(eventsData) {
     eventWindow.style.display = 'block';
 }
 
-// Fallback Event
+// Fallback Event (unchanged)
 function displayFallbackEvent() {
     const fallbackEvent = [{
         title: "next monday special",
