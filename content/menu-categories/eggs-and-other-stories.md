@@ -8,16 +8,27 @@ items:
       - proteinreich
       - gesund
     name: eggs any style
-    description: >
+    description: >-
       bestehend aus einem oder zwei eiern, meisterhaft zubereitete eier nach
       deiner wahl, kunstvoll serviert auf süßkartoffel- und avocadoscheiben.
       begleitet von aromatisch sautierten champignons und shiitake-pilzen,
       veredelt mit frischem rucula, sprossen und kresse.
 
 
-      your style:
+      **your style:**
 
-      spiegelei/pochiert/eierspeise
+
+      * spiegelei
+
+      * pochiert
+
+      * eierspeise
+    nutrition:
+      calories: "324"
+      protein: 13g
+      carbs: 27g
+      fat: 15g
+    special: true
   - tags:
       - vegetarisch
       - anpassbar
