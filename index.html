@@ -1,544 +1,567 @@
+
 <!DOCTYPE html>
 <html lang="de">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>healthy brunch club - start your monday right | bio brunch wien</title>
-    <meta name="description" content="gesunder bio-brunch jeden montag in wien. regionale zutaten, live-musik und positive vibes. jetzt buchen in der gumpendorfer straße 9.">
-    <meta name="keywords" content="healthy brunch wien, bio brunch, gesund essen wien, montag brunch, gumpendorfer straße, vegetarisch vegan wien">
-    <meta name="author" content="healthy brunch club">
-    <link rel="canonical" href="https://healthybrunchclub.at/">
+    <title>Compact Menu Design - Healthy Brunch Club</title>
+    <style>
+        /* Compact Menu Design */
+        .menu-section {
+            padding: 60px 20px;
+            background: #FFFBF5;
+        }
 
-   <!-- Style -->
-   <link rel="stylesheet" href="mystyle.css">
-	
-    
-    <!-- Favicon 
-    <link rel="icon" type="image/x-icon" href="/favicon.ico">
-    <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
-    <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
-    -->
-    <!-- Netlify Identity Widget -->
-    <script type="text/javascript" src="https://identity.netlify.com/v1/netlify-identity-widget.js"></script>
-    
-    <!-- Open Graph Tags -->
-    <meta property="og:title" content="healthy brunch club - bio brunch wien">
-    <meta property="og:description" content="gesunder bio-brunch jeden montag mit regionalen zutaten und live-musik">
-    <meta property="og:image" content="/og-image.jpg">
-    <meta property="og:url" content="https://healthybrunchclub.at/">
-    <meta property="og:type" content="website">
-    <meta property="og:locale" content="de_AT">
-    
-    <!-- PWA Meta Tags -->
-    <meta name="theme-color" content="#A8C09A">
-    <meta name="mobile-web-app-capable" content="yes">
-    <meta name="apple-mobile-web-app-status-bar-style" content="default">
-    <meta name="apple-mobile-web-app-title" content="healthy brunch">
-    <link rel="apple-touch-icon" href="/apple-touch-icon.png">
-    <link rel="manifest" href="/manifest.json">
-   
-    <!-- Google Font Link -->
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400..700;1,400..700&display=swap" rel="stylesheet">
-    
+        .menu-header {
+            text-align: center;
+            margin-bottom: 40px;
+        }
 
+        .menu-header h2 {
+            font-family: 'Lora', serif;
+            font-size: clamp(32px, 4vw, 42px);
+            color: #3A3A3A;
+            margin-bottom: 10px;
+            font-weight: 300;
+        }
+
+        /* Filter System */
+        .menu-filters {
+            display: flex;
+            justify-content: center;
+            gap: 12px;
+            margin-bottom: 40px;
+            flex-wrap: wrap;
+            padding: 0 10px;
+        }
+
+        .filter-btn {
+            padding: 8px 20px;
+            background: transparent;
+            border: 1px solid #1E4A3C;
+            border-radius: 25px;
+            color: #1E4A3C;
+            font-size: 13px;
+            font-weight: 400;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            white-space: nowrap;
+        }
+
+        .filter-btn.active,
+        .filter-btn:hover {
+            background: #1E4A3C;
+            color: white;
+            transform: translateY(-2px);
+        }
+
+        /* Compact Menu Layout */
+        .menu-container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        /* Category Section */
+        .menu-category {
+            margin-bottom: 50px;
+            opacity: 0;
+            animation: fadeInUp 0.6s ease forwards;
+        }
+
+        .menu-category:nth-child(1) { animation-delay: 0.1s; }
+        .menu-category:nth-child(2) { animation-delay: 0.2s; }
+        .menu-category:nth-child(3) { animation-delay: 0.3s; }
+
+        /* Category Header with Image */
+        .category-header {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+            margin-bottom: 25px;
+            padding: 20px;
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+        }
+
+        .category-image {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            overflow: hidden;
+            flex-shrink: 0;
+            background: #F5F0E8;
+        }
+
+        .category-image img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .category-info {
+            flex: 1;
+        }
+
+        .category-title {
+            font-family: 'Lora', serif;
+            font-size: 28px;
+            color: #1E4A3C;
+            margin-bottom: 5px;
+            font-weight: 400;
+        }
+
+        .category-description {
+            font-size: 14px;
+            color: #6B6B6B;
+            line-height: 1.5;
+        }
+
+        /* Compact Menu Items Grid */
+        .menu-items-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 20px;
+        }
+
+        /* Individual Menu Item Card */
+        .menu-item-card {
+            background: white;
+            border-radius: 12px;
+            padding: 20px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .menu-item-card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        /* Menu Item Header */
+        .menu-item-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: start;
+            margin-bottom: 10px;
+        }
+
+        .menu-item-name {
+            font-weight: 500;
+            font-size: 16px;
+            color: #3A3A3A;
+            flex: 1;
+            line-height: 1.3;
+        }
+
+        .menu-item-price {
+            font-weight: 600;
+            color: #1E4A3C;
+            font-size: 16px;
+            margin-left: 10px;
+        }
+
+        /* Rich Text Description */
+        .menu-item-description {
+            font-size: 13px;
+            color: #6B6B6B;
+            line-height: 1.5;
+            margin-bottom: 12px;
+            max-height: 60px;
+            overflow: hidden;
+            transition: max-height 0.3s ease;
+        }
+
+        .menu-item-description.expanded {
+            max-height: 200px;
+        }
+
+        .menu-item-description p {
+            margin: 0 0 8px 0;
+        }
+
+        .menu-item-description ul,
+        .menu-item-description ol {
+            margin: 0;
+            padding-left: 20px;
+        }
+
+        .menu-item-description li {
+            font-size: 12px;
+            margin-bottom: 4px;
+        }
+
+        .menu-item-description strong {
+            color: #3A3A3A;
+            font-weight: 500;
+        }
+
+        .menu-item-description em {
+            font-style: italic;
+            color: #8B9474;
+        }
+
+        /* Read More Button */
+        .read-more-btn {
+            font-size: 12px;
+            color: #1E4A3C;
+            cursor: pointer;
+            text-decoration: underline;
+            background: none;
+            border: none;
+            padding: 0;
+            margin-bottom: 12px;
+            display: none;
+        }
+
+        .read-more-btn.show {
+            display: inline-block;
+        }
+
+        /* Nutrition Information */
+        .nutrition-info {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 8px;
+            padding-top: 12px;
+            border-top: 1px solid #f0f0f0;
+            margin-top: auto;
+        }
+
+        .nutrition-item {
+            text-align: center;
+            padding: 5px;
+            background: #F5F0E8;
+            border-radius: 8px;
+        }
+
+        .nutrition-value {
+            font-weight: 600;
+            font-size: 14px;
+            color: #1E4A3C;
+            display: block;
+        }
+
+        .nutrition-label {
+            font-size: 10px;
+            color: #6B6B6B;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        /* Tags */
+        .menu-item-tags {
+            display: flex;
+            gap: 6px;
+            flex-wrap: wrap;
+            margin-top: 10px;
+        }
+
+        .menu-tag {
+            background: #DAC196;
+            color: white;
+            padding: 4px 12px;
+            border-radius: 15px;
+            font-size: 11px;
+            font-weight: 400;
+        }
+
+        /* Special Badges */
+        .menu-item-badge {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            background: #FFB5A7;
+            color: white;
+            padding: 4px 10px;
+            border-radius: 12px;
+            font-size: 10px;
+            font-weight: 600;
+            text-transform: uppercase;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .menu-items-grid {
+                grid-template-columns: 1fr;
+                gap: 15px;
+            }
+
+            .category-header {
+                flex-direction: column;
+                text-align: center;
+                padding: 15px;
+            }
+
+            .category-image {
+                width: 100px;
+                height: 100px;
+            }
+
+            .nutrition-info {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .filter-btn {
+                padding: 6px 16px;
+                font-size: 12px;
+            }
+        }
+
+        /* Animation */
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* Loading State */
+        .menu-loading {
+            text-align: center;
+            padding: 60px 20px;
+            color: #6B6B6B;
+        }
+
+        .menu-loading::after {
+            content: "...";
+            animation: loading 1.5s infinite;
+        }
+
+        @keyframes loading {
+            0% { content: "."; }
+            33% { content: ".."; }
+            66% { content: "..."; }
+        }
+    </style>
 </head>
-
 <body>
-    <!-- Loading Screen -->
-    <div class="loading-screen" id="loadingScreen">
-        <div class="loading-logo"><img src="content/images/logo.png" width="356" height="194" alt="healthy brunch club logo"/></div>
-        <div class="loading-bar">
-            <div class="loading-progress"></div>
-        </div>
-    </div>
-
-    <!-- Skip Link -->
-    <a href="#main-content" class="skip-link">zum hauptinhalt springen</a>
-
-    <!-- Navigation -->
-    <nav class="nav fade-in" id="navbar">
-        <div class="nav-container">
-            <a href="#home" class="logo"><img src="content/images/logo.png" alt="healthy brunch club" class="logo-img"/></a>
-            
-            <ul class="nav-links">
-                <li><a href="#home">home</a></li>
-                <li><a href="#menu">speisekarte</a></li>
-                <li><a href="#features">features</a></li>
-                <li><a href="#about">über uns</a></li>
-                <li><a href="#contact" class="book-btn">tisch reservieren</a></li>
-            </ul>
-
-            <button class="mobile-menu-toggle" aria-label="menu öffnen">☰</button>
-        </div>
-    </nav>
-
-    <!-- Floating Event Window -->
-
-<div class="event-window collapsed" id="eventWindow" style="display: block;">
-    <button class="event-toggle" onclick="toggleEventWindow()">
-        <span id="toggleIcon">🎵</span>
-    </button>
-    <div class="event-content" id="eventContent">
-        <!-- Event content will be loaded dynamically -->
-    </div>
-</div>
-
-
-    <!-- Admin Edit Button -->
-    <a href="/admin" class="admin-edit-btn" id="adminEditBtn">
-        ✏️ menü bearbeiten
-    </a>
-
-    <!-- Main Content -->
-    <main id="main-content">
-        <!-- Hero Section -->
-    
-        <section class="hero" id="home">
-            <!-- Full-screen video background -->
-            <div class="hero-video-background">
-                <video class="hero-video" autoplay muted loop playsinline>
-                    <source src="/content/videos/healthybrunchclub.mp4" type="video/mp4">
-                    <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1920 1080'%3E%3Crect fill='%23F5F0E8' width='1920' height='1080'/%3E%3Ctext x='50%25' y='50%25' text-anchor='middle' fill='%23A8C09A' font-size='40'%3Ehealthy brunch club%3C/text%3E%3C/svg%3E" alt="healthy brunch club">
-                </video>
-                <!-- Dark overlay for better text readability -->
-                <div class="hero-overlay"></div>
-            </div>
-            
-            <!-- Content over video -->
-            <div class="hero-container">
-                <div class="hero-content fade-in-up">
-                    <h1>start your monday with <span>healthy vibes</span></h1>
-                    <p>erlebe die perfekte kombination aus bio-zutaten, liebevoll zubereiteten speisen und entspannter atmosphäre. jeden montag von 9-12 uhr.</p>
-                    
-                    <div class="hero-buttons">
-                        <a href="#contact" class="btn-primary">jetzt reservieren</a>
-                        <a href="#menu" class="btn-secondary">speisekarte ansehen</a>
-                    </div>
-                </div>
-            </div>
-            
-            <!-- Scroll indicator -->
-            <div class="scroll-indicator">
-                <span></span>
-            </div>
-        </section>
-
-    <!-- Menu Section with Filter System -->
-
-<!-- Menu Section -->
-<section class="menu-section" id="menu">
-    <div class="menu-header">
-        <h2>unsere liebevoll kuratierte speisekarte</h2>
-        <p>100% bio, regional und mit ganz viel liebe zubereitet</p>
-    </div>
-
-    <!-- Filter Buttons -->
-    <div class="menu-filters" id="menuFilters">
-        <!-- Filter buttons will be added dynamically -->
-    </div>
-
-    <div class="menu-grid" id="menuGrid">
-        <!-- Menu items will be loaded dynamically -->
-        <div class="no-menu-message">
-            <p>Die Speisekarte wird geladen...</p>
-        </div>
-    </div>
-</section>
-
-<style>
-.menu-filters {
-    display: flex;
-    justify-content: center;
-    gap: 15px;
-    margin: 40px 0;
-    flex-wrap: wrap;
-}
-
-.menu-grid {
-    max-width: 1200px;
-    margin: 0 auto;
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
-    gap: 30px;
-}
-
-@media (max-width: 768px) {
-    .menu-grid {
-        grid-template-columns: 1fr;
-    }
-    
-    .menu-filters {
-        gap: 10px;
-    }
-    
-    .category-filter {
-        padding: 8px 16px;
-        font-size: 13px;
-    }
-}
-</style>
-
-        <!-- Features Section -->
-        <section class="features-section" id="features">
-            <div class="menu-header">
-                <h2>was uns besonders macht</h2>
-                <p>mehr als nur frühstück – eine philosophie</p>
-            </div>
-
-            <div class="features-grid">
-                <div class="feature-card">
-                    <div class="feature-icon">🌱</div>
-                    <h3>100% bio & regional</h3>
-                    <p>alle zutaten stammen von lokalen bio-bauern aus der umgebung. frisch, nachhaltig und voller nährstoffe.</p>
-                </div>
-
-                <div class="feature-card">
-                    <div class="feature-icon">🎵</div>
-                    <h3>live dj sets</h3>
-                    <p>jeden montag begleiten dich sanfte lounge-klänge durch deinen morgen. musik zum wohlfühlen.</p>
-                </div>
-
-                <div class="feature-card">
-                    <div class="feature-icon">💚</div>
-                    <h3>darmgesundheit</h3>
-                    <p>spezielle zutaten und kombinationen, die deine verdauung unterstützen und für innere balance sorgen.</p>
-                </div>
-
-                <div class="feature-card">
-                    <div class="feature-icon">☕</div>
-                    <h3>specialty coffee</h3>
-                    <p>fair-trade kaffee von lokalen röstern, mit liebe zubereitet. auch mit pflanzlichen milchalternativen.</p>
-                </div>
-
-                <div class="feature-card">
-                    <div class="feature-icon">♻️</div>
-                    <h3>zero waste</h3>
-                    <p>nachhaltige verpackungen, kompostierung und bewusster umgang mit ressourcen für unsere umwelt.</p>
-                </div>
-
-                <div class="feature-card">
-                    <div class="feature-icon">👥</div>
-                    <h3>community</h3>
-                    <p>ein ort der begegnung, wo gleichgesinnte zusammenkommen und den tag gemeinsam beginnen.</p>
-                </div>
-            </div>
-        </section>
-
-        <!-- About Section -->
-        <section class="contact-section" id="about">
-            <div class="contact-container">
-                <div class="contact-header">
-                    <h2>unsere geschichte</h2>
-                </div>
-                <div style="text-align: center; max-width: 600px; margin: 0 auto 40px;">
-                    <p style="font-size: 16px; line-height: 1.8; color: var(--text-medium);">
-                      Was einst als einfaches Geburtstagsritual begann, lebt heute in unserem Brunchlokal weiter. Drei Schwestern – eine Ärztin und zwei Flugbegleiterinnen – vereint durch die Liebe zur Familie, zum Reisen und natürlich: zum Brunchen. Ob in New York, Chicago, an der Amalfiküste oder aber auch ganz einfach in unserer Heimatstadt Wien – das gemeinsame Brunchen war immer ein besonderer Moment. Und mit jedem Bissen, jedem Kaffee und jeder neuen Idee wuchs auch der Wunsch, diesen Genuss zu teilen. Unsere Wurzeln liegen auf den Philippinen – und mit ihnen eine tiefe Verbundenheit zu Gastfreundschaft, Aromenvielfalt und dem Herz für gutes Essen. Diese Einflüsse spiegeln sich heute in unserer Speisekarte genauso wider wie die Erfahrungen aus aller Welt. <br>   
-                    </p>
-                    <p style="font-size: 16px; line-height: 1.8; color: var(--text-medium); margin-top: 20px;">
-                     Als bei Tina eine chronische Darmentzündung diagnostiziert wurde, wurde das Thema Ernährung für uns noch bedeutungsvoller. Seither setzen wir gezielt auf gesunde Alternativen und entzündungshemmende Zutaten – ohne auf Geschmack oder Kreativität zu verzichten. Das Ergebnis: Eine bunte Auswahl an trendigen, ausgewogenen und international inspirierten Brunchgerichten, die nicht nur sättigen, sondern glücklich machen.
-
-<br>
-                    </p>
-			  <p style="font-size: 16px; line-height: 1.8; color: var(--text-medium); margin-top: 20px;">
-                   Kommt vorbei, bruncht mit uns
-
-<br>
-                    </p>
-					<div style="text-align: center; max-width: 600px; margin: 0 auto 40px;">
-                  <img src="content/images/p38.png" height="300" alt=""/> </div>
-                </div>
-            </div>
-        </section>
-
-        <!-- Contact Form Section -->
-        <section class="contact-section" id="contact" id="booking">
-            <div class="contact-container">
-                <div class="contact-header">
-                    <h2>reserviere deinen tisch</h2>
-                    <p>sichere dir deinen platz für ein unvergessliches brunch-erlebnis</p>
-                </div>
-
-                <form name="reservierung" method="POST" data-netlify="true" data-netlify-honeypot="bot-field" class="contact-form">
-                    <!-- Netlify Honeypot field -->
-                    <p class="netlify-honeypot">
-                        <label>don't fill this out if you're human: <input name="bot-field" /></label>
-                    </p>
-
-                    <div class="form-row">
-                        <div class="form-group">
-                            <label for="name">name *</label>
-                            <input type="text" id="name" name="name" required>
-                        </div>
-                        <div class="form-group">
-                            <label for="email">e-mail *</label>
-                            <input type="email" id="email" name="email" required>
-                        </div>
-                    </div>
-
-                    <div class="form-row">
-                        <div class="form-group">
-                            <label for="phone">telefon</label>
-                            <input type="tel" id="phone" name="phone">
-                        </div>
-                        <div class="form-group">
-                            <label for="date">datum *</label>
-                            <select id="date" name="date" required>
-                                <option value="">montag wählen</option>
-                            </select>
-                        </div>
-                    </div>
-
-                    <div class="form-row">
-                        <div class="form-group">
-                            <label for="time">uhrzeit *</label>
-                            <select id="time" name="time" required>
-                             
-                                <option value="09:00">09:00</option>
-                                <option value="09:30">09:30</option>
-                                <option value="10:00">10:00</option>
-                                <option value="10:30">10:30</option>
-                                <option value="11:00">11:00</option>
-                                <option value="11:30">11:30</option>
-                            </select>
-                        </div>
-                        <div class="form-group">
-                            <label for="guests">anzahl personen *</label>
-                            <select id="guests" name="guests" required>
-                                <option value="">bitte wählen</option>
-                                <option value="1">1 person</option>
-                                <option value="2">2 personen</option>
-                                <option value="3">3 personen</option>
-                                <option value="4">4 personen</option>
-                                <option value="5">5 personen</option>
-                                <option value="6">6 personen</option>
-                                <option value="7+">7+ personen</option>
-                            </select>
-                        </div>
-                    </div>
-
-                    <div class="form-group">
-                        <label for="allergies">allergien / unverträglichkeiten</label>
-                        <textarea id="allergies" name="allergies" placeholder="bitte teile uns eventuelle allergien oder spezielle wünsche mit..."></textarea>
-                    </div>
-
-                    <div class="form-group">
-                        <label for="newsletter">
-                            <input type="checkbox" id="newsletter" name="newsletter" style="width: auto; margin-right: 10px;">
-                            ich möchte den newsletter mit aktuellen events und specials erhalten
-                        </label>
-                    </div>
-
-                    <button type="submit" class="form-submit">tisch reservieren</button>
-                </form>
-            </div>
-        </section>
-    </main>
-
-    <!-- Footer -->
-    <footer class="footer">
-        <div class="footer-container">
-            <div class="footer-section">
-                <h4>öffnungszeiten</h4>
-                <p>montag: 09:00 - 12:00 uhr</p>
-                <p>dienstag - sonntag: geschlossen</p>
-                <p style="margin-top: 15px;">reservierungen empfohlen!</p>
-            </div>
-
-            <div class="footer-section">
-                <h4>kontakt</h4>
-                <p>gumpendorfer straße 9<br>1060 wien</p>
-                <p><a href="tel:+4367612345678">+43 676 123 456 78</a></p>
-                <p><a href="mailto:hello@healthybrunchclub.at">hello@healthybrunchclub.at</a></p>
-            </div>
-
-            <div class="footer-section">
-                <h4>healthy brunch club</h4>
-                <p>start your monday right with healthy food, good vibes, and amazing people.</p>
-                <div class="social-links">
-                    <a href="#" class="social-link" aria-label="instagram">📷</a>
-                    <a href="#" class="social-link" aria-label="facebook">👍</a>
-                    <a href="#" class="social-link" aria-label="pinterest">📌</a>
-                </div>
-            </div>
-
-            <div class="footer-section">
-                <h4>newsletter</h4>
-                <p>bleibe auf dem laufenden über events, neue gerichte und special offers!</p>
-                <form name="newsletter" method="POST" data-netlify="true" style="margin-top: 15px;">
-                    <input type="email" name="email" placeholder="deine e-mail" required style="padding: 10px; border: none; border-radius: 5px; width: 100%; margin-bottom: 10px;">
-                    <button type="submit" style="background: var(--peach); border: none; color: white; padding: 10px 20px; border-radius: 5px; cursor: pointer; width: 100%;">anmelden</button>
-                </form>
-            </div>
+    <!-- Menu Section -->
+    <section class="menu-section" id="menu">
+        <div class="menu-header">
+            <h2>unsere liebevoll kuratierte speisekarte</h2>
+            <p>100% bio, regional und mit ganz viel liebe zubereitet</p>
         </div>
 
-        <div class="footer-bottom">
-            <p>&copy; 2025 healthy brunch club wien. made with love by erwin. | <a href="/impressum" style="color: inherit;">impressum</a> | <a href="/datenschutz" style="color: inherit;">datenschutz</a></p>
+        <!-- Filter Buttons -->
+        <div class="menu-filters" id="menuFilters">
+            <!-- Filters will be populated dynamically -->
         </div>
-    </footer>
 
-    <!-- Load CMS Script -->
-    <script src="cms-loader.js"></script>
+        <!-- Menu Container -->
+        <div class="menu-container" id="menuContainer">
+            <!-- Menu categories and items will be loaded here -->
+            <div class="menu-loading">Speisekarte wird geladen</div>
+        </div>
+    </section>
 
-    <!-- Scripts -->
     <script>
-        // Loading Screen
-        window.addEventListener('load', function() {
-            setTimeout(function() {
-                document.getElementById('loadingScreen').classList.add('hidden');
-            }, 2000);
-        });
+        // Example menu data structure with nutrition info
+        const exampleMenuData = [
+            {
+                title: "eggcitements",
+                order: 1,
+                image: "/content/images/eggs.jpg",
+                description: "Proteinreiche Frühstücksklassiker mit Bio-Eiern",
+                items: [
+                    {
+                        name: "eggs any style",
+                        price: "12.90",
+                        description: "<p>Wähle zwischen <strong>Spiegelei</strong>, <strong>pochiert</strong> oder <strong>Rührei</strong></p><ul><li>Serviert auf Süßkartoffel- und Avocadoscheiben</li><li>Mit sautierten Champignons oder Shiitake-Pilzen</li><li>Garniert mit frischem Rucola, Sprossen und Kresse</li></ul>",
+                        nutrition: {
+                            calories: "320",
+                            protein: "18g",
+                            carbs: "22g",
+                            fat: "16g"
+                        },
+                        tags: ["vegetarisch", "proteinreich", "gesund"],
+                        special: false
+                    },
+                    {
+                        name: "beggs enedict",
+                        price: "14.90",
+                        description: "<p>Pochierte Bio-Eier auf knusprigem Sauerteigbrot vom <em>Öfferl</em></p><p>Mit hausgemachter <strong>Avocado-Hollandaise</strong> und wahlweise:</p><ul><li>Bio-Schinken</li><li>Räucherlachs</li><li>Gegrilltes Gemüse (vegan)</li></ul>",
+                        nutrition: {
+                            calories: "420",
+                            protein: "22g",
+                            carbs: "28g",
+                            fat: "24g"
+                        },
+                        tags: ["signature", "anpassbar"],
+                        special: true
+                    }
+                ]
+            },
+            {
+                title: "hafer dich lieb",
+                order: 2,
+                image: "/content/images/porridge.jpg",
+                description: "Glutenfreie, lactosefreie & besonders darmfreundliche Kreationen",
+                items: [
+                    {
+                        name: "premium-porridge",
+                        price: "9.90",
+                        description: "<p>Ein wärmender Genuss aus zarten <strong>Bio-Haferflocken</strong></p><p>Verfeinert mit:</p><ul><li>Hanf- und Chiasamen für Omega-3</li><li>Kokosflocken und geriebenem Apfel</li><li>Eine Prise Ceylon-Zimt</li><li>Geröstete Mandeln und frische Beeren</li></ul>",
+                        nutrition: {
+                            calories: "380",
+                            protein: "12g",
+                            carbs: "45g",
+                            fat: "18g"
+                        },
+                        tags: ["glutenfrei", "lactosefrei", "darmfreundlich"],
+                        special: false
+                    }
+                ]
+            }
+        ];
 
-        // Toggle Event Window
-       function toggleEventWindow() {
-    const eventWindow = document.getElementById('eventWindow');
-    const toggleIcon = document.getElementById('toggleIcon');
-    
-    eventWindow.classList.toggle('collapsed');
-    toggleIcon.textContent = eventWindow.classList.contains('collapsed') ? '🎵' : '−';
-}
-
-// Show event window on page load (but keep it collapsed)
-document.addEventListener('DOMContentLoaded', function() {
-    // Make sure event window is visible but collapsed
-    const eventWindow = document.getElementById('eventWindow');
-    if (eventWindow) {
-        eventWindow.style.display = 'block';
-        eventWindow.classList.add('collapsed');
-        document.getElementById('toggleIcon').textContent = '🎵';
-    }
-});
-
-        // Show Admin Button for logged in users
-        if (window.netlifyIdentity) {
-            window.netlifyIdentity.on("init", user => {
-                if (user) {
-                    document.getElementById('adminEditBtn').classList.add('show');
-                }
-            });
+        // Display menu with compact design
+        function displayCompactMenu(categories) {
+            const container = document.getElementById('menuContainer');
             
-            window.netlifyIdentity.on("login", () => {
-                document.getElementById('adminEditBtn').classList.add('show');
-            });
-            
-            window.netlifyIdentity.on("logout", () => {
-                document.getElementById('adminEditBtn').classList.remove('show');
-            });
-        }
+            container.innerHTML = categories.map(category => `
+                <div class="menu-category" data-category="${category.title.toLowerCase().replace(/\s+/g, '-')}">
+                    <div class="category-header">
+                        ${category.image ? `
+                            <div class="category-image">
+                                <img src="${category.image}" alt="${category.title}" loading="lazy">
+                            </div>
+                        ` : ''}
+                        <div class="category-info">
+                            <h3 class="category-title">${category.title}</h3>
+                            ${category.description ? `<p class="category-description">${category.description}</p>` : ''}
+                        </div>
+                    </div>
+                    
+                    <div class="menu-items-grid">
+                        ${category.items.map((item, index) => `
+                            <div class="menu-item-card">
+                                ${item.special ? '<div class="menu-item-badge">Empfehlung</div>' : ''}
+                                
+                                <div class="menu-item-header">
+                                    <h4 class="menu-item-name">${item.name}</h4>
+                                    ${item.price ? `<span class="menu-item-price">€${item.price}</span>` : ''}
+                                </div>
+                                
+                                <div class="menu-item-description" id="desc-${category.order}-${index}">
+                                    ${item.description}
+                                </div>
+                                
+                                <button class="read-more-btn" onclick="toggleDescription('desc-${category.order}-${index}', this)">
+                                    Mehr lesen
+                                </button>
+                                
+                                ${item.nutrition ? `
+                                    <div class="nutrition-info">
+                                        <div class="nutrition-item">
+                                            <span class="nutrition-value">${item.nutrition.calories}</span>
+                                            <span class="nutrition-label">kcal</span>
+                                        </div>
+                                        <div class="nutrition-item">
+                                            <span class="nutrition-value">${item.nutrition.protein}</span>
+                                            <span class="nutrition-label">Protein</span>
+                                        </div>
+                                        <div class="nutrition-item">
+                                            <span class="nutrition-value">${item.nutrition.carbs}</span>
+                                            <span class="nutrition-label">Kohlenh.</span>
+                                        </div>
+                                        <div class="nutrition-item">
+                                            <span class="nutrition-value">${item.nutrition.fat}</span>
+                                            <span class="nutrition-label">Fett</span>
+                                        </div>
+                                    </div>
+                                ` : ''}
+                                
+                                ${item.tags && item.tags.length > 0 ? `
+                                    <div class="menu-item-tags">
+                                        ${item.tags.map(tag => `<span class="menu-tag">${tag}</span>`).join('')}
+                                    </div>
+                                ` : ''}
+                            </div>
+                        `).join('')}
+                    </div>
+                </div>
+            `).join('');
 
-        // Fill Monday dates in the select dropdown
-        function fillMondayDates() {
-            const dateSelect = document.getElementById('date');
-            const today = new Date();
-            const daysUntilMonday = (8 - today.getDay()) % 7 || 7;
-            
-            for (let i = 0; i < 4; i++) {
-                const monday = new Date(today);
-                monday.setDate(today.getDate() + daysUntilMonday + (i * 7));
-                
-                const option = document.createElement('option');
-                option.value = monday.toISOString().split('T')[0];
-                option.textContent = monday.toLocaleDateString('de-AT', { 
-                    weekday: 'long', 
-                    day: 'numeric', 
-                    month: 'long' 
+            // Check if descriptions need "read more" buttons
+            setTimeout(() => {
+                document.querySelectorAll('.menu-item-description').forEach(desc => {
+                    if (desc.scrollHeight > desc.clientHeight) {
+                        const btn = desc.nextElementSibling;
+                        if (btn && btn.classList.contains('read-more-btn')) {
+                            btn.classList.add('show');
+                        }
+                    }
                 });
-                
-                dateSelect.appendChild(option);
-            }
+            }, 100);
         }
 
-        // Call function when page loads
-        document.addEventListener('DOMContentLoaded', fillMondayDates);
-
-        // Handle form submission success
-        if (window.location.search.includes('success=true')) {
-            alert('vielen dank für deine reservierung! wir haben deine anfrage erhalten und melden uns in kürze bei dir.');
-            window.history.replaceState({}, document.title, window.location.pathname);
+        // Toggle description expansion
+        function toggleDescription(id, button) {
+            const desc = document.getElementById(id);
+            desc.classList.toggle('expanded');
+            button.textContent = desc.classList.contains('expanded') ? 'Weniger' : 'Mehr lesen';
         }
 
-        // Smooth scrolling for navigation links
-        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
-            anchor.addEventListener('click', function (e) {
-                e.preventDefault();
-                const target = document.querySelector(this.getAttribute('href'));
-                if (target) {
-                    target.scrollIntoView({
-                        behavior: 'smooth',
-                        block: 'start'
-                    });
+        // Create filter buttons
+        function createFilters(categories) {
+            const filtersContainer = document.getElementById('menuFilters');
+            
+            // Clear existing filters
+            filtersContainer.innerHTML = '';
+            
+            // Add "all" button
+            const allBtn = document.createElement('button');
+            allBtn.className = 'filter-btn active';
+            allBtn.textContent = 'alle anzeigen';
+            allBtn.onclick = () => filterMenu('all');
+            filtersContainer.appendChild(allBtn);
+            
+            // Add category filters
+            categories.forEach(category => {
+                const btn = document.createElement('button');
+                btn.className = 'filter-btn';
+                btn.textContent = category.title.toLowerCase();
+                btn.onclick = () => filterMenu(category.title);
+                filtersContainer.appendChild(btn);
+            });
+        }
+
+        // Filter menu items
+        function filterMenu(filter) {
+            // Update active button
+            document.querySelectorAll('.filter-btn').forEach(btn => {
+                btn.classList.remove('active');
+                if (filter === 'all' && btn.textContent === 'alle anzeigen') {
+                    btn.classList.add('active');
+                } else if (btn.textContent === filter.toLowerCase()) {
+                    btn.classList.add('active');
                 }
             });
-        });
-
-        // Navigation scroll effect
-        window.addEventListener('scroll', function() {
-            const navbar = document.getElementById('navbar');
-            if (window.scrollY > 100) {
-                navbar.classList.add('scrolled');
-            } else {
-                navbar.classList.remove('scrolled');
-            }
-        });
-
-        // Mobile menu toggle
-        const mobileMenuToggle = document.querySelector('.mobile-menu-toggle');
-        const navLinks = document.querySelector('.nav-links');
-
-        if (mobileMenuToggle) {
-            mobileMenuToggle.addEventListener('click', function() {
-                navLinks.style.display = navLinks.style.display === 'flex' ? 'none' : 'flex';
-                navLinks.style.flexDirection = 'column';
-                navLinks.style.position = 'absolute';
-                navLinks.style.top = '100%';
-                navLinks.style.left = '0';
-                navLinks.style.right = '0';
-                navLinks.style.background = 'white';
-                navLinks.style.padding = '20px';
-                navLinks.style.boxShadow = '0 4px 20px rgba(0,0,0,0.1)';
-            });
-        }
-
-        // Intersection Observer for fade-in animations
-        const observerOptions = {
-            threshold: 0.1,
-            rootMargin: '0px 0px -50px 0px'
-        };
-
-        const observer = new IntersectionObserver(function(entries) {
-            entries.forEach(entry => {
-                if (entry.isIntersecting) {
-                    entry.target.style.opacity = '1';
-                    entry.target.style.transform = 'translateY(0)';
-                }
-            });
-        }, observerOptions);
-
-        // Observe all menu cards and feature cards
-        document.addEventListener('DOMContentLoaded', function() {
-            const cards = document.querySelectorAll('.menu-card, .feature-card');
-            cards.forEach((card, index) => {
-                card.style.opacity = '0';
-                card.style.transform = 'translateY(30px)';
-                card.style.transition = `all 0.6s ease ${index * 0.1}s`;
-                observer.observe(card);
-            });
-        });
-
-        // Netlify CMS redirect after login
-        if (window.netlifyIdentity) {
-            window.netlifyIdentity.on("init", user => {
-                if (!user) {
-                    window.netlifyIdentity.on("login", () => {
-                        document.location.href = "/admin/";
-                    });
+            
+            // Show/hide categories
+            document.querySelectorAll('.menu-category').forEach(category => {
+                if (filter === 'all') {
+                    category.style.display = 'block';
+                } else {
+                    const categoryName = category.querySelector('.category-title').textContent;
+                    category.style.display = categoryName.toLowerCase() === filter.toLowerCase() ? 'block' : 'none';
                 }
             });
         }
 
-        // Log when CMS loader integration completes
-        console.log('CMS Integration loaded. Use window.cmsLoader.refresh() to manually refresh content.');
+        // Initialize menu
+        document.addEventListener('DOMContentLoaded', () => {
+            // Load example data (replace with actual CMS data loading)
+            displayCompactMenu(exampleMenuData);
+            createFilters(exampleMenuData);
+        });
     </script>
 </body>
 </html>
