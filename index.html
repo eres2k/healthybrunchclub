@@ -127,7 +127,7 @@
 
     <!-- Menu Section with Filter System -->
 
-<!-- Menu Section -->
+<!-- Compact Menu Section with Nutrition Support -->
 <section class="menu-section" id="menu">
     <div class="menu-header">
         <h2>unsere liebevoll kuratierte speisekarte</h2>
@@ -136,49 +136,24 @@
 
     <!-- Filter Buttons -->
     <div class="menu-filters" id="menuFilters">
-        <!-- Filter buttons will be added dynamically -->
+        <!-- Filter buttons will be added dynamically by CMS loader -->
     </div>
 
-    <div class="menu-grid" id="menuGrid">
+    <!-- Menu Container - Changed ID for compatibility -->
+    <div id="menuContainer" class="menu-container">
         <!-- Menu items will be loaded dynamically -->
-        <div class="no-menu-message">
-            <p>Die Speisekarte wird geladen...</p>
-        </div>
+        <div class="menu-loading">Die Speisekarte wird geladen...</div>
     </div>
 </section>
 
-<style>
-.menu-filters {
-    display: flex;
-    justify-content: center;
-    gap: 15px;
-    margin: 40px 0;
-    flex-wrap: wrap;
-}
-
-.menu-grid {
-    max-width: 1200px;
-    margin: 0 auto;
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
-    gap: 30px;
-}
-
-@media (max-width: 768px) {
-    .menu-grid {
-        grid-template-columns: 1fr;
-    }
-    
-    .menu-filters {
-        gap: 10px;
-    }
-    
-    .category-filter {
-        padding: 8px 16px;
-        font-size: 13px;
-    }
-}
-</style>
+<!-- Update the script section to use menuContainer instead of menuGrid -->
+<script>
+    // Update the CMS loader to use the new container ID
+    document.addEventListener('DOMContentLoaded', function() {
+        // The cms-loader.js will now look for 'menuContainer' 
+        // and apply the compact design automatically
+    });
+</script>
 
         <!-- Features Section -->
         <section class="features-section" id="features">
