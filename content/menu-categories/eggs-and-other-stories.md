@@ -41,22 +41,46 @@ items:
       kresse.
 
 
-      your style:
+      **your style:**
 
-      tomaten/speckwürfeln/käse/avocado
+
+      * tomaten
+
+      * speckwürfeln
+
+      * käse
+
+      * avocado
+    price: "8"
+    nutrition:
+      calories: "250"
+      protein: 22g
+      carbs: 13g
+      fat: 9g
   - tags:
       - vegetarisch
       - gourmet
       - aromatisch
     name: beggs enedict
-    description: >
+    description: >-
       ein oder zwei pochierte eier auf knusprigem sauerteigbrot vom öfferl und
       einer samtigen avocadosauce, serviert mit champignons oder
       shiitake-pilzen, garniert mit frischem rucula, sprossen, kresse und
       knusprigen pinienkernen.
 
 
-      your style:
+      **your style:**
 
-      schinken/speck/lachs.
+
+
+      * s﻿chinken
+
+      * s﻿peck
+
+      * l﻿achs
+    nutrition:
+      calories: "245"
+      protein: "12"
+      carbs: "54"
+      fat: "34"
 ---
