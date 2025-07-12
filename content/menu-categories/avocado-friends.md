@@ -29,9 +29,11 @@ items:
       sprossen und kresse für eine lebendige, grüne frische.
 
 
-      **your style:**
+    ***your style:***
 
-      ei (nach wunsch zubereitet)/biospeck/biolachs/shiitake und champignons pilze
+      * ei (nach wunsch zubereitet)
+      * biospeck/biolachs/shiitake
+      * champignons pilze
     nutrition:
       calories: "320"
       protein: 8g
