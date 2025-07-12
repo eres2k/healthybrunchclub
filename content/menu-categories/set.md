@@ -24,9 +24,9 @@ items:
     description: |-
       * e﻿inen chaga tee mit adaptogene
       * a﻿vocado bread\
-        + pilze (1.50€)\
-        + speck (1.90€)\
-        + ei (1.40€ )
+        pilze (1.50€)\
+        speck (1.90€)\
+        ei (1.40€)
       * h﻿afer dich lieb
   - tags:
       - herzhaft
