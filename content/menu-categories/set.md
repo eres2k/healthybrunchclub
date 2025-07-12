@@ -7,7 +7,7 @@ items:
       - gesund
       - sättigend
     special: false
-    name: set 1
+    name: by charlotte
     price: "22.90"
     description: >-
       * e﻿in heißgetränk
