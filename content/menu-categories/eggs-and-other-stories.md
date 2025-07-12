@@ -51,7 +51,7 @@ items:
       * käse
 
       * avocado
-    price: "8"
+    price: ""
     nutrition:
       calories: "250"
       protein: 22g
@@ -79,7 +79,7 @@ items:
       * l﻿achs
     nutrition:
       calories: "245"
-      protein: "12"
-      carbs: "54"
-      fat: "34"
+      protein: 12g
+      carbs: 54g
+      fat: 34g
 ---
