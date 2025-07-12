@@ -260,7 +260,7 @@
                         <div class="form-group">
                             <label for="date">datum *</label>
                             <select id="date" name="date" required>
-                                <option value="">montag wählen</option>
+                                <option value="">tag wählen</option>
                             </select>
                         </div>
                     </div>
@@ -402,9 +402,11 @@ document.addEventListener('DOMContentLoaded', function() {
             });
         }
 
-function fillSundayDate() {
+function fillMondayDates() {
     const dateSelect = document.getElementById('date');
-    const specificSunday = new Date('2025-07-03');
+    
+    // Create a specific date for Sunday, July 3rd, 2025
+    const specificSunday = new Date(2025, 6, 3); // Month is 0-indexed, so 6 = July
     
     const option = document.createElement('option');
     option.value = specificSunday.toISOString().split('T')[0];
