@@ -28,7 +28,7 @@ items:
       protein: 13g
       carbs: 27g
       fat: 15g
-    special: true
+    special: false
   - tags:
       - vegetarisch
       - anpassbar
