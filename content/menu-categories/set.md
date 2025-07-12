@@ -6,9 +6,9 @@ items:
       - herzhaft
       - gesund
       - sättigend
-    special: true
+    special: false
     name: set 1
-    price: "23"
+    price: "22.90"
     description: >-
       * e﻿in heißgetränk
 
