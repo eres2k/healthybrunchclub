@@ -1,18 +1,17 @@
 ---
 title: avo-lution
 order: 2
-image: /content/images/avo-lution.jpg
+image: /content/images/dsc00277.jpg
 items:
   - tags:
       - vegetarisch
       - leicht
       - nahrhaft
     name: avocado bowl
-    description: >-
-      eine samtige kreation aus frisch zerdrückter avocado, veredelt mit fein
-      geriebenem apfel für eine süß-frische note, gekrönt von zart gerösteten
-      mandeln, die einen knackigen akzent setzen. ein belebendes, nahrhaftes
-      vergnügen für jeden moment.
+    description: eine samtige kreation aus frisch zerdrückter avocado, veredelt mit
+      fein geriebenem apfel für eine süß-frische note, gekrönt von zart
+      gerösteten mandeln, die einen knackigen akzent setzen. ein belebendes,
+      nahrhaftes vergnügen für jeden moment.
     nutrition:
       calories: "285"
       protein: 6g
