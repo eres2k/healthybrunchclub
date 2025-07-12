@@ -1,5 +1,5 @@
 ---
-title: set
+title: sets
 order: -1
 items:
   - tags:
