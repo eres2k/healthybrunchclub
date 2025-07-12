@@ -8,7 +8,7 @@ items:
       - sättigend
     special: true
     name: set 1
-    price: "22.90"
+    price: "23"
     description: >-
       * e﻿in heißgetränk
 
