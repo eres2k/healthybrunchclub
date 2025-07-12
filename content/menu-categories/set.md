@@ -3,7 +3,10 @@ title: sets
 order: -1
 image: /content/images/set.jpg
 items:
-  - tags: []
+  - tags:
+      - herzhaft
+      - gesund
+      - sättigend
     special: false
     name: tessa's feel good combi
     description: |-
@@ -19,8 +22,11 @@ items:
     name: tina's soul food set
     price: "17.90"
     description: |-
-      * e﻿in chaga tee mit adaptogene
-      * a﻿vocado bread (pilze +1.50€, speck +1.90€, ei +1.40€)
+      * e﻿inen chaga tee mit adaptogene
+      * a﻿vocado bread\
+        + pilze (1.50€)\
+        + speck (1.90€)\
+        + ei (1.40€ )
       * h﻿afer dich lieb
   - tags:
       - herzhaft
