@@ -402,27 +402,20 @@ document.addEventListener('DOMContentLoaded', function() {
             });
         }
 
-        // Fill Monday dates in the select dropdown
-        function fillMondayDates() {
-            const dateSelect = document.getElementById('date');
-            const today = new Date();
-            const daysUntilMonday = (8 - today.getDay()) % 7 || 7;
-            
-            for (let i = 0; i < 4; i++) {
-                const monday = new Date(today);
-                monday.setDate(today.getDate() + daysUntilMonday + (i * 7));
-                
-                const option = document.createElement('option');
-                option.value = monday.toISOString().split('T')[0];
-                option.textContent = monday.toLocaleDateString('de-AT', { 
-                    weekday: 'long', 
-                    day: 'numeric', 
-                    month: 'long' 
-                });
-                
-                dateSelect.appendChild(option);
-            }
-        }
+function fillSundayDate() {
+    const dateSelect = document.getElementById('date');
+    const specificSunday = new Date('2025-07-03');
+    
+    const option = document.createElement('option');
+    option.value = specificSunday.toISOString().split('T')[0];
+    option.textContent = specificSunday.toLocaleDateString('de-AT', { 
+        weekday: 'long', 
+        day: 'numeric', 
+        month: 'long' 
+    });
+    
+    dateSelect.appendChild(option);
+}
 
         // Call function when page loads
         document.addEventListener('DOMContentLoaded', fillMondayDates);
