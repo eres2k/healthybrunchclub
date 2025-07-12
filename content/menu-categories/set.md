@@ -1,7 +1,7 @@
 ---
 title: sets
 order: -1
-image: /content/images/image.jpg
+image: /content/images/set.jpg
 items:
   - tags: []
     special: false
