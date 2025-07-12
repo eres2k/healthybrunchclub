@@ -1,6 +1,6 @@
 ---
 title: coffee, healthtea and me
-order: 6
+order: 4
 image: /content/images/dsc00407.jpg
 items:
   - tags:
