@@ -29,7 +29,7 @@ items:
       sprossen und kresse für eine lebendige, grüne frische.
 
 
-    ***your style:***
+    **your style:**
 
       * ei (nach wunsch zubereitet)
       * biospeck/biolachs/shiitake
