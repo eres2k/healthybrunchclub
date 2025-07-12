@@ -406,7 +406,7 @@ function fillMondayDates() {
     const dateSelect = document.getElementById('date');
     
     // Create a specific date for Sunday, July 3rd, 2025
-    const specificSunday = new Date(2025, 8, 3); // Month is 0-indexed, so 6 = July
+    const specificSunday = new Date(2025, 7, 3); // Month is 0-indexed, so 6 = July
     
     const option = document.createElement('option');
     option.value = specificSunday.toISOString().split('T')[0];
