@@ -27,10 +27,11 @@ items:
       knuspriges sauerteigbrot vom öfferl, handwerklich gebacken, großzügig
       bestrichen mit cremiger, zerdrückter avocado, verfeinert mit frischen
       sprossen und kresse für eine lebendige, grüne frische.
-    **your style:**
-      * ei (nach wunsch zubereitet)
-      * biospeck/biolachs/shiitake
-      * champignons pilze
+
+
+      **your style:**
+
+      ei (nach wunsch zubereitet)/biospeck/biolachs/shiitake und champignons pilze
     nutrition:
       calories: "320"
       protein: 8g
