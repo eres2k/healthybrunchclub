@@ -15,6 +15,7 @@ items:
       protein: 0g
       carbs: 11g
       fat: 0g
+    price: "4.10"
   - tags:
       - erfrischend
       - blumig
@@ -27,6 +28,7 @@ items:
       protein: 0g
       carbs: 10g
       fat: 0g
+    price: "4.10"
   - tags:
       - erfrischend
       - zitrusartig
@@ -39,6 +41,7 @@ items:
       protein: 0g
       carbs: 6g
       fat: 0g
+    price: "4.10"
   - tags:
       - erfrischend
       - fruchtig
@@ -51,6 +54,7 @@ items:
       protein: 0g
       carbs: 9g
       fat: 0g
+    price: "4.10"
   - tags:
       - würzig
       - belebend
@@ -63,6 +67,7 @@ items:
       protein: 0g
       carbs: 13g
       fat: 0g
+    price: "4.10"
   - tags:
       - vitaminreich
       - immunstärkend
@@ -75,6 +80,7 @@ items:
       protein: 1g
       carbs: 22g
       fat: 0g
+    price: "6.90"
   - tags:
       - regenerierend
       - vitaminreich
@@ -88,6 +94,7 @@ items:
       protein: 1g
       carbs: 20g
       fat: 0g
+    price: "6.90"
   - tags:
       - detox
       - erfrischend
@@ -101,4 +108,5 @@ items:
       protein: 2g
       carbs: 14g
       fat: 0g
+    price: "6.90"
 ---
