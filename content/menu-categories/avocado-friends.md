@@ -17,7 +17,7 @@ items:
       protein: 6g
       carbs: 18g
       fat: 24g
-    price: "9.90"
+    price: "8.90"
   - tags:
       - vegetarisch
       - herzhaft
@@ -37,4 +37,5 @@ items:
       protein: 8g
       carbs: 38g
       fat: 16g
+    price: "12.90"
 ---
