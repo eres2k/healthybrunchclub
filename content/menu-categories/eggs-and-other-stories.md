@@ -29,7 +29,7 @@ items:
       carbs: 27g
       fat: 15g
     special: false
-    price: "10"
+    price: "12.90"
   - tags:
       - vegetarisch
       - anpassbar
@@ -52,7 +52,7 @@ items:
       * käse
 
       * avocado
-    price: ""
+    price: "14.90"
     nutrition:
       calories: "250"
       protein: 22g
@@ -83,4 +83,5 @@ items:
       protein: 12g
       carbs: 54g
       fat: 34g
+    price: "15.90"
 ---
