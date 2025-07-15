@@ -29,6 +29,7 @@ items:
       carbs: 27g
       fat: 15g
     special: false
+    price: "10"
   - tags:
       - vegetarisch
       - anpassbar
