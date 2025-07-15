@@ -16,4 +16,5 @@ items:
       protein: 14g
       carbs: 42g
       fat: 12g
+    price: "10.50"
 ---
