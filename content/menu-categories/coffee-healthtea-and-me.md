@@ -15,6 +15,7 @@ items:
       protein: 6g
       carbs: 18g
       fat: 8g
+    price: "5.50"
   - tags:
       - adaptogen
       - immunstärkend
@@ -27,6 +28,7 @@ items:
       protein: 5g
       carbs: 14g
       fat: 7g
+    price: "4.60"
   - tags:
       - adaptogen
       - antioxidativ
@@ -39,6 +41,7 @@ items:
       protein: 0g
       carbs: 3g
       fat: 0g
+    price: "4.90"
   - tags:
       - adaptogen
       - entzündungshemmend
@@ -51,6 +54,7 @@ items:
       protein: 5g
       carbs: 16g
       fat: 7g
+    price: "5.90"
   - tags:
       - klassisch
       - kaffee
@@ -82,6 +86,7 @@ items:
       protein: 0g
       carbs: 1g
       fat: 0g
+    price: "4.50"
   - tags:
       - beruhigend
       - stressabbauend
@@ -94,6 +99,7 @@ items:
       protein: 0g
       carbs: 1g
       fat: 0g
+    price: "4.50"
   - tags:
       - antioxidativ
       - entzündungshemmend
@@ -107,4 +113,5 @@ items:
       protein: 0g
       carbs: 2g
       fat: 0g
+    price: "4.50"
 ---
