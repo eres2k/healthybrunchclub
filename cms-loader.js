@@ -1,4 +1,147 @@
-// CMS Loader with Compact Menu Design and Image Support
+displayEvents(fallbackEvent);
+}
+
+// Initialize Menu Item Popup
+function initializeMenuPopup() {
+    // Add popup container if not exists
+    if (!document.getElementById('menuItemPopup')) {
+        const popup = document.createElement('div');
+        popup.id = 'menuItemPopup';
+        popup.className = 'menu-item-popup';
+        popup.innerHTML = `
+            <div class="menu-item-popup-content">
+                <button class="popup-close" onclick="closeMenuPopup()">×</button>
+                <div class="popup-image" id="popupImage"></div>
+                <div class="popup-content">
+                    <div class="popup-header">
+                        <h3 class="popup-title" id="popupTitle"></h3>
+                        <div class="popup-price" id="popupPrice"></div>
+                    </div>
+                    <div class="popup-description" id="popupDescription"></div>
+                    <div class="popup-nutrition" id="popupNutrition" style="display: none;">
+                        <h4>Nährwerte pro Portion</h4>
+                        <div class="popup-nutrition-grid" id="nutritionGrid"></div>
+                    </div>
+                    <div class="popup-tags" id="popupTags"></div>
+                </div>
+            </div>
+        `;
+        document.body.appendChild(popup);
+    }
+    
+    // Add click handlers after menu loads
+    setTimeout(addMenuItemClickHandlers, 1000);
+}
+
+// Add click handlers to menu items
+function addMenuItemClickHandlers() {
+    document.querySelectorAll('.menu-item-card').forEach((card, index) => {
+        card.addEventListener('click', function(e) {
+            e.preventDefault();
+            showMenuItemPopup(this);
+        });
+    });
+}
+
+// Show menu item popup
+function showMenuItemPopup(card) {
+    const popup = document.getElementById('menuItemPopup');
+    
+    // Extract item data
+    const name = card.querySelector('.menu-item-name').textContent;
+    const price = card.querySelector('.menu-item-price')?.textContent || '';
+    const description = card.querySelector('.menu-item-description').innerHTML;
+    const image = card.querySelector('.menu-item-image img')?.src || '';
+    const emoji = card.querySelector('.menu-item-placeholder')?.textContent || '';
+    const tags = Array.from(card.querySelectorAll('.menu-tag')).map(tag => tag.textContent);
+    
+    // Extract nutrition data
+    const nutritionData = extractNutritionData(card);
+    
+    // Populate popup
+    document.getElementById('popupTitle').textContent = name;
+    document.getElementById('popupPrice').textContent = price;
+    document.getElementById('popupDescription').innerHTML = description;
+    
+    // Handle image
+    const popupImage = document.getElementById('popupImage');
+    if (image) {
+        popupImage.innerHTML = `<img src="${image}" alt="${name}">`;
+    } else {
+        popupImage.innerHTML = `<div class="popup-image-placeholder">${emoji}</div>`;
+    }
+    
+    // Handle nutrition
+    const nutritionContainer = document.getElementById('popupNutrition');
+    const nutritionGrid = document.getElementById('nutritionGrid');
+    
+    if (nutritionData) {
+        nutritionContainer.style.display = 'block';
+        nutritionGrid.innerHTML = `
+            <div class="popup-nutrition-item">
+                <span class="popup-nutrition-label">Kalorien</span>
+                <span class="popup-nutrition-value">${nutritionData.calories}</span>
+            </div>
+            <div class="popup-nutrition-item">
+                <span class="popup-nutrition-label">Protein</span>
+                <span class="popup-nutrition-value">${nutritionData.protein}</span>
+            </div>
+            <div class="popup-nutrition-item">
+                <span class="popup-nutrition-label">Kohlenhydrate</span>
+                <span class="popup-nutrition-value">${nutritionData.carbs}</span>
+            </div>
+            <div class="popup-nutrition-item">
+                <span class="popup-nutrition-label">Fett</span>
+                <span class="popup-nutrition-value">${nutritionData.fat}</span>
+            </div>
+        `;
+    } else {
+        nutritionContainer.style.display = 'none';
+    }
+    
+    // Handle tags
+    const tagsContainer = document.getElementById('popupTags');
+    if (tags.length > 0) {
+        tagsContainer.innerHTML = tags.map(tag => `<span class="popup-tag">${tag}</span>`).join('');
+    } else {
+        tagsContainer.innerHTML = '';
+    }
+    
+    // Show popup
+    popup.classList.add('show');
+}
+
+// Extract nutrition data from card
+function extractNutritionData(card) {
+    const nutritionInfo = card.querySelector('.nutrition-info');
+    if (!nutritionInfo) return null;
+    
+    const data = {};
+    nutritionInfo.querySelectorAll('.nutrition-item').forEach(item => {
+        const value = item.querySelector('.nutrition-value').textContent;
+        const label = item.querySelector('.nutrition-label').textContent.toLowerCase();
+        
+        if (label.includes('kcal')) data.calories = value + ' kcal';
+        else if (label.includes('protein')) data.protein = value;
+        else if (label.includes('kohlenh')) data.carbs = value;
+        else if (label.includes('fett')) data.fat = value;
+    });
+    
+    return Object.keys(data).length > 0 ? data : null;
+}
+
+// Close menu popup
+window.closeMenuPopup = function() {
+    document.getElementById('menuItemPopup').classList.remove('show');
+}
+
+// Close popup on outside click
+document.addEventListener('click', function(e) {
+    const popup = document.getElementById('menuItemPopup');
+    if (e.target === popup) {
+        closeMenuPopup();
+    }
+});// CMS Loader with Compact Menu Design and Image Support
 // Supports nutrition values, rich text formatting, and images
 
 let allMenuCategories = [];
@@ -6,6 +149,7 @@ let allMenuCategories = [];
 document.addEventListener('DOMContentLoaded', function() {
     loadMenuFromCMS();
     loadEventsFromCMS();
+    initializeMenuPopup();
 });
 
 // Load Menu from CMS
@@ -124,7 +268,9 @@ function displayCompactMenu(menuData) {
         return;
     }
     
-    menuContainer.innerHTML = menuData.map(category => {
+    menuContainer.innerHTML = `
+        <a href="/menu.pdf" class="pdf-download-btn" download>Speisekarte als PDF</a>
+        ${menuData.map(category => {
         // Handle category image URL
         let imageUrl = '';
         if (category.image) {
