@@ -6,7 +6,6 @@ let allMenuCategories = [];
 document.addEventListener('DOMContentLoaded', function() {
     loadMenuFromCMS();
     loadEventsFromCMS();
-    initializeMenuPopup();
 });
 
 // Load Menu from CMS
@@ -23,12 +22,16 @@ async function loadMenuFromCMS() {
         console.log('Menu data loaded:', menuData);
         
         allMenuCategories = menuData;
-        displayCompactMenu(menuData);
+        displayCompactMenu(menuData, false);
         createFilterButtons(menuData);
+        // Add PDF export button on initial load
+        addPDFExportButton();
         
     } catch (error) {
         console.error('Error loading menu:', error);
         displayFallbackMenu();
+        // Add PDF export button for fallback menu too
+        addPDFExportButton();
     }
 }
 
@@ -40,11 +43,11 @@ function createFilterButtons(menuData) {
     // Clear container
     filtersContainer.innerHTML = '';
     
-    // Add "all" button
+    // Add "all" button with PDF export
     const allBtn = document.createElement('button');
     allBtn.className = 'filter-btn active';
     allBtn.setAttribute('data-filter', 'all');
-    allBtn.textContent = 'alle anzeigen';
+    allBtn.innerHTML = 'alle anzeigen <span style="font-size: 11px; opacity: 0.7;">(PDF)</span>';
     allBtn.addEventListener('click', handleFilterClick);
     filtersContainer.appendChild(allBtn);
     
@@ -69,55 +72,75 @@ function handleFilterClick(e) {
     });
     e.target.classList.add('active');
     
-    // Show/hide categories instead of replacing content
-    const allCategories = document.querySelectorAll('.menu-category');
-    
+    // Filter menu
     if (filterValue === 'all') {
-        allCategories.forEach(cat => {
-            cat.style.display = 'block';
-        });
+        displayCompactMenu(allMenuCategories, false); // false = all categories view
+        // Add PDF export option for "all"
+        addPDFExportButton();
     } else {
-        allCategories.forEach(cat => {
-            const categorySlug = cat.getAttribute('data-category');
-            if (categorySlug === filterValue) {
-                cat.style.display = 'block';
-            } else {
-                cat.style.display = 'none';
-            }
-        });
+        const filtered = allMenuCategories.filter(category => 
+            category.title.toLowerCase().replace(/\s+/g, '-') === filterValue
+        );
+        displayCompactMenu(filtered, true); // true = single category view
+        removePDFExportButton();
     }
 }
 
-// Get emoji placeholder based on item name or category
-function getItemEmoji(itemName, categoryTitle) {
-    const name = itemName.toLowerCase();
-    const category = categoryTitle.toLowerCase();
+// Add PDF Export Button
+function addPDFExportButton() {
+    // Remove existing button if any
+    removePDFExportButton();
     
-    // Category-based emojis
-    if (category.includes('egg') || category.includes('eggcitement')) return '🍳';
-    if (category.includes('hafer') || category.includes('porridge')) return '🥣';
-    if (category.includes('berry') || category.includes('sweet')) return '🫐';
-    if (category.includes('avo') || category.includes('avocado')) return '🥑';
-    if (category.includes('coffee') || category.includes('tea')) return '☕';
-    if (category.includes('sip') || category.includes('drink')) return '🥤';
-    if (category.includes('set')) return '🍽️';
+    const menuHeader = document.querySelector('.menu-header');
+    if (!menuHeader) return;
     
-    // Item name-based emojis
-    if (name.includes('egg')) return '🍳';
-    if (name.includes('porridge') || name.includes('oats')) return '🥣';
-    if (name.includes('pancake') || name.includes('pfannkuchen')) return '🥞';
-    if (name.includes('avocado')) return '🥑';
-    if (name.includes('coffee') || name.includes('kaffee')) return '☕';
-    if (name.includes('tea') || name.includes('tee')) return '🍵';
-    if (name.includes('juice') || name.includes('saft')) return '🥤';
-    if (name.includes('smoothie') || name.includes('bowl')) return '🥣';
+    const pdfButton = document.createElement('button');
+    pdfButton.id = 'pdfExportBtn';
+    pdfButton.className = 'pdf-export-btn';
+    pdfButton.innerHTML = '📄 Als PDF speichern';
+    pdfButton.style.cssText = `
+        position: absolute;
+        top: 20px;
+        right: 20px;
+        background: var(--forest-green);
+        color: white;
+        padding: 10px 20px;
+        border: none;
+        border-radius: 4px;
+        font-size: 14px;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+    `;
     
-    // Default
-    return '🌱';
+    pdfButton.addEventListener('mouseover', function() {
+        this.style.background = 'var(--taupe)';
+        this.style.transform = 'translateY(-2px)';
+    });
+    
+    pdfButton.addEventListener('mouseout', function() {
+        this.style.background = 'var(--forest-green)';
+        this.style.transform = 'translateY(0)';
+    });
+    
+    pdfButton.addEventListener('click', function() {
+        window.print();
+    });
+    
+    menuHeader.style.position = 'relative';
+    menuHeader.appendChild(pdfButton);
+}
+
+// Remove PDF Export Button
+function removePDFExportButton() {
+    const existingBtn = document.getElementById('pdfExportBtn');
+    if (existingBtn) {
+        existingBtn.remove();
+    }
 }
 
 // Display Compact Menu with Image Support
-function displayCompactMenu(menuData) {
+function displayCompactMenu(menuData, isSingleCategory = false) {
     const menuContainer = document.getElementById('menuGrid') || document.getElementById('menuContainer');
     
     if (!menuData || menuData.length === 0) {
@@ -125,21 +148,10 @@ function displayCompactMenu(menuData) {
         return;
     }
     
-    // Create Logo
-    const logoHTML = '<div class="menu-logo"><img src="/content/images/logo.png" alt="Healthy Brunch Club"></div>';
+    // Add class to indicate display mode
+    menuContainer.className = isSingleCategory ? 'menu-container single-category' : 'menu-container all-categories';
     
-    // Create PDF button - with correct path and download functionality
-    const pdfButton = `
-        <a href="/content/menu-healthy-brunch.pdf" 
-           class="pdf-download-btn" 
-           download="healthy-brunch-club-menu.pdf"
-           onclick="downloadPDF(event)">
-           Speisekarte als PDF
-        </a>
-    `;
-    
-    // Create menu HTML
-    const menuHTML = menuData.map(category => {
+    menuContainer.innerHTML = menuData.map(category => {
         // Handle category image URL
         let imageUrl = '';
         if (category.image) {
@@ -172,13 +184,11 @@ function displayCompactMenu(menuData) {
                         <div class="menu-item-card ${dishImageUrl ? 'has-image' : ''}">
                             ${item.special ? '<div class="menu-item-badge">Empfehlung</div>' : ''}
                             
-                            <div class="menu-item-image">
-                                ${dishImageUrl ? `
+                            ${dishImageUrl ? `
+                                <div class="menu-item-image">
                                     <img src="${dishImageUrl}" alt="${item.name}" loading="lazy">
-                                ` : `
-                                    <div class="menu-item-placeholder">${getItemEmoji(item.name, category.title)}</div>
-                                `}
-                            </div>
+                                </div>
+                            ` : ''}
                             
                             <div class="menu-item-content">
                                 <div class="menu-item-header">
@@ -232,12 +242,6 @@ function displayCompactMenu(menuData) {
             </div>
         `;
     }).join('');
-    
-    // Combine Logo, PDF button and menu
-    menuContainer.innerHTML = logoHTML + pdfButton + menuHTML;
-    
-    // Add click handlers after menu is loaded
-    setTimeout(addMenuItemClickHandlers, 500);
 }
 
 // Process rich text from markdown
@@ -273,6 +277,35 @@ function processRichText(text) {
 function displayFallbackMenu() {
     const fallbackMenu = [
         {
+            title: "sets",
+            order: -1,
+            image: "/content/images/set.jpg",
+            description: "Unsere liebevoll zusammengestellten Kombinationen",
+            items: [
+                {
+                    name: "tessa's feel good combi",
+                    price: "16.90",
+                    description: "• einen wiener klassiker kaffee\n• premium porridge\n• frisch gepressten saft deiner wahl",
+                    tags: ["herzhaft", "gesund", "sättigend"],
+                    special: false
+                },
+                {
+                    name: "tina's soul food set",
+                    price: "18.90",
+                    description: "• einen chaga tee mit adaptogene\n• avocado bread +pilze (1.50€) +speck (1.90€) +ei (1.40€)\n• hafer dich lieb",
+                    tags: ["herzhaft", "gesund", "sättigend"],
+                    special: false
+                },
+                {
+                    name: "charlotte's healthy treat set",
+                    price: "19.50",
+                    description: "• ein reishi cappuccino mit collagen\n• ein eggcitement deiner wahl (aufpreis zweites ei 1.40€)\n• berry good choice",
+                    tags: ["herzhaft", "gesund", "sättigend"],
+                    special: true
+                }
+            ]
+        },
+        {
             title: "eggcitements",
             order: 1,
             image: "/content/images/eggs.jpg",
@@ -282,76 +315,177 @@ function displayFallbackMenu() {
                     name: "eggs any style",
                     price: "12.90",
                     image: "/content/images/eggs-any-style.jpg",
-                    description: "Wähle zwischen **Spiegelei**, **pochiert** oder **Rührei**\n\n- Serviert auf Süßkartoffel- und Avocadoscheiben\n- Mit sautierten Champignons oder Shiitake-Pilzen\n- Garniert mit frischem Rucola, Sprossen und Kresse",
+                    description: "bestehend aus einem oder zwei eiern, meisterhaft zubereitete eier nach deiner wahl, kunstvoll serviert auf süßkartoffel- und avocadoscheiben.\n\n**your style:**\n• spiegelei\n• pochiert\n• eierspeise",
                     nutrition: {
-                        calories: "320",
-                        protein: "18g",
-                        carbs: "22g",
-                        fat: "16g"
+                        calories: "324",
+                        protein: "13g",
+                        carbs: "27g",
+                        fat: "15g"
                     },
-                    tags: ["vegetarisch", "proteinreich"],
+                    tags: ["vegetarisch", "proteinreich", "gesund"],
                     special: false
                 },
                 {
                     name: "omelette creation",
-                    price: "13.90",
-                    description: "Fluffiges Omelette aus 2 Bio-Eiern auf knusprigem Sauerteigbrot\n\n**Basis:** Zwiebel, Shiitake-Pilze, Spinat\n**Add-ons:** Tomaten, Speckwürfel, Käse oder Avocado",
+                    price: "14.90",
+                    description: "ein luftig-lockeres omelette bestehend aus zwei eiern, präsentiert auf knusprigem sauerteigbrot vom öfferl.\n\n**your style:**\n• tomaten\n• speckwürfeln\n• käse\n• avocado",
                     nutrition: {
-                        calories: "380",
-                        protein: "20g",
-                        carbs: "26g",
-                        fat: "22g"
+                        calories: "250",
+                        protein: "22g",
+                        carbs: "13g",
+                        fat: "9g"
                     },
-                    tags: ["vegetarisch", "anpassbar"],
+                    tags: ["vegetarisch", "anpassbar", "herzhaft"],
                     special: false
                 },
                 {
                     name: "beggs enedict",
-                    price: "14.90",
-                    image: "/content/images/eggs-benedict.jpg",
-                    description: "Pochierte Bio-Eier auf Sauerteigbrot mit cremiger Avocado-Hollandaise\n\n*Wähle deine Beilage:*\n- Bio-Schinken\n- Räucherlachs\n- Gegrilltes Gemüse",
+                    price: "15.90",
+                    description: "ein oder zwei pochierte eier auf knusprigem sauerteigbrot vom öfferl und einer samtigen avocadosauce.\n\n**your style:**\n• schinken\n• speck\n• lachs",
                     nutrition: {
-                        calories: "420",
-                        protein: "22g",
-                        carbs: "28g",
-                        fat: "24g"
+                        calories: "245",
+                        protein: "12g",
+                        carbs: "54g",
+                        fat: "34g"
                     },
-                    tags: ["signature"],
+                    tags: ["vegetarisch", "gourmet", "aromatisch"],
                     special: true
                 }
             ]
         },
         {
-            title: "hafer dich lieb",
+            title: "avo-lution",
             order: 2,
+            image: "/content/images/avocado.jpg",
+            description: "Cremige Avocado-Kreationen für den perfekten Start",
+            items: [
+                {
+                    name: "avocado bowl",
+                    price: "8.90",
+                    image: "/content/images/avo-bowl.jpg",
+                    description: "eine samtige kreation aus frisch zerdrückter avocado, veredelt mit fein geriebenem apfel für eine süß-frische note",
+                    nutrition: {
+                        calories: "285",
+                        protein: "6g",
+                        carbs: "18g",
+                        fat: "24g"
+                    },
+                    tags: ["vegetarisch", "leicht", "nahrhaft"],
+                    special: false
+                },
+                {
+                    name: "avocado bread",
+                    price: "12.90",
+                    description: "knuspriges sauerteigbrot vom öfferl, handwerklich gebacken, großzügig bestrichen mit cremiger, zerdrückter avocado.\n\n**your style:**\nei (nach wunsch zubereitet)/biospeck/biolachs/shiitake und champignons pilze",
+                    nutrition: {
+                        calories: "320",
+                        protein: "8g",
+                        carbs: "38g",
+                        fat: "16g"
+                    },
+                    tags: ["vegetarisch", "herzhaft", "anpassbar"],
+                    special: false
+                }
+            ]
+        },
+        {
+            title: "hafer dich lieb",
+            order: 3,
             image: "/content/images/porridge.jpg",
             description: "Glutenfreie, lactosefreie & besonders darmfreundliche Kreationen",
             items: [
                 {
                     name: "premium-porridge",
-                    price: "9.90",
+                    price: "8.90",
                     image: "/content/images/premium-porridge.jpg",
-                    description: "Ein wärmender Genuss aus zarten **Bio-Haferflocken**\n\nVerfeinert mit:\n- Hanf- und Chiasamen\n- Kokosflocken und geriebenem Apfel\n- Ceylon-Zimt\n- Geröstete Mandeln und frische Beeren",
+                    description: "ein wärmender genuss aus zarten haferflocken, verfeinert mit hanf- und chiasamen, kokosflocken und geriebenem apfel",
                     nutrition: {
                         calories: "380",
                         protein: "12g",
-                        carbs: "45g",
-                        fat: "18g"
+                        carbs: "48g",
+                        fat: "16g"
                     },
                     tags: ["glutenfrei", "lactosefrei", "darmfreundlich"],
                     special: false
                 },
                 {
                     name: "kokoscreme power-oats",
-                    price: "11.90",
-                    description: "Kraftvolle Haferflocken in cremiger Kokosmilch\n\n*Getoppt mit:*\n- Hanf- und Chiasamen\n- Frische Heidel- und Himbeeren\n- Kokosflocken\n- Ahornsirup",
+                    price: "8.50",
+                    description: "kraftvolle haferflocken, umhüllt von cremiger kokoscreme, kombiniert mit hanf- und chiasamen",
                     nutrition: {
-                        calories: "410",
-                        protein: "14g",
-                        carbs: "48g",
-                        fat: "20g"
+                        calories: "415",
+                        protein: "10g",
+                        carbs: "45g",
+                        fat: "22g"
                     },
-                    tags: ["vegan", "energizing"],
+                    tags: ["glutenfrei", "lactosefrei", "darmfreundlich"],
+                    special: false
+                }
+            ]
+        },
+        {
+            title: "berry good choice",
+            order: 4,
+            image: "/content/images/sweet.jpg",
+            items: [
+                {
+                    name: "vollkorn pfannkuchen mit topfenhimbeer-leinöl",
+                    price: "10.50",
+                    description: "fluffige vollkorn-pfannkuchen, serviert mit cremigem topfenhimbeer-leinöl, verfeinert durch saftige blaubeeren",
+                    nutrition: {
+                        calories: "340",
+                        protein: "14g",
+                        carbs: "42g",
+                        fat: "12g"
+                    },
+                    tags: ["vegetarisch", "ballaststoffreich", "zuckerarm"],
+                    special: false
+                }
+            ]
+        },
+        {
+            title: "coffee, healthtea and me",
+            order: 5,
+            image: "/content/images/drinks.jpg",
+            description: "Heiße und kalte Getränke mit besonderen Zutaten",
+            items: [
+                {
+                    name: "ashwaganda latte",
+                    price: "5.50",
+                    description: "ein geschmeidiger latte, durchzogen von adaptogenem ashwaganda, der sanft beruhigt und stress schmelzen lässt",
+                    nutrition: {
+                        calories: "180",
+                        protein: "6g",
+                        carbs: "18g",
+                        fat: "8g"
+                    },
+                    tags: ["adaptogen", "beruhigend", "stressabbauend"],
+                    special: false
+                },
+                {
+                    name: "reishi cappuccino",
+                    price: "4.60",
+                    description: "samtiger cappuccino mit adaptogenem reishi, der das immunsystem unterstützt",
+                    nutrition: {
+                        calories: "150",
+                        protein: "5g",
+                        carbs: "14g",
+                        fat: "7g"
+                    },
+                    tags: ["adaptogen", "immunstärkend", "harmonisch"],
+                    special: false
+                },
+                {
+                    name: "chaga cold brew",
+                    price: "4.90",
+                    description: "kühler cold brew mit adaptogenem chaga, antioxidativ und reinigend",
+                    nutrition: {
+                        calories: "35",
+                        protein: "0g",
+                        carbs: "3g",
+                        fat: "0g"
+                    },
+                    tags: ["adaptogen", "antioxidativ", "reinigend"],
                     special: false
                 }
             ]
@@ -359,8 +493,10 @@ function displayFallbackMenu() {
     ];
     
     allMenuCategories = fallbackMenu;
-    displayCompactMenu(fallbackMenu);
+    displayCompactMenu(fallbackMenu, false);
     createFilterButtons(fallbackMenu);
+    // Add PDF export button for fallback menu
+    addPDFExportButton();
 }
 
 // Load Events from CMS
@@ -462,183 +598,4 @@ function displayFallbackEvent() {
     }];
     
     displayEvents(fallbackEvent);
-}
-
-// Initialize Menu Item Popup
-function initializeMenuPopup() {
-    // Add popup container if not exists
-    if (!document.getElementById('menuItemPopup')) {
-        const popup = document.createElement('div');
-        popup.id = 'menuItemPopup';
-        popup.className = 'menu-item-popup';
-        popup.innerHTML = `
-            <div class="menu-item-popup-content">
-                <button class="popup-close" onclick="closeMenuPopup()">×</button>
-                <div class="popup-image" id="popupImage"></div>
-                <div class="popup-content">
-                    <div class="popup-header">
-                        <h3 class="popup-title" id="popupTitle"></h3>
-                        <div class="popup-price" id="popupPrice"></div>
-                    </div>
-                    <div class="popup-description" id="popupDescription"></div>
-                    <div class="popup-nutrition" id="popupNutrition" style="display: none;">
-                        <h4>Nährwerte pro Portion</h4>
-                        <div class="popup-nutrition-grid" id="nutritionGrid"></div>
-                    </div>
-                    <div class="popup-tags" id="popupTags"></div>
-                </div>
-            </div>
-        `;
-        document.body.appendChild(popup);
-    }
-}
-
-// Add click handlers to menu items
-function addMenuItemClickHandlers() {
-    document.querySelectorAll('.menu-item-card').forEach((card, index) => {
-        card.addEventListener('click', function(e) {
-            e.preventDefault();
-            showMenuItemPopup(this);
-        });
-    });
-}
-
-// Show menu item popup
-function showMenuItemPopup(card) {
-    const popup = document.getElementById('menuItemPopup');
-    
-    // Extract item data
-    const name = card.querySelector('.menu-item-name').textContent;
-    const price = card.querySelector('.menu-item-price')?.textContent || '';
-    const description = card.querySelector('.menu-item-description').innerHTML;
-    const image = card.querySelector('.menu-item-image img')?.src || '';
-    const emoji = card.querySelector('.menu-item-placeholder')?.textContent || '';
-    const tags = Array.from(card.querySelectorAll('.menu-tag')).map(tag => tag.textContent);
-    
-    // Extract nutrition data
-    const nutritionData = extractNutritionData(card);
-    
-    // Populate popup
-    document.getElementById('popupTitle').textContent = name;
-    document.getElementById('popupPrice').textContent = price;
-    document.getElementById('popupDescription').innerHTML = description;
-    
-    // Handle image
-    const popupImage = document.getElementById('popupImage');
-    if (image) {
-        popupImage.innerHTML = `<img src="${image}" alt="${name}">`;
-    } else {
-        popupImage.innerHTML = `<div class="popup-image-placeholder">${emoji}</div>`;
-    }
-    
-    // Handle nutrition with daily values
-    const nutritionContainer = document.getElementById('popupNutrition');
-    const nutritionGrid = document.getElementById('nutritionGrid');
-    
-    if (nutritionData) {
-        nutritionContainer.style.display = 'block';
-        
-        // Calculate daily percentage values
-        const dailyValues = {
-            calories: 2000,
-            protein: 50,
-            carbs: 300,
-            fat: 65
-        };
-        
-        const calories = parseInt(nutritionData.calories) || 0;
-        const protein = parseInt(nutritionData.protein) || 0;
-        const carbs = parseInt(nutritionData.carbs) || 0;
-        const fat = parseInt(nutritionData.fat) || 0;
-        
-        nutritionGrid.innerHTML = `
-            <table class="popup-nutrition-table">
-                <thead>
-                    <tr>
-                        <th>Nährstoff</th>
-                        <th>Menge</th>
-                        <th>% Tagesbedarf*</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr>
-                        <td>Energie</td>
-                        <td>${calories} kcal</td>
-                        <td>${Math.round((calories / dailyValues.calories) * 100)}%</td>
-                    </tr>
-                    <tr>
-                        <td>Eiweiß</td>
-                        <td>${protein}g</td>
-                        <td>${Math.round((protein / dailyValues.protein) * 100)}%</td>
-                    </tr>
-                    <tr>
-                        <td>Kohlenhydrate</td>
-                        <td>${carbs}g</td>
-                        <td>${Math.round((carbs / dailyValues.carbs) * 100)}%</td>
-                    </tr>
-                    <tr>
-                        <td>Fett</td>
-                        <td>${fat}g</td>
-                        <td>${Math.round((fat / dailyValues.fat) * 100)}%</td>
-                    </tr>
-                </tbody>
-            </table>
-            <p class="popup-nutrition-reference">*Referenzmenge für einen durchschnittlichen Erwachsenen (8.400 kJ/2.000 kcal)</p>
-        `;
-    } else {
-        nutritionContainer.style.display = 'none';
-    }
-    
-    // Handle tags
-    const tagsContainer = document.getElementById('popupTags');
-    if (tags.length > 0) {
-        tagsContainer.innerHTML = tags.map(tag => `<span class="popup-tag">${tag}</span>`).join('');
-    } else {
-        tagsContainer.innerHTML = '';
-    }
-    
-    // Show popup
-    popup.classList.add('show');
-}
-
-// Extract nutrition data from card
-function extractNutritionData(card) {
-    const nutritionInfo = card.querySelector('.nutrition-info');
-    if (!nutritionInfo) return null;
-    
-    const data = {};
-    nutritionInfo.querySelectorAll('.nutrition-item').forEach(item => {
-        const value = item.querySelector('.nutrition-value').textContent;
-        const label = item.querySelector('.nutrition-label').textContent.toLowerCase();
-        
-        if (label.includes('kcal')) data.calories = value;
-        else if (label.includes('protein')) data.protein = value.replace('g', '');
-        else if (label.includes('kohlenh')) data.carbs = value.replace('g', '');
-        else if (label.includes('fett')) data.fat = value.replace('g', '');
-    });
-    
-    return Object.keys(data).length > 0 ? data : null;
-}
-
-// Close menu popup
-window.closeMenuPopup = function() {
-    document.getElementById('menuItemPopup').classList.remove('show');
-}
-
-// Close popup on outside click
-document.addEventListener('click', function(e) {
-    const popup = document.getElementById('menuItemPopup');
-    if (e.target === popup) {
-        closeMenuPopup();
-    }
-});
-
-// PDF Download Handler
-window.downloadPDF = function(event) {
-    // If download doesn't work, create a fallback
-    const link = event.target;
-    if (!link.href.includes('.pdf')) {
-        event.preventDefault();
-        alert('Die PDF-Datei ist momentan nicht verfügbar. Bitte versuchen Sie es später erneut oder nutzen Sie die Druckfunktion Ihres Browsers (Strg+P).');
-    }
 }
