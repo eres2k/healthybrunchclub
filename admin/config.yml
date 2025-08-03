@@ -22,6 +22,7 @@ collections:
         fields:
           - {label: "Name", name: "name", widget: "string"}
           - {label: "Preis (€)", name: "price", widget: "string", required: false, pattern: ["^[0-9]+\\.?[0-9]*$", "Bitte nur Zahlen eingeben (z.B. 12.90)"]}
+          - {label: "Gericht Bild", name: "image", widget: "image", required: false, hint: "Empfohlene Größe: 800x800px"}
           - label: "Beschreibung"
             name: "description"
             widget: "markdown"
