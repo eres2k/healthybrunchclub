@@ -44,14 +44,6 @@
 </head>
 
 <body>
-    <!-- Mobile Video Intro -->
-    <div id="mobileVideoIntro" class="mobile-video-intro">
-        <video class="intro-video" autoplay muted playsinline>
-            <source src="/content/videos/healthybrunchclub.mp4" type="video/mp4">
-        </video>
-        <button class="skip-intro" onclick="skipIntro()">Skip →</button>
-    </div>
-
     <!-- Loading Screen -->
     <div class="loading-screen" id="loadingScreen">
         <div class="loading-logo"><img src="content/images/logo.png" width="356" height="194" alt="healthy brunch club logo"/></div>
@@ -81,7 +73,7 @@
     </nav>
 
     <!-- Floating Event Window -->
-    <div class="event-window collapsed" id="eventWindow" style="display: block;">
+    <div class="event-window collapsed" id="eventWindow" style="display: none;">
         <button class="event-toggle" onclick="toggleEventWindow()">
             <span id="toggleIcon">🎵</span>
         </button>
@@ -101,10 +93,19 @@
         <section class="hero" id="home">
             <!-- Full-screen video background -->
             <div class="hero-video-background">
-                <video class="hero-video" autoplay muted loop playsinline>
+                <video class="hero-video" id="heroVideo" muted loop playsinline preload="metadata">
                     <source src="/content/videos/healthybrunchclub.mp4" type="video/mp4">
-                    <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1920 1080'%3E%3Crect fill='%23F5F0E8' width='1920' height='1080'/%3E%3Ctext x='50%25' y='50%25' text-anchor='middle' fill='%23A8C09A' font-size='40'%3Ehealthy brunch club%3C/text%3E%3C/svg%3E" alt="healthy brunch club">
                 </video>
+                <!-- Placeholder image for mobile/first visit -->
+                <div class="hero-video-placeholder" id="videoPlaceholder">
+                    <img src="content/images/hero-placeholder.jpg" alt="healthy brunch club" onerror="this.style.display='none'">
+                    <button class="play-video-btn" id="playVideoBtn" aria-label="Video abspielen">
+                        <svg width="60" height="60" viewBox="0 0 60 60" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <circle cx="30" cy="30" r="30" fill="rgba(255,255,255,0.3)"/>
+                            <path d="M24 20L40 30L24 40V20Z" fill="white"/>
+                        </svg>
+                    </button>
+                </div>
                 <!-- Dark overlay for better text readability -->
                 <div class="hero-overlay"></div>
             </div>
@@ -112,7 +113,7 @@
             <!-- Content over video -->
             <div class="hero-container">
                 <div class="hero-content fade-in-up">
-                    <h1>start your morning with <span style="color: #1E4A3C;">healthy</span> vibes</h1>
+                    <h1>start your morning with <span>healthy vibes</span></h1>
                     <p>erlebe die perfekte kombination aus bio-zutaten, liebevoll zubereiteten speisen und entspannter atmosphäre.</p>  
                     
                     <div class="hero-buttons">
@@ -146,17 +147,6 @@
                 <div class="menu-loading">Die Speisekarte wird geladen...</div>
             </div>
         </section>
-
-        <!-- Dish Detail Modal -->
-        <div id="dishModal" class="dish-modal">
-            <div class="dish-modal-overlay" onclick="closeDishModal()"></div>
-            <div class="dish-modal-content">
-                <button class="dish-modal-close" onclick="closeDishModal()">&times;</button>
-                <div class="dish-modal-body">
-                    <!-- Modal content will be inserted here -->
-                </div>
-            </div>
-        </div>
 
         <!-- Features Section -->
         <section class="features-section" id="features">
@@ -361,119 +351,55 @@
 
     <!-- Scripts -->
     <script>
-        // Check if mobile and show intro video
-        function checkMobileIntro() {
-            const isMobile = window.innerWidth <= 768;
-            const hasSeenIntro = sessionStorage.getItem('hasSeenIntro');
-            const introElement = document.getElementById('mobileVideoIntro');
-            
-            if (isMobile && !hasSeenIntro && introElement) {
-                introElement.style.display = 'flex';
-                // Auto-hide after video ends (assuming ~5 seconds)
-                setTimeout(() => {
-                    skipIntro();
-                }, 5000);
-            } else if (introElement) {
-                introElement.style.display = 'none';
-            }
+        // Check if mobile device
+        function isMobileDevice() {
+            return /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) || window.innerWidth <= 768;
         }
 
-        // Skip intro function
-        function skipIntro() {
-            const introElement = document.getElementById('mobileVideoIntro');
-            if (introElement) {
-                introElement.classList.add('fade-out');
-                setTimeout(() => {
-                    introElement.style.display = 'none';
-                    sessionStorage.setItem('hasSeenIntro', 'true');
-                }, 500);
-            }
+        // Check if first visit
+        function isFirstVisit() {
+            return !localStorage.getItem('hasVisited');
         }
 
-        // Call on page load
-        document.addEventListener('DOMContentLoaded', checkMobileIntro);
-
-        // Dish Modal Functions
-        window.openDishModal = function(dishData) {
-            const modal = document.getElementById('dishModal');
-            const modalBody = modal.querySelector('.dish-modal-body');
+        // Video handling
+        function initializeVideo() {
+            const video = document.getElementById('heroVideo');
+            const placeholder = document.getElementById('videoPlaceholder');
+            const playBtn = document.getElementById('playVideoBtn');
             
-            modalBody.innerHTML = `
-                <div class="dish-modal-image">
-                    ${dishData.image ? 
-                        `<img src="${dishData.image}" alt="${dishData.name}" />` : 
-                        `<div class="dish-modal-placeholder">${dishData.icon || '🍽️'}</div>`
-                    }
-                </div>
-                <div class="dish-modal-info">
-                    <h2 class="dish-modal-title">${dishData.name}</h2>
-                    ${dishData.price ? `<div class="dish-modal-price">€${dishData.price}</div>` : ''}
-                    
-                    <div class="dish-modal-description">
-                        ${dishData.description}
-                    </div>
-                    
-                    ${dishData.nutrition ? `
-                        <div class="dish-modal-nutrition">
-                            <h4>Nährwerte</h4>
-                            <div class="nutrition-grid">
-                                ${dishData.nutrition.calories ? `
-                                    <div class="nutrition-item">
-                                        <span class="nutrition-value">${dishData.nutrition.calories}</span>
-                                        <span class="nutrition-label">Kalorien</span>
-                                    </div>
-                                ` : ''}
-                                ${dishData.nutrition.protein ? `
-                                    <div class="nutrition-item">
-                                        <span class="nutrition-value">${dishData.nutrition.protein}</span>
-                                        <span class="nutrition-label">Protein</span>
-                                    </div>
-                                ` : ''}
-                                ${dishData.nutrition.carbs ? `
-                                    <div class="nutrition-item">
-                                        <span class="nutrition-value">${dishData.nutrition.carbs}</span>
-                                        <span class="nutrition-label">Kohlenhydrate</span>
-                                    </div>
-                                ` : ''}
-                                ${dishData.nutrition.fat ? `
-                                    <div class="nutrition-item">
-                                        <span class="nutrition-value">${dishData.nutrition.fat}</span>
-                                        <span class="nutrition-label">Fett</span>
-                                    </div>
-                                ` : ''}
-                            </div>
-                        </div>
-                    ` : ''}
-                    
-                    ${dishData.tags && dishData.tags.length > 0 ? `
-                        <div class="dish-modal-tags">
-                            ${dishData.tags.map(tag => `<span class="modal-tag">${tag}</span>`).join('')}
-                        </div>
-                    ` : ''}
-                </div>
-            `;
-            
-            modal.classList.add('show');
-            document.body.style.overflow = 'hidden';
-        };
-
-        window.closeDishModal = function() {
-            const modal = document.getElementById('dishModal');
-            modal.classList.remove('show');
-            document.body.style.overflow = '';
-        };
-
-        // Close modal with ESC key
-        document.addEventListener('keydown', function(e) {
-            if (e.key === 'Escape') {
-                closeDishModal();
+            if (isMobileDevice() && isFirstVisit()) {
+                // Show placeholder on first mobile visit
+                video.style.display = 'none';
+                if (placeholder) placeholder.style.display = 'flex';
+                
+                // Play button click handler
+                if (playBtn) {
+                    playBtn.addEventListener('click', function() {
+                        video.style.display = 'block';
+                        video.play();
+                        placeholder.style.display = 'none';
+                        localStorage.setItem('hasVisited', 'true');
+                    });
+                }
+            } else {
+                // Auto-play on desktop or return visits
+                video.style.display = 'block';
+                if (placeholder) placeholder.style.display = 'none';
+                video.autoplay = true;
+                video.play().catch(function(error) {
+                    console.log('Video autoplay failed:', error);
+                });
             }
-        });
+            
+            // Set visited flag
+            localStorage.setItem('hasVisited', 'true');
+        }
 
         // Loading Screen
         window.addEventListener('load', function() {
             setTimeout(function() {
                 document.getElementById('loadingScreen').classList.add('hidden');
+                initializeVideo();
             }, 2000);
         });
 
@@ -482,19 +408,17 @@
             const eventWindow = document.getElementById('eventWindow');
             const toggleIcon = document.getElementById('toggleIcon');
             
-            eventWindow.classList.toggle('collapsed');
-            toggleIcon.textContent = eventWindow.classList.contains('collapsed') ? '🎵' : '−';
+            if (eventWindow) {
+                eventWindow.classList.toggle('collapsed');
+                if (toggleIcon) {
+                    toggleIcon.textContent = eventWindow.classList.contains('collapsed') ? '🎵' : '−';
+                }
+            }
         }
 
         // Show event window on page load (but keep it collapsed)
         document.addEventListener('DOMContentLoaded', function() {
-            // Make sure event window is visible but collapsed
-            const eventWindow = document.getElementById('eventWindow');
-            if (eventWindow) {
-                eventWindow.style.display = 'block';
-                eventWindow.classList.add('collapsed');
-                document.getElementById('toggleIcon').textContent = '🎵';
-            }
+            // Event window will be shown by CMS loader when events are loaded
         });
 
         // Show Admin Button for logged in users
@@ -517,8 +441,8 @@
         function fillMondayDates() {
             const dateSelect = document.getElementById('date');
             
-            // Create a specific date for Sunday, July 3rd, 2025
-            const specificSunday = new Date(2025, 7, 10); // Month is 0-indexed, so 6 = July
+            // Create a specific date for Sunday, August 10th, 2025
+            const specificSunday = new Date(2025, 7, 10); // Month is 0-indexed, so 7 = August
             
             const option = document.createElement('option');
             option.value = specificSunday.toISOString().split('T')[0];
@@ -570,17 +494,16 @@
 
         if (mobileMenuToggle) {
             mobileMenuToggle.addEventListener('click', function() {
-                navLinks.style.display = navLinks.style.display === 'flex' ? 'none' : 'flex';
-                navLinks.style.flexDirection = 'column';
-                navLinks.style.position = 'absolute';
-                navLinks.style.top = '100%';
-                navLinks.style.left = '0';
-                navLinks.style.right = '0';
-                navLinks.style.background = 'white';
-                navLinks.style.padding = '20px';
-                navLinks.style.boxShadow = '0 4px 20px rgba(0,0,0,0.1)';
+                navLinks.classList.toggle('active');
             });
         }
+
+        // Close mobile menu when clicking outside
+        document.addEventListener('click', function(event) {
+            if (!event.target.closest('.nav-container') && navLinks && navLinks.classList.contains('active')) {
+                navLinks.classList.remove('active');
+            }
+        });
 
         // Intersection Observer for fade-in animations
         const observerOptions = {
