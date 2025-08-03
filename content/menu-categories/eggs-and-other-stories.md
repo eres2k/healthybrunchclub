@@ -87,4 +87,5 @@ items:
       fat: 34g
     price: "15.90"
     image: /content/images/image-36-.jpg
+    special: true
 ---
