@@ -125,8 +125,18 @@ function displayCompactMenu(menuData) {
         return;
     }
     
-    // Create PDF button
-    const pdfButton = '<a href="/menu.pdf" class="pdf-download-btn" download>Speisekarte als PDF</a>';
+    // Create Logo
+    const logoHTML = '<div class="menu-logo"><img src="/content/images/logo.png" alt="Healthy Brunch Club"></div>';
+    
+    // Create PDF button - with correct path and download functionality
+    const pdfButton = `
+        <a href="/content/menu-healthy-brunch.pdf" 
+           class="pdf-download-btn" 
+           download="healthy-brunch-club-menu.pdf"
+           onclick="downloadPDF(event)">
+           Speisekarte als PDF
+        </a>
+    `;
     
     // Create menu HTML
     const menuHTML = menuData.map(category => {
@@ -223,8 +233,8 @@ function displayCompactMenu(menuData) {
         `;
     }).join('');
     
-    // Combine PDF button and menu
-    menuContainer.innerHTML = pdfButton + menuHTML;
+    // Combine Logo, PDF button and menu
+    menuContainer.innerHTML = logoHTML + pdfButton + menuHTML;
     
     // Add click handlers after menu is loaded
     setTimeout(addMenuItemClickHandlers, 500);
@@ -521,29 +531,59 @@ function showMenuItemPopup(card) {
         popupImage.innerHTML = `<div class="popup-image-placeholder">${emoji}</div>`;
     }
     
-    // Handle nutrition
+    // Handle nutrition with daily values
     const nutritionContainer = document.getElementById('popupNutrition');
     const nutritionGrid = document.getElementById('nutritionGrid');
     
     if (nutritionData) {
         nutritionContainer.style.display = 'block';
+        
+        // Calculate daily percentage values
+        const dailyValues = {
+            calories: 2000,
+            protein: 50,
+            carbs: 300,
+            fat: 65
+        };
+        
+        const calories = parseInt(nutritionData.calories) || 0;
+        const protein = parseInt(nutritionData.protein) || 0;
+        const carbs = parseInt(nutritionData.carbs) || 0;
+        const fat = parseInt(nutritionData.fat) || 0;
+        
         nutritionGrid.innerHTML = `
-            <div class="popup-nutrition-item">
-                <span class="popup-nutrition-label">Kalorien</span>
-                <span class="popup-nutrition-value">${nutritionData.calories}</span>
-            </div>
-            <div class="popup-nutrition-item">
-                <span class="popup-nutrition-label">Protein</span>
-                <span class="popup-nutrition-value">${nutritionData.protein}</span>
-            </div>
-            <div class="popup-nutrition-item">
-                <span class="popup-nutrition-label">Kohlenhydrate</span>
-                <span class="popup-nutrition-value">${nutritionData.carbs}</span>
-            </div>
-            <div class="popup-nutrition-item">
-                <span class="popup-nutrition-label">Fett</span>
-                <span class="popup-nutrition-value">${nutritionData.fat}</span>
-            </div>
+            <table class="popup-nutrition-table">
+                <thead>
+                    <tr>
+                        <th>Nährstoff</th>
+                        <th>Menge</th>
+                        <th>% Tagesbedarf*</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>Energie</td>
+                        <td>${calories} kcal</td>
+                        <td>${Math.round((calories / dailyValues.calories) * 100)}%</td>
+                    </tr>
+                    <tr>
+                        <td>Eiweiß</td>
+                        <td>${protein}g</td>
+                        <td>${Math.round((protein / dailyValues.protein) * 100)}%</td>
+                    </tr>
+                    <tr>
+                        <td>Kohlenhydrate</td>
+                        <td>${carbs}g</td>
+                        <td>${Math.round((carbs / dailyValues.carbs) * 100)}%</td>
+                    </tr>
+                    <tr>
+                        <td>Fett</td>
+                        <td>${fat}g</td>
+                        <td>${Math.round((fat / dailyValues.fat) * 100)}%</td>
+                    </tr>
+                </tbody>
+            </table>
+            <p class="popup-nutrition-reference">*Referenzmenge für einen durchschnittlichen Erwachsenen (8.400 kJ/2.000 kcal)</p>
         `;
     } else {
         nutritionContainer.style.display = 'none';
@@ -571,10 +611,10 @@ function extractNutritionData(card) {
         const value = item.querySelector('.nutrition-value').textContent;
         const label = item.querySelector('.nutrition-label').textContent.toLowerCase();
         
-        if (label.includes('kcal')) data.calories = value + ' kcal';
-        else if (label.includes('protein')) data.protein = value;
-        else if (label.includes('kohlenh')) data.carbs = value;
-        else if (label.includes('fett')) data.fat = value;
+        if (label.includes('kcal')) data.calories = value;
+        else if (label.includes('protein')) data.protein = value.replace('g', '');
+        else if (label.includes('kohlenh')) data.carbs = value.replace('g', '');
+        else if (label.includes('fett')) data.fat = value.replace('g', '');
     });
     
     return Object.keys(data).length > 0 ? data : null;
@@ -592,3 +632,13 @@ document.addEventListener('click', function(e) {
         closeMenuPopup();
     }
 });
+
+// PDF Download Handler
+window.downloadPDF = function(event) {
+    // If download doesn't work, create a fallback
+    const link = event.target;
+    if (!link.href.includes('.pdf')) {
+        event.preventDefault();
+        alert('Die PDF-Datei ist momentan nicht verfügbar. Bitte versuchen Sie es später erneut oder nutzen Sie die Druckfunktion Ihres Browsers (Strg+P).');
+    }
+}
