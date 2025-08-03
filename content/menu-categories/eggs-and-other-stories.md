@@ -30,6 +30,7 @@ items:
       fat: 15g
     special: false
     price: "12.90"
+    image: /content/images/image-1-.jpg
   - tags:
       - vegetarisch
       - anpassbar
@@ -58,6 +59,7 @@ items:
       protein: 22g
       carbs: 13g
       fat: 9g
+    image: /content/images/image-2-.jpg
   - tags:
       - vegetarisch
       - gourmet
@@ -84,4 +86,5 @@ items:
       carbs: 54g
       fat: 34g
     price: "15.90"
+    image: /content/images/image-36-.jpg
 ---
