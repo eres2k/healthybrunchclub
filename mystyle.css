@@ -87,7 +87,7 @@ body {
 }
 
 .loading-logo img {
-    width: 125px;
+    width: 250px;
     height: auto;
 }
 
@@ -530,6 +530,27 @@ body {
     margin-bottom: 50px;
     position: relative;
     z-index: 3;
+    display: flex;
+    align-items: flex-start;
+    gap: 30px;
+}
+
+.menu-logo {
+    flex: 0 0 auto;
+    width: 120px;
+    height: auto;
+    opacity: 0.8;
+    margin-top: 10px;
+}
+
+.menu-logo img {
+    width: 100%;
+    height: auto;
+    object-fit: contain;
+}
+
+.menu-header-content {
+    flex: 1;
 }
 
 .menu-header h2 {
@@ -542,7 +563,7 @@ body {
     text-transform: none;
 }
 
-.menu-header::after {
+.menu-header-content::after {
     content: '';
     display: block;
     width: 80px;
@@ -746,6 +767,14 @@ body {
     gap: 40px;
     max-width: 100%;
     margin: 0;
+    justify-items: stretch;
+    align-items: start;
+}
+
+/* Ensure items don't center when there's only one */
+.menu-items-grid > .menu-item-card {
+    justify-self: stretch;
+    width: 100%;
 }
 
 /* Menu Item Card */
@@ -760,6 +789,8 @@ body {
     display: flex;
     gap: 20px;
     align-items: flex-start;
+    width: 100%;
+    justify-self: start;
 }
 
 .menu-item-card:last-child {
@@ -1399,6 +1430,16 @@ body {
     .menu-items-grid {
         grid-template-columns: repeat(3, 1fr);
     }
+    
+    /* Keep items left-aligned even with 3 columns */
+    .menu-items-grid > .menu-item-card:only-child {
+        grid-column: 1;
+    }
+    
+    .menu-items-grid > .menu-item-card:first-child:nth-last-child(2),
+    .menu-items-grid > .menu-item-card:first-child:nth-last-child(2) ~ .menu-item-card {
+        grid-column: span 1;
+    }
 }
 
 /* Tablet View */
@@ -1443,7 +1484,7 @@ body {
     }
     
     .logo-img {
-        height: 20px;
+        height: 40px;
     }
     
     .nav-links {
@@ -1515,6 +1556,18 @@ body {
             0 3px 15px rgba(0, 0, 0, 0.06);
     }
     
+    .menu-header {
+        flex-direction: column;
+        align-items: center;
+        text-align: center;
+    }
+    
+    .menu-logo {
+        width: 80px;
+        margin-top: 0;
+        margin-bottom: 20px;
+    }
+    
     .menu-header h2 {
         font-size: 28px;
         letter-spacing: 0.3px;
@@ -1523,6 +1576,10 @@ body {
     
     .menu-header p {
         font-size: 15px;
+    }
+    
+    .menu-header-content::after {
+        margin: 20px auto;
     }
     
     .menu-filters {
@@ -1923,13 +1980,19 @@ html, body {
     .contact-section,
     .footer,
     .scroll-indicator,
-    .pdf-download {
+    .pdf-download,
+    .menu-logo {
         display: none !important;
     }
     
     .menu-section {
         background: white !important;
         padding: 0 !important;
+    }
+    
+    .menu-header {
+        flex-direction: column !important;
+        align-items: flex-start !important;
     }
     
     .menu-filters {
