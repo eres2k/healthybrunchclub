@@ -1,14 +1,12 @@
 // CMS Loader with Traditional Menu Design and PDF Export
-// Optimized for mobile display and multi-column layout
+// Default 2-column layout with professional PDF export
 
 let allMenuCategories = [];
-let viewMode = 'traditional'; // 'traditional' or 'columns'
 
 document.addEventListener('DOMContentLoaded', function() {
     loadMenuFromCMS();
     loadEventsFromCMS();
     initializePDFExport();
-    initializeViewToggle();
 });
 
 // Initialize PDF Export
@@ -18,77 +16,9 @@ function initializePDFExport() {
         const pdfButton = document.createElement('button');
         pdfButton.id = 'pdfExportBtn';
         pdfButton.className = 'pdf-export-btn';
-        pdfButton.innerHTML = '📄 Als PDF speichern';
+        pdfButton.innerHTML = '📄 Menü als PDF öffnen';
         pdfButton.addEventListener('click', exportToPDF);
         document.body.appendChild(pdfButton);
-    }
-}
-
-// Initialize View Toggle
-function initializeViewToggle() {
-    const filtersContainer = document.getElementById('menuFilters');
-    if (filtersContainer) {
-        // Add view toggle buttons
-        const viewToggle = document.createElement('div');
-        viewToggle.className = 'view-toggle';
-        viewToggle.style.cssText = 'position: absolute; right: 0; top: 0; display: flex; gap: 10px;';
-        
-        const traditionalBtn = document.createElement('button');
-        traditionalBtn.className = 'view-btn active';
-        traditionalBtn.innerHTML = '📋';
-        traditionalBtn.title = 'Traditionelle Ansicht';
-        traditionalBtn.style.cssText = 'background: var(--forest-green); color: white; border: none; padding: 8px 12px; border-radius: 4px; cursor: pointer; font-size: 16px;';
-        traditionalBtn.addEventListener('click', () => setViewMode('traditional'));
-        
-        const columnsBtn = document.createElement('button');
-        columnsBtn.className = 'view-btn';
-        columnsBtn.innerHTML = '📰';
-        columnsBtn.title = 'Spaltenansicht';
-        columnsBtn.style.cssText = 'background: transparent; color: var(--text-medium); border: 1px solid var(--text-medium); padding: 8px 12px; border-radius: 4px; cursor: pointer; font-size: 16px;';
-        columnsBtn.addEventListener('click', () => setViewMode('columns'));
-        
-        viewToggle.appendChild(traditionalBtn);
-        viewToggle.appendChild(columnsBtn);
-        filtersContainer.style.position = 'relative';
-        filtersContainer.appendChild(viewToggle);
-    }
-}
-
-// Set View Mode
-function setViewMode(mode) {
-    viewMode = mode;
-    const menuContainer = document.getElementById('menuGrid') || document.getElementById('menuContainer');
-    
-    // Update button states
-    document.querySelectorAll('.view-btn').forEach(btn => {
-        btn.classList.remove('active');
-        btn.style.background = 'transparent';
-        btn.style.color = 'var(--text-medium)';
-        btn.style.border = '1px solid var(--text-medium)';
-    });
-    
-    const activeBtn = mode === 'traditional' ? 
-        document.querySelector('.view-btn:first-child') : 
-        document.querySelector('.view-btn:last-child');
-    
-    if (activeBtn) {
-        activeBtn.classList.add('active');
-        activeBtn.style.background = 'var(--forest-green)';
-        activeBtn.style.color = 'white';
-        activeBtn.style.border = 'none';
-    }
-    
-    // Toggle layout class
-    if (mode === 'columns') {
-        menuContainer.classList.add('menu-columns-layout');
-    } else {
-        menuContainer.classList.remove('menu-columns-layout');
-    }
-    
-    // Re-render with current filter
-    const activeFilter = document.querySelector('.filter-btn.active');
-    if (activeFilter) {
-        activeFilter.click();
     }
 }
 
@@ -149,12 +79,8 @@ function createFilterButtons(menuData) {
     const filtersContainer = document.getElementById('menuFilters');
     if (!filtersContainer) return;
     
-    // Clear container (but keep view toggle)
-    const viewToggle = filtersContainer.querySelector('.view-toggle');
+    // Clear container
     filtersContainer.innerHTML = '';
-    if (viewToggle) {
-        filtersContainer.appendChild(viewToggle);
-    }
     
     // Add "all" button
     const allBtn = document.createElement('button');
@@ -203,18 +129,6 @@ function displayCompactMenu(menuData, forPrint = false) {
     if (!menuData || menuData.length === 0) {
         menuContainer.innerHTML = '<div class="menu-loading">Keine Einträge gefunden.</div>';
         return;
-    }
-    
-    // Apply column layout class if in columns mode
-    if (viewMode === 'columns' && !forPrint) {
-        menuContainer.classList.add('menu-columns-layout');
-    } else {
-        menuContainer.classList.remove('menu-columns-layout');
-    }
-    
-    // For print, always use column layout
-    if (forPrint) {
-        menuContainer.classList.add('menu-columns-layout');
     }
     
     menuContainer.innerHTML = menuData.map(category => {
