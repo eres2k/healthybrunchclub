@@ -73,7 +73,7 @@
     </nav>
 
     <!-- Floating Event Window -->
-    <div class="event-window collapsed" id="eventWindow" style="display: none;">
+    <div class="event-window collapsed" id="eventWindow" style="display: block;">
         <button class="event-toggle" onclick="toggleEventWindow()">
             <span id="toggleIcon">🎵</span>
         </button>
@@ -93,19 +93,10 @@
         <section class="hero" id="home">
             <!-- Full-screen video background -->
             <div class="hero-video-background">
-                <video class="hero-video" id="heroVideo" muted loop playsinline preload="metadata">
+                <video class="hero-video" autoplay muted loop playsinline>
                     <source src="/content/videos/healthybrunchclub.mp4" type="video/mp4">
+                    <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1920 1080'%3E%3Crect fill='%23F5F0E8' width='1920' height='1080'/%3E%3Ctext x='50%25' y='50%25' text-anchor='middle' fill='%23A8C09A' font-size='40'%3Ehealthy brunch club%3C/text%3E%3C/svg%3E" alt="healthy brunch club">
                 </video>
-                <!-- Placeholder image for mobile/first visit -->
-                <div class="hero-video-placeholder" id="videoPlaceholder">
-                    <img src="content/images/hero-placeholder.jpg" alt="healthy brunch club" onerror="this.style.display='none'">
-                    <button class="play-video-btn" id="playVideoBtn" aria-label="Video abspielen">
-                        <svg width="60" height="60" viewBox="0 0 60 60" fill="none" xmlns="http://www.w3.org/2000/svg">
-                            <circle cx="30" cy="30" r="30" fill="rgba(255,255,255,0.3)"/>
-                            <path d="M24 20L40 30L24 40V20Z" fill="white"/>
-                        </svg>
-                    </button>
-                </div>
                 <!-- Dark overlay for better text readability -->
                 <div class="hero-overlay"></div>
             </div>
@@ -113,7 +104,7 @@
             <!-- Content over video -->
             <div class="hero-container">
                 <div class="hero-content fade-in-up">
-                    <h1>start your morning with <span>healthy vibes</span></h1>
+                    <h1>start your morning with <span style="color: #1E4A3C;">healthy</span> vibes</h1>
                     <p>erlebe die perfekte kombination aus bio-zutaten, liebevoll zubereiteten speisen und entspannter atmosphäre.</p>  
                     
                     <div class="hero-buttons">
@@ -304,6 +295,26 @@
         </section>
     </main>
 
+    <!-- Dish Detail Modal -->
+    <div id="dishModal" class="dish-modal">
+        <div class="dish-modal-content">
+            <button class="modal-close" onclick="closeDishModal()">&times;</button>
+            <div class="modal-body">
+                <div class="modal-image-container" id="modalImageContainer"></div>
+                <div class="modal-header">
+                    <h3 class="modal-dish-name" id="modalDishName"></h3>
+                    <div class="modal-dish-price" id="modalDishPrice"></div>
+                </div>
+                <div class="modal-description" id="modalDescription"></div>
+                <div class="modal-tags" id="modalTags"></div>
+                <div class="nutrition-table-container" id="nutritionTableContainer"></div>
+                <div class="modal-cta">
+                    <a href="#contact" class="modal-reserve-btn" onclick="closeDishModal()">Tisch reservieren</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <!-- Footer -->
     <footer class="footer">
         <div class="footer-container">
@@ -351,55 +362,10 @@
 
     <!-- Scripts -->
     <script>
-        // Check if mobile device
-        function isMobileDevice() {
-            return /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) || window.innerWidth <= 768;
-        }
-
-        // Check if first visit
-        function isFirstVisit() {
-            return !localStorage.getItem('hasVisited');
-        }
-
-        // Video handling
-        function initializeVideo() {
-            const video = document.getElementById('heroVideo');
-            const placeholder = document.getElementById('videoPlaceholder');
-            const playBtn = document.getElementById('playVideoBtn');
-            
-            if (isMobileDevice() && isFirstVisit()) {
-                // Show placeholder on first mobile visit
-                video.style.display = 'none';
-                if (placeholder) placeholder.style.display = 'flex';
-                
-                // Play button click handler
-                if (playBtn) {
-                    playBtn.addEventListener('click', function() {
-                        video.style.display = 'block';
-                        video.play();
-                        placeholder.style.display = 'none';
-                        localStorage.setItem('hasVisited', 'true');
-                    });
-                }
-            } else {
-                // Auto-play on desktop or return visits
-                video.style.display = 'block';
-                if (placeholder) placeholder.style.display = 'none';
-                video.autoplay = true;
-                video.play().catch(function(error) {
-                    console.log('Video autoplay failed:', error);
-                });
-            }
-            
-            // Set visited flag
-            localStorage.setItem('hasVisited', 'true');
-        }
-
         // Loading Screen
         window.addEventListener('load', function() {
             setTimeout(function() {
                 document.getElementById('loadingScreen').classList.add('hidden');
-                initializeVideo();
             }, 2000);
         });
 
@@ -408,17 +374,19 @@
             const eventWindow = document.getElementById('eventWindow');
             const toggleIcon = document.getElementById('toggleIcon');
             
-            if (eventWindow) {
-                eventWindow.classList.toggle('collapsed');
-                if (toggleIcon) {
-                    toggleIcon.textContent = eventWindow.classList.contains('collapsed') ? '🎵' : '−';
-                }
-            }
+            eventWindow.classList.toggle('collapsed');
+            toggleIcon.textContent = eventWindow.classList.contains('collapsed') ? '🎵' : '−';
         }
 
         // Show event window on page load (but keep it collapsed)
         document.addEventListener('DOMContentLoaded', function() {
-            // Event window will be shown by CMS loader when events are loaded
+            // Make sure event window is visible but collapsed
+            const eventWindow = document.getElementById('eventWindow');
+            if (eventWindow) {
+                eventWindow.style.display = 'block';
+                eventWindow.classList.add('collapsed');
+                document.getElementById('toggleIcon').textContent = '🎵';
+            }
         });
 
         // Show Admin Button for logged in users
@@ -441,8 +409,8 @@
         function fillMondayDates() {
             const dateSelect = document.getElementById('date');
             
-            // Create a specific date for Sunday, August 10th, 2025
-            const specificSunday = new Date(2025, 7, 10); // Month is 0-indexed, so 7 = August
+            // Create a specific date for Sunday, July 3rd, 2025
+            const specificSunday = new Date(2025, 7, 10); // Month is 0-indexed, so 6 = July
             
             const option = document.createElement('option');
             option.value = specificSunday.toISOString().split('T')[0];
@@ -494,16 +462,17 @@
 
         if (mobileMenuToggle) {
             mobileMenuToggle.addEventListener('click', function() {
-                navLinks.classList.toggle('active');
+                navLinks.style.display = navLinks.style.display === 'flex' ? 'none' : 'flex';
+                navLinks.style.flexDirection = 'column';
+                navLinks.style.position = 'absolute';
+                navLinks.style.top = '100%';
+                navLinks.style.left = '0';
+                navLinks.style.right = '0';
+                navLinks.style.background = 'white';
+                navLinks.style.padding = '20px';
+                navLinks.style.boxShadow = '0 4px 20px rgba(0,0,0,0.1)';
             });
         }
-
-        // Close mobile menu when clicking outside
-        document.addEventListener('click', function(event) {
-            if (!event.target.closest('.nav-container') && navLinks && navLinks.classList.contains('active')) {
-                navLinks.classList.remove('active');
-            }
-        });
 
         // Intersection Observer for fade-in animations
         const observerOptions = {
@@ -545,75 +514,5 @@
         // Log when CMS loader integration completes
         console.log('CMS Integration loaded. Use window.cmsLoader.refresh() to manually refresh content.');
     </script>
-<!-- Dish Detail Modal -->
-<div id="dishModal" class="dish-modal">
-    <div class="dish-modal-content">
-        <button class="dish-modal-close" onclick="closeDishModal()">&times;</button>
-        
-        <div class="dish-modal-body">
-            <div class="dish-modal-image-section">
-                <img id="dishModalImage" src="" alt="" class="dish-modal-image">
-            </div>
-            
-            <div class="dish-modal-info-section">
-                <div class="dish-modal-header">
-                    <h2 id="dishModalName" class="dish-modal-name"></h2>
-                    <span id="dishModalPrice" class="dish-modal-price"></span>
-                </div>
-                
-                <div id="dishModalBadge" class="dish-modal-badge" style="display: none;">
-                    <span>Chef's Empfehlung</span>
-                </div>
-                
-                <div id="dishModalDescription" class="dish-modal-description"></div>
-                
-                <div id="dishModalNutrition" class="dish-modal-nutrition">
-                    <h3>Nährwerte pro Portion</h3>
-                    <table class="nutrition-table">
-                        <thead>
-                            <tr>
-                                <th>Nährstoff</th>
-                                <th>Menge</th>
-                                <th>% Tagesbedarf*</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr>
-                                <td>Energie</td>
-                                <td id="nutritionCalories">-</td>
-                                <td id="nutritionCaloriesPercent">-</td>
-                            </tr>
-                            <tr>
-                                <td>Eiweiß</td>
-                                <td id="nutritionProtein">-</td>
-                                <td id="nutritionProteinPercent">-</td>
-                            </tr>
-                            <tr>
-                                <td>Kohlenhydrate</td>
-                                <td id="nutritionCarbs">-</td>
-                                <td id="nutritionCarbsPercent">-</td>
-                            </tr>
-                            <tr>
-                                <td>Fett</td>
-                                <td id="nutritionFat">-</td>
-                                <td id="nutritionFatPercent">-</td>
-                            </tr>
-                        </tbody>
-                    </table>
-                    <p class="nutrition-disclaimer">*Referenzmenge für einen durchschnittlichen Erwachsenen (8.400 kJ/2.000 kcal)</p>
-                </div>
-                
-                <div id="dishModalTags" class="dish-modal-tags"></div>
-                
-                <button class="dish-modal-reserve-btn" onclick="scrollToReservation()">
-                    Tisch reservieren
-                </button>
-            </div>
-        </div>
-    </div>
-</div>
-
-	
 </body>
 </html>
-
