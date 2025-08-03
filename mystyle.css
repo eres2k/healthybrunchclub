@@ -2016,3 +2016,206 @@ audio::-webkit-media-controls-time-remaining-display {
     color: var(--text-dark);
     font-size: 12px;
 }
+
+/* ===============================================
+   VIDEO BACKGROUND FIXES - Add to mystyle.css
+   =============================================== */
+
+/* Hero Section - Update existing styles */
+.hero {
+    position: relative;
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+    padding: 0;
+}
+
+/* Video Background Container */
+.hero-video-background {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 0;
+    overflow: hidden;
+}
+
+/* Hero Video - Fullscreen Fix */
+.hero-video {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    min-width: 100%;
+    min-height: 100%;
+    width: auto;
+    height: auto;
+    transform: translate(-50%, -50%);
+    object-fit: cover;
+    z-index: 0;
+}
+
+/* For wider screens, ensure video covers full width */
+@media (min-aspect-ratio: 16/9) {
+    .hero-video {
+        width: 100%;
+        height: auto;
+    }
+}
+
+/* For taller screens, ensure video covers full height */
+@media (max-aspect-ratio: 16/9) {
+    .hero-video {
+        width: auto;
+        height: 100%;
+    }
+}
+
+/* Video Placeholder for Mobile First Visit */
+.hero-video-placeholder {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    display: none;
+    align-items: center;
+    justify-content: center;
+    background: #F5F0E8;
+    z-index: 1;
+}
+
+.hero-video-placeholder img {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+/* Play Video Button */
+.play-video-btn {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background: none;
+    border: none;
+    cursor: pointer;
+    z-index: 2;
+    transition: all 0.3s ease;
+    filter: drop-shadow(0 4px 8px rgba(0,0,0,0.3));
+}
+
+.play-video-btn:hover {
+    transform: translate(-50%, -50%) scale(1.1);
+}
+
+.play-video-btn svg {
+    width: 80px;
+    height: 80px;
+}
+
+/* Dark Overlay */
+.hero-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.4);
+    z-index: 1;
+}
+
+/* Hero Container - Ensure it's above video */
+.hero-container {
+    position: relative;
+    z-index: 2;
+    max-width: 1200px;
+    width: 100%;
+    padding: 0 20px;
+    text-align: center;
+}
+
+/* Hero Content - Better contrast */
+.hero-content {
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 40px;
+    background: rgba(0, 0, 0, 0.3);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    border-radius: 20px;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
+}
+
+/* Update Mobile Menu Styles */
+.nav-links {
+    display: flex;
+    list-style: none;
+    gap: 30px;
+    align-items: center;
+}
+
+@media (max-width: 768px) {
+    .nav-links {
+        position: fixed;
+        top: 60px;
+        left: 0;
+        right: 0;
+        background: white;
+        flex-direction: column;
+        padding: 20px;
+        box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+        z-index: 999;
+        display: none;
+        gap: 15px;
+        max-height: calc(100vh - 60px);
+        overflow-y: auto;
+    }
+    
+    .nav-links.active {
+        display: flex;
+    }
+    
+    .nav-links a {
+        width: 100%;
+        text-align: center;
+        padding: 10px;
+    }
+    
+    /* Play button smaller on mobile */
+    .play-video-btn svg {
+        width: 60px;
+        height: 60px;
+    }
+}
+
+/* Event Window Fix - Hide until loaded */
+.event-window {
+    display: none;
+}
+
+.event-window.show {
+    display: block;
+}
+
+/* Ensure collapsed state works */
+.event-window.collapsed {
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    cursor: pointer;
+}
+
+.event-window.collapsed .event-content {
+    display: none;
+}
+
+/* Loading screen z-index fix */
+.loading-screen {
+    z-index: 10000;
+}
