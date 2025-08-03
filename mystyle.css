@@ -1,6 +1,6 @@
 /* ===============================================
-   HEALTHY BRUNCH CLUB - COMPLETE OPTIMIZED STYLESHEET
-   Classic Menu Design with Image Support
+   HEALTHY BRUNCH CLUB - TRADITIONAL MENU CARD STYLESHEET
+   Classic Menu Design with Optimized Mobile & Print
    =============================================== */
 
 * {
@@ -450,7 +450,7 @@ body {
 }
 
 /* ===============================================
-   CLASSIC MENU CARD DESIGN WITH IMAGES
+   TRADITIONAL MENU CARD DESIGN
    =============================================== */
 
 /* Menu Section Base */
@@ -486,11 +486,40 @@ body {
     z-index: 1;
 }
 
-/* Menu Container */
+/* PDF Export Button */
+.pdf-export-btn {
+    position: fixed;
+    bottom: 150px;
+    right: 30px;
+    background: var(--taupe);
+    color: white;
+    padding: 12px 20px;
+    border-radius: 4px;
+    text-decoration: none;
+    font-size: 14px;
+    font-weight: 400;
+    letter-spacing: 0.3px;
+    box-shadow: var(--soft-shadow);
+    transition: all 0.3s ease;
+    z-index: 997;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    cursor: pointer;
+    border: none;
+}
+
+.pdf-export-btn:hover {
+    background: var(--forest-green);
+    transform: translateY(-2px);
+    box-shadow: var(--hover-shadow);
+}
+
+/* Traditional Menu Container */
 #menuContainer,
 #menuGrid,
 .menu-container {
-    max-width: 900px;
+    max-width: 1200px;
     margin: 0 auto;
     background: #FFFEF9;
     box-shadow: 
@@ -502,6 +531,13 @@ body {
     padding: 60px;
     border-radius: 2px;
     overflow: hidden;
+}
+
+/* Menu in columns for traditional look */
+.menu-columns-layout {
+    column-count: 2;
+    column-gap: 50px;
+    column-rule: 1px dotted var(--taupe);
 }
 
 #menuContainer::before,
@@ -564,7 +600,7 @@ body {
     justify-content: center;
     gap: 0;
     margin: 0 auto 50px;
-    max-width: 700px;
+    max-width: 900px;
     border-bottom: 2px solid var(--taupe);
     position: relative;
     z-index: 3;
@@ -612,27 +648,23 @@ body {
     opacity: 0.7;
 }
 
-/* Category Section */
+/* Category Section - Traditional Layout */
 .menu-category {
-    margin-bottom: 60px;
+    margin-bottom: 50px;
     opacity: 0;
     animation: fadeInUp 0.6s ease forwards;
     position: relative;
     z-index: 2;
+    break-inside: avoid;
+    page-break-inside: avoid;
 }
 
-.menu-category:nth-child(1) { animation-delay: 0.1s; }
-.menu-category:nth-child(2) { animation-delay: 0.2s; }
-.menu-category:nth-child(3) { animation-delay: 0.3s; }
-.menu-category:nth-child(4) { animation-delay: 0.4s; }
-.menu-category:nth-child(5) { animation-delay: 0.5s; }
-
-/* Category Header with Image */
+/* Smaller category images for traditional look */
 .category-header {
     text-align: center;
-    margin-bottom: 50px;
+    margin-bottom: 30px;
     position: relative;
-    padding-top: 80px;
+    padding-top: 60px;
 }
 
 .category-image {
@@ -640,17 +672,16 @@ body {
     top: 0;
     left: 50%;
     transform: translateX(-50%);
-    width: 120px;
-    height: 120px;
+    width: 80px;
+    height: 80px;
     border-radius: 50%;
     overflow: hidden;
     box-shadow: 
-        0 0 0 4px #FFFEF9,
-        0 0 0 5px var(--taupe),
-        0 5px 20px rgba(0, 0, 0, 0.1);
+        0 0 0 3px #FFFEF9,
+        0 0 0 4px var(--taupe),
+        0 3px 15px rgba(0, 0, 0, 0.08);
     z-index: 3;
     transition: all 0.3s ease;
-    display: block !important;
 }
 
 .category-image img {
@@ -658,14 +689,6 @@ body {
     height: 100%;
     object-fit: cover;
     transition: transform 0.3s ease;
-}
-
-.category-image:hover {
-    transform: translateX(-50%) scale(1.05);
-}
-
-.category-image:hover img {
-    transform: scale(1.1);
 }
 
 .category-header.no-image {
@@ -678,7 +701,7 @@ body {
     top: 20px;
     left: 50%;
     transform: translateX(-50%);
-    font-size: 48px;
+    font-size: 36px;
     color: var(--taupe);
     opacity: 0.3;
     z-index: 2;
@@ -687,10 +710,10 @@ body {
 .category-header::after {
     content: '';
     position: absolute;
-    bottom: -25px;
+    bottom: -15px;
     left: 50%;
     transform: translateX(-50%);
-    width: 80px;
+    width: 60px;
     height: 1px;
     background: var(--taupe);
     opacity: 0.5;
@@ -698,51 +721,40 @@ body {
 
 .category-title {
     font-family: var(--font-menu-header);
-    font-size: 28px;
+    font-size: 24px;
     color: var(--forest-green);
     font-weight: 400;
     letter-spacing: 1px;
     text-transform: capitalize;
     display: inline-block;
     position: relative;
-    padding: 0 30px;
+    padding: 0 20px;
     background: #FFFEF9;
-    margin-top: 70px;
+    margin-top: 50px;
 }
 
 .category-header.no-image .category-title {
     margin-top: 0;
 }
 
-.category-description {
-    font-family: var(--font-menu-body);
-    font-size: 16px;
-    color: var(--text-medium);
-    font-style: italic;
-    margin-top: 10px;
-    max-width: 500px;
-    margin-left: auto;
-    margin-right: auto;
-}
-
-/* Menu Items Grid */
+/* Menu Items - Compact Traditional Style */
 .menu-items-grid {
     display: block;
-    max-width: 700px;
+    max-width: 100%;
     margin: 0 auto;
 }
 
-/* Menu Item Card */
+/* Compact Menu Item without Large Images */
 .menu-item-card {
     background: transparent;
     border: none;
-    padding: 20px 0;
+    padding: 15px 0;
     box-shadow: none;
-    border-bottom: 1px dotted rgba(30, 74, 60, 0.2);
+    border-bottom: 1px dotted rgba(30, 74, 60, 0.15);
     position: relative;
     transition: all 0.3s ease;
     display: flex;
-    gap: 20px;
+    gap: 15px;
     align-items: flex-start;
 }
 
@@ -750,29 +762,21 @@ body {
     border-bottom: none;
 }
 
-.menu-item-card.has-image {
-    padding: 25px 0;
-}
-
 .menu-item-card:hover {
-    background: rgba(245, 240, 232, 0.3);
+    background: rgba(245, 240, 232, 0.2);
     transform: none;
-    padding-left: 10px;
-    padding-right: 10px;
-    margin-left: -10px;
-    margin-right: -10px;
 }
 
-/* Menu Item Image */
+/* Small Thumbnail Images */
 .menu-item-image {
-    flex: 0 0 100px;
-    width: 100px;
-    height: 100px;
-    border-radius: 8px;
+    flex: 0 0 60px;
+    width: 60px;
+    height: 60px;
+    border-radius: 6px;
     overflow: hidden;
     box-shadow: 
-        0 0 0 1px rgba(218, 193, 150, 0.3),
-        0 3px 15px rgba(0, 0, 0, 0.08);
+        0 0 0 1px rgba(218, 193, 150, 0.2),
+        0 2px 8px rgba(0, 0, 0, 0.05);
     transition: all 0.3s ease;
 }
 
@@ -781,13 +785,6 @@ body {
     height: 100%;
     object-fit: cover;
     transition: transform 0.3s ease;
-}
-
-.menu-item-card:hover .menu-item-image {
-    transform: translateY(-2px);
-    box-shadow: 
-        0 0 0 1px rgba(218, 193, 150, 0.3),
-        0 5px 20px rgba(0, 0, 0, 0.12);
 }
 
 .menu-item-card:hover .menu-item-image img {
@@ -805,11 +802,7 @@ body {
     display: flex;
     align-items: baseline;
     position: relative;
-    margin-bottom: 8px;
-}
-
-.menu-item-card.has-image .menu-item-header {
-    margin-bottom: 10px;
+    margin-bottom: 6px;
 }
 
 .menu-item-header::after {
@@ -826,14 +819,14 @@ body {
         var(--taupe) 3px,
         var(--taupe) 6px
     );
-    opacity: 0.4;
+    opacity: 0.3;
     z-index: 1;
 }
 
 .menu-item-name {
     font-family: var(--font-menu-body);
     font-weight: 600;
-    font-size: 18px;
+    font-size: 16px;
     color: var(--forest-green);
     background: #FFFEF9;
     padding-right: 10px;
@@ -847,7 +840,7 @@ body {
     font-family: var(--font-primary);
     font-weight: 300;
     color: var(--forest-green);
-    font-size: 17px;
+    font-size: 15px;
     background: #FFFEF9;
     padding-left: 10px;
     position: relative;
@@ -856,22 +849,21 @@ body {
     flex: 0 0 auto;
 }
 
-/* Menu Item Description */
+/* Compact Description */
 .menu-item-description {
     font-family: var(--font-menu-body);
-    font-size: 15px;
+    font-size: 14px;
     color: var(--text-medium);
-    line-height: 1.5;
-    margin-bottom: 12px;
+    line-height: 1.4;
+    margin-bottom: 8px;
     font-style: italic;
-    letter-spacing: 0.2px;
-    padding-left: 20px;
+    letter-spacing: 0.1px;
     max-height: none;
     overflow: visible;
 }
 
 .menu-item-description p {
-    margin: 0 0 6px 0;
+    margin: 0 0 4px 0;
 }
 
 .menu-item-description strong {
@@ -880,32 +872,22 @@ body {
     font-style: normal;
 }
 
-.menu-item-description em {
-    font-style: italic;
-}
-
 .menu-item-description ul,
 .menu-item-description ol {
-    margin: 6px 0;
+    margin: 4px 0;
     padding-left: 20px;
 }
 
 .menu-item-description li {
-    font-size: 14px;
-    margin-bottom: 3px;
+    font-size: 13px;
+    margin-bottom: 2px;
 }
 
-/* Hide read more button */
-.read-more-btn {
-    display: none !important;
-}
-
-/* Nutrition Information */
+/* Compact Nutrition Information */
 .nutrition-info {
     display: flex !important;
-    gap: 20px;
-    padding-top: 8px;
-    padding-left: 20px;
+    gap: 15px;
+    padding-top: 6px;
     opacity: 1 !important;
     flex-wrap: wrap;
 }
@@ -913,9 +895,9 @@ body {
 .nutrition-item {
     display: flex;
     align-items: baseline;
-    gap: 4px;
+    gap: 3px;
     font-family: var(--font-primary);
-    font-size: 12px;
+    font-size: 11px;
 }
 
 .nutrition-value {
@@ -924,48 +906,47 @@ body {
 }
 
 .nutrition-label {
-    font-size: 11px;
-    color: var(--text-medium);
+    font-size: 10px;
+    color: var(--text-light);
     text-transform: lowercase;
-    letter-spacing: 0.5px;
+    letter-spacing: 0.3px;
 }
 
-/* Tags */
+/* Compact Tags */
 .menu-item-tags {
     display: flex;
-    gap: 8px;
+    gap: 6px;
     flex-wrap: wrap;
-    margin-top: 8px;
-    padding-left: 20px;
+    margin-top: 6px;
 }
 
 .menu-tag {
     background: transparent;
     color: var(--sage-green);
-    padding: 2px 0;
+    padding: 1px 0;
     border: none;
     border-bottom: 1px solid var(--sage-green);
     border-radius: 0;
     font-family: var(--font-primary);
-    font-size: 11px;
+    font-size: 10px;
     font-weight: 300;
-    letter-spacing: 0.8px;
+    letter-spacing: 0.6px;
     text-transform: lowercase;
 }
 
 /* Special Badge */
 .menu-item-badge {
     position: absolute;
-    top: 15px;
-    right: -35px;
+    top: 10px;
+    right: -25px;
     background: var(--terracotta);
     color: white;
-    padding: 4px 40px;
+    padding: 3px 30px;
     font-family: var(--font-primary);
-    font-size: 10px;
+    font-size: 9px;
     font-weight: 400;
     text-transform: uppercase;
-    letter-spacing: 1px;
+    letter-spacing: 0.8px;
     transform: rotate(45deg);
     box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
 }
@@ -978,17 +959,6 @@ body {
     font-family: var(--font-menu-body);
     font-style: italic;
     font-size: 18px;
-}
-
-/* Decorative Elements */
-.menu-category::after {
-    content: '❦';
-    display: block;
-    text-align: center;
-    font-size: 24px;
-    color: var(--taupe);
-    margin-top: 40px;
-    opacity: 0.5;
 }
 
 /* Features Section */
@@ -1370,7 +1340,7 @@ body {
 }
 
 /* ===============================================
-   RESPONSIVE DESIGN
+   RESPONSIVE DESIGN - OPTIMIZED MOBILE
    =============================================== */
 
 /* Tablet View */
@@ -1388,13 +1358,17 @@ body {
         padding: 50px 40px;
     }
     
+    .menu-columns-layout {
+        column-count: 1;
+    }
+    
     .features-grid {
         grid-template-columns: repeat(2, 1fr);
         gap: 30px;
     }
 }
 
-/* Mobile View */
+/* Mobile View - Optimized */
 @media (max-width: 768px) {
     /* Navigation Mobile */
     .nav {
@@ -1477,7 +1451,7 @@ body {
     
     #menuContainer,
     #menuGrid {
-        padding: 40px 25px;
+        padding: 35px 20px;
         box-shadow: 
             0 0 0 1px rgba(218, 193, 150, 0.2),
             0 3px 15px rgba(0, 0, 0, 0.06);
@@ -1518,61 +1492,78 @@ body {
     
     /* Category Mobile */
     .category-image {
-        width: 100px;
-        height: 100px;
+        width: 60px;
+        height: 60px;
     }
     
     .category-title {
-        margin-top: 60px;
-        font-size: 24px;
-        padding: 0 20px;
+        margin-top: 40px;
+        font-size: 20px;
+        padding: 0 15px;
     }
     
     .category-header::after {
-        bottom: -20px;
+        bottom: -12px;
+        width: 50px;
     }
     
-    /* Menu Items Mobile */
+    /* Menu Items Mobile - Optimized */
     .menu-item-card {
-        flex-direction: column;
-        gap: 15px;
+        padding: 12px 0;
+        gap: 12px;
     }
     
-    .menu-item-card.has-image {
-        padding: 20px 0;
-    }
-    
+    /* CRITICAL: Small image on mobile */
     .menu-item-image {
-        width: 100%;
-        height: 200px;
-        border-radius: 12px;
+        width: 50px;
+        height: 50px;
+        flex: 0 0 50px;
+        border-radius: 5px;
     }
     
     .menu-item-content {
-        width: 100%;
+        width: calc(100% - 62px);
     }
     
     .menu-item-name {
-        font-size: 16px;
+        font-size: 14px;
         max-width: 70%;
     }
     
     .menu-item-price {
-        font-size: 15px;
+        font-size: 14px;
     }
     
     .menu-item-description {
-        font-size: 14px;
-        padding-left: 0;
+        font-size: 13px;
+        line-height: 1.3;
+    }
+    
+    .menu-item-description li {
+        font-size: 12px;
     }
     
     .nutrition-info {
-        padding-left: 0;
-        gap: 12px;
+        gap: 10px;
+        padding-top: 4px;
+    }
+    
+    .nutrition-item {
+        font-size: 10px;
+    }
+    
+    .nutrition-label {
+        font-size: 9px;
     }
     
     .menu-item-tags {
-        padding-left: 0;
+        gap: 4px;
+        margin-top: 4px;
+    }
+    
+    .menu-tag {
+        font-size: 9px;
+        letter-spacing: 0.4px;
     }
     
     .menu-item-badge {
@@ -1580,8 +1571,17 @@ body {
         transform: none;
         display: inline-block;
         padding: 2px 8px;
-        margin-bottom: 8px;
+        margin-bottom: 6px;
         border-radius: 2px;
+        font-size: 8px;
+    }
+    
+    /* PDF Export Button Mobile */
+    .pdf-export-btn {
+        bottom: 120px;
+        right: 20px;
+        padding: 10px 16px;
+        font-size: 13px;
     }
     
     /* Remove ornaments on mobile */
@@ -1769,7 +1769,7 @@ body {
 /* Small Mobile Devices */
 @media (max-width: 375px) {
     .hero-content h1 {
-        font-size: 30px;
+        font-size: 28px;
     }
     
     .menu-header h2,
@@ -1778,21 +1778,28 @@ body {
     }
     
     .category-title {
-        font-size: 20px;
+        font-size: 18px;
     }
     
     .category-image {
-        width: 80px;
-        height: 80px;
+        width: 50px;
+        height: 50px;
     }
     
-    .menu-items-grid {
-        padding: 0 5px;
+    #menuContainer,
+    #menuGrid {
+        padding: 30px 15px;
+    }
+    
+    .menu-item-image {
+        width: 45px;
+        height: 45px;
+        flex: 0 0 45px;
     }
     
     .filter-btn {
-        padding: 5px 12px;
-        font-size: 11px;
+        padding: 8px 12px;
+        font-size: 10px;
     }
     
     .event-window {
@@ -1860,8 +1867,9 @@ html, body {
         font-size: 28px;
     }
     
-    .menu-items-grid {
-        grid-template-columns: repeat(2, 1fr);
+    .menu-columns-layout {
+        column-count: 2;
+        column-gap: 30px;
     }
     
     .features-grid {
@@ -1870,68 +1878,215 @@ html, body {
 }
 
 /* ===============================================
-   PRINT STYLES
+   PRINT STYLES - TRADITIONAL MENU FORMAT
    =============================================== */
 
 @media print {
-    .filter-btn,
-    .read-more-btn,
-    .menu-item-badge,
-    .event-window,
-    .admin-edit-btn,
+    /* Hide non-essential elements */
     .nav,
     .hero,
     .features-section,
     .contact-section,
     .footer,
-    .scroll-indicator {
+    .scroll-indicator,
+    .filter-btn,
+    .menu-filters,
+    .event-window,
+    .admin-edit-btn,
+    .pdf-export-btn,
+    .menu-item-badge,
+    .loading-screen {
         display: none !important;
     }
     
+    /* Basic page setup */
+    @page {
+        size: A4;
+        margin: 15mm;
+    }
+    
+    body {
+        background: white !important;
+        color: black !important;
+        font-size: 11pt;
+        line-height: 1.4;
+    }
+    
+    /* Menu section adjustments */
     .menu-section {
         background: white !important;
         padding: 0 !important;
     }
     
-    .menu-filters {
+    .menu-section::before {
         display: none !important;
     }
     
+    /* Menu container */
     #menuContainer,
     #menuGrid {
         box-shadow: none !important;
-        padding: 20px !important;
+        padding: 0 !important;
         max-width: 100% !important;
+        margin: 0 !important;
+        background: white !important;
     }
     
+    #menuContainer::before,
+    #menuContainer::after {
+        display: none !important;
+    }
+    
+    /* Menu header */
+    .menu-header {
+        margin-bottom: 20mm !important;
+        page-break-after: avoid;
+    }
+    
+    .menu-header h2 {
+        font-size: 24pt !important;
+        margin-bottom: 5mm !important;
+    }
+    
+    .menu-header p {
+        font-size: 12pt !important;
+    }
+    
+    /* Two column layout for print */
+    .menu-columns-layout {
+        column-count: 2 !important;
+        column-gap: 10mm !important;
+        column-rule: 1px solid #ddd !important;
+    }
+    
+    /* Categories */
     .menu-category {
         page-break-inside: avoid;
+        break-inside: avoid;
+        margin-bottom: 15mm !important;
     }
     
+    .category-header {
+        margin-bottom: 8mm !important;
+        padding-top: 0 !important;
+    }
+    
+    .category-image {
+        display: none !important;
+    }
+    
+    .category-title {
+        font-size: 16pt !important;
+        margin-top: 0 !important;
+        border-bottom: 1px solid #ddd;
+        padding-bottom: 2mm;
+    }
+    
+    .category-header::after {
+        display: none !important;
+    }
+    
+    /* Menu items */
     .menu-item-card {
         page-break-inside: avoid;
-        border-bottom: 1px solid #ddd;
-        padding: 10px 0;
+        border-bottom: 1px dotted #ccc !important;
+        padding: 3mm 0 !important;
+        margin: 0 !important;
     }
     
-    .category-image,
+    .menu-item-card:last-child {
+        border-bottom: none !important;
+    }
+    
+    /* Hide images in print */
     .menu-item-image {
-        box-shadow: none !important;
-        border: 1px solid #ddd;
+        display: none !important;
     }
     
-    .menu-item-image {
-        width: 60px !important;
-        height: 60px !important;
+    .menu-item-content {
+        width: 100% !important;
     }
     
+    /* Item details */
+    .menu-item-header {
+        margin-bottom: 2mm !important;
+    }
+    
+    .menu-item-header::after {
+        display: none !important;
+    }
+    
+    .menu-item-name {
+        font-size: 11pt !important;
+        font-weight: 600 !important;
+        max-width: 80% !important;
+    }
+    
+    .menu-item-price {
+        font-size: 11pt !important;
+        font-weight: 600 !important;
+    }
+    
+    .menu-item-description {
+        font-size: 9pt !important;
+        color: #333 !important;
+        margin-bottom: 2mm !important;
+    }
+    
+    /* Nutrition info */
     .nutrition-info {
-        display: flex !important;
-        opacity: 1 !important;
+        display: inline-flex !important;
+        gap: 3mm !important;
+        font-size: 8pt !important;
+        color: #666 !important;
+        padding: 0 !important;
     }
     
+    .nutrition-value,
+    .nutrition-label {
+        color: #666 !important;
+    }
+    
+    /* Tags */
+    .menu-item-tags {
+        display: inline-flex !important;
+        gap: 2mm !important;
+        margin-top: 1mm !important;
+    }
+    
+    .menu-tag {
+        font-size: 8pt !important;
+        color: #666 !important;
+        border: 1px solid #ccc !important;
+        padding: 0.5mm 2mm !important;
+        border-radius: 2mm !important;
+    }
+    
+    /* Ensure decorative elements are hidden */
     .menu-category::after {
-        display: none;
+        display: none !important;
+    }
+    
+    /* Page breaks */
+    h2, h3, h4 {
+        page-break-after: avoid;
+    }
+    
+    /* Links in print */
+    a {
+        text-decoration: none !important;
+        color: inherit !important;
+    }
+}
+
+/* Print-specific utility class */
+.print-only {
+    display: none;
+}
+
+@media print {
+    .print-only {
+        display: block !important;
     }
 }
 
