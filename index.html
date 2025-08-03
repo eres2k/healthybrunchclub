@@ -46,7 +46,7 @@
 <body>
     <!-- Loading Screen -->
     <div class="loading-screen" id="loadingScreen">
-        <div class="loading-logo"><img src="content/images/logo.png" width="356" height="194" alt="healthy brunch club logo"/></div>
+        <div class="loading-logo"><img src="content/images/logo.png" width="178" height="97" alt="healthy brunch club logo"/></div>
         <div class="loading-bar">
             <div class="loading-progress"></div>
         </div>
@@ -120,11 +120,12 @@
             </div>
         </section>
 
-        <!-- Classic Menu Section with 2-Column Layout -->
+        <!-- Classic Menu Section with Updated Design -->
         <section class="menu-section" id="menu">
             <div class="menu-header">
                 <h2>unsere fein abgestimmte speisekarte</h2>
                 <p>100% bio und mit ganz viel liebe zubereitet</p>
+                <a href="/menu.pdf" class="pdf-download" download>📄 PDF herunterladen</a>
             </div>
 
             <!-- Filter Buttons -->
@@ -132,9 +133,9 @@
                 <!-- Filter buttons will be added dynamically by CMS loader -->
             </div>
 
-            <!-- Menu Container - 2-Column Default Layout -->
+            <!-- Menu Container -->
             <div id="menuContainer" class="menu-container">
-                <!-- Menu items will be loaded dynamically in 2 columns -->
+                <!-- Menu items will be loaded dynamically -->
                 <div class="menu-loading">Die Speisekarte wird geladen...</div>
             </div>
         </section>
@@ -150,7 +151,7 @@
                 <div class="feature-card">
                     <div class="feature-icon">🌱</div>
                     <h3>100% bio</h3>
-                    <p>alle zutaten stammen von bio-bauern. frisch, nachhaltig und voller nährstoffe.</p>
+                    <p>alle zutaten stammen von  bio-bauern. frisch, nachhaltig und voller nährstoffe.</p>
                 </div>
 
                 <div class="feature-card">
@@ -442,16 +443,17 @@
 
         if (mobileMenuToggle) {
             mobileMenuToggle.addEventListener('click', function() {
-                navLinks.classList.toggle('active');
+                navLinks.style.display = navLinks.style.display === 'flex' ? 'none' : 'flex';
+                navLinks.style.flexDirection = 'column';
+                navLinks.style.position = 'absolute';
+                navLinks.style.top = '100%';
+                navLinks.style.left = '0';
+                navLinks.style.right = '0';
+                navLinks.style.background = 'white';
+                navLinks.style.padding = '20px';
+                navLinks.style.boxShadow = '0 4px 20px rgba(0,0,0,0.1)';
             });
         }
-
-        // Close mobile menu when clicking outside
-        document.addEventListener('click', function(e) {
-            if (!e.target.closest('.nav') && navLinks && navLinks.classList.contains('active')) {
-                navLinks.classList.remove('active');
-            }
-        });
 
         // Intersection Observer for fade-in animations
         const observerOptions = {
@@ -491,7 +493,7 @@
         }
 
         // Log when CMS loader integration completes
-        console.log('CMS Integration loaded with PDF export. Click "Menü als PDF öffnen" button to save/print.');
+        console.log('CMS Integration loaded. Use window.cmsLoader.refresh() to manually refresh content.');
     </script>
 </body>
 </html>
