@@ -1,7 +1,8 @@
-// CMS Loader with Compact Menu Design and Image Support
-// Supports nutrition values, rich text formatting, and images
+// CMS Loader with 3-Column Layout and Modal Support
+// Supports nutrition values, rich text formatting, images, and modal popups
 
 let allMenuCategories = [];
+let allDishesData = {};
 
 document.addEventListener('DOMContentLoaded', function() {
     loadMenuFromCMS();
@@ -79,19 +80,16 @@ function handleFilterClick(e) {
     }
 }
 
-// Display Compact Menu with Image Support
+// Display Compact Menu with 3-Column Grid
 function displayCompactMenu(menuData) {
     const menuContainer = document.getElementById('menuGrid') || document.getElementById('menuContainer');
     
     if (!menuData || menuData.length === 0) {
-        menuContainer.innerHTML = '<div class="menu-logo"><img src="content/images/logo.png" alt="healthy brunch club" /></div><div class="menu-loading">Keine Einträge gefunden.</div>';
+        menuContainer.innerHTML = '<div class="menu-loading">Keine Einträge gefunden.</div>';
         return;
     }
     
-    // Start with the logo
-    let menuHTML = '<div class="menu-logo"><img src="content/images/logo.png" alt="healthy brunch club" /></div>';
-    
-    menuHTML += menuData.map(category => {
+    menuContainer.innerHTML = menuData.map(category => {
         // Handle category image URL
         let imageUrl = '';
         if (category.image) {
@@ -100,10 +98,10 @@ function displayCompactMenu(menuData) {
         
         return `
             <div class="menu-category" data-category="${category.title.toLowerCase().replace(/\s+/g, '-')}">
-                <div class="category-header ${!imageUrl ? 'no-image' : ''}">
+                <div class="category-header">
                     ${imageUrl ? `
                         <div class="category-image">
-                            <img src="${imageUrl}" alt="${category.title}" loading="lazy" onerror="this.parentElement.parentElement.classList.add('no-image'); this.parentElement.style.display='none';">
+                            <img src="${imageUrl}" alt="${category.title}" loading="lazy" onerror="this.parentElement.style.display='none';">
                         </div>
                     ` : ''}
                     <div class="category-info">
@@ -114,6 +112,16 @@ function displayCompactMenu(menuData) {
                 
                 <div class="menu-items-grid">
                     ${category.items.map((item, index) => {
+                        // Generate unique ID for this dish
+                        const dishId = `dish-${category.order || 0}-${index}`;
+                        
+                        // Store full dish data
+                        allDishesData[dishId] = {
+                            ...item,
+                            categoryTitle: category.title,
+                            icon: getIconForCategory(category.title)
+                        };
+                        
                         // Handle dish image URL
                         let dishImageUrl = '';
                         if (item.image) {
@@ -121,14 +129,18 @@ function displayCompactMenu(menuData) {
                         }
                         
                         return `
-                        <div class="menu-item-card ${dishImageUrl ? 'has-image' : ''}">
+                        <div class="menu-item-card ${dishImageUrl ? 'has-image' : ''}" onclick="openDishModal('${dishId}')">
                             ${item.special ? '<div class="menu-item-badge">Empfehlung</div>' : ''}
                             
                             ${dishImageUrl ? `
                                 <div class="menu-item-image">
                                     <img src="${dishImageUrl}" alt="${item.name}" loading="lazy">
                                 </div>
-                            ` : ''}
+                            ` : `
+                                <div class="menu-item-image">
+                                    <div class="dish-modal-placeholder">${getIconForCategory(category.title)}</div>
+                                </div>
+                            `}
                             
                             <div class="menu-item-content">
                                 <div class="menu-item-header">
@@ -136,8 +148,8 @@ function displayCompactMenu(menuData) {
                                     ${item.price ? `<span class="menu-item-price">€${item.price}</span>` : ''}
                                 </div>
                                 
-                                <div class="menu-item-description" id="desc-${category.order}-${index}">
-                                    ${processRichText(item.description)}
+                                <div class="menu-item-description">
+                                    ${processRichText(item.description, true)}
                                 </div>
                                 
                                 ${item.nutrition ? `
@@ -182,12 +194,35 @@ function displayCompactMenu(menuData) {
             </div>
         `;
     }).join('');
+}
+
+// Get icon for category
+function getIconForCategory(categoryTitle) {
+    const icons = {
+        'eggcitements': '🍳',
+        'eggs': '🥚',
+        'hafer dich lieb': '🥣',
+        'avo-lution': '🥑',
+        'avocado': '🥑',
+        'berry good choice': '🫐',
+        'sweet': '🍰',
+        'coffee': '☕',
+        'sip happens': '🥤',
+        'drinks': '🍹',
+        'sets': '🍽️'
+    };
     
-    menuContainer.innerHTML = menuHTML;
+    const lowerTitle = categoryTitle.toLowerCase();
+    for (const [key, icon] of Object.entries(icons)) {
+        if (lowerTitle.includes(key)) {
+            return icon;
+        }
+    }
+    return '🍴';
 }
 
 // Process rich text from markdown
-function processRichText(text) {
+function processRichText(text, truncate = false) {
     if (!text) return '';
     
     // Convert markdown to HTML
@@ -212,16 +247,38 @@ function processRichText(text) {
     html = html.replace(/^- (.+)$/gm, '<li>$1</li>');
     html = html.replace(/(<li>.*<\/li>)/s, '<ul>$1</ul>');
     
+    // Truncate for card view if needed
+    if (truncate) {
+        // Remove HTML tags for truncation
+        const textOnly = html.replace(/<[^>]*>/g, '');
+        if (textOnly.length > 150) {
+            return textOnly.substring(0, 150) + '...';
+        }
+    }
+    
     return html;
 }
 
+// Open dish modal with full details
+window.openDishModal = function(dishId) {
+    const dishData = allDishesData[dishId];
+    if (!dishData) return;
+    
+    const fullDescription = processRichText(dishData.description, false);
+    
+    window.openDishModal({
+        name: dishData.name,
+        price: dishData.price,
+        image: dishData.image,
+        description: fullDescription,
+        nutrition: dishData.nutrition,
+        tags: dishData.tags,
+        icon: dishData.icon
+    });
+};
+
 // Fallback Menu with image data
 function displayFallbackMenu() {
-    const menuContainer = document.getElementById('menuGrid') || document.getElementById('menuContainer');
-    
-    // Add logo first
-    menuContainer.innerHTML = '<div class="menu-logo"><img src="content/images/logo.png" alt="healthy brunch club" /></div>';
-    
     const fallbackMenu = [
         {
             title: "eggcitements",
@@ -303,6 +360,28 @@ function displayFallbackMenu() {
                         fat: "20g"
                     },
                     tags: ["vegan", "energizing"],
+                    special: false
+                }
+            ]
+        },
+        {
+            title: "avo-lution",
+            order: 3,
+            image: "/content/images/avocado.jpg",
+            description: "Cremige Avocado-Kreationen für den perfekten Start",
+            items: [
+                {
+                    name: "avocado bowl",
+                    price: "8.90",
+                    image: "/content/images/avo-bowl.jpg",
+                    description: "Eine samtige Kreation aus frisch zerdrückter Avocado\n\n- Veredelt mit fein geriebenem Apfel\n- Gekrönt von zart gerösteten Mandeln\n- Ein belebendes, nahrhaftes Vergnügen",
+                    nutrition: {
+                        calories: "285",
+                        protein: "6g",
+                        carbs: "18g",
+                        fat: "24g"
+                    },
+                    tags: ["vegetarisch", "leicht", "nahrhaft"],
                     special: false
                 }
             ]
@@ -414,3 +493,11 @@ function displayFallbackEvent() {
     
     displayEvents(fallbackEvent);
 }
+
+// Manual refresh function
+window.cmsLoader = {
+    refresh: function() {
+        loadMenuFromCMS();
+        loadEventsFromCMS();
+    }
+};
