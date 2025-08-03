@@ -490,7 +490,7 @@ body {
 #menuContainer,
 #menuGrid,
 .menu-container {
-    max-width: 1200px;
+    max-width: 1400px;
     margin: 0 auto;
     background: #FFFEF9;
     box-shadow: 
@@ -602,6 +602,11 @@ body {
     z-index: 2;
 }
 
+/* In all-categories view, adjust spacing */
+.all-categories .menu-category {
+    margin-bottom: 40px;
+}
+
 .menu-category:last-child {
     margin-bottom: 40px;
 }
@@ -621,6 +626,12 @@ body {
     padding-bottom: 25px;
 }
 
+/* Smaller header in all-categories view */
+.all-categories .category-header {
+    margin-bottom: 30px;
+    padding-bottom: 20px;
+}
+
 .category-header::after {
     content: '';
     position: absolute;
@@ -631,6 +642,11 @@ body {
     height: 2px;
     background: var(--taupe);
     opacity: 0.6;
+}
+
+/* Smaller line in all-categories view */
+.all-categories .category-header::after {
+    width: 60px;
 }
 
 .category-image {
@@ -645,6 +661,13 @@ body {
         0 0 0 4px var(--taupe),
         0 3px 15px rgba(0, 0, 0, 0.08);
     transition: all 0.3s ease;
+}
+
+/* Smaller image in all-categories view */
+.all-categories .category-image {
+    width: 60px;
+    height: 60px;
+    margin-bottom: 10px;
 }
 
 .category-image img {
@@ -683,6 +706,12 @@ body {
     margin-bottom: 8px;
 }
 
+/* Smaller title in all-categories view */
+.all-categories .category-title {
+    font-size: 24px;
+    letter-spacing: 1px;
+}
+
 .category-description {
     font-family: var(--font-menu-body);
     font-size: 16px;
@@ -692,23 +721,53 @@ body {
     margin: 0 auto;
 }
 
-/* Menu Items Grid - Dynamic based on view */
+/* Smaller description in all-categories view */
+.all-categories .category-description {
+    font-size: 14px;
+}
+
+/* Menu Container Grid - Dynamic based on view */
+/* All categories view - 3 columns for categories */
+.all-categories {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 40px;
+    align-items: start;
+}
+
+/* Ensure equal height columns */
+.all-categories .menu-category {
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+}
+
+.all-categories .menu-items-grid {
+    flex: 1;
+}
+
+/* Single category view - normal flow */
+.single-category {
+    display: block;
+}
+
+/* Menu Items Grid */
 .menu-items-grid {
     display: grid;
-    gap: 30px;
+    gap: 20px;
     margin: 0 auto;
     max-width: 100%;
 }
 
-/* Single category view - 3 columns */
+/* Single category view - 3 columns for items */
 .single-category .menu-items-grid {
     grid-template-columns: repeat(3, 1fr);
+    gap: 30px;
 }
 
-/* All categories view - 1 column per category */
+/* All categories view - 1 column per category for items */
 .all-categories .menu-items-grid {
     grid-template-columns: 1fr;
-    max-width: 700px;
 }
 
 /* Menu Item Card */
@@ -724,6 +783,11 @@ body {
     flex-direction: column;
     height: 100%;
     overflow: hidden;
+}
+
+/* Smaller cards in all-categories view */
+.all-categories .menu-item-card {
+    padding: 15px;
 }
 
 .menu-item-card:hover {
@@ -743,6 +807,12 @@ body {
         0 0 0 1px rgba(218, 193, 150, 0.2),
         0 2px 10px rgba(0, 0, 0, 0.05);
     transition: all 0.3s ease;
+}
+
+/* Smaller image in all-categories view */
+.all-categories .menu-item-image {
+    height: 120px;
+    margin-bottom: 12px;
 }
 
 .menu-item-image img {
@@ -781,12 +851,22 @@ body {
     flex: 1;
 }
 
+/* Smaller name in all-categories view */
+.all-categories .menu-item-name {
+    font-size: 15px;
+}
+
 .menu-item-price {
     font-family: var(--font-primary);
     font-weight: 400;
     color: var(--terracotta);
     font-size: 16px;
     white-space: nowrap;
+}
+
+/* Smaller price in all-categories view */
+.all-categories .menu-item-price {
+    font-size: 14px;
 }
 
 /* Menu Item Description */
@@ -799,8 +879,19 @@ body {
     flex: 1;
 }
 
+/* Smaller description in all-categories view */
+.all-categories .menu-item-description {
+    font-size: 12px;
+    line-height: 1.4;
+    margin-bottom: 10px;
+}
+
 .menu-item-description p {
     margin: 0 0 8px 0;
+}
+
+.all-categories .menu-item-description p {
+    margin: 0 0 5px 0;
 }
 
 .menu-item-description strong {
@@ -818,9 +909,20 @@ body {
     padding-left: 20px;
 }
 
+.all-categories .menu-item-description ul,
+.all-categories .menu-item-description ol {
+    margin: 5px 0;
+    padding-left: 15px;
+}
+
 .menu-item-description li {
     font-size: 13px;
     margin-bottom: 4px;
+}
+
+.all-categories .menu-item-description li {
+    font-size: 11px;
+    margin-bottom: 2px;
 }
 
 /* Hide read more button */
@@ -839,12 +941,23 @@ body {
     margin-top: auto;
 }
 
+/* Smaller nutrition in all-categories view */
+.all-categories .nutrition-info {
+    gap: 10px;
+    padding: 8px 0;
+    font-size: 10px;
+}
+
 .nutrition-item {
     display: flex;
     align-items: baseline;
     gap: 3px;
     font-family: var(--font-primary);
     font-size: 11px;
+}
+
+.all-categories .nutrition-item {
+    font-size: 9px;
 }
 
 .nutrition-value {
@@ -859,12 +972,21 @@ body {
     letter-spacing: 0.3px;
 }
 
+.all-categories .nutrition-label {
+    font-size: 8px;
+}
+
 /* Tags */
 .menu-item-tags {
     display: flex;
     gap: 6px;
     flex-wrap: wrap;
     margin-top: 10px;
+}
+
+.all-categories .menu-item-tags {
+    gap: 4px;
+    margin-top: 8px;
 }
 
 .menu-tag {
@@ -876,6 +998,11 @@ body {
     font-size: 11px;
     font-weight: 400;
     letter-spacing: 0.5px;
+}
+
+.all-categories .menu-tag {
+    padding: 2px 8px;
+    font-size: 9px;
 }
 
 /* Special Badge */
@@ -894,6 +1021,12 @@ body {
     border-radius: 12px;
     box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
     z-index: 10;
+}
+
+.all-categories .menu-item-badge {
+    padding: 3px 8px;
+    font-size: 8px;
+    letter-spacing: 0.5px;
 }
 
 /* Loading State */
@@ -935,6 +1068,11 @@ body {
     margin-top: 50px;
     opacity: 0.3;
     letter-spacing: 15px;
+}
+
+/* Hide category separator in all-categories view */
+.all-categories .menu-category::after {
+    display: none;
 }
 
 .menu-category:last-child::after {
@@ -1344,6 +1482,12 @@ body {
         gap: 25px;
     }
     
+    /* All categories - 2 columns on tablet */
+    .all-categories {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 30px;
+    }
+    
     .features-grid {
         grid-template-columns: repeat(2, 1fr);
         gap: 30px;
@@ -1499,6 +1643,12 @@ body {
         grid-template-columns: 1fr;
         gap: 20px;
         max-width: 100%;
+    }
+    
+    /* All categories - single column on mobile */
+    .all-categories {
+        grid-template-columns: 1fr;
+        gap: 40px;
     }
     
     .menu-item-card {
@@ -1918,6 +2068,15 @@ html, body {
         margin-bottom: 40px !important;
         opacity: 1 !important;
         animation: none !important;
+    }
+    
+    /* All categories layout for print */
+    .all-categories {
+        display: block !important;
+    }
+    
+    .all-categories .menu-category {
+        margin-bottom: 30px !important;
     }
     
     .category-header {
