@@ -44,6 +44,14 @@
 </head>
 
 <body>
+    <!-- Mobile Video Intro -->
+    <div id="mobileVideoIntro" class="mobile-video-intro">
+        <video class="intro-video" autoplay muted playsinline>
+            <source src="/content/videos/healthybrunchclub.mp4" type="video/mp4">
+        </video>
+        <button class="skip-intro" onclick="skipIntro()">Skip →</button>
+    </div>
+
     <!-- Loading Screen -->
     <div class="loading-screen" id="loadingScreen">
         <div class="loading-logo"><img src="content/images/logo.png" width="356" height="194" alt="healthy brunch club logo"/></div>
@@ -125,9 +133,6 @@
             <div class="menu-header">
                 <h2>unsere fein abgestimmte speisekarte</h2>
                 <p>100% bio und mit ganz viel liebe zubereitet</p>
-                <button class="pdf-download-btn" onclick="generateMenuPDF()">
-                    📄 Speisekarte herunterladen
-                </button>
             </div>
 
             <!-- Filter Buttons -->
@@ -137,15 +142,21 @@
 
             <!-- Menu Container -->
             <div id="menuContainer" class="menu-container">
-                <!-- Menu Logo -->
-                <div class="menu-logo">
-                    <img src="content/images/logo.png" alt="healthy brunch club" />
-                </div>
-                
                 <!-- Menu items will be loaded dynamically -->
                 <div class="menu-loading">Die Speisekarte wird geladen...</div>
             </div>
         </section>
+
+        <!-- Dish Detail Modal -->
+        <div id="dishModal" class="dish-modal">
+            <div class="dish-modal-overlay" onclick="closeDishModal()"></div>
+            <div class="dish-modal-content">
+                <button class="dish-modal-close" onclick="closeDishModal()">&times;</button>
+                <div class="dish-modal-body">
+                    <!-- Modal content will be inserted here -->
+                </div>
+            </div>
+        </div>
 
         <!-- Features Section -->
         <section class="features-section" id="features">
@@ -347,13 +358,118 @@
 
     <!-- Load CMS Script -->
     <script src="cms-loader.js"></script>
-    
-    <!-- jsPDF for PDF generation -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
 
     <!-- Scripts -->
     <script>
+        // Check if mobile and show intro video
+        function checkMobileIntro() {
+            const isMobile = window.innerWidth <= 768;
+            const hasSeenIntro = sessionStorage.getItem('hasSeenIntro');
+            const introElement = document.getElementById('mobileVideoIntro');
+            
+            if (isMobile && !hasSeenIntro && introElement) {
+                introElement.style.display = 'flex';
+                // Auto-hide after video ends (assuming ~5 seconds)
+                setTimeout(() => {
+                    skipIntro();
+                }, 5000);
+            } else if (introElement) {
+                introElement.style.display = 'none';
+            }
+        }
+
+        // Skip intro function
+        function skipIntro() {
+            const introElement = document.getElementById('mobileVideoIntro');
+            if (introElement) {
+                introElement.classList.add('fade-out');
+                setTimeout(() => {
+                    introElement.style.display = 'none';
+                    sessionStorage.setItem('hasSeenIntro', 'true');
+                }, 500);
+            }
+        }
+
+        // Call on page load
+        document.addEventListener('DOMContentLoaded', checkMobileIntro);
+
+        // Dish Modal Functions
+        window.openDishModal = function(dishData) {
+            const modal = document.getElementById('dishModal');
+            const modalBody = modal.querySelector('.dish-modal-body');
+            
+            modalBody.innerHTML = `
+                <div class="dish-modal-image">
+                    ${dishData.image ? 
+                        `<img src="${dishData.image}" alt="${dishData.name}" />` : 
+                        `<div class="dish-modal-placeholder">${dishData.icon || '🍽️'}</div>`
+                    }
+                </div>
+                <div class="dish-modal-info">
+                    <h2 class="dish-modal-title">${dishData.name}</h2>
+                    ${dishData.price ? `<div class="dish-modal-price">€${dishData.price}</div>` : ''}
+                    
+                    <div class="dish-modal-description">
+                        ${dishData.description}
+                    </div>
+                    
+                    ${dishData.nutrition ? `
+                        <div class="dish-modal-nutrition">
+                            <h4>Nährwerte</h4>
+                            <div class="nutrition-grid">
+                                ${dishData.nutrition.calories ? `
+                                    <div class="nutrition-item">
+                                        <span class="nutrition-value">${dishData.nutrition.calories}</span>
+                                        <span class="nutrition-label">Kalorien</span>
+                                    </div>
+                                ` : ''}
+                                ${dishData.nutrition.protein ? `
+                                    <div class="nutrition-item">
+                                        <span class="nutrition-value">${dishData.nutrition.protein}</span>
+                                        <span class="nutrition-label">Protein</span>
+                                    </div>
+                                ` : ''}
+                                ${dishData.nutrition.carbs ? `
+                                    <div class="nutrition-item">
+                                        <span class="nutrition-value">${dishData.nutrition.carbs}</span>
+                                        <span class="nutrition-label">Kohlenhydrate</span>
+                                    </div>
+                                ` : ''}
+                                ${dishData.nutrition.fat ? `
+                                    <div class="nutrition-item">
+                                        <span class="nutrition-value">${dishData.nutrition.fat}</span>
+                                        <span class="nutrition-label">Fett</span>
+                                    </div>
+                                ` : ''}
+                            </div>
+                        </div>
+                    ` : ''}
+                    
+                    ${dishData.tags && dishData.tags.length > 0 ? `
+                        <div class="dish-modal-tags">
+                            ${dishData.tags.map(tag => `<span class="modal-tag">${tag}</span>`).join('')}
+                        </div>
+                    ` : ''}
+                </div>
+            `;
+            
+            modal.classList.add('show');
+            document.body.style.overflow = 'hidden';
+        };
+
+        window.closeDishModal = function() {
+            const modal = document.getElementById('dishModal');
+            modal.classList.remove('show');
+            document.body.style.overflow = '';
+        };
+
+        // Close modal with ESC key
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape') {
+                closeDishModal();
+            }
+        });
+
         // Loading Screen
         window.addEventListener('load', function() {
             setTimeout(function() {
@@ -505,87 +621,6 @@
 
         // Log when CMS loader integration completes
         console.log('CMS Integration loaded. Use window.cmsLoader.refresh() to manually refresh content.');
-
-        // PDF Generation Function
-        function generateMenuPDF() {
-            // Show loading state
-            const btn = document.querySelector('.pdf-download-btn');
-            const originalText = btn.innerHTML;
-            btn.innerHTML = '⏳ PDF wird erstellt...';
-            btn.disabled = true;
-
-            // Hide elements we don't want in PDF
-            const filters = document.querySelector('.menu-filters');
-            const eventWindow = document.querySelector('.event-window');
-            const adminBtn = document.querySelector('.admin-edit-btn');
-            const nav = document.querySelector('.nav');
-            const footer = document.querySelector('.footer');
-            
-            if (filters) filters.style.display = 'none';
-            if (eventWindow) eventWindow.style.display = 'none';
-            if (adminBtn) adminBtn.style.display = 'none';
-            if (nav) nav.style.display = 'none';
-            if (footer) footer.style.display = 'none';
-
-            // Use html2canvas to capture the menu
-            const menuContainer = document.getElementById('menuContainer');
-            
-            html2canvas(menuContainer, {
-                scale: 2,
-                useCORS: true,
-                logging: false,
-                backgroundColor: '#FFFEF9'
-            }).then(canvas => {
-                // Create PDF
-                const imgData = canvas.toDataURL('image/png');
-                const pdf = new jsPDF('p', 'mm', 'a4');
-                
-                // Calculate dimensions
-                const imgWidth = 210; // A4 width in mm
-                const pageHeight = 297; // A4 height in mm
-                const imgHeight = canvas.height * imgWidth / canvas.width;
-                let heightLeft = imgHeight;
-                let position = 0;
-
-                // Add first page
-                pdf.addImage(imgData, 'PNG', 0, position, imgWidth, imgHeight);
-                heightLeft -= pageHeight;
-
-                // Add additional pages if needed
-                while (heightLeft >= 0) {
-                    position = heightLeft - imgHeight;
-                    pdf.addPage();
-                    pdf.addImage(imgData, 'PNG', 0, position, imgWidth, imgHeight);
-                    heightLeft -= pageHeight;
-                }
-
-                // Save PDF
-                pdf.save('healthy-brunch-club-speisekarte.pdf');
-
-                // Restore UI
-                if (filters) filters.style.display = '';
-                if (eventWindow) eventWindow.style.display = '';
-                if (adminBtn && adminBtn.classList.contains('show')) adminBtn.style.display = '';
-                if (nav) nav.style.display = '';
-                if (footer) footer.style.display = '';
-                
-                btn.innerHTML = originalText;
-                btn.disabled = false;
-            }).catch(error => {
-                console.error('Error generating PDF:', error);
-                alert('Fehler beim Erstellen der PDF. Bitte versuchen Sie es später erneut.');
-                
-                // Restore UI
-                if (filters) filters.style.display = '';
-                if (eventWindow) eventWindow.style.display = '';
-                if (adminBtn && adminBtn.classList.contains('show')) adminBtn.style.display = '';
-                if (nav) nav.style.display = '';
-                if (footer) footer.style.display = '';
-                
-                btn.innerHTML = originalText;
-                btn.disabled = false;
-            });
-        }
     </script>
 </body>
 </html>
