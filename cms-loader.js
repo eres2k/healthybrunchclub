@@ -1,8 +1,7 @@
-// CMS Loader with 3-Column Layout and Modal Support
-// Supports nutrition values, rich text formatting, images, and modal popups
+// CMS Loader with Compact Menu Design and Image Support
+// Supports nutrition values, rich text formatting, and images
 
 let allMenuCategories = [];
-let allDishesData = {};
 
 document.addEventListener('DOMContentLoaded', function() {
     loadMenuFromCMS();
@@ -80,7 +79,7 @@ function handleFilterClick(e) {
     }
 }
 
-// Display Compact Menu with 3-Column Grid
+// Display Compact Menu with Image Support
 function displayCompactMenu(menuData) {
     const menuContainer = document.getElementById('menuGrid') || document.getElementById('menuContainer');
     
@@ -98,10 +97,10 @@ function displayCompactMenu(menuData) {
         
         return `
             <div class="menu-category" data-category="${category.title.toLowerCase().replace(/\s+/g, '-')}">
-                <div class="category-header">
+                <div class="category-header ${!imageUrl ? 'no-image' : ''}">
                     ${imageUrl ? `
                         <div class="category-image">
-                            <img src="${imageUrl}" alt="${category.title}" loading="lazy" onerror="this.parentElement.style.display='none';">
+                            <img src="${imageUrl}" alt="${category.title}" loading="lazy" onerror="this.parentElement.parentElement.classList.add('no-image'); this.parentElement.style.display='none';">
                         </div>
                     ` : ''}
                     <div class="category-info">
@@ -111,17 +110,7 @@ function displayCompactMenu(menuData) {
                 </div>
                 
                 <div class="menu-items-grid">
-                    ${category.items.map((item, index) => {
-                        // Generate unique ID for this dish
-                        const dishId = `dish-${category.order || 0}-${index}`;
-                        
-                        // Store full dish data
-                        allDishesData[dishId] = {
-                            ...item,
-                            categoryTitle: category.title,
-                            icon: getIconForCategory(category.title)
-                        };
-                        
+                    ${category.items && category.items.length > 0 ? category.items.map((item, index) => {
                         // Handle dish image URL
                         let dishImageUrl = '';
                         if (item.image) {
@@ -129,28 +118,26 @@ function displayCompactMenu(menuData) {
                         }
                         
                         return `
-                        <div class="menu-item-card ${dishImageUrl ? 'has-image' : ''}" onclick="openDishModal('${dishId}')">
+                        <div class="menu-item-card ${dishImageUrl ? 'has-image' : ''}">
                             ${item.special ? '<div class="menu-item-badge">Empfehlung</div>' : ''}
                             
                             ${dishImageUrl ? `
                                 <div class="menu-item-image">
                                     <img src="${dishImageUrl}" alt="${item.name}" loading="lazy">
                                 </div>
-                            ` : `
-                                <div class="menu-item-image">
-                                    <div class="dish-modal-placeholder">${getIconForCategory(category.title)}</div>
-                                </div>
-                            `}
+                            ` : ''}
                             
                             <div class="menu-item-content">
                                 <div class="menu-item-header">
-                                    <h4 class="menu-item-name">${item.name}</h4>
+                                    <h4 class="menu-item-name">${item.name || ''}</h4>
                                     ${item.price ? `<span class="menu-item-price">€${item.price}</span>` : ''}
                                 </div>
                                 
-                                <div class="menu-item-description">
-                                    ${processRichText(item.description, true)}
-                                </div>
+                                ${item.description ? `
+                                    <div class="menu-item-description" id="desc-${category.order}-${index}">
+                                        ${processRichText(item.description)}
+                                    </div>
+                                ` : ''}
                                 
                                 ${item.nutrition ? `
                                     <div class="nutrition-info">
@@ -189,40 +176,15 @@ function displayCompactMenu(menuData) {
                             </div>
                         </div>
                     `;
-                    }).join('')}
+                    }).join('') : '<p style="text-align: center; color: var(--text-medium); font-style: italic;">Keine Gerichte in dieser Kategorie.</p>'}
                 </div>
             </div>
         `;
     }).join('');
 }
 
-// Get icon for category
-function getIconForCategory(categoryTitle) {
-    const icons = {
-        'eggcitements': '🍳',
-        'eggs': '🥚',
-        'hafer dich lieb': '🥣',
-        'avo-lution': '🥑',
-        'avocado': '🥑',
-        'berry good choice': '🫐',
-        'sweet': '🍰',
-        'coffee': '☕',
-        'sip happens': '🥤',
-        'drinks': '🍹',
-        'sets': '🍽️'
-    };
-    
-    const lowerTitle = categoryTitle.toLowerCase();
-    for (const [key, icon] of Object.entries(icons)) {
-        if (lowerTitle.includes(key)) {
-            return icon;
-        }
-    }
-    return '🍴';
-}
-
 // Process rich text from markdown
-function processRichText(text, truncate = false) {
+function processRichText(text) {
     if (!text) return '';
     
     // Convert markdown to HTML
@@ -247,35 +209,8 @@ function processRichText(text, truncate = false) {
     html = html.replace(/^- (.+)$/gm, '<li>$1</li>');
     html = html.replace(/(<li>.*<\/li>)/s, '<ul>$1</ul>');
     
-    // Truncate for card view if needed
-    if (truncate) {
-        // Remove HTML tags for truncation
-        const textOnly = html.replace(/<[^>]*>/g, '');
-        if (textOnly.length > 150) {
-            return textOnly.substring(0, 150) + '...';
-        }
-    }
-    
     return html;
 }
-
-// Open dish modal with full details
-window.openDishModal = function(dishId) {
-    const dishData = allDishesData[dishId];
-    if (!dishData) return;
-    
-    const fullDescription = processRichText(dishData.description, false);
-    
-    window.openDishModal({
-        name: dishData.name,
-        price: dishData.price,
-        image: dishData.image,
-        description: fullDescription,
-        nutrition: dishData.nutrition,
-        tags: dishData.tags,
-        icon: dishData.icon
-    });
-};
 
 // Fallback Menu with image data
 function displayFallbackMenu() {
@@ -363,28 +298,6 @@ function displayFallbackMenu() {
                     special: false
                 }
             ]
-        },
-        {
-            title: "avo-lution",
-            order: 3,
-            image: "/content/images/avocado.jpg",
-            description: "Cremige Avocado-Kreationen für den perfekten Start",
-            items: [
-                {
-                    name: "avocado bowl",
-                    price: "8.90",
-                    image: "/content/images/avo-bowl.jpg",
-                    description: "Eine samtige Kreation aus frisch zerdrückter Avocado\n\n- Veredelt mit fein geriebenem Apfel\n- Gekrönt von zart gerösteten Mandeln\n- Ein belebendes, nahrhaftes Vergnügen",
-                    nutrition: {
-                        calories: "285",
-                        protein: "6g",
-                        carbs: "18g",
-                        fat: "24g"
-                    },
-                    tags: ["vegetarisch", "leicht", "nahrhaft"],
-                    special: false
-                }
-            ]
         }
     ];
     
@@ -406,10 +319,22 @@ async function loadEventsFromCMS() {
         const eventsData = await response.json();
         console.log('Events data loaded:', eventsData);
         
-        displayEvents(eventsData);
+        if (eventsData && eventsData.length > 0) {
+            displayEvents(eventsData);
+        } else {
+            // No events, hide event window
+            const eventWindow = document.getElementById('eventWindow');
+            if (eventWindow) {
+                eventWindow.style.display = 'none';
+            }
+        }
     } catch (error) {
         console.error('Error loading events:', error);
-        displayFallbackEvent();
+        // Hide event window on error
+        const eventWindow = document.getElementById('eventWindow');
+        if (eventWindow) {
+            eventWindow.style.display = 'none';
+        }
     }
 }
 
@@ -418,12 +343,18 @@ function displayEvents(eventsData) {
     const eventWindow = document.getElementById('eventWindow');
     const eventContent = document.getElementById('eventContent');
     
-    if (!eventsData || eventsData.length === 0) {
-        eventWindow.style.display = 'none';
+    if (!eventWindow || !eventContent || !eventsData || eventsData.length === 0) {
+        if (eventWindow) eventWindow.style.display = 'none';
         return;
     }
     
     const nextEvent = eventsData[0];
+    
+    // Check if event has required data
+    if (!nextEvent.title && !nextEvent.artist) {
+        eventWindow.style.display = 'none';
+        return;
+    }
     
     let imageUrl = '';
     if (nextEvent.featuredImage) {
@@ -445,15 +376,15 @@ function displayEvents(eventsData) {
     eventContent.innerHTML = `
         ${imageUrl ? `
             <div class="event-image">
-                <img src="${imageUrl}" alt="${nextEvent.title}" style="width: 100%; height: 100%; object-fit: cover;" loading="lazy" onerror="this.parentElement.style.display='none'">
+                <img src="${imageUrl}" alt="${nextEvent.title || nextEvent.artist || 'Event'}" style="width: 100%; height: 100%; object-fit: cover;" loading="lazy" onerror="this.parentElement.style.display='none'">
             </div>
         ` : ''}
         <div class="event-header" style="${imageUrl ? 'background: none; color: var(--text-dark); padding: 0; margin: 0 0 15px 0;' : ''}">
-            <h3>${nextEvent.title}</h3>
+            <h3>${nextEvent.title || nextEvent.artist || 'Kommende Veranstaltung'}</h3>
             <p style="${imageUrl ? 'color: var(--text-medium);' : ''}">${formattedDate}</p>
         </div>
         <div class="event-details">
-            <p style="margin-bottom: 10px;">${nextEvent.body || ''}</p>
+            ${nextEvent.body || nextEvent.description ? `<p style="margin-bottom: 10px;">${nextEvent.body || nextEvent.description}</p>` : ''}
             
             ${nextEvent.location ? `
                 <strong>📍 Location:</strong>
@@ -479,22 +410,15 @@ function displayEvents(eventsData) {
         ` : ''}
     `;
     
+    // Show event window as collapsed initially
     eventWindow.style.display = 'block';
+    eventWindow.classList.add('collapsed');
+    eventWindow.classList.add('show');
+    const toggleIcon = document.getElementById('toggleIcon');
+    if (toggleIcon) toggleIcon.textContent = '🎵';
 }
 
-// Fallback Event
-function displayFallbackEvent() {
-    const fallbackEvent = [{
-        title: "next monday special",
-        artist: "dj cosmic kitchen",
-        date: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000).toISOString(),
-        description: "erlebe entspannte lounge-klänge während deines brunches!"
-    }];
-    
-    displayEvents(fallbackEvent);
-}
-
-// Manual refresh function
+// Export for global access
 window.cmsLoader = {
     refresh: function() {
         loadMenuFromCMS();
