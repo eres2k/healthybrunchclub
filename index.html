@@ -120,19 +120,20 @@
             </div>
         </section>
 
-        <!-- Classic Menu Section with Updated Design -->
+        <!-- Classic Menu Section with Traditional Design -->
         <section class="menu-section" id="menu">
             <div class="menu-header">
                 <h2>unsere fein abgestimmte speisekarte</h2>
                 <p>100% bio und mit ganz viel liebe zubereitet</p>
             </div>
 
-            <!-- Filter Buttons -->
+            <!-- Filter Buttons with View Toggle -->
             <div class="menu-filters" id="menuFilters">
                 <!-- Filter buttons will be added dynamically by CMS loader -->
+                <!-- View toggle buttons will be added in top-right corner -->
             </div>
 
-            <!-- Menu Container -->
+            <!-- Menu Container - Traditional Layout -->
             <div id="menuContainer" class="menu-container">
                 <!-- Menu items will be loaded dynamically -->
                 <div class="menu-loading">Die Speisekarte wird geladen...</div>
@@ -150,7 +151,7 @@
                 <div class="feature-card">
                     <div class="feature-icon">🌱</div>
                     <h3>100% bio</h3>
-                    <p>alle zutaten stammen von  bio-bauern. frisch, nachhaltig und voller nährstoffe.</p>
+                    <p>alle zutaten stammen von bio-bauern. frisch, nachhaltig und voller nährstoffe.</p>
                 </div>
 
                 <div class="feature-card">
@@ -442,17 +443,16 @@
 
         if (mobileMenuToggle) {
             mobileMenuToggle.addEventListener('click', function() {
-                navLinks.style.display = navLinks.style.display === 'flex' ? 'none' : 'flex';
-                navLinks.style.flexDirection = 'column';
-                navLinks.style.position = 'absolute';
-                navLinks.style.top = '100%';
-                navLinks.style.left = '0';
-                navLinks.style.right = '0';
-                navLinks.style.background = 'white';
-                navLinks.style.padding = '20px';
-                navLinks.style.boxShadow = '0 4px 20px rgba(0,0,0,0.1)';
+                navLinks.classList.toggle('active');
             });
         }
+
+        // Close mobile menu when clicking outside
+        document.addEventListener('click', function(e) {
+            if (!e.target.closest('.nav') && navLinks && navLinks.classList.contains('active')) {
+                navLinks.classList.remove('active');
+            }
+        });
 
         // Intersection Observer for fade-in animations
         const observerOptions = {
@@ -492,7 +492,7 @@
         }
 
         // Log when CMS loader integration completes
-        console.log('CMS Integration loaded. Use window.cmsLoader.refresh() to manually refresh content.');
+        console.log('CMS Integration loaded with PDF export functionality.');
     </script>
 </body>
 </html>
