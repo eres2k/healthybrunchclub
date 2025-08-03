@@ -1,12 +1,125 @@
-// CMS Loader with Compact Menu Design and Image Support
-// Supports nutrition values, rich text formatting, and images
+// CMS Loader with Traditional Menu Design and PDF Export
+// Optimized for mobile display and multi-column layout
 
 let allMenuCategories = [];
+let viewMode = 'traditional'; // 'traditional' or 'columns'
 
 document.addEventListener('DOMContentLoaded', function() {
     loadMenuFromCMS();
     loadEventsFromCMS();
+    initializePDFExport();
+    initializeViewToggle();
 });
+
+// Initialize PDF Export
+function initializePDFExport() {
+    // Add PDF export button if not exists
+    if (!document.getElementById('pdfExportBtn')) {
+        const pdfButton = document.createElement('button');
+        pdfButton.id = 'pdfExportBtn';
+        pdfButton.className = 'pdf-export-btn';
+        pdfButton.innerHTML = '📄 Als PDF speichern';
+        pdfButton.addEventListener('click', exportToPDF);
+        document.body.appendChild(pdfButton);
+    }
+}
+
+// Initialize View Toggle
+function initializeViewToggle() {
+    const filtersContainer = document.getElementById('menuFilters');
+    if (filtersContainer) {
+        // Add view toggle buttons
+        const viewToggle = document.createElement('div');
+        viewToggle.className = 'view-toggle';
+        viewToggle.style.cssText = 'position: absolute; right: 0; top: 0; display: flex; gap: 10px;';
+        
+        const traditionalBtn = document.createElement('button');
+        traditionalBtn.className = 'view-btn active';
+        traditionalBtn.innerHTML = '📋';
+        traditionalBtn.title = 'Traditionelle Ansicht';
+        traditionalBtn.style.cssText = 'background: var(--forest-green); color: white; border: none; padding: 8px 12px; border-radius: 4px; cursor: pointer; font-size: 16px;';
+        traditionalBtn.addEventListener('click', () => setViewMode('traditional'));
+        
+        const columnsBtn = document.createElement('button');
+        columnsBtn.className = 'view-btn';
+        columnsBtn.innerHTML = '📰';
+        columnsBtn.title = 'Spaltenansicht';
+        columnsBtn.style.cssText = 'background: transparent; color: var(--text-medium); border: 1px solid var(--text-medium); padding: 8px 12px; border-radius: 4px; cursor: pointer; font-size: 16px;';
+        columnsBtn.addEventListener('click', () => setViewMode('columns'));
+        
+        viewToggle.appendChild(traditionalBtn);
+        viewToggle.appendChild(columnsBtn);
+        filtersContainer.style.position = 'relative';
+        filtersContainer.appendChild(viewToggle);
+    }
+}
+
+// Set View Mode
+function setViewMode(mode) {
+    viewMode = mode;
+    const menuContainer = document.getElementById('menuGrid') || document.getElementById('menuContainer');
+    
+    // Update button states
+    document.querySelectorAll('.view-btn').forEach(btn => {
+        btn.classList.remove('active');
+        btn.style.background = 'transparent';
+        btn.style.color = 'var(--text-medium)';
+        btn.style.border = '1px solid var(--text-medium)';
+    });
+    
+    const activeBtn = mode === 'traditional' ? 
+        document.querySelector('.view-btn:first-child') : 
+        document.querySelector('.view-btn:last-child');
+    
+    if (activeBtn) {
+        activeBtn.classList.add('active');
+        activeBtn.style.background = 'var(--forest-green)';
+        activeBtn.style.color = 'white';
+        activeBtn.style.border = 'none';
+    }
+    
+    // Toggle layout class
+    if (mode === 'columns') {
+        menuContainer.classList.add('menu-columns-layout');
+    } else {
+        menuContainer.classList.remove('menu-columns-layout');
+    }
+    
+    // Re-render with current filter
+    const activeFilter = document.querySelector('.filter-btn.active');
+    if (activeFilter) {
+        activeFilter.click();
+    }
+}
+
+// Export to PDF
+function exportToPDF() {
+    // Store current state
+    const currentFilter = document.querySelector('.filter-btn.active').getAttribute('data-filter');
+    
+    // Temporarily show all items for PDF
+    displayCompactMenu(allMenuCategories, true);
+    
+    // Add print-specific class
+    document.body.classList.add('printing');
+    
+    // Trigger print
+    window.print();
+    
+    // Restore state after a short delay
+    setTimeout(() => {
+        document.body.classList.remove('printing');
+        // Restore filtered view
+        if (currentFilter === 'all') {
+            displayCompactMenu(allMenuCategories);
+        } else {
+            const filtered = allMenuCategories.filter(category => 
+                category.title.toLowerCase().replace(/\s+/g, '-') === currentFilter
+            );
+            displayCompactMenu(filtered);
+        }
+    }, 100);
+}
 
 // Load Menu from CMS
 async function loadMenuFromCMS() {
@@ -36,8 +149,12 @@ function createFilterButtons(menuData) {
     const filtersContainer = document.getElementById('menuFilters');
     if (!filtersContainer) return;
     
-    // Clear container
+    // Clear container (but keep view toggle)
+    const viewToggle = filtersContainer.querySelector('.view-toggle');
     filtersContainer.innerHTML = '';
+    if (viewToggle) {
+        filtersContainer.appendChild(viewToggle);
+    }
     
     // Add "all" button
     const allBtn = document.createElement('button');
@@ -79,8 +196,8 @@ function handleFilterClick(e) {
     }
 }
 
-// Display Compact Menu with Image Support
-function displayCompactMenu(menuData) {
+// Display Traditional Compact Menu
+function displayCompactMenu(menuData, forPrint = false) {
     const menuContainer = document.getElementById('menuGrid') || document.getElementById('menuContainer');
     
     if (!menuData || menuData.length === 0) {
@@ -88,10 +205,22 @@ function displayCompactMenu(menuData) {
         return;
     }
     
+    // Apply column layout class if in columns mode
+    if (viewMode === 'columns' && !forPrint) {
+        menuContainer.classList.add('menu-columns-layout');
+    } else {
+        menuContainer.classList.remove('menu-columns-layout');
+    }
+    
+    // For print, always use column layout
+    if (forPrint) {
+        menuContainer.classList.add('menu-columns-layout');
+    }
+    
     menuContainer.innerHTML = menuData.map(category => {
         // Handle category image URL
         let imageUrl = '';
-        if (category.image) {
+        if (category.image && !forPrint) { // Don't show images in print
             imageUrl = category.image.startsWith('/') ? category.image : `/${category.image}`;
         }
         
@@ -111,15 +240,15 @@ function displayCompactMenu(menuData) {
                 
                 <div class="menu-items-grid">
                     ${category.items.map((item, index) => {
-                        // Handle dish image URL
+                        // Handle dish image URL - smaller on mobile
                         let dishImageUrl = '';
-                        if (item.image) {
+                        if (item.image && !forPrint) { // Don't show images in print
                             dishImageUrl = item.image.startsWith('/') ? item.image : `/${item.image}`;
                         }
                         
                         return `
                         <div class="menu-item-card ${dishImageUrl ? 'has-image' : ''}">
-                            ${item.special ? '<div class="menu-item-badge">Empfehlung</div>' : ''}
+                            ${item.special && !forPrint ? '<div class="menu-item-badge">Empfehlung</div>' : ''}
                             
                             ${dishImageUrl ? `
                                 <div class="menu-item-image">
@@ -210,7 +339,7 @@ function processRichText(text) {
     return html;
 }
 
-// Fallback Menu with image data
+// Fallback Menu with smaller images
 function displayFallbackMenu() {
     const fallbackMenu = [
         {
@@ -403,4 +532,37 @@ function displayFallbackEvent() {
     }];
     
     displayEvents(fallbackEvent);
+}
+
+// Add CSS for print mode
+const printStyles = `
+<style id="print-styles">
+@media screen {
+    .printing .nav,
+    .printing .hero,
+    .printing .features-section,
+    .printing .contact-section,
+    .printing .footer,
+    .printing .event-window,
+    .printing .admin-edit-btn,
+    .printing .pdf-export-btn {
+        display: none !important;
+    }
+    
+    .printing .menu-section {
+        padding: 0 !important;
+        background: white !important;
+    }
+    
+    .printing #menuContainer {
+        box-shadow: none !important;
+        padding: 20px !important;
+    }
+}
+</style>
+`;
+
+// Add print styles to head
+if (!document.getElementById('print-styles')) {
+    document.head.insertAdjacentHTML('beforeend', printStyles);
 }
