@@ -1,55 +1,12 @@
-// CMS Loader with Traditional Menu Design and PDF Export
-// Default 2-column layout with professional PDF export
+// CMS Loader with Compact Menu Design and Image Support
+// Supports nutrition values, rich text formatting, and images
 
 let allMenuCategories = [];
 
 document.addEventListener('DOMContentLoaded', function() {
     loadMenuFromCMS();
     loadEventsFromCMS();
-    initializePDFExport();
 });
-
-// Initialize PDF Export
-function initializePDFExport() {
-    // Add PDF export button if not exists
-    if (!document.getElementById('pdfExportBtn')) {
-        const pdfButton = document.createElement('button');
-        pdfButton.id = 'pdfExportBtn';
-        pdfButton.className = 'pdf-export-btn';
-        pdfButton.innerHTML = '📄 Menü als PDF öffnen';
-        pdfButton.addEventListener('click', exportToPDF);
-        document.body.appendChild(pdfButton);
-    }
-}
-
-// Export to PDF
-function exportToPDF() {
-    // Store current state
-    const currentFilter = document.querySelector('.filter-btn.active').getAttribute('data-filter');
-    
-    // Temporarily show all items for PDF
-    displayCompactMenu(allMenuCategories, true);
-    
-    // Add print-specific class
-    document.body.classList.add('printing');
-    
-    // Trigger print
-    window.print();
-    
-    // Restore state after a short delay
-    setTimeout(() => {
-        document.body.classList.remove('printing');
-        // Restore filtered view
-        if (currentFilter === 'all') {
-            displayCompactMenu(allMenuCategories);
-        } else {
-            const filtered = allMenuCategories.filter(category => 
-                category.title.toLowerCase().replace(/\s+/g, '-') === currentFilter
-            );
-            displayCompactMenu(filtered);
-        }
-    }, 100);
-}
 
 // Load Menu from CMS
 async function loadMenuFromCMS() {
@@ -122,8 +79,8 @@ function handleFilterClick(e) {
     }
 }
 
-// Display Traditional Compact Menu
-function displayCompactMenu(menuData, forPrint = false) {
+// Display Compact Menu with Image Support
+function displayCompactMenu(menuData) {
     const menuContainer = document.getElementById('menuGrid') || document.getElementById('menuContainer');
     
     if (!menuData || menuData.length === 0) {
@@ -131,10 +88,17 @@ function displayCompactMenu(menuData, forPrint = false) {
         return;
     }
     
-    menuContainer.innerHTML = menuData.map(category => {
+    // Add logo at the top of the menu
+    const logoHtml = `
+        <div class="menu-logo">
+            <img src="/content/images/logo.png" alt="Healthy Brunch Club" />
+        </div>
+    `;
+    
+    menuContainer.innerHTML = logoHtml + menuData.map(category => {
         // Handle category image URL
         let imageUrl = '';
-        if (category.image && !forPrint) { // Don't show images in print
+        if (category.image) {
             imageUrl = category.image.startsWith('/') ? category.image : `/${category.image}`;
         }
         
@@ -154,15 +118,15 @@ function displayCompactMenu(menuData, forPrint = false) {
                 
                 <div class="menu-items-grid">
                     ${category.items.map((item, index) => {
-                        // Handle dish image URL - smaller on mobile
+                        // Handle dish image URL
                         let dishImageUrl = '';
-                        if (item.image && !forPrint) { // Don't show images in print
+                        if (item.image) {
                             dishImageUrl = item.image.startsWith('/') ? item.image : `/${item.image}`;
                         }
                         
                         return `
                         <div class="menu-item-card ${dishImageUrl ? 'has-image' : ''}">
-                            ${item.special && !forPrint ? '<div class="menu-item-badge">Empfehlung</div>' : ''}
+                            ${item.special ? '<div class="menu-item-badge">Empfehlung</div>' : ''}
                             
                             ${dishImageUrl ? `
                                 <div class="menu-item-image">
@@ -253,7 +217,7 @@ function processRichText(text) {
     return html;
 }
 
-// Fallback Menu with smaller images
+// Fallback Menu with image data
 function displayFallbackMenu() {
     const fallbackMenu = [
         {
@@ -446,37 +410,4 @@ function displayFallbackEvent() {
     }];
     
     displayEvents(fallbackEvent);
-}
-
-// Add CSS for print mode
-const printStyles = `
-<style id="print-styles">
-@media screen {
-    .printing .nav,
-    .printing .hero,
-    .printing .features-section,
-    .printing .contact-section,
-    .printing .footer,
-    .printing .event-window,
-    .printing .admin-edit-btn,
-    .printing .pdf-export-btn {
-        display: none !important;
-    }
-    
-    .printing .menu-section {
-        padding: 0 !important;
-        background: white !important;
-    }
-    
-    .printing #menuContainer {
-        box-shadow: none !important;
-        padding: 20px !important;
-    }
-}
-</style>
-`;
-
-// Add print styles to head
-if (!document.getElementById('print-styles')) {
-    document.head.insertAdjacentHTML('beforeend', printStyles);
 }
