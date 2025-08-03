@@ -84,11 +84,14 @@ function displayCompactMenu(menuData) {
     const menuContainer = document.getElementById('menuGrid') || document.getElementById('menuContainer');
     
     if (!menuData || menuData.length === 0) {
-        menuContainer.innerHTML = '<div class="menu-loading">Keine Einträge gefunden.</div>';
+        menuContainer.innerHTML = '<div class="menu-logo"><img src="content/images/logo.png" alt="healthy brunch club" /></div><div class="menu-loading">Keine Einträge gefunden.</div>';
         return;
     }
     
-    menuContainer.innerHTML = menuData.map(category => {
+    // Start with the logo
+    let menuHTML = '<div class="menu-logo"><img src="content/images/logo.png" alt="healthy brunch club" /></div>';
+    
+    menuHTML += menuData.map(category => {
         // Handle category image URL
         let imageUrl = '';
         if (category.image) {
@@ -179,6 +182,8 @@ function displayCompactMenu(menuData) {
             </div>
         `;
     }).join('');
+    
+    menuContainer.innerHTML = menuHTML;
 }
 
 // Process rich text from markdown
@@ -212,6 +217,11 @@ function processRichText(text) {
 
 // Fallback Menu with image data
 function displayFallbackMenu() {
+    const menuContainer = document.getElementById('menuGrid') || document.getElementById('menuContainer');
+    
+    // Add logo first
+    menuContainer.innerHTML = '<div class="menu-logo"><img src="content/images/logo.png" alt="healthy brunch club" /></div>';
+    
     const fallbackMenu = [
         {
             title: "eggcitements",
