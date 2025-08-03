@@ -195,7 +195,7 @@ body {
 }
 
 .logo-img {
-    height: 30px;
+    height: 90px;
     width: auto;
 }
 
@@ -465,7 +465,6 @@ body {
             rgba(250, 245, 238, 1) 100%);
     position: relative;
     min-height: 100vh;
-    text-align: left;
 }
 
 .menu-section::before {
@@ -491,8 +490,8 @@ body {
 #menuContainer,
 #menuGrid,
 .menu-container {
-    max-width: 1200px;
-    margin: 0;
+    max-width: 900px;
+    margin: 0 auto;
     background: #FFFEF9;
     box-shadow: 
         0 0 0 1px rgba(218, 193, 150, 0.2),
@@ -503,15 +502,28 @@ body {
     padding: 60px;
     border-radius: 2px;
     overflow: hidden;
+    text-align: center;
+}
+
+/* Menu Logo */
+.menu-logo {
+    text-align: center;
+    margin-bottom: 40px;
+}
+
+.menu-logo img {
+    width: 200px;
+    height: auto;
+    opacity: 0.8;
 }
 
 #menuContainer::before,
 #menuContainer::after {
-    content: '❦';
+    content: '✦';
     position: absolute;
-    font-size: 24px;
+    font-size: 32px;
     color: var(--taupe);
-    opacity: 0.3;
+    opacity: 0.2;
 }
 
 #menuContainer::before {
@@ -526,31 +538,10 @@ body {
 
 /* Menu Header */
 .menu-header {
-    text-align: left;
+    text-align: center;
     margin-bottom: 50px;
     position: relative;
     z-index: 3;
-    display: flex;
-    align-items: flex-start;
-    gap: 30px;
-}
-
-.menu-logo {
-    flex: 0 0 auto;
-    width: 120px;
-    height: auto;
-    opacity: 0.8;
-    margin-top: 10px;
-}
-
-.menu-logo img {
-    width: 100%;
-    height: auto;
-    object-fit: contain;
-}
-
-.menu-header-content {
-    flex: 1;
 }
 
 .menu-header h2 {
@@ -563,13 +554,13 @@ body {
     text-transform: none;
 }
 
-.menu-header-content::after {
+.menu-header::after {
     content: '';
     display: block;
     width: 80px;
     height: 1px;
     background: var(--taupe);
-    margin: 20px 0;
+    margin: 20px auto;
 }
 
 .menu-header p {
@@ -580,30 +571,41 @@ body {
     font-weight: 300;
 }
 
-/* PDF Download Link */
-.pdf-download {
-    display: inline-block;
-    margin-top: 15px;
+/* PDF Download Button */
+.pdf-download-btn {
+    margin-top: 20px;
+    padding: 12px 24px;
+    background: var(--forest-green);
+    color: white;
+    border: none;
+    border-radius: 4px;
     font-family: var(--font-primary);
     font-size: 14px;
-    color: var(--forest-green);
-    text-decoration: none;
-    border-bottom: 1px solid var(--forest-green);
-    padding-bottom: 2px;
+    font-weight: 400;
+    letter-spacing: 0.5px;
+    cursor: pointer;
     transition: all 0.3s ease;
+    display: inline-block;
 }
 
-.pdf-download:hover {
-    color: var(--taupe);
-    border-bottom-color: var(--taupe);
+.pdf-download-btn:hover {
+    background: var(--taupe);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+.pdf-download-btn:disabled {
+    opacity: 0.7;
+    cursor: not-allowed;
+    transform: none;
 }
 
 /* Filter System */
 .menu-filters {
     display: flex;
-    justify-content: flex-start;
+    justify-content: center;
     gap: 0;
-    margin: 0 0 50px 0;
+    margin: 0 auto 50px;
     max-width: 700px;
     border-bottom: 2px solid var(--taupe);
     position: relative;
@@ -659,6 +661,7 @@ body {
     animation: fadeInUp 0.6s ease forwards;
     position: relative;
     z-index: 2;
+    text-align: center;
 }
 
 .menu-category:nth-child(1) { animation-delay: 0.1s; }
@@ -669,17 +672,17 @@ body {
 
 /* Category Header with Image */
 .category-header {
-    text-align: left;
+    text-align: center;
     margin-bottom: 50px;
     position: relative;
-    display: flex;
-    align-items: center;
-    gap: 30px;
+    padding-top: 80px;
 }
 
 .category-image {
-    position: relative;
-    flex: 0 0 120px;
+    position: absolute;
+    top: 0;
+    left: 50%;
+    transform: translateX(-50%);
     width: 120px;
     height: 120px;
     border-radius: 50%;
@@ -701,26 +704,23 @@ body {
 }
 
 .category-image:hover {
-    transform: scale(1.05);
+    transform: translateX(-50%) scale(1.05);
 }
 
 .category-image:hover img {
     transform: scale(1.1);
 }
 
-.category-info {
-    flex: 1;
-}
-
 .category-header.no-image {
-    padding-top: 0;
+    padding-top: 20px;
 }
 
 .category-header.no-image::before {
     content: '❦';
     position: absolute;
-    top: 0;
-    left: 0;
+    top: 20px;
+    left: 50%;
+    transform: translateX(-50%);
     font-size: 48px;
     color: var(--taupe);
     opacity: 0.3;
@@ -728,7 +728,15 @@ body {
 }
 
 .category-header::after {
-    display: none;
+    content: '';
+    position: absolute;
+    bottom: -25px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 80px;
+    height: 1px;
+    background: var(--taupe);
+    opacity: 0.5;
 }
 
 .category-title {
@@ -740,9 +748,9 @@ body {
     text-transform: capitalize;
     display: inline-block;
     position: relative;
-    padding: 0;
+    padding: 0 30px;
     background: #FFFEF9;
-    margin-top: 0;
+    margin-top: 70px;
 }
 
 .category-header.no-image .category-title {
@@ -762,19 +770,10 @@ body {
 
 /* Menu Items Grid */
 .menu-items-grid {
-    display: grid;
-    grid-template-columns: repeat(2, 1fr);
-    gap: 40px;
-    max-width: 100%;
-    margin: 0;
-    justify-items: stretch;
-    align-items: start;
-}
-
-/* Ensure items don't center when there's only one */
-.menu-items-grid > .menu-item-card {
-    justify-self: stretch;
-    width: 100%;
+    display: block;
+    max-width: 700px;
+    margin: 0 auto;
+    text-align: left;
 }
 
 /* Menu Item Card */
@@ -789,8 +788,6 @@ body {
     display: flex;
     gap: 20px;
     align-items: flex-start;
-    width: 100%;
-    justify-self: start;
 }
 
 .menu-item-card:last-child {
@@ -1420,28 +1417,6 @@ body {
    RESPONSIVE DESIGN
    =============================================== */
 
-/* Large Desktop View */
-@media (min-width: 1400px) {
-    #menuContainer,
-    #menuGrid {
-        max-width: 1400px;
-    }
-    
-    .menu-items-grid {
-        grid-template-columns: repeat(3, 1fr);
-    }
-    
-    /* Keep items left-aligned even with 3 columns */
-    .menu-items-grid > .menu-item-card:only-child {
-        grid-column: 1;
-    }
-    
-    .menu-items-grid > .menu-item-card:first-child:nth-last-child(2),
-    .menu-items-grid > .menu-item-card:first-child:nth-last-child(2) ~ .menu-item-card {
-        grid-column: span 1;
-    }
-}
-
 /* Tablet View */
 @media (max-width: 1024px) {
     .nav-container {
@@ -1455,10 +1430,6 @@ body {
     #menuContainer,
     #menuGrid {
         padding: 50px 40px;
-    }
-    
-    .menu-items-grid {
-        grid-template-columns: 1fr;
     }
     
     .features-grid {
@@ -1484,7 +1455,7 @@ body {
     }
     
     .logo-img {
-        height: 40px;
+        height: 60px;
     }
     
     .nav-links {
@@ -1556,18 +1527,6 @@ body {
             0 3px 15px rgba(0, 0, 0, 0.06);
     }
     
-    .menu-header {
-        flex-direction: column;
-        align-items: center;
-        text-align: center;
-    }
-    
-    .menu-logo {
-        width: 80px;
-        margin-top: 0;
-        margin-bottom: 20px;
-    }
-    
     .menu-header h2 {
         font-size: 28px;
         letter-spacing: 0.3px;
@@ -1576,10 +1535,6 @@ body {
     
     .menu-header p {
         font-size: 15px;
-    }
-    
-    .menu-header-content::after {
-        margin: 20px auto;
     }
     
     .menu-filters {
@@ -1606,28 +1561,22 @@ body {
     }
     
     /* Category Mobile */
-    .category-header {
-        flex-direction: column;
-        text-align: center;
-        gap: 20px;
-    }
-    
     .category-image {
-        flex: 0 0 100px;
         width: 100px;
         height: 100px;
     }
     
     .category-title {
+        margin-top: 60px;
         font-size: 24px;
         padding: 0 20px;
     }
     
-    /* Menu Items Mobile */
-    .menu-items-grid {
-        grid-template-columns: 1fr;
+    .category-header::after {
+        bottom: -20px;
     }
     
+    /* Menu Items Mobile */
     .menu-item-card {
         flex-direction: column;
         gap: 15px;
@@ -1683,6 +1632,21 @@ body {
     #menuContainer::before,
     #menuContainer::after {
         display: none;
+    }
+    
+    /* Menu Logo Mobile */
+    .menu-logo {
+        margin-bottom: 30px;
+    }
+    
+    .menu-logo img {
+        width: 150px;
+    }
+    
+    /* PDF Button Mobile */
+    .pdf-download-btn {
+        font-size: 13px;
+        padding: 10px 20px;
     }
     
     /* Features Mobile */
@@ -1956,7 +1920,7 @@ html, body {
     }
     
     .menu-items-grid {
-        grid-template-columns: 1fr;
+        grid-template-columns: repeat(2, 1fr);
     }
     
     .features-grid {
@@ -1979,20 +1943,13 @@ html, body {
     .features-section,
     .contact-section,
     .footer,
-    .scroll-indicator,
-    .pdf-download,
-    .menu-logo {
+    .scroll-indicator {
         display: none !important;
     }
     
     .menu-section {
         background: white !important;
         padding: 0 !important;
-    }
-    
-    .menu-header {
-        flex-direction: column !important;
-        align-items: flex-start !important;
     }
     
     .menu-filters {
@@ -2010,19 +1967,10 @@ html, body {
         page-break-inside: avoid;
     }
     
-    .menu-items-grid {
-        grid-template-columns: repeat(2, 1fr) !important;
-    }
-    
     .menu-item-card {
         page-break-inside: avoid;
         border-bottom: 1px solid #ddd;
         padding: 10px 0;
-    }
-    
-    .category-header {
-        flex-direction: row !important;
-        text-align: left !important;
     }
     
     .category-image,
