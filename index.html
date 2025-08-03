@@ -123,14 +123,11 @@
         <!-- Classic Menu Section with Updated Design -->
         <section class="menu-section" id="menu">
             <div class="menu-header">
-                <div class="menu-logo">
-                    <img src="content/images/logo.png" alt="healthy brunch club">
-                </div>
-                <div class="menu-header-content">
-                    <h2>unsere fein abgestimmte speisekarte</h2>
-                    <p>100% bio und mit ganz viel liebe zubereitet</p>
-                    <a href="/menu.pdf" class="pdf-download" download>📄 PDF herunterladen</a>
-                </div>
+                <h2>unsere fein abgestimmte speisekarte</h2>
+                <p>100% bio und mit ganz viel liebe zubereitet</p>
+                <button class="pdf-download-btn" onclick="generateMenuPDF()">
+                    📄 Speisekarte herunterladen
+                </button>
             </div>
 
             <!-- Filter Buttons -->
@@ -140,6 +137,11 @@
 
             <!-- Menu Container -->
             <div id="menuContainer" class="menu-container">
+                <!-- Menu Logo -->
+                <div class="menu-logo">
+                    <img src="content/images/logo.png" alt="healthy brunch club" />
+                </div>
+                
                 <!-- Menu items will be loaded dynamically -->
                 <div class="menu-loading">Die Speisekarte wird geladen...</div>
             </div>
@@ -345,6 +347,10 @@
 
     <!-- Load CMS Script -->
     <script src="cms-loader.js"></script>
+    
+    <!-- jsPDF for PDF generation -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
 
     <!-- Scripts -->
     <script>
@@ -499,6 +505,87 @@
 
         // Log when CMS loader integration completes
         console.log('CMS Integration loaded. Use window.cmsLoader.refresh() to manually refresh content.');
+
+        // PDF Generation Function
+        function generateMenuPDF() {
+            // Show loading state
+            const btn = document.querySelector('.pdf-download-btn');
+            const originalText = btn.innerHTML;
+            btn.innerHTML = '⏳ PDF wird erstellt...';
+            btn.disabled = true;
+
+            // Hide elements we don't want in PDF
+            const filters = document.querySelector('.menu-filters');
+            const eventWindow = document.querySelector('.event-window');
+            const adminBtn = document.querySelector('.admin-edit-btn');
+            const nav = document.querySelector('.nav');
+            const footer = document.querySelector('.footer');
+            
+            if (filters) filters.style.display = 'none';
+            if (eventWindow) eventWindow.style.display = 'none';
+            if (adminBtn) adminBtn.style.display = 'none';
+            if (nav) nav.style.display = 'none';
+            if (footer) footer.style.display = 'none';
+
+            // Use html2canvas to capture the menu
+            const menuContainer = document.getElementById('menuContainer');
+            
+            html2canvas(menuContainer, {
+                scale: 2,
+                useCORS: true,
+                logging: false,
+                backgroundColor: '#FFFEF9'
+            }).then(canvas => {
+                // Create PDF
+                const imgData = canvas.toDataURL('image/png');
+                const pdf = new jsPDF('p', 'mm', 'a4');
+                
+                // Calculate dimensions
+                const imgWidth = 210; // A4 width in mm
+                const pageHeight = 297; // A4 height in mm
+                const imgHeight = canvas.height * imgWidth / canvas.width;
+                let heightLeft = imgHeight;
+                let position = 0;
+
+                // Add first page
+                pdf.addImage(imgData, 'PNG', 0, position, imgWidth, imgHeight);
+                heightLeft -= pageHeight;
+
+                // Add additional pages if needed
+                while (heightLeft >= 0) {
+                    position = heightLeft - imgHeight;
+                    pdf.addPage();
+                    pdf.addImage(imgData, 'PNG', 0, position, imgWidth, imgHeight);
+                    heightLeft -= pageHeight;
+                }
+
+                // Save PDF
+                pdf.save('healthy-brunch-club-speisekarte.pdf');
+
+                // Restore UI
+                if (filters) filters.style.display = '';
+                if (eventWindow) eventWindow.style.display = '';
+                if (adminBtn && adminBtn.classList.contains('show')) adminBtn.style.display = '';
+                if (nav) nav.style.display = '';
+                if (footer) footer.style.display = '';
+                
+                btn.innerHTML = originalText;
+                btn.disabled = false;
+            }).catch(error => {
+                console.error('Error generating PDF:', error);
+                alert('Fehler beim Erstellen der PDF. Bitte versuchen Sie es später erneut.');
+                
+                // Restore UI
+                if (filters) filters.style.display = '';
+                if (eventWindow) eventWindow.style.display = '';
+                if (adminBtn && adminBtn.classList.contains('show')) adminBtn.style.display = '';
+                if (nav) nav.style.display = '';
+                if (footer) footer.style.display = '';
+                
+                btn.innerHTML = originalText;
+                btn.disabled = false;
+            });
+        }
     </script>
 </body>
 </html>
