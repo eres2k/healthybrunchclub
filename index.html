@@ -9,15 +9,15 @@
     <meta name="author" content="healthybrunchclub">
     <link rel="canonical" href="https://healthybrunchclub.at/">
 
-   <!-- Style -->
-   <link rel="stylesheet" href="mystyle.css">
+    <!-- Style -->
+    <link rel="stylesheet" href="mystyle.css">
 	
-    
     <!-- Favicon 
     <link rel="icon" type="image/x-icon" href="/favicon.ico">
     <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
     <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
     -->
+    
     <!-- Netlify Identity Widget -->
     <script type="text/javascript" src="https://identity.netlify.com/v1/netlify-identity-widget.js"></script>
     
@@ -37,12 +37,10 @@
     <link rel="apple-touch-icon" href="/apple-touch-icon.png">
     <link rel="manifest" href="/manifest.json">
    
-    <!-- Google Font Link -->
+    <!-- Updated Google Font Links for Classic Menu Typography -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400..700;1,400..700&display=swap" rel="stylesheet">
-    
-
+    <link href="https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400..700;1,400..700&family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=Crimson+Text:ital,wght@0,400;0,600;1,400&family=Lato:wght@300;400&display=swap" rel="stylesheet">
 </head>
 
 <body>
@@ -75,16 +73,14 @@
     </nav>
 
     <!-- Floating Event Window -->
-
-<div class="event-window collapsed" id="eventWindow" style="display: block;">
-    <button class="event-toggle" onclick="toggleEventWindow()">
-        <span id="toggleIcon">🎵</span>
-    </button>
-    <div class="event-content" id="eventContent">
-        <!-- Event content will be loaded dynamically -->
+    <div class="event-window collapsed" id="eventWindow" style="display: block;">
+        <button class="event-toggle" onclick="toggleEventWindow()">
+            <span id="toggleIcon">🎵</span>
+        </button>
+        <div class="event-content" id="eventContent">
+            <!-- Event content will be loaded dynamically -->
+        </div>
     </div>
-</div>
-
 
     <!-- Admin Edit Button -->
     <a href="/admin" class="admin-edit-btn" id="adminEditBtn">
@@ -94,7 +90,6 @@
     <!-- Main Content -->
     <main id="main-content">
         <!-- Hero Section -->
-    
         <section class="hero" id="home">
             <!-- Full-screen video background -->
             <div class="hero-video-background">
@@ -125,35 +120,24 @@
             </div>
         </section>
 
-    <!-- Menu Section with Filter System -->
+        <!-- Classic Menu Section with Updated Design -->
+        <section class="menu-section" id="menu">
+            <div class="menu-header">
+                <h2>unsere fein abgestimmte speisekarte</h2>
+                <p>100% bio und mit ganz viel liebe zubereitet</p>
+            </div>
 
-<!-- Compact Menu Section with Nutrition Support -->
-<section class="menu-section" id="menu">
-    <div class="menu-header">
-        <h2>unsere fein abgestimmte speisekarte</h2>
-        <p>100% bio und mit ganz viel liebe zubereitet</p>
-    </div>
+            <!-- Filter Buttons -->
+            <div class="menu-filters" id="menuFilters">
+                <!-- Filter buttons will be added dynamically by CMS loader -->
+            </div>
 
-    <!-- Filter Buttons -->
-    <div class="menu-filters" id="menuFilters">
-        <!-- Filter buttons will be added dynamically by CMS loader -->
-    </div>
-
-    <!-- Menu Container - Changed ID for compatibility -->
-    <div id="menuContainer" class="menu-container">
-        <!-- Menu items will be loaded dynamically -->
-        <div class="menu-loading">Die Speisekarte wird geladen...</div>
-    </div>
-</section>
-
-<!-- Update the script section to use menuContainer instead of menuGrid -->
-<script>
-    // Update the CMS loader to use the new container ID
-    document.addEventListener('DOMContentLoaded', function() {
-        // The cms-loader.js will now look for 'menuContainer' 
-        // and apply the compact design automatically
-    });
-</script>
+            <!-- Menu Container -->
+            <div id="menuContainer" class="menu-container">
+                <!-- Menu items will be loaded dynamically -->
+                <div class="menu-loading">Die Speisekarte wird geladen...</div>
+            </div>
+        </section>
 
         <!-- Features Section -->
         <section class="features-section" id="features">
@@ -366,24 +350,24 @@
         });
 
         // Toggle Event Window
-       function toggleEventWindow() {
-    const eventWindow = document.getElementById('eventWindow');
-    const toggleIcon = document.getElementById('toggleIcon');
-    
-    eventWindow.classList.toggle('collapsed');
-    toggleIcon.textContent = eventWindow.classList.contains('collapsed') ? '🎵' : '−';
-}
+        function toggleEventWindow() {
+            const eventWindow = document.getElementById('eventWindow');
+            const toggleIcon = document.getElementById('toggleIcon');
+            
+            eventWindow.classList.toggle('collapsed');
+            toggleIcon.textContent = eventWindow.classList.contains('collapsed') ? '🎵' : '−';
+        }
 
-// Show event window on page load (but keep it collapsed)
-document.addEventListener('DOMContentLoaded', function() {
-    // Make sure event window is visible but collapsed
-    const eventWindow = document.getElementById('eventWindow');
-    if (eventWindow) {
-        eventWindow.style.display = 'block';
-        eventWindow.classList.add('collapsed');
-        document.getElementById('toggleIcon').textContent = '🎵';
-    }
-});
+        // Show event window on page load (but keep it collapsed)
+        document.addEventListener('DOMContentLoaded', function() {
+            // Make sure event window is visible but collapsed
+            const eventWindow = document.getElementById('eventWindow');
+            if (eventWindow) {
+                eventWindow.style.display = 'block';
+                eventWindow.classList.add('collapsed');
+                document.getElementById('toggleIcon').textContent = '🎵';
+            }
+        });
 
         // Show Admin Button for logged in users
         if (window.netlifyIdentity) {
@@ -402,22 +386,22 @@ document.addEventListener('DOMContentLoaded', function() {
             });
         }
 
-function fillMondayDates() {
-    const dateSelect = document.getElementById('date');
-    
-    // Create a specific date for Sunday, July 3rd, 2025
-    const specificSunday = new Date(2025, 7, 10); // Month is 0-indexed, so 6 = July
-    
-    const option = document.createElement('option');
-    option.value = specificSunday.toISOString().split('T')[0];
-    option.textContent = specificSunday.toLocaleDateString('de-AT', { 
-        weekday: 'long', 
-        day: 'numeric', 
-        month: 'long' 
-    });
-    
-    dateSelect.appendChild(option);
-}
+        function fillMondayDates() {
+            const dateSelect = document.getElementById('date');
+            
+            // Create a specific date for Sunday, July 3rd, 2025
+            const specificSunday = new Date(2025, 7, 10); // Month is 0-indexed, so 6 = July
+            
+            const option = document.createElement('option');
+            option.value = specificSunday.toISOString().split('T')[0];
+            option.textContent = specificSunday.toLocaleDateString('de-AT', { 
+                weekday: 'long', 
+                day: 'numeric', 
+                month: 'long' 
+            });
+            
+            dateSelect.appendChild(option);
+        }
 
         // Call function when page loads
         document.addEventListener('DOMContentLoaded', fillMondayDates);
