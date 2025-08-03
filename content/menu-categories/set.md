@@ -14,6 +14,7 @@ items:
       * p﻿remium porridge
       * f﻿risch gepressten saft deiner wahl
     price: "16.90"
+    image: /content/images/image-3-.jpg
   - tags:
       - herzhaft
       - gesund
@@ -25,6 +26,7 @@ items:
       * e﻿inen chaga tee mit adaptogene
       * a﻿vocado bread  +pilze (1.50€) +speck (1.90€) +ei (1.40€)
       * h﻿afer dich lieb
+    image: /content/images/image-4-.jpg
   - tags:
       - herzhaft
       - gesund
@@ -36,4 +38,5 @@ items:
       * e﻿in reishi cappuccino mit collagen
       * e﻿in eggcitement deiner wahl (aufpreis zweites ei 1.40€)
       * berry good choice
+    image: /content/images/image-5-.jpg
 ---
