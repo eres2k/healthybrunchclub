@@ -425,3 +425,185 @@ window.cmsLoader = {
         loadEventsFromCMS();
     }
 };
+
+// Store current menu data globally for modal access
+let currentMenuData = [];
+
+// Update the existing displayCompactMenu function to store data and add click handlers
+const originalDisplayCompactMenu = displayCompactMenu;
+displayCompactMenu = function(menuData) {
+    // Store menu data globally
+    currentMenuData = menuData;
+    
+    // Call original function
+    originalDisplayCompactMenu(menuData);
+    
+    // Add click handlers after a short delay to ensure DOM is ready
+    setTimeout(() => {
+        attachDishClickHandlers();
+    }, 100);
+};
+
+// Attach click handlers to menu items
+function attachDishClickHandlers() {
+    document.querySelectorAll('.menu-item-card').forEach((card, index) => {
+        card.style.cursor = 'pointer';
+        card.addEventListener('click', function(e) {
+            // Prevent click on tags or buttons from opening modal
+            if (e.target.classList.contains('menu-tag') || e.target.tagName === 'BUTTON') {
+                return;
+            }
+            
+            // Find which category and item this is
+            const categoryElement = card.closest('.menu-category');
+            const categoryTitle = categoryElement.querySelector('.category-title').textContent;
+            
+            // Find the category in our data
+            const category = currentMenuData.find(cat => cat.title === categoryTitle);
+            if (!category) return;
+            
+            // Find the item index within this category
+            const categoryCards = categoryElement.querySelectorAll('.menu-item-card');
+            const itemIndex = Array.from(categoryCards).indexOf(card);
+            
+            if (itemIndex !== -1 && category.items[itemIndex]) {
+                openDishModal(category.items[itemIndex], category);
+            }
+        });
+    });
+}
+
+// Open dish modal with data
+function openDishModal(dish, category) {
+    const modal = document.getElementById('dishModal');
+    if (!modal) return;
+    
+    // Populate basic info
+    document.getElementById('dishModalName').textContent = dish.name || '';
+    document.getElementById('dishModalPrice').textContent = dish.price ? `€${dish.price}` : '';
+    
+    // Handle image
+    const modalImage = document.getElementById('dishModalImage');
+    const imageSection = modalImage.closest('.dish-modal-image-section');
+    
+    if (dish.image) {
+        let imageUrl = dish.image.startsWith('/') ? dish.image : `/${dish.image}`;
+        modalImage.src = imageUrl;
+        modalImage.alt = dish.name;
+        modalImage.style.display = 'block';
+        imageSection.classList.remove('no-image');
+    } else {
+        modalImage.style.display = 'none';
+        imageSection.classList.add('no-image');
+    }
+    
+    // Handle badge
+    const badge = document.getElementById('dishModalBadge');
+    if (dish.special) {
+        badge.style.display = 'inline-block';
+    } else {
+        badge.style.display = 'none';
+    }
+    
+    // Handle description with rich text
+    const description = document.getElementById('dishModalDescription');
+    description.innerHTML = processRichText(dish.description || '');
+    
+    // Handle nutrition
+    if (dish.nutrition) {
+        populateNutritionTable(dish.nutrition);
+        document.getElementById('dishModalNutrition').style.display = 'block';
+    } else {
+        document.getElementById('dishModalNutrition').style.display = 'none';
+    }
+    
+    // Handle tags
+    const tagsContainer = document.getElementById('dishModalTags');
+    tagsContainer.innerHTML = '';
+    if (dish.tags && dish.tags.length > 0) {
+        dish.tags.forEach(tag => {
+            const tagSpan = document.createElement('span');
+            tagSpan.className = 'menu-tag';
+            tagSpan.textContent = tag;
+            tagsContainer.appendChild(tagSpan);
+        });
+    }
+    
+    // Show modal
+    modal.classList.add('show');
+    document.body.style.overflow = 'hidden'; // Prevent background scrolling
+}
+
+// Populate nutrition table with calculated percentages
+function populateNutritionTable(nutrition) {
+    // Daily recommended values (based on 2000 kcal diet)
+    const dailyValues = {
+        calories: 2000,
+        protein: 50, // grams
+        carbs: 300, // grams
+        fat: 65 // grams
+    };
+    
+    // Update calories
+    const calories = parseInt(nutrition.calories) || 0;
+    document.getElementById('nutritionCalories').textContent = calories ? `${calories} kcal` : '-';
+    document.getElementById('nutritionCaloriesPercent').textContent = calories ? 
+        `${Math.round((calories / dailyValues.calories) * 100)}%` : '-';
+    
+    // Update protein
+    const protein = parseFloat(nutrition.protein) || 0;
+    document.getElementById('nutritionProtein').textContent = nutrition.protein || '-';
+    document.getElementById('nutritionProteinPercent').textContent = protein ? 
+        `${Math.round((protein / dailyValues.protein) * 100)}%` : '-';
+    
+    // Update carbs
+    const carbs = parseFloat(nutrition.carbs) || 0;
+    document.getElementById('nutritionCarbs').textContent = nutrition.carbs || '-';
+    document.getElementById('nutritionCarbsPercent').textContent = carbs ? 
+        `${Math.round((carbs / dailyValues.carbs) * 100)}%` : '-';
+    
+    // Update fat
+    const fat = parseFloat(nutrition.fat) || 0;
+    document.getElementById('nutritionFat').textContent = nutrition.fat || '-';
+    document.getElementById('nutritionFatPercent').textContent = fat ? 
+        `${Math.round((fat / dailyValues.fat) * 100)}%` : '-';
+}
+
+// Close dish modal
+function closeDishModal() {
+    const modal = document.getElementById('dishModal');
+    modal.classList.remove('show');
+    document.body.style.overflow = ''; // Re-enable background scrolling
+}
+
+// Scroll to reservation section
+function scrollToReservation() {
+    closeDishModal();
+    const reservationSection = document.getElementById('contact');
+    if (reservationSection) {
+        reservationSection.scrollIntoView({ behavior: 'smooth' });
+    }
+}
+
+// Close modal on background click
+document.addEventListener('DOMContentLoaded', function() {
+    const modal = document.getElementById('dishModal');
+    if (modal) {
+        modal.addEventListener('click', function(e) {
+            if (e.target === modal) {
+                closeDishModal();
+            }
+        });
+    }
+    
+    // Close modal on ESC key
+    document.addEventListener('keydown', function(e) {
+        if (e.key === 'Escape' && modal.classList.contains('show')) {
+            closeDishModal();
+        }
+    });
+});
+
+// Make functions globally available
+window.closeDishModal = closeDishModal;
+window.scrollToReservation = scrollToReservation;
