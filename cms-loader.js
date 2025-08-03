@@ -1,5 +1,5 @@
-// CMS Loader with Compact Menu Design
-// Supports nutrition values and rich text formatting
+// CMS Loader with Compact Menu Design and Image Support
+// Supports nutrition values, rich text formatting, and images
 
 let allMenuCategories = [];
 
@@ -79,7 +79,7 @@ function handleFilterClick(e) {
     }
 }
 
-// Display Compact Menu
+// Display Compact Menu with Image Support
 function displayCompactMenu(menuData) {
     const menuContainer = document.getElementById('menuGrid') || document.getElementById('menuContainer');
     
@@ -89,7 +89,7 @@ function displayCompactMenu(menuData) {
     }
     
     menuContainer.innerHTML = menuData.map(category => {
-        // Handle image URL
+        // Handle category image URL
         let imageUrl = '';
         if (category.image) {
             imageUrl = category.image.startsWith('/') ? category.image : `/${category.image}`;
@@ -97,10 +97,10 @@ function displayCompactMenu(menuData) {
         
         return `
             <div class="menu-category" data-category="${category.title.toLowerCase().replace(/\s+/g, '-')}">
-                <div class="category-header">
+                <div class="category-header ${!imageUrl ? 'no-image' : ''}">
                     ${imageUrl ? `
                         <div class="category-image">
-                            <img src="${imageUrl}" alt="${category.title}" loading="lazy" onerror="this.parentElement.style.display='none'">
+                            <img src="${imageUrl}" alt="${category.title}" loading="lazy" onerror="this.parentElement.parentElement.classList.add('no-image'); this.parentElement.style.display='none';">
                         </div>
                     ` : ''}
                     <div class="category-info">
@@ -110,66 +110,75 @@ function displayCompactMenu(menuData) {
                 </div>
                 
                 <div class="menu-items-grid">
-                    ${category.items.map((item, index) => `
-                        <div class="menu-item-card">
+                    ${category.items.map((item, index) => {
+                        // Handle dish image URL
+                        let dishImageUrl = '';
+                        if (item.image) {
+                            dishImageUrl = item.image.startsWith('/') ? item.image : `/${item.image}`;
+                        }
+                        
+                        return `
+                        <div class="menu-item-card ${dishImageUrl ? 'has-image' : ''}">
                             ${item.special ? '<div class="menu-item-badge">Empfehlung</div>' : ''}
                             
-                            <div class="menu-item-header">
-                                <h4 class="menu-item-name">${item.name}</h4>
-                                ${item.price ? `<span class="menu-item-price">€${item.price}</span>` : ''}
-                            </div>
-                            
-                            <div class="menu-item-description" id="desc-${category.order}-${index}">
-                                ${processRichText(item.description)}
-                            </div>
-                            
-                            <button class="read-more-btn" onclick="toggleDescription('desc-${category.order}-${index}', this)">
-                                Mehr lesen
-                            </button>
-                            
-                            ${item.nutrition ? `
-                                <div class="nutrition-info">
-                                    ${item.nutrition.calories ? `
-                                        <div class="nutrition-item">
-                                            <span class="nutrition-value">${item.nutrition.calories}</span>
-                                            <span class="nutrition-label">kcal</span>
-                                        </div>
-                                    ` : ''}
-                                    ${item.nutrition.protein ? `
-                                        <div class="nutrition-item">
-                                            <span class="nutrition-value">${item.nutrition.protein}</span>
-                                            <span class="nutrition-label">Protein</span>
-                                        </div>
-                                    ` : ''}
-                                    ${item.nutrition.carbs ? `
-                                        <div class="nutrition-item">
-                                            <span class="nutrition-value">${item.nutrition.carbs}</span>
-                                            <span class="nutrition-label">Kohlenh.</span>
-                                        </div>
-                                    ` : ''}
-                                    ${item.nutrition.fat ? `
-                                        <div class="nutrition-item">
-                                            <span class="nutrition-value">${item.nutrition.fat}</span>
-                                            <span class="nutrition-label">Fett</span>
-                                        </div>
-                                    ` : ''}
+                            ${dishImageUrl ? `
+                                <div class="menu-item-image">
+                                    <img src="${dishImageUrl}" alt="${item.name}" loading="lazy">
                                 </div>
                             ` : ''}
                             
-                            ${item.tags && item.tags.length > 0 ? `
-                                <div class="menu-item-tags">
-                                    ${item.tags.map(tag => `<span class="menu-tag">${tag}</span>`).join('')}
+                            <div class="menu-item-content">
+                                <div class="menu-item-header">
+                                    <h4 class="menu-item-name">${item.name}</h4>
+                                    ${item.price ? `<span class="menu-item-price">€${item.price}</span>` : ''}
                                 </div>
-                            ` : ''}
+                                
+                                <div class="menu-item-description" id="desc-${category.order}-${index}">
+                                    ${processRichText(item.description)}
+                                </div>
+                                
+                                ${item.nutrition ? `
+                                    <div class="nutrition-info">
+                                        ${item.nutrition.calories ? `
+                                            <div class="nutrition-item">
+                                                <span class="nutrition-value">${item.nutrition.calories}</span>
+                                                <span class="nutrition-label">kcal</span>
+                                            </div>
+                                        ` : ''}
+                                        ${item.nutrition.protein ? `
+                                            <div class="nutrition-item">
+                                                <span class="nutrition-value">${item.nutrition.protein}</span>
+                                                <span class="nutrition-label">Protein</span>
+                                            </div>
+                                        ` : ''}
+                                        ${item.nutrition.carbs ? `
+                                            <div class="nutrition-item">
+                                                <span class="nutrition-value">${item.nutrition.carbs}</span>
+                                                <span class="nutrition-label">Kohlenh.</span>
+                                            </div>
+                                        ` : ''}
+                                        ${item.nutrition.fat ? `
+                                            <div class="nutrition-item">
+                                                <span class="nutrition-value">${item.nutrition.fat}</span>
+                                                <span class="nutrition-label">Fett</span>
+                                            </div>
+                                        ` : ''}
+                                    </div>
+                                ` : ''}
+                                
+                                ${item.tags && item.tags.length > 0 ? `
+                                    <div class="menu-item-tags">
+                                        ${item.tags.map(tag => `<span class="menu-tag">${tag}</span>`).join('')}
+                                    </div>
+                                ` : ''}
+                            </div>
                         </div>
-                    `).join('')}
+                    `;
+                    }).join('')}
                 </div>
             </div>
         `;
     }).join('');
-    
-    // Initialize read more buttons after content is loaded
-    setTimeout(initializeReadMoreButtons, 100);
 }
 
 // Process rich text from markdown
@@ -201,28 +210,7 @@ function processRichText(text) {
     return html;
 }
 
-// Initialize read more buttons
-function initializeReadMoreButtons() {
-    document.querySelectorAll('.menu-item-description').forEach(desc => {
-        const btn = desc.nextElementSibling;
-        if (btn && btn.classList.contains('read-more-btn')) {
-            if (desc.scrollHeight > desc.clientHeight + 5) {
-                btn.classList.add('show');
-            } else {
-                btn.classList.remove('show');
-            }
-        }
-    });
-}
-
-// Toggle description expansion
-window.toggleDescription = function(id, button) {
-    const desc = document.getElementById(id);
-    desc.classList.toggle('expanded');
-    button.textContent = desc.classList.contains('expanded') ? 'Weniger' : 'Mehr lesen';
-}
-
-// Fallback Menu with nutrition data
+// Fallback Menu with image data
 function displayFallbackMenu() {
     const fallbackMenu = [
         {
@@ -234,6 +222,7 @@ function displayFallbackMenu() {
                 {
                     name: "eggs any style",
                     price: "12.90",
+                    image: "/content/images/eggs-any-style.jpg",
                     description: "Wähle zwischen **Spiegelei**, **pochiert** oder **Rührei**\n\n- Serviert auf Süßkartoffel- und Avocadoscheiben\n- Mit sautierten Champignons oder Shiitake-Pilzen\n- Garniert mit frischem Rucola, Sprossen und Kresse",
                     nutrition: {
                         calories: "320",
@@ -260,6 +249,7 @@ function displayFallbackMenu() {
                 {
                     name: "beggs enedict",
                     price: "14.90",
+                    image: "/content/images/eggs-benedict.jpg",
                     description: "Pochierte Bio-Eier auf Sauerteigbrot mit cremiger Avocado-Hollandaise\n\n*Wähle deine Beilage:*\n- Bio-Schinken\n- Räucherlachs\n- Gegrilltes Gemüse",
                     nutrition: {
                         calories: "420",
@@ -281,6 +271,7 @@ function displayFallbackMenu() {
                 {
                     name: "premium-porridge",
                     price: "9.90",
+                    image: "/content/images/premium-porridge.jpg",
                     description: "Ein wärmender Genuss aus zarten **Bio-Haferflocken**\n\nVerfeinert mit:\n- Hanf- und Chiasamen\n- Kokosflocken und geriebenem Apfel\n- Ceylon-Zimt\n- Geröstete Mandeln und frische Beeren",
                     nutrition: {
                         calories: "380",
@@ -313,7 +304,7 @@ function displayFallbackMenu() {
     createFilterButtons(fallbackMenu);
 }
 
-// Load Events from CMS (unchanged)
+// Load Events from CMS
 async function loadEventsFromCMS() {
     try {
         console.log('Loading events from CMS...');
@@ -333,7 +324,7 @@ async function loadEventsFromCMS() {
     }
 }
 
-// Display Events (unchanged)
+// Display Events
 function displayEvents(eventsData) {
     const eventWindow = document.getElementById('eventWindow');
     const eventContent = document.getElementById('eventContent');
@@ -402,7 +393,7 @@ function displayEvents(eventsData) {
     eventWindow.style.display = 'block';
 }
 
-// Fallback Event (unchanged)
+// Fallback Event
 function displayFallbackEvent() {
     const fallbackEvent = [{
         title: "next monday special",
