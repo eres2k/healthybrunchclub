@@ -22,7 +22,7 @@ async function loadMenuFromCMS() {
         console.log('Menu data loaded:', menuData);
         
         allMenuCategories = menuData;
-        displayCompactMenu(menuData, false);
+        displayCompactMenu(menuData, false); // false = all categories view
         createFilterButtons(menuData);
         // Add PDF export button on initial load
         addPDFExportButton();
