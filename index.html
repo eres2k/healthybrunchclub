@@ -545,5 +545,75 @@
         // Log when CMS loader integration completes
         console.log('CMS Integration loaded. Use window.cmsLoader.refresh() to manually refresh content.');
     </script>
+<!-- Dish Detail Modal -->
+<div id="dishModal" class="dish-modal">
+    <div class="dish-modal-content">
+        <button class="dish-modal-close" onclick="closeDishModal()">&times;</button>
+        
+        <div class="dish-modal-body">
+            <div class="dish-modal-image-section">
+                <img id="dishModalImage" src="" alt="" class="dish-modal-image">
+            </div>
+            
+            <div class="dish-modal-info-section">
+                <div class="dish-modal-header">
+                    <h2 id="dishModalName" class="dish-modal-name"></h2>
+                    <span id="dishModalPrice" class="dish-modal-price"></span>
+                </div>
+                
+                <div id="dishModalBadge" class="dish-modal-badge" style="display: none;">
+                    <span>Chef's Empfehlung</span>
+                </div>
+                
+                <div id="dishModalDescription" class="dish-modal-description"></div>
+                
+                <div id="dishModalNutrition" class="dish-modal-nutrition">
+                    <h3>Nährwerte pro Portion</h3>
+                    <table class="nutrition-table">
+                        <thead>
+                            <tr>
+                                <th>Nährstoff</th>
+                                <th>Menge</th>
+                                <th>% Tagesbedarf*</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>Energie</td>
+                                <td id="nutritionCalories">-</td>
+                                <td id="nutritionCaloriesPercent">-</td>
+                            </tr>
+                            <tr>
+                                <td>Eiweiß</td>
+                                <td id="nutritionProtein">-</td>
+                                <td id="nutritionProteinPercent">-</td>
+                            </tr>
+                            <tr>
+                                <td>Kohlenhydrate</td>
+                                <td id="nutritionCarbs">-</td>
+                                <td id="nutritionCarbsPercent">-</td>
+                            </tr>
+                            <tr>
+                                <td>Fett</td>
+                                <td id="nutritionFat">-</td>
+                                <td id="nutritionFatPercent">-</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    <p class="nutrition-disclaimer">*Referenzmenge für einen durchschnittlichen Erwachsenen (8.400 kJ/2.000 kcal)</p>
+                </div>
+                
+                <div id="dishModalTags" class="dish-modal-tags"></div>
+                
+                <button class="dish-modal-reserve-btn" onclick="scrollToReservation()">
+                    Tisch reservieren
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+	
 </body>
 </html>
+
