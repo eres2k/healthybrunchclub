@@ -88,14 +88,7 @@ function displayCompactMenu(menuData) {
         return;
     }
     
-    // Add logo at the top of the menu
-    const logoHtml = `
-        <div class="menu-logo">
-            <img src="/content/images/logo.png" alt="Healthy Brunch Club" />
-        </div>
-    `;
-    
-    menuContainer.innerHTML = logoHtml + menuData.map(category => {
+    menuContainer.innerHTML = menuData.map(category => {
         // Handle category image URL
         let imageUrl = '';
         if (category.image) {
