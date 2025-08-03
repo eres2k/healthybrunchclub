@@ -2,6 +2,14 @@
 title: eggcitements
 order: 1
 image: /content/images/dsc00161.jpg
+description: 'Stell dir vor, Eier, die nicht nur braten, sondern tanzen! Unsere
+  "Eggcitements"-Kategorie ist der ultimative Eier-Party-Hit – frisch, fluffig
+  und voller Überraschungen. Ob du ein Spiegelei-Fan bist, das wie ein
+  Sonnenaufgang grinst, oder ein pochiertes Ei, das elegant auf Avocado thront:
+  Hier wird jedes Ei zum Helden deines Tellers. Vegetarisch, proteinreich und so
+  gesund, dass sogar dein Fitness-Tracker applaudiert. Und hey, wenn du denkst,
+  Eier sind langweilig – warte, bis du unsere Omelette-Kreation siehst, die mit
+  Speckwürfeln rockt oder mit Käse schmilzt!'
 items:
   - tags:
       - vegetarisch
