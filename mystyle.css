@@ -501,7 +501,23 @@ body {
     z-index: 2;
     padding: 40px;
     border-radius: 2px;
-    overflow: hidden;
+    overflow: visible;
+}
+
+/* Menu Logo */
+.menu-logo {
+    position: absolute;
+    top: 20px;
+    left: 20px;
+    width: 100px;
+    height: auto;
+    opacity: 0.3;
+    z-index: 1;
+}
+
+.menu-logo img {
+    width: 100%;
+    height: auto;
 }
 
 #menuContainer::before,
@@ -515,7 +531,7 @@ body {
 
 #menuContainer::before {
     top: 15px;
-    left: 15px;
+    left: 130px;
 }
 
 #menuContainer::after {
@@ -577,17 +593,48 @@ body {
     align-items: center;
     gap: 8px;
     text-decoration: none;
+    z-index: 10;
 }
 
 .pdf-download-btn:hover {
     background: var(--taupe);
     transform: translateY(-2px);
     box-shadow: var(--soft-shadow);
+    color: white;
 }
 
 .pdf-download-btn::before {
     content: '📄';
     font-size: 16px;
+}
+
+@media (max-width: 768px) {
+    .menu-logo {
+        position: static;
+        margin: 0 auto 20px;
+        width: 80px;
+        opacity: 0.5;
+    }
+    
+    .pdf-download-btn {
+        position: static;
+        margin: 0 auto 20px;
+        width: auto;
+        justify-content: center;
+        display: inline-flex;
+    }
+    
+    #menuContainer {
+        text-align: center;
+    }
+    
+    #menuContainer > * {
+        text-align: left;
+    }
+    
+    #menuContainer::before {
+        display: none;
+    }
 }
 
 /* Filter System - Always Visible */
@@ -654,9 +701,6 @@ body {
     animation: none;
     position: relative;
     z-index: 2;
-    columns: 3;
-    column-gap: 30px;
-    column-rule: 1px dotted rgba(218, 193, 150, 0.3);
 }
 
 .menu-category[style*="display: none"] {
@@ -669,7 +713,6 @@ body {
     margin-bottom: 35px;
     position: relative;
     padding-top: 60px;
-    column-span: all;
     break-inside: avoid;
 }
 
@@ -766,7 +809,10 @@ body {
 /* Menu Items Grid - 3 COLUMNS */
 .menu-items-grid {
     display: block;
-    column-span: all;
+    margin-top: 20px;
+    columns: 3;
+    column-gap: 30px;
+    column-rule: 1px dotted rgba(218, 193, 150, 0.3);
 }
 
 /* Menu Item Card - COMPACT */
@@ -779,8 +825,12 @@ body {
     position: relative;
     transition: all 0.3s ease;
     break-inside: avoid;
-    margin-bottom: 15px;
+    -webkit-column-break-inside: avoid;
     page-break-inside: avoid;
+    margin-bottom: 15px;
+    cursor: pointer;
+    display: inline-block;
+    width: 100%;
 }
 
 .menu-item-card:last-child {
@@ -789,7 +839,7 @@ body {
 
 .menu-item-card:hover {
     background: rgba(245, 240, 232, 0.3);
-    transform: none;
+    transform: translateY(-2px);
     padding-left: 8px;
     padding-right: 8px;
     margin-left: -8px;
@@ -1420,28 +1470,49 @@ body {
     text-align: center;
 }
 
-.popup-nutrition-grid {
-    display: grid;
-    grid-template-columns: repeat(2, 1fr);
-    gap: 15px;
-}
-
-.popup-nutrition-item {
-    display: flex;
-    justify-content: space-between;
-    padding: 10px;
+.popup-nutrition-table {
+    width: 100%;
+    border-collapse: collapse;
     background: white;
-    border-radius: 6px;
+    border-radius: 8px;
+    overflow: hidden;
 }
 
-.popup-nutrition-label {
-    color: var(--text-medium);
+.popup-nutrition-table th,
+.popup-nutrition-table td {
+    padding: 10px 15px;
+    text-align: left;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+}
+
+.popup-nutrition-table th {
+    background: var(--forest-green);
+    color: white;
+    font-weight: 500;
     font-size: 14px;
 }
 
-.popup-nutrition-value {
+.popup-nutrition-table td {
+    font-size: 14px;
+}
+
+.popup-nutrition-table tr:last-child td {
+    border-bottom: none;
+}
+
+.popup-nutrition-table td:nth-child(2),
+.popup-nutrition-table td:nth-child(3) {
+    text-align: center;
     font-weight: 600;
     color: var(--forest-green);
+}
+
+.popup-nutrition-reference {
+    font-size: 12px;
+    color: var(--text-medium);
+    text-align: center;
+    margin-top: 10px;
+    font-style: italic;
 }
 
 .popup-tags {
@@ -1593,6 +1664,11 @@ body {
         column-gap: 25px;
     }
     
+    .menu-items-grid {
+        columns: 2;
+        column-gap: 25px;
+    }
+    
     .features-grid {
         grid-template-columns: repeat(2, 1fr);
         gap: 30px;
@@ -1725,6 +1801,11 @@ body {
     
     /* Category Mobile */
     .menu-category {
+        columns: 1;
+        column-gap: 0;
+    }
+    
+    .menu-items-grid {
         columns: 1;
         column-gap: 0;
     }
@@ -2079,7 +2160,7 @@ html, body {
         font-size: 28px;
     }
     
-    .menu-category {
+    .menu-items-grid {
         columns: 2;
     }
     
@@ -2125,6 +2206,9 @@ html, body {
     
     .menu-category {
         page-break-inside: avoid;
+    }
+    
+    .menu-items-grid {
         columns: 3;
     }
     
