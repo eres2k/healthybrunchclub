@@ -271,16 +271,20 @@ function createDishModal() {
         <div class="dish-modal-content">
             <button class="modal-close" onclick="closeDishModal()" aria-label="Schließen">&times;</button>
             <div class="modal-body">
-                <div class="modal-image-container" id="modalImageContainer"></div>
-                <div class="modal-header">
-                    <h3 class="modal-dish-name" id="modalDishName"></h3>
-                    <div class="modal-dish-price" id="modalDishPrice"></div>
+                <div class="modal-left-column">
+                    <div class="modal-image-container" id="modalImageContainer"></div>
+                    <div class="modal-header">
+                        <h3 class="modal-dish-name" id="modalDishName"></h3>
+                        <div class="modal-dish-price" id="modalDishPrice"></div>
+                    </div>
+                    <div class="modal-description" id="modalDescription"></div>
+                    <div class="modal-tags" id="modalTags"></div>
                 </div>
-                <div class="modal-description" id="modalDescription"></div>
-                <div class="modal-tags" id="modalTags"></div>
-                <div class="nutrition-table-container" id="nutritionTableContainer"></div>
-                <div class="modal-cta">
-                    <a href="#contact" class="modal-reserve-btn" onclick="closeDishModal()">Tisch reservieren</a>
+                <div class="modal-right-column">
+                    <div class="nutrition-container" id="nutritionContainer"></div>
+                    <div class="modal-cta">
+                        <a href="#contact" class="modal-reserve-btn" onclick="closeDishModal()">Tisch reservieren</a>
+                    </div>
                 </div>
             </div>
         </div>
@@ -316,8 +320,15 @@ function populateDishModal(item) {
     document.getElementById('modalDishName').textContent = item.name;
     document.getElementById('modalDishPrice').textContent = item.price ? `€${item.price}` : '';
     
-    // Set description with full rich text
-    document.getElementById('modalDescription').innerHTML = processRichText(item.description);
+    // Set description with truncated text for compact display
+    const descriptionEl = document.getElementById('modalDescription');
+    const fullDescription = processRichText(item.description);
+    // Truncate description for modal to fit without scrolling
+    const tempDiv = document.createElement('div');
+    tempDiv.innerHTML = fullDescription;
+    const plainText = tempDiv.textContent || tempDiv.innerText || '';
+    const truncatedText = plainText.length > 150 ? plainText.substring(0, 150) + '...' : plainText;
+    descriptionEl.textContent = truncatedText;
     
     // Set tags
     const tagsContainer = document.getElementById('modalTags');
@@ -330,52 +341,46 @@ function populateDishModal(item) {
         tagsContainer.style.display = 'none';
     }
     
-    // Set nutrition table
-    const nutritionContainer = document.getElementById('nutritionTableContainer');
+    // Set nutrition in compact grid format
+    const nutritionContainer = document.getElementById('nutritionContainer');
     if (item.nutrition && hasNutritionData(item.nutrition)) {
-        nutritionContainer.innerHTML = `
-            <h4 class="nutrition-table-title">Nährwerte pro Portion</h4>
-            <table class="nutrition-table">
-                <thead>
-                    <tr>
-                        <th>Nährstoff</th>
-                        <th>Menge</th>
-                        <th style="text-align: right;">% Tagesbedarf*</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    ${item.nutrition.calories ? `
-                    <tr>
-                        <td>Energie</td>
-                        <td>${item.nutrition.calories} kcal</td>
-                        <td style="text-align: right;">${calculateDailyPercent(item.nutrition.calories, 2000)}%</td>
-                    </tr>
-                    ` : ''}
-                    ${item.nutrition.protein ? `
-                    <tr>
-                        <td>Eiweiß</td>
-                        <td>${item.nutrition.protein}</td>
-                        <td style="text-align: right;">${calculateDailyPercent(item.nutrition.protein, 50)}%</td>
-                    </tr>
-                    ` : ''}
-                    ${item.nutrition.carbs ? `
-                    <tr>
-                        <td>Kohlenhydrate</td>
-                        <td>${item.nutrition.carbs}</td>
-                        <td style="text-align: right;">${calculateDailyPercent(item.nutrition.carbs, 260)}%</td>
-                    </tr>
-                    ` : ''}
-                    ${item.nutrition.fat ? `
-                    <tr>
-                        <td>Fett</td>
-                        <td>${item.nutrition.fat}</td>
-                        <td style="text-align: right;">${calculateDailyPercent(item.nutrition.fat, 70)}%</td>
-                    </tr>
-                    ` : ''}
-                </tbody>
-            </table>
-            <p class="nutrition-note">*Referenzmenge für einen durchschnittlichen Erwachsenen (8.400 kJ/2.000 kcal)</p>
-        `;
+        let nutritionHTML = '<div class="nutrition-grid">';
+        
+        if (item.nutrition.calories) {
+            nutritionHTML += `
+                <div class="nutrition-grid-item">
+                    <span class="nutrition-grid-value">${item.nutrition.calories}</span>
+                    <span class="nutrition-grid-label">Kalorien</span>
+                </div>
+            `;
+        }
+        if (item.nutrition.protein) {
+            nutritionHTML += `
+                <div class="nutrition-grid-item">
+                    <span class="nutrition-grid-value">${item.nutrition.protein}</span>
+                    <span class="nutrition-grid-label">Eiweiß</span>
+                </div>
+            `;
+        }
+        if (item.nutrition.carbs) {
+            nutritionHTML += `
+                <div class="nutrition-grid-item">
+                    <span class="nutrition-grid-value">${item.nutrition.carbs}</span>
+                    <span class="nutrition-grid-label">Kohlenhydrate</span>
+                </div>
+            `;
+        }
+        if (item.nutrition.fat) {
+            nutritionHTML += `
+                <div class="nutrition-grid-item">
+                    <span class="nutrition-grid-value">${item.nutrition.fat}</span>
+                    <span class="nutrition-grid-label">Fett</span>
+                </div>
+            `;
+        }
+        
+        nutritionHTML += '</div>';
+        nutritionContainer.innerHTML = nutritionHTML;
         nutritionContainer.style.display = 'block';
     } else {
         nutritionContainer.style.display = 'none';
