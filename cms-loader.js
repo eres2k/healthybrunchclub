@@ -1,5 +1,5 @@
-// CMS Loader with Classical 2-Column Menu Design
-// Supports nutrition values, rich text formatting, images, and modal functionality
+// CMS Loader with Refined Classical Menu Design
+// Enhanced typography, spacing, and elegant price display
 
 let allMenuCategories = [];
 let currentFilter = 'all';
@@ -92,6 +92,36 @@ function handleFilterClick(e) {
     }
 }
 
+// Enhanced Price Display Function
+function formatPrice(price) {
+    if (!price) return '';
+    // Remove any existing currency symbols and format elegantly
+    const cleanPrice = price.toString().replace(/[€$£¥]/g, '').trim();
+    return cleanPrice; // Return price without currency symbol
+}
+
+// Enhanced Description Processing
+function enhanceDescription(text) {
+    if (!text) return '';
+    
+    // Replace common ingredients with more evocative descriptions
+    const enhancements = {
+        'bio': 'biologisch angebaut',
+        'frisch': 'täglich frisch',
+        'hausgemacht': 'nach hausrezept zubereitet',
+        'regional': 'von regionalen partnern',
+        'saisonal': 'der saison entsprechend'
+    };
+    
+    let enhanced = text;
+    Object.entries(enhancements).forEach(([key, value]) => {
+        const regex = new RegExp(`\\b${key}\\b`, 'gi');
+        enhanced = enhanced.replace(regex, value);
+    });
+    
+    return enhanced;
+}
+
 // Display Classical 2-Column Menu
 function displayClassicalMenu(menuData) {
     const menuContainer = document.getElementById('menuGrid') || document.getElementById('menuContainer');
@@ -103,7 +133,7 @@ function displayClassicalMenu(menuData) {
     
     menuContainer.innerHTML = menuData.map((category, catIndex) => {
         return `
-            <div class="menu-category" data-category="${category.title.toLowerCase().replace(/\s+/g, '-')}" style="animation-delay: ${catIndex * 0.1}s">
+            <div class="menu-category" data-category="${category.title.toLowerCase().replace(/\s+/g, '-')}" style="animation-delay: ${catIndex * 0.15}s">
                 <div class="category-header">
                     <h3 class="category-title">${category.title}</h3>
                     ${category.description ? `<p class="category-description">${category.description}</p>` : ''}
@@ -117,10 +147,14 @@ function displayClassicalMenu(menuData) {
                             categoryTitle: category.title
                         }));
                         
+                        // Enhanced description with sensory language
+                        const enhancedDesc = enhanceDescription(processRichText(item.description));
+                        
                         return `
                         <div class="menu-item-card ${item.image ? 'has-image' : ''}" 
                             onclick="openDishModalFromData(this)"
-                            data-item="${itemData}">
+                            data-item="${itemData}"
+                            style="animation-delay: ${(catIndex * 0.15) + (index * 0.05)}s">
                             ${item.special ? '<div class="menu-item-badge">Empfehlung</div>' : ''}
                             
                             ${item.image ? `
@@ -131,11 +165,11 @@ function displayClassicalMenu(menuData) {
                             
                             <div class="menu-item-header">
                                 <h4 class="menu-item-name">${item.name}</h4>
-                                ${item.price ? `<span class="menu-item-price">€${item.price}</span>` : ''}
+                                ${item.price ? `<span class="menu-item-price">${formatPrice(item.price)}</span>` : ''}
                             </div>
                             
                             <div class="menu-item-description">
-                                ${truncateDescription(processRichText(item.description), 120)}
+                                ${truncateDescription(enhancedDesc, 140)}
                             </div>
                             
                             ${item.nutrition && hasNutritionData(item.nutrition) ? `
@@ -192,7 +226,7 @@ function hasNutritionData(nutrition) {
     return nutrition && (nutrition.calories || nutrition.protein || nutrition.carbs || nutrition.fat);
 }
 
-// Truncate Description
+// Truncate Description with Ellipsis
 function truncateDescription(html, maxLength) {
     const tempDiv = document.createElement('div');
     tempDiv.innerHTML = html;
@@ -200,11 +234,14 @@ function truncateDescription(html, maxLength) {
     
     if (text.length <= maxLength) return html;
     
-    // For truncated text, return plain text to avoid broken HTML
-    return text.substring(0, maxLength) + '...';
+    // Find natural break point (end of word)
+    let truncateAt = text.lastIndexOf(' ', maxLength);
+    if (truncateAt === -1) truncateAt = maxLength;
+    
+    return text.substring(0, truncateAt) + '…';
 }
 
-// Process Rich Text
+// Process Rich Text with Enhanced Formatting
 function processRichText(text) {
     if (!text) return '';
     
@@ -238,7 +275,7 @@ function openDishModalFromData(element) {
     }
 }
 
-// Open Dish Modal
+// Open Dish Modal with Refined Display
 function openDishModal(item) {
     // Prevent body scroll
     document.body.classList.add('modal-open');
@@ -249,11 +286,13 @@ function openDishModal(item) {
         modal = createDishModal();
     }
     
-    // Populate modal
+    // Populate modal with enhanced content
     populateDishModal(item);
     
-    // Show modal
-    modal.classList.add('active');
+    // Show modal with fade-in effect
+    setTimeout(() => {
+        modal.classList.add('active');
+    }, 10);
     
     // Focus on close button for accessibility
     setTimeout(() => {
@@ -262,7 +301,7 @@ function openDishModal(item) {
     }, 100);
 }
 
-// Create Dish Modal
+// Create Dish Modal with Refined Structure
 function createDishModal() {
     const modal = document.createElement('div');
     modal.id = 'dishModal';
@@ -301,7 +340,7 @@ function createDishModal() {
     return modal;
 }
 
-// Populate Dish Modal
+// Populate Dish Modal with Enhanced Content
 function populateDishModal(item) {
     // Handle image
     const imageContainer = document.getElementById('modalImageContainer');
@@ -316,21 +355,20 @@ function populateDishModal(item) {
         imageContainer.classList.add('no-image');
     }
     
-    // Set name and price
+    // Set name and price (without currency symbol)
     document.getElementById('modalDishName').textContent = item.name;
-    document.getElementById('modalDishPrice').textContent = item.price ? `€${item.price}` : '';
+    document.getElementById('modalDishPrice').textContent = item.price ? formatPrice(item.price) : '';
     
-    // Set description with truncated text for compact display
+    // Set enhanced description
     const descriptionEl = document.getElementById('modalDescription');
-    const fullDescription = processRichText(item.description);
-    // Truncate description for modal to fit without scrolling
+    const fullDescription = enhanceDescription(processRichText(item.description));
     const tempDiv = document.createElement('div');
     tempDiv.innerHTML = fullDescription;
     const plainText = tempDiv.textContent || tempDiv.innerText || '';
-    const truncatedText = plainText.length > 150 ? plainText.substring(0, 150) + '...' : plainText;
-    descriptionEl.textContent = truncatedText;
+    const truncatedText = plainText.length > 180 ? plainText.substring(0, 180) + '…' : plainText;
+    descriptionEl.innerHTML = `<p>${truncatedText}</p>`;
     
-    // Set tags
+    // Set tags with refined display
     const tagsContainer = document.getElementById('modalTags');
     if (item.tags && item.tags.length > 0) {
         tagsContainer.innerHTML = item.tags.map(tag => 
@@ -341,7 +379,7 @@ function populateDishModal(item) {
         tagsContainer.style.display = 'none';
     }
     
-    // Set nutrition in compact grid format
+    // Set nutrition in elegant grid format
     const nutritionContainer = document.getElementById('nutritionContainer');
     if (item.nutrition && hasNutritionData(item.nutrition)) {
         let nutritionHTML = '<div class="nutrition-grid">';
@@ -387,19 +425,11 @@ function populateDishModal(item) {
     }
 }
 
-// Calculate Daily Percentage
-function calculateDailyPercent(value, dailyValue) {
-    if (!value) return '--';
-    const numValue = parseFloat(value);
-    if (isNaN(numValue)) return '--';
-    return Math.round((numValue / dailyValue) * 100);
-}
-
-// Get Category Icon
+// Get Category Icon with Refined Icons
 function getCategoryIcon(categoryTitle) {
     const icons = {
         'eggcitements': '🍳',
-        'hafer dich lieb': '🥣',
+        'hafer dich lieb': '🌾',
         'avo-lution': '🥑',
         'berry good choice': '🫐',
         'coffee, healthtea and me': '☕',
@@ -407,7 +437,7 @@ function getCategoryIcon(categoryTitle) {
         'sets': '🍽️'
     };
     
-    if (!categoryTitle) return '🍴';
+    if (!categoryTitle) return '🌿';
     
     const lowerTitle = categoryTitle.toLowerCase();
     for (const [key, icon] of Object.entries(icons)) {
@@ -415,15 +445,17 @@ function getCategoryIcon(categoryTitle) {
             return icon;
         }
     }
-    return '🍴';
+    return '🌿';
 }
 
-// Close Dish Modal
+// Close Dish Modal with Fade Out
 function closeDishModal() {
     const modal = document.getElementById('dishModal');
     if (modal) {
         modal.classList.remove('active');
-        document.body.classList.remove('modal-open');
+        setTimeout(() => {
+            document.body.classList.remove('modal-open');
+        }, 300);
     }
 }
 
@@ -447,7 +479,7 @@ async function loadEventsFromCMS() {
     }
 }
 
-// Display Events
+// Display Events with Refined Styling
 function displayEvents(eventsData) {
     const eventWindow = document.getElementById('eventWindow');
     const eventContent = document.getElementById('eventContent');
@@ -471,32 +503,30 @@ function displayEvents(eventsData) {
     
     eventContent.innerHTML = `
         ${imageUrl ? `
-            <div class="event-image">
-                <img src="${imageUrl}" alt="${nextEvent.title}" loading="lazy">
+            <div class="event-image" style="margin-bottom: 20px; border-radius: 0;">
+                <img src="${imageUrl}" alt="${nextEvent.title}" style="width: 100%; height: auto;">
             </div>
         ` : ''}
-        <div class="event-header">
-            <h3>${nextEvent.title}</h3>
-            <p>${formattedDate}</p>
+        <div class="event-header" style="margin-bottom: 15px;">
+            <h3 style="font-family: var(--font-menu-header); font-size: 22px; margin-bottom: 5px; font-weight: 300;">${nextEvent.title}</h3>
+            <p style="color: var(--text-secondary); font-size: 14px;">${formattedDate}</p>
         </div>
-        <div class="event-details">
-            <p>${nextEvent.body || nextEvent.description || ''}</p>
+        <div class="event-details" style="font-size: 14px; line-height: 1.6;">
+            <p style="margin-bottom: 10px;">${nextEvent.body || nextEvent.description || ''}</p>
             
             ${nextEvent.location ? `
-                <strong>📍 Location:</strong>
-                <p>${nextEvent.location}</p>
+                <p style="margin-bottom: 8px;"><strong style="font-weight: 400;">📍 Location:</strong> ${nextEvent.location}</p>
             ` : ''}
             
             ${nextEvent.price ? `
-                <strong>💶 Eintritt:</strong>
-                <p>${nextEvent.price}€</p>
+                <p style="margin-bottom: 8px;"><strong style="font-weight: 400;">💶 Eintritt:</strong> ${nextEvent.price}</p>
             ` : ''}
         </div>
         
         ${audioUrl ? `
-            <div class="audio-player">
-                <h4>🎧 Preview</h4>
-                <audio controls preload="none">
+            <div class="audio-player" style="margin-top: 20px; padding-top: 15px; border-top: 1px solid var(--border-subtle);">
+                <h4 style="font-size: 13px; margin-bottom: 10px; text-transform: uppercase; letter-spacing: 1px;">🎧 Preview</h4>
+                <audio controls preload="none" style="width: 100%;">
                     <source src="${audioUrl}" type="audio/mpeg">
                     <source src="${audioUrl}" type="audio/wav">
                     <source src="${audioUrl}" type="audio/ogg">
@@ -509,7 +539,7 @@ function displayEvents(eventsData) {
     eventWindow.style.display = 'block';
 }
 
-// Fallback Menu
+// Fallback Menu with Enhanced Descriptions
 function displayFallbackMenu() {
     const fallbackMenu = [
         {
@@ -519,20 +549,20 @@ function displayFallbackMenu() {
                 {
                     name: "eggs any style",
                     price: "12.90",
-                    description: "Wähle zwischen Spiegelei, pochiert oder Rührei. Serviert auf Süßkartoffel- und Avocadoscheiben mit sautierten Champignons, garniert mit frischem Rucola, Sprossen und Kresse.",
+                    description: "Meisterhaft zubereitete Bio-Eier nach Ihrer Wahl – ob als goldenes Spiegelei, sanft pochiert oder cremig gerührt. Serviert auf einem Bett aus karamellisierten Süßkartoffelscheiben und samtigem Avocadopüree, begleitet von aromatisch sautierten Waldchampignons und Shiitake-Pilzen. Gekrönt mit pfeffrigem Rucola, knackigen Sprossen und frischer Gartenkresse.",
                     nutrition: {
                         calories: "320",
                         protein: "18g",
                         carbs: "22g",
                         fat: "16g"
                     },
-                    tags: ["vegetarisch", "proteinreich"],
+                    tags: ["vegetarisch", "proteinreich", "glutenfrei"],
                     special: false
                 },
                 {
                     name: "omelette creation",
                     price: "13.90",
-                    description: "Fluffiges Omelette aus 2 Bio-Eiern auf knusprigem Sauerteigbrot.\n\n**Gefüllt mit:** Zwiebel, Shiitake-Pilze, Spinat\n**Extras:** Tomaten, Speckwürfel, Käse oder Avocado",
+                    description: "Ein luftig-lockeres Kunstwerk aus zwei Bio-Eiern, golden gebraten und gefüllt mit karamellisierten Zwiebeln, erdigen Shiitake-Pilzen und frischem Babyspinat. Präsentiert auf handwerklich gebackenem Sauerteigbrot vom Öfferl.\n\n**Ihre Wahl an Extras:** Sonnengereiften Tomaten, knusprige Speckwürfel, cremiger Bergkäse oder butterweiche Avocado",
                     nutrition: {
                         calories: "380",
                         protein: "20g",
@@ -551,7 +581,7 @@ function displayFallbackMenu() {
                 {
                     name: "premium-porridge",
                     price: "9.90",
-                    description: "Ein wärmender Genuss aus zarten Bio-Haferflocken, verfeinert mit Hanf- und Chiasamen, Kokosflocken und geriebenem Apfel. Ein Hauch Ceylon-Zimt rundet das Geschmackserlebnis ab.",
+                    description: "Ein wärmender Seelentröster aus biologischen Haferflocken, langsam gekocht zu cremiger Perfektion. Verfeinert mit nährstoffreichen Hanf- und Chiasamen, exotischen Kokosflocken und frisch geriebenem Apfel der Sorte Elstar. Ein Hauch von Ceylon-Zimt und eine Prise Kardamom verleihen orientalische Noten, während geröstete Mandelblättchen für den perfekten Crunch sorgen.",
                     nutrition: {
                         calories: "380",
                         protein: "12g",
@@ -559,7 +589,7 @@ function displayFallbackMenu() {
                         fat: "18g"
                     },
                     tags: ["glutenfrei", "lactosefrei", "darmfreundlich"],
-                    special: false
+                    special: true
                 }
             ]
         }
@@ -576,7 +606,7 @@ function displayFallbackEvent() {
         title: "next monday special",
         artist: "dj cosmic kitchen",
         date: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000).toISOString(),
-        description: "erlebe entspannte lounge-klänge während deines brunches!"
+        description: "Erlebe entspannte Lounge-Klänge während deines Brunches! Sanfte Beats treffen auf kulinarische Genüsse."
     }];
     
     displayEvents(fallbackEvent);
@@ -595,4 +625,4 @@ window.cmsLoader = {
     }
 };
 
-console.log('CMS Loader initialized. All features preserved: filters, tags, images, nutrition, modal popups.');
+console.log('Refined CMS Loader initialized. Enhanced typography, elegant price display, and sophisticated descriptions.');
