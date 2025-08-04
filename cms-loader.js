@@ -122,7 +122,7 @@ function enhanceDescription(text) {
     return enhanced;
 }
 
-// Display Classical 2-Column Menu
+// Display Classical 2-Column Menu with Enhanced Images
 function displayClassicalMenu(menuData) {
     const menuContainer = document.getElementById('menuGrid') || document.getElementById('menuContainer');
     
@@ -132,11 +132,16 @@ function displayClassicalMenu(menuData) {
     }
     
     menuContainer.innerHTML = menuData.map((category, catIndex) => {
+        const categoryBgImage = category.image ? `style="background-image: url('${formatImageUrl(category.image)}');"` : '';
+        
         return `
             <div class="menu-category" data-category="${category.title.toLowerCase().replace(/\s+/g, '-')}" style="animation-delay: ${catIndex * 0.15}s">
-                <div class="category-header">
-                    <h3 class="category-title">${category.title}</h3>
-                    ${category.description ? `<p class="category-description">${category.description}</p>` : ''}
+                <div class="category-header ${category.image ? 'has-bg-image' : ''}" ${categoryBgImage}>
+                    <div class="category-header-overlay">
+                        <img src="/content/images/logo.png" alt="Healthy Brunch Club" class="category-logo">
+                        <h3 class="category-title">${category.title}</h3>
+                        ${category.description ? `<p class="category-description">${category.description}</p>` : ''}
+                    </div>
                 </div>
                 
                 <div class="menu-items-grid">
@@ -157,55 +162,59 @@ function displayClassicalMenu(menuData) {
                             style="animation-delay: ${(catIndex * 0.15) + (index * 0.05)}s">
                             ${item.special ? '<div class="menu-item-badge">Empfehlung</div>' : ''}
                             
-                            ${item.image ? `
-                                <div class="menu-item-image">
-                                    <img src="${formatImageUrl(item.image)}" alt="${item.name}" loading="lazy">
+                            <div class="menu-item-content">
+                                ${item.image ? `
+                                    <div class="menu-item-image-elegant">
+                                        <img src="${formatImageUrl(item.image)}" alt="${item.name}" loading="lazy">
+                                    </div>
+                                ` : ''}
+                                
+                                <div class="menu-item-details">
+                                    <div class="menu-item-header">
+                                        <h4 class="menu-item-name">${item.name}</h4>
+                                        ${item.price ? `<span class="menu-item-price">${formatPrice(item.price)}</span>` : ''}
+                                    </div>
+                                    
+                                    <div class="menu-item-description">
+                                        ${truncateDescription(enhancedDesc, item.image ? 100 : 140)}
+                                    </div>
+                                    
+                                    ${item.nutrition && hasNutritionData(item.nutrition) ? `
+                                        <div class="nutrition-info">
+                                            ${item.nutrition.calories ? `
+                                                <div class="nutrition-item">
+                                                    <span class="nutrition-value">${item.nutrition.calories}</span>
+                                                    <span class="nutrition-label">kcal</span>
+                                                </div>
+                                            ` : ''}
+                                            ${item.nutrition.protein ? `
+                                                <div class="nutrition-item">
+                                                    <span class="nutrition-value">${item.nutrition.protein}</span>
+                                                    <span class="nutrition-label">Protein</span>
+                                                </div>
+                                            ` : ''}
+                                            ${item.nutrition.carbs ? `
+                                                <div class="nutrition-item">
+                                                    <span class="nutrition-value">${item.nutrition.carbs}</span>
+                                                    <span class="nutrition-label">Kohlenh.</span>
+                                                </div>
+                                            ` : ''}
+                                            ${item.nutrition.fat ? `
+                                                <div class="nutrition-item">
+                                                    <span class="nutrition-value">${item.nutrition.fat}</span>
+                                                    <span class="nutrition-label">Fett</span>
+                                                </div>
+                                            ` : ''}
+                                        </div>
+                                    ` : ''}
+                                    
+                                    ${item.tags && item.tags.length > 0 ? `
+                                        <div class="menu-item-tags">
+                                            ${item.tags.map(tag => `<span class="menu-tag">${tag}</span>`).join('')}
+                                        </div>
+                                    ` : ''}
                                 </div>
-                            ` : ''}
-                            
-                            <div class="menu-item-header">
-                                <h4 class="menu-item-name">${item.name}</h4>
-                                ${item.price ? `<span class="menu-item-price">${formatPrice(item.price)}</span>` : ''}
                             </div>
-                            
-                            <div class="menu-item-description">
-                                ${truncateDescription(enhancedDesc, 140)}
-                            </div>
-                            
-                            ${item.nutrition && hasNutritionData(item.nutrition) ? `
-                                <div class="nutrition-info">
-                                    ${item.nutrition.calories ? `
-                                        <div class="nutrition-item">
-                                            <span class="nutrition-value">${item.nutrition.calories}</span>
-                                            <span class="nutrition-label">kcal</span>
-                                        </div>
-                                    ` : ''}
-                                    ${item.nutrition.protein ? `
-                                        <div class="nutrition-item">
-                                            <span class="nutrition-value">${item.nutrition.protein}</span>
-                                            <span class="nutrition-label">Protein</span>
-                                        </div>
-                                    ` : ''}
-                                    ${item.nutrition.carbs ? `
-                                        <div class="nutrition-item">
-                                            <span class="nutrition-value">${item.nutrition.carbs}</span>
-                                            <span class="nutrition-label">Kohlenh.</span>
-                                        </div>
-                                    ` : ''}
-                                    ${item.nutrition.fat ? `
-                                        <div class="nutrition-item">
-                                            <span class="nutrition-value">${item.nutrition.fat}</span>
-                                            <span class="nutrition-label">Fett</span>
-                                        </div>
-                                    ` : ''}
-                                </div>
-                            ` : ''}
-                            
-                            ${item.tags && item.tags.length > 0 ? `
-                                <div class="menu-item-tags">
-                                    ${item.tags.map(tag => `<span class="menu-tag">${tag}</span>`).join('')}
-                                </div>
-                            ` : ''}
                         </div>
                     `;
                     }).join('')}
@@ -362,11 +371,7 @@ function populateDishModal(item) {
     // Set enhanced description
     const descriptionEl = document.getElementById('modalDescription');
     const fullDescription = enhanceDescription(processRichText(item.description));
-    const tempDiv = document.createElement('div');
-    tempDiv.innerHTML = fullDescription;
-    const plainText = tempDiv.textContent || tempDiv.innerText || '';
-    const truncatedText = plainText.length > 180 ? plainText.substring(0, 180) + '…' : plainText;
-    descriptionEl.innerHTML = `<p>${truncatedText}</p>`;
+    descriptionEl.innerHTML = fullDescription;
     
     // Set tags with refined display
     const tagsContainer = document.getElementById('modalTags');
