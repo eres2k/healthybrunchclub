@@ -11,12 +11,6 @@
 
     <!-- Style -->
     <link rel="stylesheet" href="mystyle.css">
-	
-    <!-- Favicon 
-    <link rel="icon" type="image/x-icon" href="/favicon.ico">
-    <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
-    <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
-    -->
     
     <!-- Netlify Identity Widget -->
     <script type="text/javascript" src="https://identity.netlify.com/v1/netlify-identity-widget.js"></script>
@@ -30,14 +24,14 @@
     <meta property="og:locale" content="de_AT">
     
     <!-- PWA Meta Tags -->
-    <meta name="theme-color" content="#A8C09A">
+    <meta name="theme-color" content="#1E4A3C">
     <meta name="mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="default">
     <meta name="apple-mobile-web-app-title" content="healthy brunch">
     <link rel="apple-touch-icon" href="/apple-touch-icon.png">
     <link rel="manifest" href="/manifest.json">
    
-    <!-- Updated Google Font Links for Classic Menu Typography -->
+    <!-- Google Fonts for Classical Menu Typography -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400..700;1,400..700&family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=Crimson+Text:ital,wght@0,400;0,600;1,400&family=Lato:wght@300;400&display=swap" rel="stylesheet">
@@ -95,7 +89,7 @@
             <div class="hero-video-background">
                 <video class="hero-video" autoplay muted loop playsinline>
                     <source src="/content/videos/healthybrunchclub.mp4" type="video/mp4">
-                    <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1920 1080'%3E%3Crect fill='%23F5F0E8' width='1920' height='1080'/%3E%3Ctext x='50%25' y='50%25' text-anchor='middle' fill='%23A8C09A' font-size='40'%3Ehealthy brunch club%3C/text%3E%3C/svg%3E" alt="healthy brunch club">
+                    <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1920 1080'%3E%3Crect fill='%23F4E8D0' width='1920' height='1080'/%3E%3Ctext x='50%25' y='50%25' text-anchor='middle' fill='%231E4A3C' font-size='40'%3Ehealthy brunch club%3C/text%3E%3C/svg%3E" alt="healthy brunch club">
                 </video>
                 <!-- Dark overlay for better text readability -->
                 <div class="hero-overlay"></div>
@@ -104,7 +98,7 @@
             <!-- Content over video -->
             <div class="hero-container">
                 <div class="hero-content fade-in-up">
-                    <h1>start your morning with <span style="color: #1E4A3C;">healthy</span> vibes</h1>
+                    <h1>start your morning with <span>healthy</span> vibes</h1>
                     <p>erlebe die perfekte kombination aus bio-zutaten, liebevoll zubereiteten speisen und entspannter atmosphäre.</p>  
                     
                     <div class="hero-buttons">
@@ -120,10 +114,10 @@
             </div>
         </section>
 
-        <!-- Classic Menu Section with Updated Design -->
+        <!-- Classical Menu Section with 2-Column Layout -->
         <section class="menu-section" id="menu">
             <div class="menu-header">
-                <h2>unsere fein abgestimmte speisekarte</h2>
+                <h2>Unsere Speisekarte</h2>
                 <p>100% bio und mit ganz viel liebe zubereitet</p>
             </div>
 
@@ -150,7 +144,7 @@
                 <div class="feature-card">
                     <div class="feature-icon">🌱</div>
                     <h3>100% bio</h3>
-                    <p>alle zutaten stammen von  bio-bauern. frisch, nachhaltig und voller nährstoffe.</p>
+                    <p>alle zutaten stammen von bio-bauern. frisch, nachhaltig und voller nährstoffe.</p>
                 </div>
 
                 <div class="feature-card">
@@ -197,16 +191,15 @@
                     </p>
                     <p style="font-size: 16px; line-height: 1.8; color: var(--text-medium); margin-top: 20px;">
                      Als bei Tina eine chronische Darmentzündung diagnostiziert wurde, wurde das Thema Ernährung für uns noch bedeutungsvoller. Seither setzen wir gezielt auf gesunde Alternativen und entzündungshemmende Zutaten – ohne auf Geschmack oder Kreativität zu verzichten. Das Ergebnis: Eine bunte Auswahl an trendigen, ausgewogenen und international inspirierten Brunchgerichten, die nicht nur sättigen, sondern glücklich machen.
-
 <br>
                     </p>
-			  <p style="font-size: 16px; line-height: 1.8; color: var(--text-medium); margin-top: 20px;">
+                    <p style="font-size: 16px; line-height: 1.8; color: var(--text-medium); margin-top: 20px;">
                    Kommt vorbei, bruncht mit uns
-
 <br>
                     </p>
-					<div style="text-align: center; max-width: 600px; margin: 0 auto 40px;">
-                  <img src="content/images/p38.png" height="300" alt=""/> </div>
+                    <div style="text-align: center; max-width: 600px; margin: 0 auto 40px;">
+                        <img src="content/images/p38.png" height="300" alt=""/> 
+                    </div>
                 </div>
             </div>
         </section>
@@ -253,7 +246,6 @@
                         <div class="form-group">
                             <label for="time">uhrzeit *</label>
                             <select id="time" name="time" required>
-                             
                                 <option value="09:00">09:00</option>
                                 <option value="09:30">09:30</option>
                                 <option value="10:00">10:00</option>
@@ -295,26 +287,6 @@
         </section>
     </main>
 
-    <!-- Dish Detail Modal -->
-    <div id="dishModal" class="dish-modal">
-        <div class="dish-modal-content">
-            <button class="modal-close" onclick="closeDishModal()">&times;</button>
-            <div class="modal-body">
-                <div class="modal-image-container" id="modalImageContainer"></div>
-                <div class="modal-header">
-                    <h3 class="modal-dish-name" id="modalDishName"></h3>
-                    <div class="modal-dish-price" id="modalDishPrice"></div>
-                </div>
-                <div class="modal-description" id="modalDescription"></div>
-                <div class="modal-tags" id="modalTags"></div>
-                <div class="nutrition-table-container" id="nutritionTableContainer"></div>
-                <div class="modal-cta">
-                    <a href="#contact" class="modal-reserve-btn" onclick="closeDishModal()">Tisch reservieren</a>
-                </div>
-            </div>
-        </div>
-    </div>
-
     <!-- Footer -->
     <footer class="footer">
         <div class="footer-container">
@@ -347,7 +319,7 @@
                 <p>bleibe auf dem laufenden über events, neue gerichte und special offers!</p>
                 <form name="newsletter" method="POST" data-netlify="true" style="margin-top: 15px;">
                     <input type="email" name="email" placeholder="deine e-mail" required style="padding: 10px; border: none; border-radius: 5px; width: 100%; margin-bottom: 10px;">
-                    <button type="submit" style="background: var(--peach); border: none; color: white; padding: 10px 20px; border-radius: 5px; cursor: pointer; width: 100%;">anmelden</button>
+                    <button type="submit" style="background: var(--forest-green); border: none; color: white; padding: 10px 20px; border-radius: 5px; cursor: pointer; width: 100%;">anmelden</button>
                 </form>
             </div>
         </div>
@@ -409,8 +381,8 @@
         function fillMondayDates() {
             const dateSelect = document.getElementById('date');
             
-            // Create a specific date for Sunday, July 3rd, 2025
-            const specificSunday = new Date(2025, 7, 10); // Month is 0-indexed, so 6 = July
+            // Create a specific date for Sunday, August 10th, 2025
+            const specificSunday = new Date(2025, 7, 10); // Month is 0-indexed, so 7 = August
             
             const option = document.createElement('option');
             option.value = specificSunday.toISOString().split('T')[0];
@@ -463,14 +435,6 @@
         if (mobileMenuToggle) {
             mobileMenuToggle.addEventListener('click', function() {
                 navLinks.style.display = navLinks.style.display === 'flex' ? 'none' : 'flex';
-                navLinks.style.flexDirection = 'column';
-                navLinks.style.position = 'absolute';
-                navLinks.style.top = '100%';
-                navLinks.style.left = '0';
-                navLinks.style.right = '0';
-                navLinks.style.background = 'white';
-                navLinks.style.padding = '20px';
-                navLinks.style.boxShadow = '0 4px 20px rgba(0,0,0,0.1)';
             });
         }
 
@@ -489,9 +453,9 @@
             });
         }, observerOptions);
 
-        // Observe all menu cards and feature cards
+        // Observe all cards
         document.addEventListener('DOMContentLoaded', function() {
-            const cards = document.querySelectorAll('.menu-card, .feature-card');
+            const cards = document.querySelectorAll('.feature-card');
             cards.forEach((card, index) => {
                 card.style.opacity = '0';
                 card.style.transform = 'translateY(30px)';
@@ -512,7 +476,7 @@
         }
 
         // Log when CMS loader integration completes
-        console.log('CMS Integration loaded. Use window.cmsLoader.refresh() to manually refresh content.');
+        console.log('Classical menu design loaded with 2-column layout. No modal scrolling.');
     </script>
 </body>
 </html>
