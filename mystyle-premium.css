@@ -2255,3 +2255,131 @@ vvvvv
     content: none !important;
     display: none !important;
 }
+
+/* Add these additional CSS rules for enhanced filter functionality */
+
+/* Filter Count Badge */
+.filter-count {
+    position: absolute;
+    top: -8px;
+    right: -8px;
+    background: var(--gold);
+    color: var(--pure-white);
+    font-size: 0.625rem;
+    font-weight: 600;
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+}
+
+/* Active filters visual feedback */
+.menu-filter-container.has-active-filters {
+    border: 2px solid var(--gold);
+    box-shadow: 0 4px 20px rgba(201, 169, 97, 0.15);
+}
+
+/* Reset button position relative for badge */
+.btn-icon[onclick="resetFilters()"] {
+    position: relative;
+}
+
+/* Enhance tag filter selected state */
+.tag-filter input[type="checkbox"]:checked + .tag-label {
+    background: var(--black);
+    color: var(--pure-white);
+    border-color: var(--black);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+    transform: translateY(-1px);
+}
+
+/* Add subtle animation to filter state changes */
+.filter-btn,
+.tag-label {
+    transition: all 0.2s ease;
+}
+
+/* Visual indicator for scrollable category filters on mobile */
+@media (max-width: 768px) {
+    .filter-buttons {
+        position: relative;
+    }
+    
+    /* Gradient indicators for scrollable content */
+    .filter-buttons::before,
+    .filter-buttons::after {
+        content: '';
+        position: absolute;
+        top: 0;
+        bottom: 0;
+        width: 20px;
+        pointer-events: none;
+        z-index: 2;
+    }
+    
+    .filter-buttons::before {
+        left: 0;
+        background: linear-gradient(to right, var(--pure-white), transparent);
+    }
+    
+    .filter-buttons::after {
+        right: 0;
+        background: linear-gradient(to left, var(--pure-white), transparent);
+    }
+    
+    /* Show scroll hint on mobile */
+    .filter-buttons:not(:hover) {
+        scroll-behavior: smooth;
+    }
+}
+
+/* Improve filter button spacing on mobile */
+@media (max-width: 768px) {
+    .filter-btn:first-child {
+        margin-left: 20px;
+    }
+    
+    .filter-btn:last-child {
+        margin-right: 20px;
+    }
+}
+
+/* Add loading state for filter application */
+.menu-content.filtering {
+    opacity: 0.5;
+    transition: opacity 0.3s ease;
+}
+
+/* Smooth transitions for menu items */
+.menu-item-card {
+    animation: fadeIn 0.3s ease forwards;
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* No results message styling */
+.no-results-message {
+    text-align: center;
+    padding: var(--spacing-xxl);
+    color: var(--warm-gray);
+    font-size: 1.125rem;
+}
+
+.no-results-message i {
+    font-size: 3rem;
+    color: var(--light-gray);
+    margin-bottom: var(--spacing-md);
+    display: block;
+}
