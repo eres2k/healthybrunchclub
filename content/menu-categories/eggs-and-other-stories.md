@@ -25,11 +25,14 @@ items:
 
       **your style:**
 
+
       * spiegelei
 
       * pochiert
 
       * eierspeise
+
+      * a﻿ufpreis zweites ei: 1,40 EUR
     allergens:
       - C
     nutrition:
