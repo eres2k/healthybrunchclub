@@ -3,6 +3,14 @@
 
 document.addEventListener('DOMContentLoaded', function() {
     initializeApp();
+    
+    // Ensure event window is visible but collapsed
+    const eventWindow = document.getElementById('eventWindow');
+    if (eventWindow) {
+        // Make sure it starts collapsed
+        eventWindow.classList.add('collapsed');
+        eventWindow.style.display = 'block';
+    }
 });
 
 function initializeApp() {

@@ -201,9 +201,12 @@ window.resetFilters = function() {
     });
     document.querySelector('.filter-btn[data-filter="all"]').classList.add('active');
     
-    document.querySelectorAll('.tag-filter input[type="checkbox"]').forEach(checkbox => {
-        checkbox.checked = false;
-    });
+    // Only reset tag checkboxes if visible (not on mobile)
+    if (window.innerWidth > 768) {
+        document.querySelectorAll('.tag-filter input[type="checkbox"]').forEach(checkbox => {
+            checkbox.checked = false;
+        });
+    }
     
     displayPremiumMenu(allMenuCategories);
 };
@@ -576,13 +579,38 @@ function displayEvents(eventsData) {
         ` : ''}
     `;
     
+    // Show event window (starts collapsed due to HTML class)
     eventWindow.style.display = 'block';
+    
+    // Add initial highlight animation after a short delay
+    setTimeout(() => {
+        const toggleBtn = eventWindow.querySelector('.event-toggle');
+        if (toggleBtn) {
+            toggleBtn.classList.add('highlight');
+            
+            // Remove highlight after animation completes
+            setTimeout(() => {
+                toggleBtn.classList.remove('highlight');
+            }, 6000); // 2s animation × 3 iterations
+        }
+    }, 1000);
 }
 
 // Toggle Event Window
 window.toggleEventWindow = function() {
     const eventWindow = document.getElementById('eventWindow');
     eventWindow.classList.toggle('collapsed');
+    
+    // Mark as interacted to remove notification badge
+    if (!eventWindow.classList.contains('interacted')) {
+        eventWindow.classList.add('interacted');
+    }
+    
+    // Remove highlight animation after first interaction
+    const toggleBtn = eventWindow.querySelector('.event-toggle');
+    if (toggleBtn) {
+        toggleBtn.classList.remove('highlight');
+    }
 };
 
 // Fallback Menu
@@ -623,7 +651,7 @@ function displayFallbackEvent() {
     const fallbackEvent = [{
         title: "Live Music Monday",
         date: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000).toISOString(),
-        description: "Genießen Sie sanfte Jazz-Klänge zu Ihrem Brunch"
+        description: "Genießen Sie sanfte Jazz-Klänge zu Ihrem Brunch. Jeden Montag live!"
     }];
     
     displayEvents(fallbackEvent);
