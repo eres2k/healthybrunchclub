@@ -282,26 +282,28 @@ window.resetFilters = function() {
     displayPremiumMenu(allMenuCategories);
 };
     
-    // Reset UI
+   // Reset UI filters and reload menu
+function resetFilters() {
+    // Reset filter buttons
     document.querySelectorAll('.filter-btn').forEach(btn => {
         btn.classList.remove('active');
     });
     document.querySelector('.filter-btn[data-filter="all"]').classList.add('active');
-    
+
     // Only reset tag checkboxes if visible (not on mobile)
     if (window.innerWidth > 768) {
         document.querySelectorAll('.tag-filter input[type="checkbox"]').forEach(checkbox => {
             checkbox.checked = false;
         });
     }
-    
+
     displayPremiumMenu(allMenuCategories);
-};
+}
 
 // Display Premium Menu
 function displayPremiumMenu(menuData) {
     const container = document.getElementById('menuContainer');
-    
+
     if (!menuData || menuData.length === 0) {
         container.innerHTML = `
             <div class="menu-loading">
@@ -311,6 +313,21 @@ function displayPremiumMenu(menuData) {
         document.getElementById('allergenLegend').style.display = 'none';
         return;
     }
+
+    // Show legend again
+    document.getElementById('allergenLegend').style.display = '';
+
+    // Render menu items
+    container.innerHTML = menuData
+        .map(item => `
+            <div class="menu-item">
+                <h3>${item.name}</h3>
+                <p>${item.description}</p>
+                <!-- etc. -->
+            </div>
+        `)
+        .join('');
+}
     
     let hasAllergens = false;
     let menuHTML = '';
