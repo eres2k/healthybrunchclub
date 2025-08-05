@@ -39,6 +39,10 @@ items:
     special: false
     price: "12.90"
     image: /content/images/image-1-.jpg
+    allergens:
+      - B
+      - C
+      - O
   - tags:
       - vegetarisch
       - anpassbar
