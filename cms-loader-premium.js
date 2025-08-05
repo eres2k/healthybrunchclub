@@ -366,7 +366,6 @@ function displayPremiumMenu(menuData) {
     } else {
         document.getElementById('allergenLegend').style.display = 'none';
     }
-}
 
 // Update the createMenuItemCard function to ensure price is displayed
 function createMenuItemCard(item) {
