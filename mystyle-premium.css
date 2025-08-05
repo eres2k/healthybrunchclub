@@ -430,10 +430,10 @@ h1, h2, h3, h4, h5, h6 {
 .filter-group {
     flex: 1 1 auto; /* Allow flexible sizing */
     min-width: 0; /* Prevent overflow */
+    align-content: center;
 }
 
 .filter-buttons {
-    display: flex;
     gap: 0;
     align-items: center;
     margin: 0;
