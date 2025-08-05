@@ -264,7 +264,7 @@ function displayPremiumMenu(menuData) {
     }
 }
 
-// Create Menu Item Card
+// Create Menu Item Card - FIXED VERSION
 function createMenuItemCard(item) {
     const hasImage = item.image ? true : false;
     const isSpecial = item.special || false;
@@ -281,7 +281,7 @@ function createMenuItemCard(item) {
             
             <div class="menu-item-header">
                 <h4 class="menu-item-name">${item.name}</h4>
-                ${item.price ? `<span class="menu-item-price">€${formatPrice(item.price)}</span>` : ''}
+                ${item.price ? `<span class="menu-item-price">${formatPrice(item.price)}</span>` : ''}
             </div>
             
             <div class="menu-item-description">
@@ -306,6 +306,27 @@ function createMenuItemCard(item) {
             ` : ''}
         </div>
     `;
+}
+
+// Format Price - FIXED VERSION
+function formatPrice(price) {
+    if (!price) return '';
+    
+    // Remove any existing currency symbols
+    let cleanPrice = price.toString().replace(/[€$£¥\s]/g, '').trim();
+    
+    // Replace comma with dot for decimal
+    cleanPrice = cleanPrice.replace(',', '.');
+    
+    // Ensure it's a valid number
+    const numPrice = parseFloat(cleanPrice);
+    if (isNaN(numPrice)) return price; // Return original if not a valid number
+    
+    // Format with 2 decimal places
+    const formatted = numPrice.toFixed(2);
+    
+    // Add euro sign at the beginning
+    return `€${formatted}`;
 }
 
 // Get Item Icon
