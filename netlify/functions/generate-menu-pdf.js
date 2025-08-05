@@ -2,48 +2,6 @@ const { jsPDF } = require('jspdf');
 const fs = require('fs').promises;
 const path = require('path');
 const matter = require('gray-matter');
-const https = require('https');
-const http = require('http');
-
-// Helper function to load image as base64
-async function loadImageAsBase64(imagePath) {
-    try {
-        // Handle local file paths
-        if (imagePath.startsWith('/content/images/') || imagePath.startsWith('content/images/')) {
-            const localPath = path.join(process.cwd(), imagePath);
-            try {
-                const imageBuffer = await fs.readFile(localPath);
-                const base64 = imageBuffer.toString('base64');
-                const extension = path.extname(localPath).toLowerCase().slice(1);
-                return `data:image/${extension === 'jpg' ? 'jpeg' : extension};base64,${base64}`;
-            } catch (err) {
-                console.log('Local image not found:', localPath);
-                return null;
-            }
-        }
-        
-        // For URLs, we'd need to fetch them - skip for now
-        if (imagePath.startsWith('http://') || imagePath.startsWith('https://')) {
-            // In production, you'd fetch the image here
-            return null;
-        }
-        
-        // Try as relative path
-        const relativePath = path.join(process.cwd(), 'public', imagePath);
-        try {
-            const imageBuffer = await fs.readFile(relativePath);
-            const base64 = imageBuffer.toString('base64');
-            const extension = path.extname(relativePath).toLowerCase().slice(1);
-            return `data:image/${extension === 'jpg' ? 'jpeg' : extension};base64,${base64}`;
-        } catch (err) {
-            console.log('Image not found:', relativePath);
-            return null;
-        }
-    } catch (error) {
-        console.error('Error loading image:', imagePath, error);
-        return null;
-    }
-}
 
 // Helper function to load menu data
 async function loadMenuData() {
@@ -138,14 +96,14 @@ exports.handler = async (event, context) => {
         // PDF Configuration
         const pageWidth = doc.internal.pageSize.getWidth();
         const pageHeight = doc.internal.pageSize.getHeight();
-        const margin = 15; // Reduced margin for more space
+        const margin = 15;
         const contentWidth = pageWidth - (margin * 2);
-        const columnWidth = (contentWidth - 10) / 2; // 2 columns with 10mm gap
+        const columnWidth = (contentWidth - 10) / 2;
         const columnGap = 10;
         
         // Colors
         const colors = {
-            primary: [30, 74, 60], // Forest green
+            primary: [30, 74, 60],
             gold: [201, 169, 97],
             gray: [88, 88, 88],
             lightGray: [232, 232, 232],
@@ -155,19 +113,21 @@ exports.handler = async (event, context) => {
         
         // Helper function to add decorative elements
         function addPageDecoration() {
-            // Top border
             doc.setDrawColor(...colors.gold);
             doc.setLineWidth(0.5);
             doc.line(margin, 10, pageWidth - margin, 10);
-            
-            // Bottom border
             doc.line(margin, pageHeight - 10, pageWidth - margin, pageHeight - 10);
         }
         
-        // Cover page - Elegant and minimal
+        // Helper function for safe rectangle drawing
+        function drawRect(x, y, w, h, style = 'F') {
+            doc.rect(x, y, w, h, style);
+        }
+        
+        // Cover page
         addPageDecoration();
         
-        // Logo area (circle placeholder)
+        // Logo area
         let yPos = 40;
         doc.setFillColor(...colors.primary);
         doc.circle(pageWidth / 2, yPos, 12, 'F');
@@ -194,9 +154,9 @@ exports.handler = async (event, context) => {
         
         yPos += 30;
         
-        // Opening hours box
+        // Opening hours box - using regular rect instead of roundedRect
         doc.setFillColor(...colors.cream[0], colors.cream[1], colors.cream[2]);
-        doc.roundedRect(margin + 40, yPos, contentWidth - 80, 25, 3, 3, 'F');
+        drawRect(margin + 40, yPos, contentWidth - 80, 25);
         doc.setTextColor(...colors.primary);
         doc.setFontSize(10);
         doc.setFont('helvetica', 'normal');
@@ -224,13 +184,12 @@ exports.handler = async (event, context) => {
         yPos = 35;
         
         // Track which column we're in
-        let currentColumn = 0; // 0 = left, 1 = right
+        let currentColumn = 0;
         let leftColumnY = yPos;
         let rightColumnY = yPos;
         
         // Process categories
         for (const category of menuData) {
-            // Determine which column to use
             const isLeftColumn = currentColumn === 0;
             const columnX = isLeftColumn ? margin : margin + columnWidth + columnGap;
             let columnY = isLeftColumn ? leftColumnY : rightColumnY;
@@ -238,11 +197,9 @@ exports.handler = async (event, context) => {
             // Check if we need a new page
             if (columnY > pageHeight - 60) {
                 if (isLeftColumn && currentColumn === 0) {
-                    // Switch to right column
                     currentColumn = 1;
                     columnY = rightColumnY;
                 } else {
-                    // New page needed
                     doc.addPage();
                     addPageDecoration();
                     leftColumnY = 20;
@@ -256,7 +213,7 @@ exports.handler = async (event, context) => {
             
             // Category header with background
             doc.setFillColor(...colors.cream[0], colors.cream[1], colors.cream[2]);
-            doc.roundedRect(columnX, columnY - 6, columnWidth, 10, 2, 2, 'F');
+            drawRect(columnX, columnY - 6, columnWidth, 10);
             
             doc.setTextColor(...colors.primary);
             doc.setFontSize(12);
@@ -270,20 +227,20 @@ exports.handler = async (event, context) => {
                 doc.setFontSize(8);
                 doc.setFont('helvetica', 'italic');
                 const descLines = doc.splitTextToSize(category.description, columnWidth - 10);
-                descLines.forEach(line => {
-                    doc.text(line, columnX + 2, columnY);
-                    columnY += 3.5;
-                });
+                if (Array.isArray(descLines)) {
+                    descLines.forEach(line => {
+                        doc.text(line, columnX + 2, columnY);
+                        columnY += 3.5;
+                    });
+                }
                 columnY += 2;
             }
             
             // Menu items
             for (const item of category.items) {
-                // Check space for item (estimate 25mm per item with image)
-                const itemHeight = item.image ? 25 : 20;
+                const itemHeight = 20;
                 if (columnY + itemHeight > pageHeight - 20) {
                     if (isLeftColumn && currentColumn === 0) {
-                        // Switch to right column
                         currentColumn = 1;
                         leftColumnY = columnY;
                         columnY = rightColumnY;
@@ -291,14 +248,13 @@ exports.handler = async (event, context) => {
                         
                         // Repeat category header in new column
                         doc.setFillColor(...colors.cream[0], colors.cream[1], colors.cream[2]);
-                        doc.roundedRect(newColumnX, columnY - 6, columnWidth, 10, 2, 2, 'F');
+                        drawRect(newColumnX, columnY - 6, columnWidth, 10);
                         doc.setTextColor(...colors.primary);
                         doc.setFontSize(12);
                         doc.setFont('helvetica', 'bold');
                         doc.text(category.title.toUpperCase() + ' (Forts.)', newColumnX + columnWidth / 2, columnY, { align: 'center' });
                         columnY += 12;
                     } else {
-                        // New page
                         doc.addPage();
                         addPageDecoration();
                         leftColumnY = 20;
@@ -308,7 +264,7 @@ exports.handler = async (event, context) => {
                         
                         // Repeat category header
                         doc.setFillColor(...colors.cream[0], colors.cream[1], colors.cream[2]);
-                        doc.roundedRect(margin, columnY - 6, columnWidth, 10, 2, 2, 'F');
+                        drawRect(margin, columnY - 6, columnWidth, 10);
                         doc.setTextColor(...colors.primary);
                         doc.setFontSize(12);
                         doc.setFont('helvetica', 'bold');
@@ -320,36 +276,21 @@ exports.handler = async (event, context) => {
                 const itemStartY = columnY;
                 const currentColumnX = currentColumn === 0 ? margin : margin + columnWidth + columnGap;
                 
-                // Item container with subtle background
+                // Item container with subtle background for special items
                 if (item.special) {
-                    doc.setFillColor(255, 247, 237); // Light peach for special items
-                    doc.roundedRect(currentColumnX, columnY - 2, columnWidth, itemHeight - 2, 1, 1, 'F');
+                    doc.setFillColor(255, 247, 237);
+                    drawRect(currentColumnX, columnY - 2, columnWidth, itemHeight - 2);
                 }
                 
-                // Add image if available (small thumbnail on the left)
-                let textStartX = currentColumnX + 2;
-                if (item.image) {
-                    try {
-                        const imageData = await loadImageAsBase64(item.image);
-                        if (imageData) {
-                            // Small square image 15x15mm
-                            doc.addImage(imageData, 'JPEG', currentColumnX + 2, columnY, 15, 15);
-                            textStartX = currentColumnX + 20; // Start text after image
-                        }
-                    } catch (err) {
-                        console.log('Could not add image:', item.image);
-                    }
-                }
-                
-                // Item name and price on same line
+                // Item name and price
                 doc.setTextColor(...colors.darkGray);
                 doc.setFontSize(9);
                 doc.setFont('helvetica', 'bold');
                 
-                // Calculate price width to right-align it
+                const textStartX = currentColumnX + 2;
                 const priceText = item.price ? formatPrice(item.price) : '';
                 const priceWidth = doc.getTextWidth(priceText);
-                const maxNameWidth = columnWidth - (textStartX - currentColumnX) - priceWidth - 5;
+                const maxNameWidth = columnWidth - 4 - priceWidth - 5;
                 
                 // Truncate name if too long
                 let itemName = item.name;
@@ -376,11 +317,13 @@ exports.handler = async (event, context) => {
                     doc.setFontSize(7);
                     doc.setFont('helvetica', 'normal');
                     const cleanDesc = item.description.replace(/<[^>]*>/g, '').replace(/\*/g, '');
-                    const descLines = doc.splitTextToSize(cleanDesc, columnWidth - (textStartX - currentColumnX) - 2);
-                    descLines.slice(0, 2).forEach(line => {
-                        doc.text(line, textStartX, columnY);
-                        columnY += 2.5;
-                    });
+                    const descLines = doc.splitTextToSize(cleanDesc, columnWidth - 4);
+                    if (Array.isArray(descLines)) {
+                        descLines.slice(0, 2).forEach(line => {
+                            doc.text(line, textStartX, columnY);
+                            columnY += 2.5;
+                        });
+                    }
                 }
                 
                 // Nutrition & Tags (very compact)
@@ -420,7 +363,7 @@ exports.handler = async (event, context) => {
                     doc.setFontSize(6);
                     const badgeWidth = 25;
                     const badgeHeight = 4;
-                    doc.roundedRect(currentColumnX + columnWidth - badgeWidth - 2, itemStartY, badgeWidth, badgeHeight, 1, 1, 'F');
+                    drawRect(currentColumnX + columnWidth - badgeWidth - 2, itemStartY, badgeWidth, badgeHeight);
                     doc.text("EMPFEHLUNG", currentColumnX + columnWidth - badgeWidth/2 - 2, itemStartY + 2.5, { align: 'center' });
                 }
                 
@@ -444,19 +387,16 @@ exports.handler = async (event, context) => {
             }
         }
         
-        // Allergen legend - compact at the bottom of last page
+        // Allergen legend
         const hasAllergens = menuData.some(cat => 
             cat.items.some(item => item.allergens && item.allergens.length > 0)
         );
         
         if (hasAllergens) {
-            // Check if we have space at bottom of current page
             const maxY = Math.max(leftColumnY, rightColumnY);
             if (maxY < pageHeight - 50) {
-                // Add to current page
                 yPos = pageHeight - 40;
             } else {
-                // New page
                 doc.addPage();
                 addPageDecoration();
                 yPos = 30;
