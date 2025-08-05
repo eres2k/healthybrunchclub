@@ -103,53 +103,48 @@
             <p class="section-subtitle">Eine kulinarische Reise durch biologische Exzellenz</p>
         </div>
 
-        <!-- Advanced Filter System -->
+     <!-- Elegant Minimal Filter System -->
         <div class="menu-filter-container">
-            <div class="filter-group">
-                <h4 class="filter-title">Kategorien</h4>
-                <div class="filter-buttons" id="categoryFilters">
-                    <button class="filter-btn active" data-filter="all">
-                        <i class="fas fa-border-all"></i>
-                        <span class="btn-text">Alle Gerichte</span>
+            <div class="filter-bar">
+                <div class="filter-group">
+                    <div class="filter-buttons" id="categoryFilters">
+                        <button class="filter-btn active" data-filter="all">
+                            <span class="btn-text">Alle Gerichte</span>
+                        </button>
+                    </div>
+                </div>
+                
+                <div class="filter-group desktop-only">
+                    <div class="filter-tags" id="tagFilters">
+                        <label class="tag-filter">
+                            <input type="checkbox" value="vegan">
+                            <span class="tag-label">Vegan</span>
+                        </label>
+                        <label class="tag-filter">
+                            <input type="checkbox" value="vegetarisch">
+                            <span class="tag-label">Vegetarisch</span>
+                        </label>
+                        <label class="tag-filter">
+                            <input type="checkbox" value="glutenfrei">
+                            <span class="tag-label">Glutenfrei</span>
+                        </label>
+                        <label class="tag-filter">
+                            <input type="checkbox" value="lactosefrei">
+                            <span class="tag-label">Laktosefrei</span>
+                        </label>
+                    </div>
+                </div>
+                
+                <div class="filter-actions">
+                    <button class="btn-icon" onclick="resetFilters()">
+                        <i class="fas fa-undo"></i>
+                        <span class="btn-text">Zurücksetzen</span>
+                    </button>
+                    <button class="btn-icon" onclick="downloadMenuPDF()">
+                        <i class="fas fa-download"></i>
+                        <span class="btn-text">PDF</span>
                     </button>
                 </div>
-            </div>
-            
-            <div class="filter-group desktop-only">
-                <h4 class="filter-title">Eigenschaften</h4>
-                <div class="filter-tags" id="tagFilters">
-                    <label class="tag-filter">
-                        <input type="checkbox" value="vegan">
-                        <span class="tag-label">Vegan</span>
-                    </label>
-                    <label class="tag-filter">
-                        <input type="checkbox" value="vegetarisch">
-                        <span class="tag-label">Vegetarisch</span>
-                    </label>
-                    <label class="tag-filter">
-                        <input type="checkbox" value="glutenfrei">
-                        <span class="tag-label">Glutenfrei</span>
-                    </label>
-                    <label class="tag-filter">
-                        <input type="checkbox" value="lactosefrei">
-                        <span class="tag-label">Laktosefrei</span>
-                    </label>
-                    <label class="tag-filter">
-                        <input type="checkbox" value="zuckerarm">
-                        <span class="tag-label">Zuckerarm</span>
-                    </label>
-                </div>
-            </div>
-            
-            <div class="filter-actions">
-                <button class="btn-icon" onclick="resetFilters()">
-                    <i class="fas fa-undo"></i>
-                    <span class="btn-text">Filter zurücksetzen</span>
-                </button>
-                <button class="btn-icon" onclick="downloadMenuPDF()">
-                    <i class="fas fa-download"></i>
-                    <span class="btn-text">PDF herunterladen</span>
-                </button>
             </div>
         </div>
 
