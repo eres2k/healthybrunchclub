@@ -114,8 +114,11 @@ function handleFilterClick(e) {
 function formatPrice(price) {
     if (!price) return '';
     // Clean and format price
-    const cleanPrice = price.toString().replace(/[€$£¥]/g, '').trim();
-    return cleanPrice;
+    const cleanPrice = price.toString().replace(/[€$£¥\s]/g, '').trim();
+    // Replace comma with dot for decimal
+    const formattedPrice = cleanPrice.replace(',', '.');
+    // Return with euro sign using HTML entity
+    return `€&nbsp;${formattedPrice}`;
 }
 
 // Process Rich Text
