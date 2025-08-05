@@ -13,6 +13,7 @@ description: 'Stell dir vor, Eier, die nicht nur braten, sondern tanzen! Unsere
 items:
   - tags:
       - vegetarisch
+      - glutenfrei
       - proteinreich
       - gesund
     name: eggs any style
@@ -22,15 +23,15 @@ items:
       begleitet von aromatisch sautierten champignons und shiitake-pilzen,
       veredelt mit frischem rucula, sprossen und kresse.
 
-
       **your style:**
-
 
       * spiegelei
 
       * pochiert
 
       * eierspeise
+    allergens:
+      - C
     nutrition:
       calories: "324"
       protein: 13g
@@ -39,14 +40,11 @@ items:
     special: false
     price: "12.90"
     image: /content/images/image-1-.jpg
-    allergens:
-      - B
-      - C
-      - O
   - tags:
       - vegetarisch
       - anpassbar
       - herzhaft
+      - proteinreich
     name: omelette creation
     description: >-
       ein luftig-lockeres omelette bestehend aus zwei eiern, präsentiert auf
@@ -54,9 +52,7 @@ items:
       shiitake-spilzen und frischem spinat und gekrönt mit rucula, sprossen und
       kresse.
 
-
       **your style:**
-
 
       * tomaten
 
@@ -65,9 +61,13 @@ items:
       * käse
 
       * avocado
+    allergens:
+      - A
+      - C
+      - G
     price: "14.90"
     nutrition:
-      calories: "250"
+      calories: "300"
       protein: 22g
       carbs: 13g
       fat: 9g
@@ -76,6 +76,7 @@ items:
       - vegetarisch
       - gourmet
       - aromatisch
+      - sättigend
     name: beggs enedict
     description: >-
       ein oder zwei pochierte eier auf knusprigem sauerteigbrot vom öfferl und
@@ -83,17 +84,20 @@ items:
       shiitake-pilzen, garniert mit frischem rucula, sprossen, kresse und
       knusprigen pinienkernen.
 
-
       **your style:**
 
+      * schinken
 
-      * s﻿chinken
+      * speck
 
-      * s﻿peck
-
-      * l﻿achs
+      * lachs
+    allergens:
+      - A
+      - C
+      - H
+      - D
     nutrition:
-      calories: "245"
+      calories: "570"
       protein: 12g
       carbs: 54g
       fat: 34g

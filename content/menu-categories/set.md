@@ -4,39 +4,52 @@ order: -1
 image: /content/images/set.jpg
 items:
   - tags:
-      - herzhaft
-      - gesund
+      - ausgewogen
+      - belebend
       - sättigend
     special: false
     name: tessa's feel good combi
     description: |-
-      * e﻿inen wiener klassiker kaffee
-      * p﻿remium porridge
-      * f﻿risch gepressten saft deiner wahl
+      * einen wiener klassiker kaffee
+      * premium porridge
+      * frisch gepressten saft deiner wahl
+    allergens:
+      - G
+      - H
+      - L
     price: "16.90"
     image: /content/images/image-3-.jpg
   - tags:
-      - herzhaft
-      - gesund
+      - ausgewogen
+      - proteinreich
       - sättigend
     special: false
     name: tina's soul food set
-    price: "18.90"
     description: |-
-      * e﻿inen chaga tee mit adaptogene
-      * a﻿vocado bread  +pilze (1.50€) +speck (1.90€) +ei (1.40€)
-      * h﻿afer dich lieb
+      * einen chaga tee mit adaptogene
+      * avocado bread  +pilze (1.50€) +speck (1.90€) +ei (1.40€)
+      * hafer dich lieb
+    allergens:
+      - A
+      - C
+    price: "18.90"
     image: /content/images/image-4-.jpg
   - tags:
-      - herzhaft
-      - gesund
-      - sättigend
+      - ausgewogen
+      - proteinreich
+      - genussvoll
     special: false
     name: charlotte's healthy treat set
-    price: "19.50"
     description: |-
-      * e﻿in reishi cappuccino mit collagen
-      * e﻿in eggcitement deiner wahl (aufpreis zweites ei 1.40€)
+      * ein reishi cappuccino mit collagen
+      * ein eggcitement deiner wahl (aufpreis zweites ei 1.40€)
       * berry good choice
+    allergens:
+      - A
+      - C
+      - G
+      - H
+      - D
+    price: "19.50"
     image: /content/images/image-5-.jpg
 ---

@@ -4,7 +4,7 @@ order: 2
 image: /content/images/dsc00277.jpg
 items:
   - tags:
-      - vegetarisch
+      - vegan
       - leicht
       - nahrhaft
     name: avocado bowl
@@ -12,8 +12,10 @@ items:
       fein geriebenem apfel für eine süß-frische note, gekrönt von zart
       gerösteten mandeln, die einen knackigen akzent setzen. ein belebendes,
       nahrhaftes vergnügen für jeden moment.
+    allergens:
+      - H
     nutrition:
-      calories: "285"
+      calories: "300"
       protein: 6g
       carbs: 18g
       fat: 24g
@@ -29,10 +31,13 @@ items:
       bestrichen mit cremiger, zerdrückter avocado, verfeinert mit frischen
       sprossen und kresse für eine lebendige, grüne frische.
 
-
       **your style:**
 
       ei (nach wunsch zubereitet)/biospeck/biolachs/shiitake und champignons pilze
+    allergens:
+      - A
+      - C
+      - D
     nutrition:
       calories: "320"
       protein: 8g

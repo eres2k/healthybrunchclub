@@ -10,6 +10,7 @@ items:
     name: himbeersoda
     description: prickelndes himbeersoda von sonnentor, sanft gesüßt mit
       apfelsaftkonzentrat, für einen fruchtig-leichten genuss.
+    allergens: []
     nutrition:
       calories: "45"
       protein: 0g
@@ -23,6 +24,7 @@ items:
     name: hollundersoda
     description: spritziges hollundersoda von sonnentor, verfeinert mit
       apfelsaftkonzentrat, für eine blumig-frische erfrischung.
+    allergens: []
     nutrition:
       calories: "42"
       protein: 0g
@@ -36,6 +38,7 @@ items:
     name: minty
     description: ein kühler mix aus frischer pfefferminze und spritziger zitrone,
       der die sinne belebt und erfrischt.
+    allergens: []
     nutrition:
       calories: "25"
       protein: 0g
@@ -49,6 +52,7 @@ items:
     name: berry minty
     description: eine lebendige kombination aus frischer pfefferminze und saftigen
       beeren, für einen fruchtig-kühlen geschmacksmoment.
+    allergens: []
     nutrition:
       calories: "38"
       protein: 0g
@@ -58,10 +62,11 @@ items:
   - tags:
       - würzig
       - belebend
-      - gesundheitsfördernd
+      - entzündungshemmend
     name: golden kurkuma
     description: ein goldener mix aus sonnentors ingwer-zitrone-sirup und frischer
       kurkuma, würzig und belebend für körper und geist.
+    allergens: []
     nutrition:
       calories: "55"
       protein: 0g
@@ -75,6 +80,7 @@ items:
     name: immunity
     description: ein sonniger frischekick für dein immunsystem süß-würzig mit
       natürlicher power aus karotten, orangen, ingwer und kurkuma.
+    allergens: []
     nutrition:
       calories: "95"
       protein: 1g
@@ -89,6 +95,7 @@ items:
     description: "der sanfte weckruf nach einer langen nacht: fruchtig, belebend und
       randvoll mit natürlichen vitaminen von karotten, äpfel, zitrone, rote
       beete und ingwer."
+    allergens: []
     nutrition:
       calories: "85"
       protein: 1g
@@ -103,6 +110,8 @@ items:
     description: ein erfrischender detox-drink mit leichter schärfe. ideal für neue
       energie und klaren kopf. grün, klar und kraftvoll mit gurken, sellerie,
       zitrone und ingwer.
+    allergens:
+      - L
     nutrition:
       calories: "65"
       protein: 2g
