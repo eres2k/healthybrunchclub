@@ -1,43 +1,59 @@
-/* admin/preview.css - Classical 2-Column Menu Preview */
+/* admin/preview.css - Klassische Menükarten Vorschau */
 body {
-  font-family: 'Lato', sans-serif;
-  color: #2C2C2C;
-  background: #F4E8D0;
+  font-family: 'Lato', 'Helvetica Neue', sans-serif;
+  color: #1A1A1A;
+  background: #FBF9F4;
   padding: 20px;
+  line-height: 1.6;
 }
 
 h1, h2, h3 {
-  font-family: 'Playfair Display', serif;
+  font-family: 'Playfair Display', Georgia, serif;
   color: #1E4A3C;
-  text-transform: uppercase;
-  letter-spacing: 1px;
+  font-weight: 300;
 }
 
-/* Category Container */
+/* Kategorie Container */
 .menu-category {
-  background: #FFFEF9;
+  background: #FFFFFF;
   padding: 40px;
   margin: 20px 0;
-  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+  border: 1px solid #E8E2D5;
 }
 
-/* Category Header */
+/* Kategorie Header */
 .category-header {
   text-align: center;
   margin-bottom: 40px;
   position: relative;
 }
 
+.category-image {
+  width: 100%;
+  max-width: 600px;
+  height: 200px;
+  margin: 0 auto 30px;
+  overflow: hidden;
+  border-radius: 8px;
+}
+
+.category-image img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
 .category-title {
   font-family: 'Playfair Display', serif;
-  font-size: 28px;
+  font-size: 32px;
   color: #1E4A3C;
   text-transform: uppercase;
   letter-spacing: 2px;
-  margin-bottom: 15px;
+  margin-bottom: 10px;
   position: relative;
   display: inline-block;
-  padding: 0 30px;
+  padding: 0 40px;
 }
 
 .category-title::before,
@@ -47,7 +63,7 @@ h1, h2, h3 {
   top: 50%;
   width: 50px;
   height: 1px;
-  background: #D4C4A8;
+  background: #E8E2D5;
 }
 
 .category-title::before {
@@ -59,41 +75,54 @@ h1, h2, h3 {
 }
 
 .category-description {
-  font-family: 'Crimson Text', serif;
+  font-family: 'Crimson Text', Georgia, serif;
   font-size: 16px;
-  color: #5A5A5A;
+  color: #4A4A4A;
   font-style: italic;
-  max-width: 500px;
+  max-width: 600px;
   margin: 0 auto;
 }
 
-/* Two Column Grid */
+/* 3-Spalten Grid */
 .menu-items-grid {
   display: grid;
-  grid-template-columns: repeat(2, 1fr);
-  gap: 30px 50px;
-  max-width: 900px;
-  margin: 0 auto;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 30px 40px;
 }
 
-/* Menu Item */
+/* Menü Item */
 .menu-item {
-  background: transparent;
-  padding: 0;
+  border-bottom: 1px dashed #E8E2D5;
+  padding-bottom: 20px;
   position: relative;
 }
 
-/* Item with Image */
-.menu-item.has-image {
-  margin-bottom: 20px;
+.menu-item.special {
+  position: relative;
 }
 
+.special-badge {
+  position: absolute;
+  top: -10px;
+  right: -10px;
+  background: #FFB5A7;
+  color: white;
+  padding: 4px 12px;
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  border-radius: 20px;
+  font-weight: 600;
+  z-index: 1;
+}
+
+/* Item Bild */
 .menu-item-image {
   width: 100%;
-  height: 150px;
+  height: 120px;
   overflow: hidden;
   margin-bottom: 15px;
-  border-radius: 2px;
+  border-radius: 4px;
 }
 
 .menu-item-image img {
@@ -102,118 +131,140 @@ h1, h2, h3 {
   object-fit: cover;
 }
 
-/* Item Header with Dotted Line */
+/* Item Header */
 .menu-item-header {
   display: flex;
+  justify-content: space-between;
   align-items: baseline;
   margin-bottom: 8px;
-  position: relative;
-}
-
-.menu-item-header::after {
-  content: '';
-  flex: 1;
-  height: 1px;
-  background-image: repeating-linear-gradient(
-    to right,
-    transparent,
-    transparent 3px,
-    #D4C4A8 3px,
-    #D4C4A8 6px
-  );
-  margin: 0 10px;
-  opacity: 0.6;
 }
 
 .menu-item-name {
   font-family: 'Crimson Text', serif;
-  font-size: 18px;
+  font-size: 16px;
   font-weight: 600;
-  color: #1E4A3C;
-  flex: 0 0 auto;
-  max-width: 70%;
+  color: #1A1A1A;
+  flex: 1;
+  margin-right: 10px;
 }
 
 .menu-item-price {
   font-family: 'Lato', sans-serif;
-  font-size: 16px;
-  color: #4A4A4A;
-  font-weight: 400;
-  flex: 0 0 auto;
+  font-size: 15px;
+  color: #2C5234;
+  font-weight: 600;
 }
 
-/* Description */
+.menu-item-price::before {
+  content: '€ ';
+}
+
+/* Beschreibung */
 .menu-item-description {
   font-family: 'Crimson Text', serif;
-  font-size: 14px;
-  color: #5A5A5A;
-  line-height: 1.6;
+  font-size: 13px;
+  color: #4A4A4A;
+  line-height: 1.5;
   margin-bottom: 10px;
   font-style: italic;
 }
 
-/* Nutrition */
-.nutrition-info {
-  display: flex;
-  gap: 15px;
-  margin-top: 8px;
+/* Kalorien */
+.menu-item-calories {
   font-size: 11px;
-  color: #5A5A5A;
-}
-
-.nutrition-item {
-  display: flex;
-  gap: 3px;
-}
-
-.nutrition-value {
-  font-weight: 600;
-  color: #1E4A3C;
+  color: #7A7A7A;
+  margin-bottom: 8px;
 }
 
 /* Tags */
+.menu-item-tags {
+  display: flex;
+  gap: 6px;
+  flex-wrap: wrap;
+  margin-bottom: 8px;
+}
+
 .menu-tag {
-  font-size: 11px;
+  font-size: 10px;
   color: #8B9474;
-  border: 1px solid #8B9474;
+  background: rgba(139, 148, 116, 0.1);
   padding: 2px 8px;
-  border-radius: 2px;
-  margin-right: 6px;
+  border-radius: 12px;
   text-transform: lowercase;
 }
 
-/* Special Badge */
-.menu-item.special {
-  position: relative;
+/* Allergene */
+.menu-item-allergens {
+  font-size: 11px;
+  color: #8B4513;
+  font-weight: 500;
+  margin-top: 5px;
 }
 
-.menu-item.special::before {
-  content: 'Empfehlung';
-  position: absolute;
-  top: -10px;
-  right: -10px;
-  background: #D4735E;
-  color: white;
-  padding: 4px 12px;
-  font-size: 10px;
-  text-transform: uppercase;
-  letter-spacing: 1px;
+.allergen-code {
+  font-weight: 700;
+  margin: 0 2px;
+}
+
+/* Allergen Legende */
+.allergen-legend {
+  margin-top: 60px;
+  padding: 30px;
+  background: #FAF8F3;
+  border-radius: 8px;
+  text-align: center;
+}
+
+.allergen-legend h3 {
+  font-family: 'Playfair Display', serif;
+  font-size: 22px;
+  margin-bottom: 20px;
+  color: #1A1A1A;
+}
+
+.allergen-list {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  gap: 8px;
+  text-align: left;
+  max-width: 700px;
+  margin: 0 auto;
+}
+
+.allergen-item {
+  font-size: 12px;
+  color: #4A4A4A;
+}
+
+.allergen-item strong {
+  color: #8B4513;
   font-weight: 600;
 }
 
-/* Mobile Preview */
+/* Responsive für CMS Vorschau */
+@media (max-width: 1024px) {
+  .menu-items-grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 25px 30px;
+  }
+}
+
 @media (max-width: 768px) {
   .menu-items-grid {
     grid-template-columns: 1fr;
-    gap: 25px;
+    gap: 20px;
   }
   
   .category-title {
-    font-size: 22px;
+    font-size: 24px;
   }
   
   .category-title::before,
   .category-title::after {
     width: 30px;
+  }
+  
+  .menu-item-image {
+    height: 150px;
   }
 }

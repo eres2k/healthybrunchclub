@@ -40,6 +40,26 @@ collections:
               - {label: "Kohlenhydrate", name: "carbs", widget: "string", hint: "z.B. 22g", required: false}
               - {label: "Fett", name: "fat", widget: "string", hint: "z.B. 16g", required: false}
           - {label: "Tags", name: "tags", widget: "list", default: [], required: false}
+          - label: "Allergene"
+            name: "allergens"
+            widget: "select"
+            multiple: true
+            required: false
+            options:
+              - {label: "A - Glutenhaltiges Getreide", value: "A"}
+              - {label: "B - Krebstiere", value: "B"}
+              - {label: "C - Eier", value: "C"}
+              - {label: "D - Fisch", value: "D"}
+              - {label: "E - Erdnüsse", value: "E"}
+              - {label: "F - Soja", value: "F"}
+              - {label: "G - Milch/Laktose", value: "G"}
+              - {label: "H - Schalenfrüchte", value: "H"}
+              - {label: "L - Sellerie", value: "L"}
+              - {label: "M - Senf", value: "M"}
+              - {label: "N - Sesam", value: "N"}
+              - {label: "O - Sulfite", value: "O"}
+              - {label: "P - Lupinen", value: "P"}
+              - {label: "R - Weichtiere", value: "R"}
           - {label: "Als Empfehlung markieren", name: "special", widget: "boolean", default: false, required: false}
 
   - name: "events"
