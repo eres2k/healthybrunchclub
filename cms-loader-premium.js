@@ -113,13 +113,8 @@ function createFilterButton(value, text, iconClass, isActive = false, emoji = nu
     btn.className = `filter-btn ${isActive ? 'active' : ''}`;
     btn.setAttribute('data-filter', value);
     
-    if (iconClass) {
-        btn.innerHTML = `<i class="fas ${iconClass}"></i> ${text}`;
-    } else if (emoji) {
-        btn.innerHTML = `<span style="font-size: 1.2em;">${emoji}</span> ${text}`;
-    } else {
-        btn.textContent = text;
-    }
+    // Simplified - just text for elegant look
+    btn.innerHTML = `<span class="btn-text">${text}</span>`;
     
     btn.addEventListener('click', handleCategoryFilter);
     return btn;
