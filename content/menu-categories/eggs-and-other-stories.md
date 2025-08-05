@@ -88,9 +88,11 @@ items:
       ein oder zwei pochierte eier auf knusprigem sauerteigbrot vom öfferl und
       einer samtigen avocadosauce, serviert mit champignons oder
       shiitake-pilzen, garniert mit frischem rucula, sprossen, kresse und
-      knusprigen pinienkernen.
+      gerösteten pinienkernen.
+
 
       **your style:**
+
 
       * schinken
 
