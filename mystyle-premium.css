@@ -399,35 +399,37 @@ h1, h2, h3, h4, h5, h6 {
     text-align: center;
 }
 
-/* Elegant Minimal Filter System */
+/* ===============================================
+   FILTER DISPLAY FIX
+   Add this to your mystyle-premium.css file
+   Replace the existing filter styles (around line 1073-1200)
+   =============================================== */
+
+/* Elegant Minimal Filter System - FIXED */
 .menu-filter-container {
     max-width: 1200px;
     margin: 0 auto var(--spacing-lg);
     position: relative;
-    opacity: 0;
-    animation: fadeInDown 0.8s ease forwards;
-    animation-delay: 0.3s;
+    opacity: 1; /* Changed from 0 to ensure visibility */
+    /* Remove animation that might be causing issues */
 }
 
-/* Filter Bar - Horizontal and Elegant */
+/* Filter Bar - Fixed Layout */
 .filter-bar {
     display: flex;
     align-items: center;
     justify-content: space-between;
     gap: var(--spacing-md);
-    padding: 0;
+    padding: var(--spacing-md) 0; /* Added padding */
     background: transparent;
     border-bottom: 1px solid var(--light-gray);
-    padding-bottom: var(--spacing-md);
+    flex-wrap: wrap; /* Allow wrapping on smaller screens */
 }
 
-/* Category Filters - Elegant Tabs */
+/* Category Filters - Fixed */
 .filter-group {
-    flex: 1;
-}
-
-.filter-title {
-    display: none; /* Hide titles for cleaner look */
+    flex: 1 1 auto; /* Allow flexible sizing */
+    min-width: 0; /* Prevent overflow */
 }
 
 .filter-buttons {
@@ -435,6 +437,15 @@ h1, h2, h3, h4, h5, h6 {
     gap: 0;
     align-items: center;
     margin: 0;
+    flex-wrap: nowrap; /* Keep buttons in a row */
+    overflow-x: auto; /* Enable horizontal scroll if needed */
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none; /* Hide scrollbar */
+    -ms-overflow-style: none; /* Hide scrollbar IE/Edge */
+}
+
+.filter-buttons::-webkit-scrollbar {
+    display: none; /* Hide scrollbar Chrome/Safari */
 }
 
 .filter-btn {
@@ -451,6 +462,8 @@ h1, h2, h3, h4, h5, h6 {
     cursor: pointer;
     transition: all var(--transition-normal);
     position: relative;
+    white-space: nowrap; /* Prevent text wrapping */
+    flex-shrink: 0; /* Prevent button shrinking */
 }
 
 .filter-btn:first-child {
@@ -475,27 +488,18 @@ h1, h2, h3, h4, h5, h6 {
 
 .filter-btn.active {
     color: var(--black);
-    background: none;
-    border-bottom-color: transparent;
 }
 
 .filter-btn.active::after {
     transform: scaleX(1);
 }
 
-.filter-btn i {
-    display: none; /* Hide icons for cleaner look */
-}
-
-.filter-btn .btn-text {
-    display: inline-block;
-}
-
-/* Tag Filters - Inline Pills */
+/* Tag Filters - Fixed */
 .filter-tags {
     display: flex;
     gap: var(--spacing-xs);
     align-items: center;
+    flex-wrap: wrap; /* Allow wrapping */
 }
 
 .tag-filter {
@@ -521,6 +525,7 @@ h1, h2, h3, h4, h5, h6 {
     border: 1px solid var(--light-gray);
     cursor: pointer;
     transition: all var(--transition-fast);
+    white-space: nowrap;
 }
 
 .tag-filter input[type="checkbox"]:checked + .tag-label {
@@ -534,13 +539,12 @@ h1, h2, h3, h4, h5, h6 {
     color: var(--gold);
 }
 
-/* Filter Actions - Minimal */
+/* Filter Actions - Fixed */
 .filter-actions {
     display: flex;
     gap: var(--spacing-sm);
-    border: none;
-    padding: 0;
-    margin: 0;
+    align-items: center;
+    flex-shrink: 0; /* Prevent shrinking */
 }
 
 .btn-icon {
@@ -554,6 +558,7 @@ h1, h2, h3, h4, h5, h6 {
     display: flex;
     align-items: center;
     gap: 0.375rem;
+    position: relative;
 }
 
 .btn-icon:hover {
@@ -571,16 +576,160 @@ h1, h2, h3, h4, h5, h6 {
     font-size: 0.875rem;
 }
 
-/* Fade in animation */
-@keyframes fadeInDown {
-    from {
-        opacity: 0;
-        transform: translateY(-20px);
+/* Filter Count Badge */
+.filter-count {
+    position: absolute;
+    top: -8px;
+    right: -8px;
+    background: var(--gold);
+    color: var(--pure-white);
+    font-size: 0.625rem;
+    font-weight: 600;
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+}
+
+/* Active filters visual feedback */
+.menu-filter-container.has-active-filters {
+    border: 2px solid var(--gold);
+    box-shadow: 0 4px 20px rgba(201, 169, 97, 0.15);
+    padding: var(--spacing-md);
+    border-radius: 8px;
+}
+
+/* Desktop only class */
+@media (min-width: 769px) {
+    .desktop-only {
+        display: block !important;
     }
-    to {
-        opacity: 1;
-        transform: translateY(0);
+}
+
+/* Tablet adjustments */
+@media (max-width: 1024px) and (min-width: 769px) {
+    .filter-bar {
+        flex-wrap: wrap;
+        gap: var(--spacing-sm);
     }
+    
+    .filter-group {
+        flex: 1 1 100%;
+    }
+    
+    .filter-actions {
+        flex: 1 1 100%;
+        justify-content: center;
+        margin-top: var(--spacing-sm);
+    }
+}
+
+/* Mobile adjustments */
+@media (max-width: 768px) {
+    /* Hide desktop-only elements */
+    .desktop-only {
+        display: none !important;
+    }
+    
+    /* Filter container mobile */
+    .menu-filter-container {
+        margin: 0 var(--spacing-sm) var(--spacing-lg);
+        padding: var(--spacing-sm);
+        background: var(--pure-white);
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+        border-radius: 8px;
+    }
+    
+    /* Filter bar mobile */
+    .filter-bar {
+        flex-direction: column;
+        gap: var(--spacing-sm);
+        padding: 0;
+        border-bottom: none;
+    }
+    
+    /* Category filters mobile */
+    .filter-group {
+        width: 100%;
+    }
+    
+    .filter-buttons {
+        width: 100%;
+        overflow-x: auto;
+        padding-bottom: var(--spacing-xs);
+        /* Add visual scroll indicators */
+        -webkit-mask-image: linear-gradient(to right, black 90%, transparent 100%);
+        mask-image: linear-gradient(to right, black 90%, transparent 100%);
+    }
+    
+    /* Adjust button spacing on mobile */
+    .filter-btn {
+        padding: 0.5rem 1rem;
+        font-size: 0.7rem;
+    }
+    
+    .filter-btn:first-child {
+        padding-left: 0.5rem;
+    }
+    
+    /* Filter actions mobile */
+    .filter-actions {
+        width: 100%;
+        justify-content: center;
+        border-top: 1px solid var(--light-gray);
+        padding-top: var(--spacing-sm);
+        margin-top: var(--spacing-sm);
+    }
+    
+    /* Show only icons on mobile */
+    .btn-icon .btn-text {
+        display: none;
+    }
+    
+    .btn-icon {
+        padding: 0.75rem;
+    }
+    
+    .btn-icon i {
+        font-size: 1.25rem;
+    }
+}
+
+/* Loading state for menu */
+.menu-loading {
+    text-align: center;
+    padding: var(--spacing-xxl);
+    color: var(--warm-gray);
+}
+
+.menu-loading i {
+    font-size: 3rem;
+    margin-bottom: var(--spacing-md);
+    color: var(--gold);
+    animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+    from { transform: rotate(0deg); }
+    to { transform: rotate(360deg); }
+}
+
+/* No results message */
+.no-results-message {
+    text-align: center;
+    padding: var(--spacing-xxl);
+    color: var(--warm-gray);
+    font-size: 1.125rem;
+}
+
+.no-results-message i {
+    font-size: 3rem;
+    color: var(--light-gray);
+    margin-bottom: var(--spacing-md);
+    display: block;
 }
 
 /* Menu Content - 3 Column Layout */
