@@ -7,7 +7,9 @@
   NODE_VERSION = "18"
 
 [functions]
-  included_files = ["content/**"]
+  # Include content files in the function bundle
+  included_files = ["content/**/*.md", "content/**/*.yml", "content/**/*.json"]
+  node_bundler = "esbuild"
 
 [[redirects]]
   from = "/menu-pdf"
@@ -17,4 +19,10 @@
 [[redirects]]
   from = "/speisekarte.pdf"
   to = "/.netlify/functions/generate-menu-pdf"
+  status = 200
+
+# Test path endpoint
+[[redirects]]
+  from = "/test-paths"
+  to = "/.netlify/functions/test-paths"
   status = 200
