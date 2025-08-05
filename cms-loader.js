@@ -1,7 +1,26 @@
-// CMS Loader with Compact Menu Design and Image Support
-// Supports nutrition values, rich text formatting, and images
+// CMS Loader für klassisches Menü Design
+// Ohne Modal-Popups, mit Allergen-Anzeige
 
 let allMenuCategories = [];
+let currentFilter = 'all';
+
+// Allergen-Mapping
+const allergenMap = {
+    'A': 'Glutenhaltiges Getreide',
+    'B': 'Krebstiere',
+    'C': 'Eier',
+    'D': 'Fisch',
+    'E': 'Erdnüsse',
+    'F': 'Soja',
+    'G': 'Milch/Laktose',
+    'H': 'Schalenfrüchte',
+    'L': 'Sellerie',
+    'M': 'Senf',
+    'N': 'Sesam',
+    'O': 'Sulfite',
+    'P': 'Lupinen',
+    'R': 'Weichtiere'
+};
 
 document.addEventListener('DOMContentLoaded', function() {
     loadMenuFromCMS();
@@ -22,7 +41,7 @@ async function loadMenuFromCMS() {
         console.log('Menu data loaded:', menuData);
         
         allMenuCategories = menuData;
-        displayCompactMenu(menuData);
+        displayClassicMenu(menuData);
         createFilterButtons(menuData);
         
     } catch (error) {
@@ -36,14 +55,14 @@ function createFilterButtons(menuData) {
     const filtersContainer = document.getElementById('menuFilters');
     if (!filtersContainer) return;
     
-    // Clear container
+    // Clear existing filters
     filtersContainer.innerHTML = '';
     
-    // Add "all" button
+    // Add "All" button
     const allBtn = document.createElement('button');
     allBtn.className = 'filter-btn active';
     allBtn.setAttribute('data-filter', 'all');
-    allBtn.textContent = 'alle anzeigen';
+    allBtn.textContent = 'Alle Kategorien';
     allBtn.addEventListener('click', handleFilterClick);
     filtersContainer.appendChild(allBtn);
     
@@ -52,7 +71,7 @@ function createFilterButtons(menuData) {
         const filterBtn = document.createElement('button');
         filterBtn.className = 'filter-btn';
         filterBtn.setAttribute('data-filter', category.title.toLowerCase().replace(/\s+/g, '-'));
-        filterBtn.textContent = category.title.toLowerCase();
+        filterBtn.textContent = category.title;
         filterBtn.addEventListener('click', handleFilterClick);
         filtersContainer.appendChild(filterBtn);
     });
@@ -61,6 +80,7 @@ function createFilterButtons(menuData) {
 // Handle Filter Click
 function handleFilterClick(e) {
     const filterValue = e.target.getAttribute('data-filter');
+    currentFilter = filterValue;
     
     // Update active state
     document.querySelectorAll('.filter-btn').forEach(btn => {
@@ -68,144 +88,38 @@ function handleFilterClick(e) {
     });
     e.target.classList.add('active');
     
-    // Filter menu
+    // Filter menu display
     if (filterValue === 'all') {
-        displayCompactMenu(allMenuCategories);
+        displayClassicMenu(allMenuCategories);
     } else {
         const filtered = allMenuCategories.filter(category => 
             category.title.toLowerCase().replace(/\s+/g, '-') === filterValue
         );
-        displayCompactMenu(filtered);
+        displayClassicMenu(filtered);
     }
 }
 
-// Display Compact Menu with Image Support
-function displayCompactMenu(menuData) {
-    const menuContainer = document.getElementById('menuGrid') || document.getElementById('menuContainer');
-    
-    if (!menuData || menuData.length === 0) {
-        menuContainer.innerHTML = '<div class="menu-loading">Keine Einträge gefunden.</div>';
-        return;
-    }
-    
-    // Add logo at the top of the menu
-    const logoHtml = `
-        <div class="menu-logo">
-            <img src="/content/images/logo.png" alt="Healthy Brunch Club" />
-        </div>
-    `;
-    
-    menuContainer.innerHTML = logoHtml + menuData.map(category => {
-        // Handle category image URL
-        let imageUrl = '';
-        if (category.image) {
-            imageUrl = category.image.startsWith('/') ? category.image : `/${category.image}`;
-        }
-        
-        return `
-            <div class="menu-category" data-category="${category.title.toLowerCase().replace(/\s+/g, '-')}">
-                <div class="category-header ${!imageUrl ? 'no-image' : ''}">
-                    ${imageUrl ? `
-                        <div class="category-image">
-                            <img src="${imageUrl}" alt="${category.title}" loading="lazy" onerror="this.parentElement.parentElement.classList.add('no-image'); this.parentElement.style.display='none';">
-                        </div>
-                    ` : ''}
-                    <div class="category-info">
-                        <h3 class="category-title">${category.title}</h3>
-                        ${category.description ? `<p class="category-description">${category.description}</p>` : ''}
-                    </div>
-                </div>
-                
-                <div class="menu-items-grid">
-                    ${category.items.map((item, index) => {
-                        // Handle dish image URL
-                        let dishImageUrl = '';
-                        if (item.image) {
-                            dishImageUrl = item.image.startsWith('/') ? item.image : `/${item.image}`;
-                        }
-                        
-                        return `
-                        <div class="menu-item-card ${dishImageUrl ? 'has-image' : ''}">
-                            ${item.special ? '<div class="menu-item-badge">Empfehlung</div>' : ''}
-                            
-                            ${dishImageUrl ? `
-                                <div class="menu-item-image">
-                                    <img src="${dishImageUrl}" alt="${item.name}" loading="lazy">
-                                </div>
-                            ` : ''}
-                            
-                            <div class="menu-item-content">
-                                <div class="menu-item-header">
-                                    <h4 class="menu-item-name">${item.name}</h4>
-                                    ${item.price ? `<span class="menu-item-price">€${item.price}</span>` : ''}
-                                </div>
-                                
-                                <div class="menu-item-description" id="desc-${category.order}-${index}">
-                                    ${processRichText(item.description)}
-                                </div>
-                                
-                                ${item.nutrition ? `
-                                    <div class="nutrition-info">
-                                        ${item.nutrition.calories ? `
-                                            <div class="nutrition-item">
-                                                <span class="nutrition-value">${item.nutrition.calories}</span>
-                                                <span class="nutrition-label">kcal</span>
-                                            </div>
-                                        ` : ''}
-                                        ${item.nutrition.protein ? `
-                                            <div class="nutrition-item">
-                                                <span class="nutrition-value">${item.nutrition.protein}</span>
-                                                <span class="nutrition-label">Protein</span>
-                                            </div>
-                                        ` : ''}
-                                        ${item.nutrition.carbs ? `
-                                            <div class="nutrition-item">
-                                                <span class="nutrition-value">${item.nutrition.carbs}</span>
-                                                <span class="nutrition-label">Kohlenh.</span>
-                                            </div>
-                                        ` : ''}
-                                        ${item.nutrition.fat ? `
-                                            <div class="nutrition-item">
-                                                <span class="nutrition-value">${item.nutrition.fat}</span>
-                                                <span class="nutrition-label">Fett</span>
-                                            </div>
-                                        ` : ''}
-                                    </div>
-                                ` : ''}
-                                
-                                ${item.tags && item.tags.length > 0 ? `
-                                    <div class="menu-item-tags">
-                                        ${item.tags.map(tag => `<span class="menu-tag">${tag}</span>`).join('')}
-                                    </div>
-                                ` : ''}
-                            </div>
-                        </div>
-                    `;
-                    }).join('')}
-                </div>
-            </div>
-        `;
-    }).join('');
+// Format Price
+function formatPrice(price) {
+    if (!price) return '';
+    // Clean and format price
+    const cleanPrice = price.toString().replace(/[€$£¥]/g, '').trim();
+    return cleanPrice;
 }
 
-// Process rich text from markdown
+// Process Rich Text
 function processRichText(text) {
     if (!text) return '';
     
-    // Convert markdown to HTML
     let html = text;
     
-    // Convert bold text
+    // Convert markdown to HTML
     html = html.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>');
-    
-    // Convert italic text
     html = html.replace(/\*(.*?)\*/g, '<em>$1</em>');
-    
-    // Convert line breaks
     html = html.replace(/\n\n/g, '</p><p>');
     html = html.replace(/\n/g, '<br>');
     
-    // Wrap in paragraph if not already
+    // Wrap in paragraph if needed
     if (!html.startsWith('<p>')) {
         html = `<p>${html}</p>`;
     }
@@ -217,98 +131,116 @@ function processRichText(text) {
     return html;
 }
 
-// Fallback Menu with image data
-function displayFallbackMenu() {
-    const fallbackMenu = [
-        {
-            title: "eggcitements",
-            order: 1,
-            image: "/content/images/eggs.jpg",
-            description: "Proteinreiche Frühstücksklassiker mit Bio-Eiern",
-            items: [
-                {
-                    name: "eggs any style",
-                    price: "12.90",
-                    image: "/content/images/eggs-any-style.jpg",
-                    description: "Wähle zwischen **Spiegelei**, **pochiert** oder **Rührei**\n\n- Serviert auf Süßkartoffel- und Avocadoscheiben\n- Mit sautierten Champignons oder Shiitake-Pilzen\n- Garniert mit frischem Rucola, Sprossen und Kresse",
-                    nutrition: {
-                        calories: "320",
-                        protein: "18g",
-                        carbs: "22g",
-                        fat: "16g"
-                    },
-                    tags: ["vegetarisch", "proteinreich"],
-                    special: false
-                },
-                {
-                    name: "omelette creation",
-                    price: "13.90",
-                    description: "Fluffiges Omelette aus 2 Bio-Eiern auf knusprigem Sauerteigbrot\n\n**Basis:** Zwiebel, Shiitake-Pilze, Spinat\n**Add-ons:** Tomaten, Speckwürfel, Käse oder Avocado",
-                    nutrition: {
-                        calories: "380",
-                        protein: "20g",
-                        carbs: "26g",
-                        fat: "22g"
-                    },
-                    tags: ["vegetarisch", "anpassbar"],
-                    special: false
-                },
-                {
-                    name: "beggs enedict",
-                    price: "14.90",
-                    image: "/content/images/eggs-benedict.jpg",
-                    description: "Pochierte Bio-Eier auf Sauerteigbrot mit cremiger Avocado-Hollandaise\n\n*Wähle deine Beilage:*\n- Bio-Schinken\n- Räucherlachs\n- Gegrilltes Gemüse",
-                    nutrition: {
-                        calories: "420",
-                        protein: "22g",
-                        carbs: "28g",
-                        fat: "24g"
-                    },
-                    tags: ["signature"],
-                    special: true
-                }
-            ]
-        },
-        {
-            title: "hafer dich lieb",
-            order: 2,
-            image: "/content/images/porridge.jpg",
-            description: "Glutenfreie, lactosefreie & besonders darmfreundliche Kreationen",
-            items: [
-                {
-                    name: "premium-porridge",
-                    price: "9.90",
-                    image: "/content/images/premium-porridge.jpg",
-                    description: "Ein wärmender Genuss aus zarten **Bio-Haferflocken**\n\nVerfeinert mit:\n- Hanf- und Chiasamen\n- Kokosflocken und geriebenem Apfel\n- Ceylon-Zimt\n- Geröstete Mandeln und frische Beeren",
-                    nutrition: {
-                        calories: "380",
-                        protein: "12g",
-                        carbs: "45g",
-                        fat: "18g"
-                    },
-                    tags: ["glutenfrei", "lactosefrei", "darmfreundlich"],
-                    special: false
-                },
-                {
-                    name: "kokoscreme power-oats",
-                    price: "11.90",
-                    description: "Kraftvolle Haferflocken in cremiger Kokosmilch\n\n*Getoppt mit:*\n- Hanf- und Chiasamen\n- Frische Heidel- und Himbeeren\n- Kokosflocken\n- Ahornsirup",
-                    nutrition: {
-                        calories: "410",
-                        protein: "14g",
-                        carbs: "48g",
-                        fat: "20g"
-                    },
-                    tags: ["vegan", "energizing"],
-                    special: false
-                }
-            ]
-        }
-    ];
+// Format Allergens
+function formatAllergens(allergens) {
+    if (!allergens || allergens.length === 0) return '';
     
-    allMenuCategories = fallbackMenu;
-    displayCompactMenu(fallbackMenu);
-    createFilterButtons(fallbackMenu);
+    return 'Allergene: ' + allergens.map(code => 
+        `<span class="allergen-code">${code}</span>`
+    ).join(', ');
+}
+
+// Display Classic Menu with 3-Column Layout
+function displayClassicMenu(menuData) {
+    const menuContainer = document.getElementById('menuGrid') || document.getElementById('menuContainer');
+    
+    if (!menuData || menuData.length === 0) {
+        menuContainer.innerHTML = '<div class="menu-loading">Keine Gerichte in dieser Kategorie gefunden.</div>';
+        return;
+    }
+    
+    let hasAllergens = false;
+    
+    menuContainer.innerHTML = menuData.map((category, catIndex) => {
+        // Check if any item has allergens
+        if (category.items.some(item => item.allergens && item.allergens.length > 0)) {
+            hasAllergens = true;
+        }
+        
+        return `
+            <div class="menu-category" data-category="${category.title.toLowerCase().replace(/\s+/g, '-')}">
+                ${category.image ? `
+                    <div class="category-image">
+                        <img src="${formatImageUrl(category.image)}" alt="${category.title}" loading="lazy">
+                    </div>
+                ` : ''}
+                
+                <div class="category-header">
+                    <h3 class="category-title">${category.title}</h3>
+                    ${category.description ? `<p class="category-description">${category.description}</p>` : ''}
+                </div>
+                
+                <div class="menu-items-grid">
+                    ${category.items.map((item, index) => {
+                        const hasImage = item.image ? true : false;
+                        const isSpecial = item.special || false;
+                        
+                        return `
+                        <div class="menu-item ${isSpecial ? 'special' : ''}">
+                            ${isSpecial ? '<div class="special-badge">Empfehlung</div>' : ''}
+                            
+                            ${hasImage ? `
+                                <div class="menu-item-image">
+                                    <img src="${formatImageUrl(item.image)}" alt="${item.name}" loading="lazy">
+                                </div>
+                            ` : ''}
+                            
+                            <div class="menu-item-header">
+                                <h4 class="menu-item-name">${item.name}</h4>
+                                ${item.price ? `<span class="menu-item-price">${formatPrice(item.price)}</span>` : ''}
+                            </div>
+                            
+                            <div class="menu-item-description">
+                                ${processRichText(item.description)}
+                            </div>
+                            
+                            ${item.nutrition && item.nutrition.calories ? `
+                                <div class="menu-item-calories">
+                                    ${item.nutrition.calories} kcal
+                                    ${item.nutrition.protein ? ` • ${item.nutrition.protein} Protein` : ''}
+                                    ${item.nutrition.carbs ? ` • ${item.nutrition.carbs} Kohlenhydrate` : ''}
+                                    ${item.nutrition.fat ? ` • ${item.nutrition.fat} Fett` : ''}
+                                </div>
+                            ` : ''}
+                            
+                            ${item.tags && item.tags.length > 0 ? `
+                                <div class="menu-item-tags">
+                                    ${item.tags.map(tag => `<span class="menu-tag">${tag}</span>`).join('')}
+                                </div>
+                            ` : ''}
+                            
+                            ${item.allergens && item.allergens.length > 0 ? `
+                                <div class="menu-item-allergens">
+                                    ${formatAllergens(item.allergens)}
+                                </div>
+                            ` : ''}
+                        </div>
+                    `;
+                    }).join('')}
+                </div>
+            </div>
+        `;
+    }).join('');
+    
+    // Add allergen legend if any items have allergens
+    if (hasAllergens) {
+        menuContainer.innerHTML += `
+            <div class="allergen-legend">
+                <h3>Allergen-Kennzeichnung</h3>
+                <div class="allergen-list">
+                    ${Object.entries(allergenMap).map(([code, name]) => 
+                        `<div class="allergen-item"><strong>${code}</strong> = ${name}</div>`
+                    ).join('')}
+                </div>
+            </div>
+        `;
+    }
+}
+
+// Format Image URL
+function formatImageUrl(url) {
+    if (!url) return '';
+    return url.startsWith('/') ? url : `/${url}`;
 }
 
 // Load Events from CMS
@@ -343,15 +275,8 @@ function displayEvents(eventsData) {
     
     const nextEvent = eventsData[0];
     
-    let imageUrl = '';
-    if (nextEvent.featuredImage) {
-        imageUrl = nextEvent.featuredImage.startsWith('/') ? nextEvent.featuredImage : `/${nextEvent.featuredImage}`;
-    }
-    
-    let audioUrl = '';
-    if (nextEvent.audioAnnouncement) {
-        audioUrl = nextEvent.audioAnnouncement.startsWith('/') ? nextEvent.audioAnnouncement : `/${nextEvent.audioAnnouncement}`;
-    }
+    const imageUrl = nextEvent.featuredImage ? formatImageUrl(nextEvent.featuredImage) : '';
+    const audioUrl = nextEvent.audioAnnouncement ? formatImageUrl(nextEvent.audioAnnouncement) : '';
     
     const eventDate = new Date(nextEvent.date);
     const formattedDate = eventDate.toLocaleDateString('de-AT', {
@@ -362,31 +287,29 @@ function displayEvents(eventsData) {
     
     eventContent.innerHTML = `
         ${imageUrl ? `
-            <div class="event-image">
-                <img src="${imageUrl}" alt="${nextEvent.title}" style="width: 100%; height: 100%; object-fit: cover;" loading="lazy" onerror="this.parentElement.style.display='none'">
+            <div class="event-image" style="margin-bottom: 20px;">
+                <img src="${imageUrl}" alt="${nextEvent.title}" style="width: 100%; height: auto; border-radius: 4px;">
             </div>
         ` : ''}
-        <div class="event-header" style="${imageUrl ? 'background: none; color: var(--text-dark); padding: 0; margin: 0 0 15px 0;' : ''}">
-            <h3>${nextEvent.title}</h3>
-            <p style="${imageUrl ? 'color: var(--text-medium);' : ''}">${formattedDate}</p>
+        <div class="event-header" style="margin-bottom: 15px;">
+            <h3 style="font-size: 20px; margin-bottom: 5px;">${nextEvent.title}</h3>
+            <p style="color: var(--text-secondary); font-size: 14px;">${formattedDate}</p>
         </div>
-        <div class="event-details">
-            <p style="margin-bottom: 10px;">${nextEvent.body || ''}</p>
+        <div class="event-details" style="font-size: 14px; line-height: 1.6;">
+            <p style="margin-bottom: 10px;">${nextEvent.body || nextEvent.description || ''}</p>
             
             ${nextEvent.location ? `
-                <strong>📍 Location:</strong>
-                <p>${nextEvent.location}</p>
+                <p style="margin-bottom: 8px;"><strong>📍 Location:</strong> ${nextEvent.location}</p>
             ` : ''}
             
             ${nextEvent.price ? `
-                <strong>💶 Eintritt:</strong>
-                <p>${nextEvent.price}€</p>
+                <p style="margin-bottom: 8px;"><strong>💶 Eintritt:</strong> ${nextEvent.price}</p>
             ` : ''}
         </div>
         
         ${audioUrl ? `
-            <div class="audio-player">
-                <h4>🎧 Preview</h4>
+            <div class="audio-player" style="margin-top: 20px; padding-top: 15px; border-top: 1px solid var(--border-color);">
+                <h4 style="font-size: 13px; margin-bottom: 10px;">🎧 Preview</h4>
                 <audio controls preload="none" style="width: 100%;">
                     <source src="${audioUrl}" type="audio/mpeg">
                     <source src="${audioUrl}" type="audio/wav">
@@ -400,14 +323,95 @@ function displayEvents(eventsData) {
     eventWindow.style.display = 'block';
 }
 
+// Fallback Menu
+function displayFallbackMenu() {
+    const fallbackMenu = [
+        {
+            title: "Morning Rituals",
+            order: 1,
+            items: [
+                {
+                    name: "Warmes Wasser mit Bio-Zitrone",
+                    price: "4.90",
+                    description: "Der perfekte Start für deine Verdauung. Frisch gepresste Bio-Zitrone in warmem, gefiltertem Wasser.",
+                    nutrition: {
+                        calories: "25"
+                    },
+                    tags: ["detox", "vegan"],
+                    allergens: []
+                },
+                {
+                    name: "Golden Milk Latte",
+                    price: "6.90",
+                    description: "Kurkuma, Ingwer, Zimt & Hafermilch. Ein entzündungshemmender Genuss für Körper und Seele.",
+                    nutrition: {
+                        calories: "180",
+                        protein: "5g",
+                        carbs: "18g",
+                        fat: "8g"
+                    },
+                    tags: ["anti-inflammatory", "lactosefrei"],
+                    allergens: ["A", "F"]
+                }
+            ]
+        },
+        {
+            title: "Power Bowls",
+            order: 2,
+            items: [
+                {
+                    name: "Açaí Sunrise Bowl",
+                    price: "12.90",
+                    description: "Açaí, Banane, Beeren, hausgemachtes Granola, Kokosflocken und Chiasamen. Getoppt mit frischen Früchten der Saison.",
+                    nutrition: {
+                        calories: "320",
+                        protein: "8g",
+                        carbs: "45g",
+                        fat: "12g"
+                    },
+                    tags: ["superfood", "vegan"],
+                    allergens: ["A", "H"],
+                    special: true
+                }
+            ]
+        }
+    ];
+    
+    allMenuCategories = fallbackMenu;
+    displayClassicMenu(fallbackMenu);
+    createFilterButtons(fallbackMenu);
+}
+
 // Fallback Event
 function displayFallbackEvent() {
     const fallbackEvent = [{
-        title: "next monday special",
-        artist: "dj cosmic kitchen",
+        title: "Next Monday Special",
+        artist: "DJ Cosmic Kitchen",
         date: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000).toISOString(),
-        description: "erlebe entspannte lounge-klänge während deines brunches!"
+        description: "Erlebe entspannte Lounge-Klänge während deines Brunches! Sanfte Beats treffen auf kulinarische Genüsse."
     }];
     
     displayEvents(fallbackEvent);
 }
+
+// Export functions for global access
+window.toggleEventWindow = toggleEventWindow;
+
+// Toggle Event Window
+function toggleEventWindow() {
+    const eventWindow = document.getElementById('eventWindow');
+    const toggleIcon = document.getElementById('toggleIcon');
+    
+    eventWindow.classList.toggle('collapsed');
+    toggleIcon.textContent = eventWindow.classList.contains('collapsed') ? '🎵' : '−';
+}
+
+// Refresh content function
+window.cmsLoader = {
+    refresh: function() {
+        loadMenuFromCMS();
+        loadEventsFromCMS();
+    }
+};
+
+console.log('Classic Menu CMS Loader initialized. Traditional 3-column layout with allergen display.');
