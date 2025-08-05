@@ -7,7 +7,8 @@
     "build": "echo 'Build completed'"
   },
   "dependencies": {
-    "gray-matter": "^4.0.3"
+    "gray-matter": "^4.0.3",
+    "jspdf": "^2.5.1"
   },
   "devDependencies": {
     "@netlify/functions": "^2.0.0"
