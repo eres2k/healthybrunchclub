@@ -1,16 +1,8 @@
-// Premium App JavaScript
+// Premium App JavaScript - Fixed Mobile Menu
 // Enhanced functionality for upper-class restaurant experience
 
 document.addEventListener('DOMContentLoaded', function() {
     initializeApp();
-    
-    // Ensure event window is visible but collapsed
-    const eventWindow = document.getElementById('eventWindow');
-    if (eventWindow) {
-        // Make sure it starts collapsed
-        eventWindow.classList.add('collapsed');
-        eventWindow.style.display = 'block';
-    }
 });
 
 function initializeApp() {
@@ -23,6 +15,13 @@ function initializeApp() {
     initAnimations();
     initVideoOptimization();
     fillAvailableDates();
+    
+    // Initialize event window
+    const eventWindow = document.getElementById('eventWindow');
+    if (eventWindow) {
+        eventWindow.classList.add('collapsed');
+        eventWindow.style.display = 'block';
+    }
 }
 
 // Loading Screen
@@ -52,66 +51,97 @@ function initNavigation() {
             navbar.classList.remove('scrolled');
         }
         
-        // Hide/show on scroll
-        if (currentScroll > lastScroll && currentScroll > 500) {
-            navbar.style.transform = 'translateY(-100%)';
-        } else {
-            navbar.style.transform = 'translateY(0)';
+        // Hide/show on scroll (only on desktop)
+        if (window.innerWidth > 768) {
+            if (currentScroll > lastScroll && currentScroll > 500) {
+                navbar.style.transform = 'translateY(-100%)';
+            } else {
+                navbar.style.transform = 'translateY(0)';
+            }
         }
         
         lastScroll = currentScroll;
     });
 }
 
-
-// Mobile Menu
+// Mobile Menu - Fixed Implementation
 function initMobileMenu() {
     const menuBtn = document.querySelector('.mobile-menu-btn');
     const navMenu = document.querySelector('.nav-menu');
     
-    if (menuBtn && navMenu) {
-        menuBtn.addEventListener('click', function() {
-            navMenu.classList.toggle('active');
-            menuBtn.classList.toggle('active');
-            
-            // For compatibility with mystyle.css
-            if (navMenu.style.display === 'flex') {
-                navMenu.style.display = 'none';
-            } else {
-                navMenu.style.display = 'flex';
-                navMenu.style.flexDirection = 'column';
-                navMenu.style.position = 'absolute';
-                navMenu.style.top = '100%';
-                navMenu.style.left = '0';
-                navMenu.style.right = '0';
-                navMenu.style.background = 'white';
-                navMenu.style.padding = '20px';
-                navMenu.style.boxShadow = '0 10px 30px rgba(0,0,0,0.1)';
-            }
-            
-            // Animate burger menu
-            const spans = menuBtn.querySelectorAll('span');
-            if (menuBtn.classList.contains('active')) {
-                spans[0].style.transform = 'rotate(45deg) translate(5px, 5px)';
-                spans[1].style.opacity = '0';
-                spans[2].style.transform = 'rotate(-45deg) translate(7px, -6px)';
-            } else {
-                spans[0].style.transform = '';
-                spans[1].style.opacity = '';
-                spans[2].style.transform = '';
-            }
+    if (!menuBtn || !navMenu) return;
+    
+    // Click handler for mobile menu button
+    menuBtn.addEventListener('click', function(e) {
+        e.stopPropagation();
+        toggleMobileMenu();
+    });
+    
+    // Close menu when clicking on a link
+    const navLinks = navMenu.querySelectorAll('.nav-link');
+    navLinks.forEach(link => {
+        link.addEventListener('click', function() {
+            closeMobileMenu();
         });
-        
-        // Close menu on link click
-        const navLinks = navMenu.querySelectorAll('.nav-link');
-        navLinks.forEach(link => {
-            link.addEventListener('click', function() {
-                navMenu.classList.remove('active');
-                navMenu.style.display = 'none';
-                menuBtn.classList.remove('active');
-            });
-        });
+    });
+    
+    // Close menu when clicking outside
+    document.addEventListener('click', function(e) {
+        if (!navMenu.contains(e.target) && !menuBtn.contains(e.target)) {
+            closeMobileMenu();
+        }
+    });
+    
+    // Close menu on escape key
+    document.addEventListener('keydown', function(e) {
+        if (e.key === 'Escape') {
+            closeMobileMenu();
+        }
+    });
+}
+
+// Toggle Mobile Menu
+function toggleMobileMenu() {
+    const menuBtn = document.querySelector('.mobile-menu-btn');
+    const navMenu = document.querySelector('.nav-menu');
+    
+    if (!menuBtn || !navMenu) return;
+    
+    const isActive = navMenu.classList.contains('active');
+    
+    if (isActive) {
+        closeMobileMenu();
+    } else {
+        openMobileMenu();
     }
+}
+
+// Open Mobile Menu
+function openMobileMenu() {
+    const menuBtn = document.querySelector('.mobile-menu-btn');
+    const navMenu = document.querySelector('.nav-menu');
+    
+    if (!menuBtn || !navMenu) return;
+    
+    navMenu.classList.add('active');
+    menuBtn.classList.add('active');
+    
+    // Prevent body scroll when menu is open
+    document.body.style.overflow = 'hidden';
+}
+
+// Close Mobile Menu
+function closeMobileMenu() {
+    const menuBtn = document.querySelector('.mobile-menu-btn');
+    const navMenu = document.querySelector('.nav-menu');
+    
+    if (!menuBtn || !navMenu) return;
+    
+    navMenu.classList.remove('active');
+    menuBtn.classList.remove('active');
+    
+    // Restore body scroll
+    document.body.style.overflow = '';
 }
 
 // Smooth Scrolling
@@ -278,6 +308,18 @@ function initVideoOptimization() {
     }
 }
 
+// Handle window resize
+let resizeTimer;
+window.addEventListener('resize', function() {
+    clearTimeout(resizeTimer);
+    resizeTimer = setTimeout(function() {
+        // Close mobile menu on resize to desktop
+        if (window.innerWidth > 768) {
+            closeMobileMenu();
+        }
+    }, 250);
+});
+
 // Form Success Handling
 if (window.location.search.includes('success=true')) {
     // Show success message
@@ -325,6 +367,28 @@ if (window.netlifyIdentity) {
                 document.location.href = "/admin/";
             });
         }
+        
+        // Show admin button if logged in
+        if (user) {
+            const adminBtn = document.getElementById('adminBtn');
+            if (adminBtn) {
+                adminBtn.classList.add('show');
+            }
+        }
+    });
+    
+    window.netlifyIdentity.on("login", () => {
+        const adminBtn = document.getElementById('adminBtn');
+        if (adminBtn) {
+            adminBtn.classList.add('show');
+        }
+    });
+    
+    window.netlifyIdentity.on("logout", () => {
+        const adminBtn = document.getElementById('adminBtn');
+        if (adminBtn) {
+            adminBtn.classList.remove('show');
+        }
     });
 }
 
@@ -342,8 +406,10 @@ function debounce(func, wait) {
     };
 }
 
-// Parallax effect for hero
+// Parallax effect for hero (desktop only)
 function initParallax() {
+    if (window.innerWidth <= 768) return;
+    
     const heroContent = document.querySelector('.hero-content');
     
     if (heroContent) {
