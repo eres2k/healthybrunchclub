@@ -122,10 +122,72 @@ function createFilterButton(value, text, iconClass, isActive = false, emoji = nu
 
 // Initialize Tag Filters
 function initializeFilters() {
+    // Initialize tag filters
     const tagCheckboxes = document.querySelectorAll('.tag-filter input[type="checkbox"]');
     tagCheckboxes.forEach(checkbox => {
         checkbox.addEventListener('change', handleTagFilter);
     });
+    
+    // Add smooth scroll behavior for mobile horizontal scrolling
+    const filterButtons = document.querySelector('.filter-buttons');
+    if (filterButtons) {
+        let isDown = false;
+        let startX;
+        let scrollLeft;
+        
+        filterButtons.addEventListener('mousedown', (e) => {
+            isDown = true;
+            startX = e.pageX - filterButtons.offsetLeft;
+            scrollLeft = filterButtons.scrollLeft;
+        });
+        
+        filterButtons.addEventListener('mouseleave', () => {
+            isDown = false;
+        });
+        
+        filterButtons.addEventListener('mouseup', () => {
+            isDown = false;
+        });
+        
+        filterButtons.addEventListener('mousemove', (e) => {
+            if (!isDown) return;
+            e.preventDefault();
+            const x = e.pageX - filterButtons.offsetLeft;
+            const walk = (x - startX) * 2;
+            filterButtons.scrollLeft = scrollLeft - walk;
+        });
+    }
+}
+
+// Add visual feedback for active filters
+function updateFilterVisualFeedback() {
+    const hasActiveFilters = currentFilters.category !== 'all' || currentFilters.tags.length > 0;
+    const filterContainer = document.querySelector('.menu-filter-container');
+    
+    if (hasActiveFilters) {
+        filterContainer.classList.add('has-active-filters');
+    } else {
+        filterContainer.classList.remove('has-active-filters');
+    }
+    
+    // Show filter count badge
+    const activeFilterCount = (currentFilters.category !== 'all' ? 1 : 0) + currentFilters.tags.length;
+    const resetButton = document.querySelector('.btn-icon[onclick="resetFilters()"]');
+    
+    if (resetButton && activeFilterCount > 0) {
+        const existingBadge = resetButton.querySelector('.filter-count');
+        if (existingBadge) {
+            existingBadge.textContent = activeFilterCount;
+        } else {
+            const badge = document.createElement('span');
+            badge.className = 'filter-count';
+            badge.textContent = activeFilterCount;
+            resetButton.appendChild(badge);
+        }
+    } else if (resetButton) {
+        const badge = resetButton.querySelector('.filter-count');
+        if (badge) badge.remove();
+    }
 }
 
 // Handle Category Filter
@@ -157,6 +219,20 @@ function handleTagFilter(e) {
     applyFilters();
 }
 
+// Update the existing handleTagFilter to include visual feedback
+const originalHandleTagFilter = handleTagFilter;
+handleTagFilter = function(e) {
+    originalHandleTagFilter.call(this, e);
+    updateFilterVisualFeedback();
+};
+
+// Update the existing handleCategoryFilter to include visual feedback
+const originalHandleCategoryFilter = handleCategoryFilter;
+handleCategoryFilter = function(e) {
+    originalHandleCategoryFilter.call(this, e);
+    updateFilterVisualFeedback();
+};
+
 // Apply All Filters
 function applyFilters() {
     let filteredCategories = [...allMenuCategories];
@@ -185,10 +261,26 @@ function applyFilters() {
 
 // Reset Filters
 window.resetFilters = function() {
+    // Reset filter state
     currentFilters = {
         category: 'all',
         tags: []
     };
+    
+    // Reset category buttons
+    document.querySelectorAll('.filter-btn').forEach(btn => {
+        btn.classList.remove('active');
+    });
+    document.querySelector('.filter-btn[data-filter="all"]').classList.add('active');
+    
+    // Reset all tag checkboxes (now visible on all devices)
+    document.querySelectorAll('.tag-filter input[type="checkbox"]').forEach(checkbox => {
+        checkbox.checked = false;
+    });
+    
+    // Display all menu items
+    displayPremiumMenu(allMenuCategories);
+};
     
     // Reset UI
     document.querySelectorAll('.filter-btn').forEach(btn => {
