@@ -2849,3 +2849,140 @@ vvvvv
     }
     */
 }
+
+/* ===============================================
+   CATEGORY IMAGE ANIMATIONS
+   Add this to your mystyle-premium.css
+   =============================================== */
+
+/* Initial state for category images */
+.category-hero {
+    opacity: 0;
+    transform: translateY(20px);
+    transition: opacity 0.6s ease, transform 0.6s ease;
+}
+
+/* Loaded state */
+.category-hero.loaded {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+/* Shimmer loading effect while image loads */
+.category-hero::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: linear-gradient(
+        90deg,
+        rgba(255, 255, 255, 0) 0%,
+        rgba(255, 255, 255, 0.2) 50%,
+        rgba(255, 255, 255, 0) 100%
+    );
+    transform: translateX(-100%);
+    animation: shimmer 1.5s infinite;
+    z-index: 0;
+    pointer-events: none;
+}
+
+.category-hero.loaded::after {
+    display: none;
+}
+
+@keyframes shimmer {
+    to {
+        transform: translateX(100%);
+    }
+}
+
+/* Alternative styles you can apply by adding classes */
+
+/* Style 1: Elegant fade with zoom */
+.category-hero.style-elegant img {
+    transition: all 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.category-hero.style-elegant:hover img {
+    transform: scale(1.05);
+    filter: brightness(0.85) contrast(1.1);
+}
+
+/* Style 2: Dramatic dark overlay */
+.category-hero.style-dramatic::before {
+    background: linear-gradient(
+        180deg,
+        rgba(0, 0, 0, 0.2) 0%,
+        rgba(0, 0, 0, 0.5) 50%,
+        rgba(0, 0, 0, 0.9) 100%
+    );
+}
+
+/* Style 3: Colorful overlay based on category */
+.menu-category[data-category="sets"] .category-hero::before {
+    background: linear-gradient(
+        180deg,
+        rgba(30, 74, 60, 0.3) 0%,
+        rgba(30, 74, 60, 0.5) 50%,
+        rgba(30, 74, 60, 0.8) 100%
+    );
+}
+
+.menu-category[data-category="eggcitements"] .category-hero::before {
+    background: linear-gradient(
+        180deg,
+        rgba(201, 169, 97, 0.3) 0%,
+        rgba(201, 169, 97, 0.5) 50%,
+        rgba(201, 169, 97, 0.8) 100%
+    );
+}
+
+/* Entrance animation for menu items after category loads */
+.category-hero.loaded ~ .menu-grid .menu-item-card {
+    animation: fadeInUp 0.6s ease forwards;
+    opacity: 0;
+}
+
+.category-hero.loaded ~ .menu-grid .menu-item-card:nth-child(1) { animation-delay: 0.1s; }
+.category-hero.loaded ~ .menu-grid .menu-item-card:nth-child(2) { animation-delay: 0.15s; }
+.category-hero.loaded ~ .menu-grid .menu-item-card:nth-child(3) { animation-delay: 0.2s; }
+.category-hero.loaded ~ .menu-grid .menu-item-card:nth-child(4) { animation-delay: 0.25s; }
+.category-hero.loaded ~ .menu-grid .menu-item-card:nth-child(5) { animation-delay: 0.3s; }
+.category-hero.loaded ~ .menu-grid .menu-item-card:nth-child(6) { animation-delay: 0.35s; }
+
+@keyframes fadeInUp {
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* Disable animations on mobile for performance */
+@media (max-width: 768px) {
+    .category-hero {
+        opacity: 1;
+        transform: none;
+        transition: none;
+    }
+    
+    .category-hero::after {
+        display: none;
+    }
+    
+    .category-hero.loaded ~ .menu-grid .menu-item-card {
+        animation: none;
+        opacity: 1;
+    }
+}
+
+/* Reduced motion preference */
+@media (prefers-reduced-motion: reduce) {
+    .category-hero,
+    .category-hero img,
+    .menu-item-card {
+        transition: none !important;
+        animation: none !important;
+    }
+}
