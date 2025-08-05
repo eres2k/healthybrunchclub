@@ -32,20 +32,16 @@ items:
       sprossen und kresse für eine lebendige, grüne frische.
 
 
-
       **your style:**
 
 
-      \* ei (nach wunsch zubereitet)
+      * ei (nach wunsch zubereitet)
 
+      * biospeck
 
-      \* biospeck
+      * biolachs
 
-
-      \* biolachs
-
-
-      \* shiitake und champignons pilze
+      * shiitake und champignons pilze
     allergens:
       - A
       - C
