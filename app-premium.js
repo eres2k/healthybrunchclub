@@ -469,5 +469,121 @@ if ('serviceWorker' in navigator) {
     });
 }
 
+// HAMBURGER MENU FIX
+// Add this to the end of app-premium.js or in a <script> tag at the bottom of index.html
+
+// Wait for DOM to be ready
+document.addEventListener('DOMContentLoaded', function() {
+    // Debug: Check what elements exist
+    console.log('Checking for menu elements...');
+    const menuBtn = document.querySelector('.mobile-menu-btn');
+    const navMenu = document.querySelector('.nav-menu');
+    
+    console.log('Menu button found:', !!menuBtn);
+    console.log('Nav menu found:', !!navMenu);
+    
+    if (menuBtn && navMenu) {
+        // Remove any existing event listeners
+        const newBtn = menuBtn.cloneNode(true);
+        menuBtn.parentNode.replaceChild(newBtn, menuBtn);
+        
+        // Add click event to hamburger menu
+        newBtn.addEventListener('click', function(e) {
+            e.preventDefault();
+            e.stopPropagation();
+            
+            console.log('Menu button clicked!');
+            
+            // Toggle active class
+            navMenu.classList.toggle('active');
+            newBtn.classList.toggle('active');
+            
+            // Toggle body scroll
+            if (navMenu.classList.contains('active')) {
+                document.body.style.overflow = 'hidden';
+            } else {
+                document.body.style.overflow = '';
+            }
+        });
+        
+        // Close menu when clicking outside
+        document.addEventListener('click', function(e) {
+            if (!navMenu.contains(e.target) && !newBtn.contains(e.target)) {
+                navMenu.classList.remove('active');
+                newBtn.classList.remove('active');
+                document.body.style.overflow = '';
+            }
+        });
+        
+        // Close menu when clicking on a link
+        const navLinks = navMenu.querySelectorAll('.nav-link');
+        navLinks.forEach(link => {
+            link.addEventListener('click', function() {
+                navMenu.classList.remove('active');
+                newBtn.classList.remove('active');
+                document.body.style.overflow = '';
+            });
+        });
+        
+        console.log('✓ Hamburger menu initialized successfully!');
+    } else {
+        console.error('❌ Could not find menu button or nav menu!');
+    }
+});
+
+// Alternative fix if the above doesn't work
+window.fixHamburgerMenu = function() {
+    const style = document.createElement('style');
+    style.textContent = `
+        @media (max-width: 768px) {
+            .mobile-menu-btn {
+                display: block !important;
+                opacity: 1 !important;
+                visibility: visible !important;
+                position: relative !important;
+                z-index: 1001 !important;
+                width: 30px !important;
+                height: 30px !important;
+                background: none !important;
+                border: none !important;
+                cursor: pointer !important;
+            }
+            
+            .mobile-menu-btn span {
+                display: block !important;
+                width: 25px !important;
+                height: 2px !important;
+                background: #1A1A1A !important;
+                margin: 6px 0 !important;
+                opacity: 1 !important;
+                visibility: visible !important;
+            }
+            
+            .nav-menu {
+                display: none !important;
+            }
+            
+            .nav-menu.active {
+                display: flex !important;
+                position: absolute !important;
+                top: 100% !important;
+                left: 0 !important;
+                right: 0 !important;
+                background: white !important;
+                flex-direction: column !important;
+                padding: 20px !important;
+                box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1) !important;
+                z-index: 1000 !important;
+            }
+        }
+    `;
+    document.head.appendChild(style);
+    console.log('✓ CSS fixes applied!');
+};
+
+// Run the CSS fix automatically
+if (window.innerWidth <= 768) {
+    fixHamburgerMenu();
+}
 // Log initialization
 console.log('Premium restaurant app initialized with enhanced features.');
