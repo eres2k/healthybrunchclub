@@ -19,7 +19,6 @@
     
     <!-- Styles -->
     <link rel="stylesheet" href="mystyle-premium.css">
-    <link rel="stylesheet" href="mystyle.css">
     
     <!-- Netlify Identity -->
     <script type="text/javascript" src="https://identity.netlify.com/v1/netlify-identity-widget.js"></script>
@@ -61,16 +60,6 @@
                 <li><a href="#about" class="nav-link">Über uns</a></li>
                 <li><a href="#reservierung" class="nav-link nav-cta">Reservierung</a></li>
             </ul>
-
-              <ul class="nav-menu nav-links">
-                <li><a href="#home" class="nav-link">Home</a></li>
-                <li><a href="#menu" class="nav-link">Speisekarte</a></li>
-                <li><a href="#philosophy" class="nav-link">Philosophie</a></li>
-                <li><a href="#about" class="nav-link">Über uns</a></li>
-                <li><a href="#reservierung" class="nav-link nav-cta">Reservierung</a></li>
-            </ul>
-            
-            <button class="mobile-menu-btn mobile-menu-toggle" aria-label="Menu">
             
             <button class="mobile-menu-btn" aria-label="Menu">
                 <span></span>
@@ -121,12 +110,12 @@
                 <div class="filter-buttons" id="categoryFilters">
                     <button class="filter-btn active" data-filter="all">
                         <i class="fas fa-border-all"></i>
-                        Alle Gerichte
+                        <span class="btn-text">Alle Gerichte</span>
                     </button>
                 </div>
             </div>
             
-            <div class="filter-group">
+            <div class="filter-group desktop-only">
                 <h4 class="filter-title">Eigenschaften</h4>
                 <div class="filter-tags" id="tagFilters">
                     <label class="tag-filter">
@@ -155,11 +144,11 @@
             <div class="filter-actions">
                 <button class="btn-icon" onclick="resetFilters()">
                     <i class="fas fa-undo"></i>
-                    Filter zurücksetzen
+                    <span class="btn-text">Filter zurücksetzen</span>
                 </button>
                 <button class="btn-icon" onclick="downloadMenuPDF()">
                     <i class="fas fa-download"></i>
-                    PDF herunterladen
+                    <span class="btn-text">PDF herunterladen</span>
                 </button>
             </div>
         </div>
