@@ -63,6 +63,7 @@ function initNavigation() {
     });
 }
 
+
 // Mobile Menu
 function initMobileMenu() {
     const menuBtn = document.querySelector('.mobile-menu-btn');
@@ -72,6 +73,21 @@ function initMobileMenu() {
         menuBtn.addEventListener('click', function() {
             navMenu.classList.toggle('active');
             menuBtn.classList.toggle('active');
+            
+            // For compatibility with mystyle.css
+            if (navMenu.style.display === 'flex') {
+                navMenu.style.display = 'none';
+            } else {
+                navMenu.style.display = 'flex';
+                navMenu.style.flexDirection = 'column';
+                navMenu.style.position = 'absolute';
+                navMenu.style.top = '100%';
+                navMenu.style.left = '0';
+                navMenu.style.right = '0';
+                navMenu.style.background = 'white';
+                navMenu.style.padding = '20px';
+                navMenu.style.boxShadow = '0 10px 30px rgba(0,0,0,0.1)';
+            }
             
             // Animate burger menu
             const spans = menuBtn.querySelectorAll('span');
@@ -91,6 +107,7 @@ function initMobileMenu() {
         navLinks.forEach(link => {
             link.addEventListener('click', function() {
                 navMenu.classList.remove('active');
+                navMenu.style.display = 'none';
                 menuBtn.classList.remove('active');
             });
         });
