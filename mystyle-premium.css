@@ -2066,11 +2066,7 @@ html {
     font-size: 1.375rem;
     color: var(--gold);
 }
-
-/* Remove the double euro from ::before but keep the price display */
-.menu-item-price::before {
-    content: ''; /* This prevents DOUBLE euro */
-}
+vvvvv
 
 /* FIX 2: Ensure hamburger menu is visible on mobile */
 @media (max-width: 768px) {
@@ -2173,4 +2169,24 @@ html {
         height: 2px !important;
         background-color: #1A1A1A !important;
     }
+}
+
+* ===============================================
+   PRICE DISPLAY FIX
+   =============================================== */
+
+/* Ensure price visibility and proper styling */
+.menu-item-price {
+    display: inline-block !important;
+    opacity: 1 !important;
+    visibility: visible !important;
+    font-weight: 400 !important;
+    white-space: nowrap;
+}
+
+/* Prevent any ::before pseudo-elements from adding extra euro signs */
+.menu-item-price::before,
+.menu-card-price::before {
+    content: none !important;
+    display: none !important;
 }
