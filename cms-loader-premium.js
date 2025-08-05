@@ -269,6 +269,11 @@ function createMenuItemCard(item) {
     const hasImage = item.image ? true : false;
     const isSpecial = item.special || false;
     
+    // Debug log to check price formatting
+    if (item.price) {
+        console.log(`Item: ${item.name}, Original price: ${item.price}, Formatted: ${formatPrice(item.price)}`);
+    }
+    
     return `
         <div class="menu-item-card ${isSpecial ? 'special' : ''} ${!hasImage ? 'no-image' : ''}">
             ${hasImage ? `
@@ -308,33 +313,38 @@ function createMenuItemCard(item) {
     `;
 }
 
-// Format Price - ENSURE EURO SIGN IS DISPLAYED
+// Format Price - ROBUST VERSION
 function formatPrice(price) {
-    if (!price) return '';
+    if (!price && price !== 0) return '';
     
-    // Remove any existing currency symbols and spaces
-    let cleanPrice = price.toString().replace(/[€$£¥\s]/g, '').trim();
+    // Convert to string and clean
+    let cleanPrice = String(price).trim();
+    
+    // Remove any currency symbols and extra spaces
+    cleanPrice = cleanPrice.replace(/[€$£¥\s]/g, '');
     
     // Replace comma with dot for decimal
-    cleanPrice = cleanPrice.replace(',', '.');
+    cleanPrice = cleanPrice.replace(/,/g, '.');
     
-    // Ensure it's a valid number
+    // Parse as float
     const numPrice = parseFloat(cleanPrice);
+    
+    // Check if valid number
     if (isNaN(numPrice)) {
-        // If not a valid number, just return with euro sign
+        console.warn(`Invalid price format: ${price}`);
         return `€ ${price}`;
     }
     
-    // Format with 2 decimal places if needed
+    // Format number
     let formatted = numPrice.toFixed(2);
     
-    // If price ends with .00, remove it for cleaner display
+    // Remove .00 for whole numbers
     if (formatted.endsWith('.00')) {
         formatted = formatted.slice(0, -3);
     }
     
-    // Add euro sign with space
-    return `€ ${formatted}`;
+    // Return with euro sign and non-breaking space
+    return `€\u00A0${formatted}`;
 }
 
 // Get Item Icon
@@ -382,18 +392,6 @@ function processDescription(text) {
     html = html.replace(/(<li>.*<\/li>)/s, '<ul>$1</ul>');
     
     return html;
-}
-
-// Format Price
-function formatPrice(price) {
-    if (!price) return '';
-    // Remove currency symbols and format
-    const cleanPrice = price.toString().replace(/[€$£¥]/g, '').trim();
-    // Ensure decimal format
-    if (!cleanPrice.includes('.')) {
-        return cleanPrice + '.00';
-    }
-    return cleanPrice;
 }
 
 // Format Image URL
@@ -476,7 +474,7 @@ window.downloadMenuPDF = async function() {
             doc.text(item.name, margin, yPos);
             
             if (item.price) {
-                const priceText = `€${formatPrice(item.price)}`;
+                const priceText = formatPrice(item.price);
                 doc.text(priceText, pageWidth - margin, yPos, { align: 'right' });
             }
             yPos += lineHeight;
@@ -790,6 +788,48 @@ function displayElegantMenu(menuData) {
             </div>
         `;
     }).join('');
+}
+
+// Helper Functions for displayElegantMenu
+function getCategoryIcon(categoryTitle) {
+    if (!categoryTitle) return '🌿';
+    const lowerTitle = categoryTitle.toLowerCase();
+    for (const [key, icon] of Object.entries(categoryIcons)) {
+        if (lowerTitle.includes(key) || key.includes(lowerTitle)) {
+            return icon;
+        }
+    }
+    return '🌿';
+}
+
+function processRichText(text) {
+    return processDescription(text);
+}
+
+function formatNutrition(nutrition) {
+    if (!nutrition || !nutrition.calories) return '';
+    
+    let nutritionText = `<span class="calories-value">${nutrition.calories}</span> kcal`;
+    
+    if (nutrition.protein || nutrition.carbs || nutrition.fat) {
+        const extras = [];
+        if (nutrition.protein) extras.push(`${nutrition.protein} Protein`);
+        if (nutrition.carbs) extras.push(`${nutrition.carbs} KH`);
+        if (nutrition.fat) extras.push(`${nutrition.fat} Fett`);
+        
+        if (extras.length > 0) {
+            nutritionText += ` • ${extras.join(' • ')}`;
+        }
+    }
+    
+    return nutritionText;
+}
+
+function formatAllergens(allergens) {
+    if (!allergens || allergens.length === 0) return '';
+    return allergens.map(code => 
+        `<span class="allergen-code">${code}</span>`
+    ).join(' ');
 }
 
 console.log('Premium CMS Loader initialized with advanced filtering and PDF export.');
