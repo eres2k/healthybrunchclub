@@ -1190,6 +1190,7 @@ address a:hover {
     width: 60px;
     height: 60px;
     border-radius: 50%;
+    overflow: visible; /* Allow badge to show outside bounds */
 }
 
 .event-window.collapsed .event-content {
@@ -1222,9 +1223,44 @@ address a:hover {
     padding-top: 4rem;
 }
 
-/* Responsive Design */
-/* Tablet - 2 Columns */
-@media (max-width: 1024px) {
+/* Event Window - Desktop specific adjustments */
+@media (min-width: 769px) {
+    .event-window {
+        bottom: 11rem !important; /* Even more space from admin button */
+        width: 350px !important;
+        left: auto !important;
+        right: 2rem !important;
+    }
+    
+    .event-window.collapsed {
+        bottom: 11rem !important;
+        width: 60px !important;
+        height: 60px !important;
+        right: 2rem !important;
+        overflow: visible !important;
+    }
+    
+    .event-window.collapsed .event-toggle {
+        width: 60px !important;
+        height: 60px !important;
+        position: relative !important; /* For badge positioning */
+    }
+    
+    .event-window:not(.collapsed) .event-toggle {
+        display: block !important; /* Keep toggle button visible on desktop */
+        position: absolute !important;
+    }
+    
+    .event-content {
+        padding-top: 4rem !important;
+        max-height: 70vh !important;
+    }
+    
+    /* Ensure notification badge is visible on desktop */
+    .event-window.collapsed:not(.interacted) .event-toggle::before {
+        display: flex !important;
+    }
+}
     .menu-grid {
         grid-template-columns: repeat(2, 1fr);
     }
@@ -1497,8 +1533,16 @@ address a:hover {
     .event-window {
         width: calc(100vw - 2rem);
         left: 1rem;
-        bottom: 5rem; /* Higher position on mobile too */
+        bottom: 4.5rem; /* Adjusted for better spacing on mobile */
         right: auto;
+        max-height: 60vh; /* Reasonable height limit on mobile */
+        border-radius: 12px;
+        box-shadow: 0 10px 40px rgba(0, 0, 0, 0.25);
+    }
+    
+    /* Fix toggle button position when expanded on mobile */
+    .event-window:not(.collapsed) .event-toggle {
+        display: none; /* Hide floating button when expanded on mobile */
     }
     
     .event-window.collapsed {
@@ -1506,21 +1550,41 @@ address a:hover {
         height: 50px;
         left: auto;
         right: 1rem;
+        bottom: 4.5rem;
+        max-height: 50px;
+        border-radius: 50%;
+        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+        overflow: visible !important; /* Allow badge to show */
     }
     
     .event-window.collapsed .event-toggle {
         width: 50px;
         height: 50px;
         font-size: 20px;
+        top: 0;
+        right: 0;
+        position: relative; /* For badge positioning */
+        display: flex; /* Ensure it's visible when collapsed */
     }
     
-    /* Smaller notification badge on mobile */
-    .event-toggle::before {
+    /* Event content scrollable on mobile */
+    .event-content {
+        padding: var(--spacing-md);
+        padding-top: 2.5rem;
+        max-height: calc(60vh - 3rem);
+        overflow-y: auto;
+        -webkit-overflow-scrolling: touch;
+    }
+    
+    /* Notification badge visible on mobile */
+    .event-window.collapsed .event-toggle::before {
         width: 16px;
         height: 16px;
         font-size: 10px;
         top: -3px;
         right: -3px;
+        z-index: 2;
+        display: flex !important; /* Force display */
     }
     
     /* Hide tooltip on mobile */

@@ -547,6 +547,8 @@ function displayEvents(eventsData) {
     });
     
     eventContent.innerHTML = `
+        <button class="event-close-btn" onclick="toggleEventWindow()">×</button>
+        
         ${nextEvent.featuredImage ? `
             <div class="event-image" style="margin-bottom: 1rem;">
                 <img src="${formatImageUrl(nextEvent.featuredImage)}" alt="${nextEvent.title}" 
@@ -579,7 +581,8 @@ function displayEvents(eventsData) {
         ` : ''}
     `;
     
-    // Show event window (starts collapsed due to HTML class)
+    // Ensure window starts collapsed
+    eventWindow.classList.add('collapsed');
     eventWindow.style.display = 'block';
     
     // Add initial highlight animation after a short delay
