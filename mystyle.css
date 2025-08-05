@@ -564,9 +564,6 @@ body {
     display: block;
 }
 
-.menu-item-price::before {
-    content: '€ ';
-}
 
 /* Beschreibung */
 .menu-item-description {
