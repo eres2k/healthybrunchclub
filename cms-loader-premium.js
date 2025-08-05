@@ -264,7 +264,7 @@ function displayPremiumMenu(menuData) {
     }
 }
 
-// Create Menu Item Card - FIXED VERSION
+// Update the createMenuItemCard function to ensure price is displayed
 function createMenuItemCard(item) {
     const hasImage = item.image ? true : false;
     const isSpecial = item.special || false;
@@ -308,11 +308,11 @@ function createMenuItemCard(item) {
     `;
 }
 
-// Format Price - FIXED VERSION
+// Format Price - ENSURE EURO SIGN IS DISPLAYED
 function formatPrice(price) {
     if (!price) return '';
     
-    // Remove any existing currency symbols
+    // Remove any existing currency symbols and spaces
     let cleanPrice = price.toString().replace(/[€$£¥\s]/g, '').trim();
     
     // Replace comma with dot for decimal
@@ -320,13 +320,21 @@ function formatPrice(price) {
     
     // Ensure it's a valid number
     const numPrice = parseFloat(cleanPrice);
-    if (isNaN(numPrice)) return price; // Return original if not a valid number
+    if (isNaN(numPrice)) {
+        // If not a valid number, just return with euro sign
+        return `€ ${price}`;
+    }
     
-    // Format with 2 decimal places
-    const formatted = numPrice.toFixed(2);
+    // Format with 2 decimal places if needed
+    let formatted = numPrice.toFixed(2);
     
-    // Add euro sign at the beginning
-    return `€${formatted}`;
+    // If price ends with .00, remove it for cleaner display
+    if (formatted.endsWith('.00')) {
+        formatted = formatted.slice(0, -3);
+    }
+    
+    // Add euro sign with space
+    return `€ ${formatted}`;
 }
 
 // Get Item Icon
@@ -705,5 +713,83 @@ window.cmsLoader = {
         loadEventsFromCMS();
     }
 };
+
+// Also check if you're using the old menu display function
+// For mystyle.css compatibility
+function displayElegantMenu(menuData) {
+    const menuContainer = document.getElementById('menuGrid') || document.getElementById('menuContainer');
+    
+    if (!menuData || menuData.length === 0) {
+        menuContainer.innerHTML = '<div class="menu-loading">Keine Gerichte in dieser Kategorie gefunden.</div>';
+        return;
+    }
+    
+    menuContainer.innerHTML = menuData.map(category => {
+        return `
+            <div class="menu-category" data-category="${category.title.toLowerCase().replace(/\s+/g, '-')}">
+                ${category.image ? `
+                    <div class="category-image">
+                        <img src="${formatImageUrl(category.image)}" alt="${category.title}" loading="lazy">
+                    </div>
+                ` : ''}
+                
+                <div class="category-header">
+                    <h3 class="category-title">${category.title}</h3>
+                    ${category.description ? `<p class="category-description">${category.description}</p>` : ''}
+                </div>
+                
+                <div class="menu-items-grid">
+                    ${category.items.map(item => {
+                        const hasImage = item.image ? true : false;
+                        const isSpecial = item.special || false;
+                        const categoryIcon = getCategoryIcon(category.title);
+                        
+                        return `
+                        <div class="menu-item ${isSpecial ? 'special' : ''} ${!hasImage ? 'no-image' : ''}">
+                            ${hasImage ? `
+                                <div class="menu-item-image">
+                                    <img src="${formatImageUrl(item.image)}" alt="${item.name}" loading="lazy">
+                                </div>
+                            ` : `
+                                <div class="menu-item-icon">${categoryIcon}</div>
+                            `}
+                            
+                            <div class="menu-item-header">
+                                <h4 class="menu-item-name">${item.name}</h4>
+                                ${item.price ? `<span class="menu-item-price">${formatPrice(item.price)}</span>` : ''}
+                            </div>
+                            
+                            <div class="menu-item-description">
+                                ${processRichText(item.description)}
+                            </div>
+                            
+                            <div class="menu-item-info">
+                                ${item.nutrition && item.nutrition.calories ? `
+                                    <div class="menu-item-calories">
+                                        ${formatNutrition(item.nutrition)}
+                                    </div>
+                                ` : ''}
+                                
+                                ${item.tags && item.tags.length > 0 ? `
+                                    <div class="menu-item-tags">
+                                        ${item.tags.map(tag => `<span class="menu-tag">${tag}</span>`).join('')}
+                                    </div>
+                                ` : ''}
+                                
+                                ${item.allergens && item.allergens.length > 0 ? `
+                                    <div class="menu-item-allergens">
+                                        <span class="allergen-label">Allergene:</span>
+                                        ${formatAllergens(item.allergens)}
+                                    </div>
+                                ` : ''}
+                            </div>
+                        </div>
+                    `;
+                    }).join('')}
+                </div>
+            </div>
+        `;
+    }).join('');
+}
 
 console.log('Premium CMS Loader initialized with advanced filtering and PDF export.');
