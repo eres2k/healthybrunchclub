@@ -47,20 +47,26 @@ items:
       - proteinreich
     name: omelette creation
     description: >-
-      ein luftig-lockeres omelette bestehend aus zwei eiern, präsentiert auf
-      knusprigem sauerteigbrot vom öfferl, gefüllt mit zwiebeln,
-      shiitake-spilzen und frischem spinat und gekrönt mit rucula, sprossen und
-      kresse.
+      ein luftig-lockeres omelette bestehend aus zwei eiern,gefüllt mit
+      zwiebeln, shiitake-spilzen, frischem  spinat. gekrönt mit rucula, sprossen
+      und kresse.
 
       **your style:**
 
-      * tomaten
 
-      * speckwürfeln
+      \* tomaten
 
-      * käse
 
-      * avocado
+      \* speckwürfeln
+
+
+      \* käse
+
+
+      \* avocado
+
+
+      \*﻿ zwei scheiben sauerteigbrot (aufpreis 2,50)
     allergens:
       - A
       - C
