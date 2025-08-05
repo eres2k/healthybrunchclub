@@ -8,3 +8,13 @@
 
 [functions]
   included_files = ["content/**"]
+
+[[redirects]]
+  from = "/menu-pdf"
+  to = "/.netlify/functions/generate-menu-pdf"
+  status = 200
+
+[[redirects]]
+  from = "/speisekarte.pdf"
+  to = "/.netlify/functions/generate-menu-pdf"
+  status = 200
