@@ -2533,3 +2533,319 @@ vvvvv
     margin-bottom: var(--spacing-md);
     display: block;
 }
+
+/* ===============================================
+   MOBILE FILTER DISPLAY FIX
+   Add this to the end of mystyle-premium.css
+   =============================================== */
+
+/* Remove any conflicting styles and ensure proper mobile display */
+@media (max-width: 768px) {
+    /* Filter Container - Ensure visibility and proper styling */
+    .menu-filter-container {
+        display: block !important;
+        opacity: 1 !important;
+        visibility: visible !important;
+        margin: 0 1rem 2rem !important;
+        padding: 1rem !important;
+        background: var(--pure-white) !important;
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.08) !important;
+        border-radius: 12px !important;
+        position: relative !important;
+        z-index: 10 !important;
+    }
+    
+    /* Filter Bar - Proper mobile layout */
+    .filter-bar {
+        display: flex !important;
+        flex-direction: column !important;
+        gap: 1rem !important;
+        padding: 0 !important;
+        border-bottom: none !important;
+        align-items: stretch !important;
+    }
+    
+    /* Filter Group - Full width on mobile */
+    .filter-group {
+        width: 100% !important;
+        flex: none !important;
+        display: block !important;
+    }
+    
+    /* Category Filters Container */
+    #categoryFilters,
+    .filter-buttons {
+        display: flex !important;
+        width: 100% !important;
+        overflow-x: auto !important;
+        overflow-y: hidden !important;
+        -webkit-overflow-scrolling: touch !important;
+        scrollbar-width: none !important;
+        -ms-overflow-style: none !important;
+        gap: 0.5rem !important;
+        padding: 0.5rem 0 !important;
+        margin: 0 -0.5rem !important;
+        padding-left: 0.5rem !important;
+        padding-right: 0.5rem !important;
+    }
+    
+    /* Hide scrollbar but keep functionality */
+    #categoryFilters::-webkit-scrollbar,
+    .filter-buttons::-webkit-scrollbar {
+        display: none !important;
+    }
+    
+    /* Filter Buttons - Ensure they don't shrink */
+    .filter-btn {
+        display: inline-flex !important;
+        align-items: center !important;
+        justify-content: center !important;
+        white-space: nowrap !important;
+        flex-shrink: 0 !important;
+        padding: 0.625rem 1.25rem !important;
+        font-size: 0.75rem !important;
+        font-weight: 500 !important;
+        background: var(--pure-white) !important;
+        border: 1px solid var(--light-gray) !important;
+        border-radius: 20px !important;
+        color: var(--warm-gray) !important;
+        transition: all 0.2s ease !important;
+        min-height: 36px !important;
+        cursor: pointer !important;
+    }
+    
+    /* Active filter button */
+    .filter-btn.active {
+        background: var(--black) !important;
+        color: var(--pure-white) !important;
+        border-color: var(--black) !important;
+    }
+    
+    /* Filter button hover state (for touch feedback) */
+    .filter-btn:active {
+        transform: scale(0.95) !important;
+        background: var(--light-gray) !important;
+    }
+    
+    .filter-btn.active:active {
+        background: var(--gold) !important;
+    }
+    
+    /* Tag Filters - Always hidden on mobile */
+    #tagFilters,
+    .filter-tags,
+    .desktop-only {
+        display: none !important;
+    }
+    
+    /* Filter Actions - Centered at bottom */
+    .filter-actions {
+        display: flex !important;
+        width: 100% !important;
+        justify-content: center !important;
+        gap: 1.5rem !important;
+        border-top: 1px solid var(--light-gray) !important;
+        padding-top: 1rem !important;
+        margin-top: 0.5rem !important;
+    }
+    
+    /* Action Buttons - Icon only on mobile */
+    .btn-icon {
+        display: flex !important;
+        align-items: center !important;
+        justify-content: center !important;
+        background: none !important;
+        border: none !important;
+        padding: 0.75rem !important;
+        font-size: 1rem !important;
+        color: var(--warm-gray) !important;
+        cursor: pointer !important;
+        transition: all 0.2s ease !important;
+        position: relative !important;
+        min-width: 44px !important;
+        min-height: 44px !important;
+    }
+    
+    .btn-icon:active {
+        color: var(--gold) !important;
+        transform: scale(0.9) !important;
+    }
+    
+    /* Hide button text, show only icons */
+    .btn-icon .btn-text {
+        display: none !important;
+    }
+    
+    .btn-icon i {
+        font-size: 1.25rem !important;
+        margin: 0 !important;
+    }
+    
+    /* Filter count badge positioning */
+    .filter-count {
+        position: absolute !important;
+        top: 0 !important;
+        right: 0 !important;
+        background: var(--gold) !important;
+        color: var(--pure-white) !important;
+        font-size: 0.625rem !important;
+        font-weight: 600 !important;
+        width: 18px !important;
+        height: 18px !important;
+        border-radius: 50% !important;
+        display: flex !important;
+        align-items: center !important;
+        justify-content: center !important;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2) !important;
+    }
+    
+    /* Visual scroll indicators */
+    .filter-buttons::before,
+    .filter-buttons::after {
+        content: '' !important;
+        position: absolute !important;
+        top: 0 !important;
+        bottom: 0 !important;
+        width: 20px !important;
+        pointer-events: none !important;
+        z-index: 2 !important;
+        opacity: 0.8 !important;
+    }
+    
+    .filter-buttons::before {
+        left: 0 !important;
+        background: linear-gradient(to right, var(--pure-white), transparent) !important;
+    }
+    
+    .filter-buttons::after {
+        right: 0 !important;
+        background: linear-gradient(to left, var(--pure-white), transparent) !important;
+    }
+    
+    /* Active filters state */
+    .menu-filter-container.has-active-filters {
+        border: 2px solid var(--gold) !important;
+        box-shadow: 0 4px 20px rgba(201, 169, 97, 0.2) !important;
+    }
+    
+    /* No results message */
+    .no-results-message {
+        text-align: center !important;
+        padding: 3rem 1rem !important;
+        color: var(--warm-gray) !important;
+        font-size: 1rem !important;
+    }
+    
+    .no-results-message i {
+        font-size: 2.5rem !important;
+        color: var(--light-gray) !important;
+        margin-bottom: 1rem !important;
+        display: block !important;
+    }
+    
+    /* Menu loading state */
+    .menu-loading {
+        text-align: center !important;
+        padding: 3rem 1rem !important;
+        color: var(--warm-gray) !important;
+    }
+    
+    .menu-loading i {
+        font-size: 2.5rem !important;
+        margin-bottom: 1rem !important;
+        color: var(--gold) !important;
+    }
+}
+
+/* Additional touch-friendly improvements */
+@media (hover: none) and (pointer: coarse) {
+    /* Make touch targets larger */
+    .filter-btn {
+        min-height: 44px !important;
+        padding: 0.75rem 1.5rem !important;
+    }
+    
+    .btn-icon {
+        min-width: 48px !important;
+        min-height: 48px !important;
+    }
+    
+    /* Remove hover effects on touch devices */
+    .filter-btn:hover {
+        background: var(--pure-white) !important;
+        color: var(--warm-gray) !important;
+    }
+    
+    .filter-btn.active:hover {
+        background: var(--black) !important;
+        color: var(--pure-white) !important;
+    }
+    
+    .btn-icon:hover {
+        color: var(--warm-gray) !important;
+    }
+}
+
+/* Landscape orientation adjustments */
+@media (max-width: 768px) and (orientation: landscape) {
+    .menu-filter-container {
+        margin-bottom: 1.5rem !important;
+        padding: 0.75rem !important;
+    }
+    
+    .filter-bar {
+        flex-direction: row !important;
+        flex-wrap: wrap !important;
+    }
+    
+    .filter-group {
+        flex: 1 1 auto !important;
+    }
+    
+    .filter-actions {
+        flex: 0 0 auto !important;
+        border-top: none !important;
+        padding-top: 0 !important;
+        margin-top: 0 !important;
+        margin-left: auto !important;
+    }
+}
+
+/* Small phone specific (iPhone SE, etc.) */
+@media (max-width: 375px) {
+    .menu-filter-container {
+        margin: 0 0.5rem 1.5rem !important;
+        padding: 0.75rem !important;
+    }
+    
+    .filter-btn {
+        font-size: 0.7rem !important;
+        padding: 0.5rem 1rem !important;
+    }
+    
+    .btn-icon {
+        padding: 0.5rem !important;
+    }
+    
+    .btn-icon i {
+        font-size: 1.125rem !important;
+    }
+}
+
+/* Debug helper - remove this after testing */
+@media (max-width: 768px) {
+    /* Uncomment to debug visibility issues */
+    /*
+    .menu-filter-container {
+        border: 2px solid red !important;
+    }
+    
+    .filter-bar {
+        border: 2px solid blue !important;
+    }
+    
+    .filter-buttons {
+        border: 2px solid green !important;
+    }
+    */
+}
