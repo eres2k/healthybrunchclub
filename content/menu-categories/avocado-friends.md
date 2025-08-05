@@ -31,9 +31,21 @@ items:
       bestrichen mit cremiger, zerdrückter avocado, verfeinert mit frischen
       sprossen und kresse für eine lebendige, grüne frische.
 
+
+
       **your style:**
 
-      ei (nach wunsch zubereitet)/biospeck/biolachs/shiitake und champignons pilze
+
+      \* ei (nach wunsch zubereitet)
+
+
+      \* biospeck
+
+
+      \* biolachs
+
+
+      \* shiitake und champignons pilze
     allergens:
       - A
       - C
