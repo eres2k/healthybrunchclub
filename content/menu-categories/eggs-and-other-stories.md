@@ -99,6 +99,8 @@ items:
       * speck
 
       * lachs
+
+      * a﻿ufpreis zweites ei: 1,40 EUR
     allergens:
       - A
       - C
