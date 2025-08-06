@@ -1,7 +1,7 @@
 ---
 title: hafer dich lieb
 order: 3
-image: /content/images/dsc00254.jpg
+image: ""
 items:
   - tags:
       - glutenfrei
