@@ -1,14 +1,15 @@
 ---
 title: hafer dich lieb
 order: 3
-image: ""
+image: /content/images/dsc00254.jpg
 items:
-  - tags:
+  - name: premium-porridge
+    tags:
       - glutenfrei
-      - lactosefrei
-      - ballaststoffreich
-      - darmfreundlich
-    name: premium-porridge
+      - proteinreich
+      - sättigend
+      - antioxidativ
+      - immunstärkend
     description: ein wärmender genuss aus zarten haferflocken, verfeinert mit hanf-
       und chiasamen, kokosflocken und geriebenem apfel. ein hauch von zimt
       rundet das geschmackserlebnis ab, gekrönt mit knackigen, gehobelten
@@ -21,12 +22,13 @@ items:
       carbs: 48g
       fat: 16g
     price: "8.90"
-  - tags:
+
+  - name: kokoscreme power-oats
+    tags:
       - glutenfrei
-      - lactosefrei
-      - ballaststoffreich
-      - darmfreundlich
-    name: kokoscreme power-oats
+      - proteinreich
+      - sättigend
+      - antioxidativ
     description: kraftvolle haferflocken, umhüllt von cremiger kokoscreme,
       kombiniert mit hanf- und chiasamen. garniert mit kokosflocken, saftigen
       heidel- und himbeeren für einen fruchtig-frischen start in den tag.
