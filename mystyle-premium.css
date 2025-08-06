@@ -2886,28 +2886,34 @@ vvvvv
     }
 
 /* ===============================================
-   SIMPLE CATEGORY IMAGE WITH TEXT OVERLAY
-   Static implementation for both desktop and mobile
+   CATEGORY IMAGE WITH TEXT OVERLAY - FIXED
+   Consistent implementation for desktop and mobile
    =============================================== */
-/* Category with image - consistent height */
+
+/* Remove or comment out the existing category overlay section (around line 3273) 
+   and replace with this improved version */
+
+/* Category with image - consistent across all screen sizes */
 .category-hero {
     width: 100%;
     max-width: 1200px;
-    height: 250px; /* Fixed height for consistency */
+    height: 300px; /* Taller on desktop */
     margin: 0 auto var(--spacing-xl);
     overflow: hidden;
     position: relative;
-    border-radius: 8px;
-    box-shadow: 0 5px 20px rgba(0, 0, 0, 0.1);
+    border-radius: 12px;
+    box-shadow: 0 8px 30px rgba(0, 0, 0, 0.12);
 }
+
 /* Image styling */
 .category-hero img {
     width: 100%;
     height: 100%;
     object-fit: cover;
-    /* No transitions or transforms - completely static */
+    /* No transitions - keep it simple and static */
 }
-/* Dark overlay for better text contrast */
+
+/* Dark gradient overlay for better text contrast */
 .category-hero::before {
     content: '';
     position: absolute;
@@ -2917,12 +2923,13 @@ vvvvv
     bottom: 0;
     background: linear-gradient(
         to bottom,
-        rgba(0, 0, 0, 0.3) 0%,
-        rgba(0, 0, 0, 0.5) 50%,
-        rgba(0, 0, 0, 0.7) 100%
+        rgba(0, 0, 0, 0.2) 0%,
+        rgba(0, 0, 0, 0.4) 50%,
+        rgba(0, 0, 0, 0.6) 100%
     );
     z-index: 1;
 }
+
 /* Category hero overlay container */
 .category-hero-overlay {
     position: absolute;
@@ -2934,112 +2941,190 @@ vvvvv
     align-items: center;
     justify-content: center;
     z-index: 2;
+    padding: var(--spacing-lg);
 }
-/* Category name overlay - centered */
+
+/* Category name overlay - centered and prominent */
 .category-hero-overlay .category-name {
     font-family: var(--font-display);
-    font-size: 3rem;
+    font-size: 3.5rem;
     color: white;
     text-transform: uppercase;
     letter-spacing: 0.2em;
     text-align: center;
     margin: 0;
-    padding: 0 var(--spacing-md);
-    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.8);
-    /* No animations */
+    text-shadow: 3px 3px 6px rgba(0, 0, 0, 0.7);
+    line-height: 1.2;
 }
-/* Hide the duplicate title below the image */
+
+/* Hide the duplicate title below the image when hero exists */
 .menu-category:has(.category-hero) .category-header .category-name {
     display: none;
 }
+
 /* Category header adjustments when image present */
 .menu-category:has(.category-hero) .category-header {
     margin-top: 0;
     margin-bottom: var(--spacing-lg);
 }
-/* Remove all animation-related styles */
-.category-hero,
-.category-hero img,
-.category-hero-overlay {
-    transition: none !important;
-    animation: none !important;
-    transform: none !important;
-}
-/* Remove hover effects */
-.category-hero:hover img {
-    transform: none;
-}
-/* Mobile adjustments */
-@media (max-width: 768px) {
-    .category-hero {
-        height: 150px; /* Smaller on mobile */
-        margin: 0 -var(--spacing-sm) var(--spacing-md);
-        border-radius: 0;
-    }
-   
-    .category-hero-overlay .category-name {
-        font-size: 1.75rem;
-        letter-spacing: 0.1em;
-        padding: 0 var(--spacing-sm);
-    }
-   
-    /* Ensure no overflow on mobile */
-    .menu-category {
-        overflow: hidden;
-    }
-}
-/* Tablet adjustments */
-@media (max-width: 1024px) and (min-width: 769px) {
-    .category-hero {
-        height: 200px;
-    }
-   
-    .category-hero-overlay .category-name {
-        font-size: 2.5rem;
-    }
-}
-/* Remove any loading states or shimmer effects */
-.category-hero::after,
-.category-hero.loaded,
-.category-hero.loading {
-    display: none !important;
-}
-/* Ensure proper spacing when no image */
+
+/* When no hero image, show the regular category name */
 .menu-category:not(:has(.category-hero)) .category-header {
     text-align: center;
     margin-bottom: var(--spacing-xl);
     position: relative;
 }
-/* Category name when no hero image */
+
 .menu-category:not(:has(.category-hero)) .category-name {
     display: block !important;
+    font-family: var(--font-display);
+    font-size: 2.5rem;
+    color: var(--black);
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    margin-bottom: var(--spacing-sm);
 }
+
+/* Tablet adjustments */
+@media (max-width: 1024px) and (min-width: 769px) {
+    .category-hero {
+        height: 250px;
+        margin: 0 var(--spacing-md) var(--spacing-xl);
+    }
+    
+    .category-hero-overlay .category-name {
+        font-size: 3rem;
+    }
+}
+
+/* Mobile adjustments */
+@media (max-width: 768px) {
+    .category-hero {
+        height: 180px;
+        margin: 0 -var(--spacing-sm) var(--spacing-md);
+        border-radius: 0;
+        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+    }
+    
+    .category-hero-overlay {
+        padding: var(--spacing-md);
+    }
+    
+    .category-hero-overlay .category-name {
+        font-size: 1.75rem;
+        letter-spacing: 0.1em;
+        text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.8);
+    }
+    
+    /* Ensure proper spacing on mobile */
+    .menu-category {
+        overflow: hidden;
+    }
+    
+    .menu-category:not(:has(.category-hero)) .category-name {
+        font-size: 2rem;
+    }
+}
+
 /* High contrast mode support */
 @media (prefers-contrast: high) {
     .category-hero::before {
-        background: rgba(0, 0, 0, 0.8);
+        background: linear-gradient(
+            to bottom,
+            rgba(0, 0, 0, 0.5) 0%,
+            rgba(0, 0, 0, 0.7) 50%,
+            rgba(0, 0, 0, 0.9) 100%
+        );
     }
-   
+    
     .category-hero-overlay .category-name {
         font-weight: 700;
         letter-spacing: 0.3em;
+        text-shadow: 4px 4px 8px rgba(0, 0, 0, 1);
     }
 }
+
 /* Print styles */
 @media print {
     .category-hero {
         display: none !important;
     }
-   
+    
     /* Show category name in print */
     .menu-category .category-header .category-name {
         display: block !important;
     }
 }
-/* Ensure no JavaScript-added classes affect the static design */
-.category-hero.fade-in,
-.category-hero.animate,
-.category-hero.parallax {
-    opacity: 1 !important;
-    transform: none !important;
+
+/* Hover effect for desktop only */
+@media (hover: hover) and (min-width: 769px) {
+    .category-hero {
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+    
+    .category-hero:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 12px 40px rgba(0, 0, 0, 0.15);
+    }
+    
+    .category-hero img {
+        transition: transform 0.6s ease;
+    }
+    
+    .category-hero:hover img {
+        transform: scale(1.05);
+    }
+}
+
+/* Loading state for images */
+.category-hero {
+    background-color: var(--light-gray);
+    background-image: linear-gradient(
+        45deg,
+        var(--light-gray) 25%,
+        var(--cream) 25%,
+        var(--cream) 50%,
+        var(--light-gray) 50%,
+        var(--light-gray) 75%,
+        var(--cream) 75%,
+        var(--cream)
+    );
+    background-size: 20px 20px;
+}
+
+/* Once image loads, remove the pattern */
+.category-hero img {
+    background-color: var(--pure-white);
+}
+
+/* Additional refinements for better visual hierarchy */
+.menu-category {
+    margin-bottom: calc(var(--spacing-xxl) * 1.5);
+}
+
+.menu-category:last-child {
+    margin-bottom: var(--spacing-xl);
+}
+
+/* Ensure description styling when present */
+.category-description {
+    font-family: var(--font-heading);
+    font-size: 1.125rem;
+    color: var(--warm-gray);
+    font-style: italic;
+    max-width: 700px;
+    margin: 0 auto var(--spacing-md);
+    text-align: center;
+    line-height: 1.8;
+}
+
+/* Fix any z-index issues with filters */
+.menu-filter-container {
+    position: relative;
+    z-index: 5; /* Below navigation but above content */
+}
+
+/* Ensure smooth scrolling to categories */
+.menu-category {
+    scroll-margin-top: 100px; /* Account for fixed navigation */
 }
