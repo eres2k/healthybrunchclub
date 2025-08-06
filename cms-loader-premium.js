@@ -43,7 +43,7 @@ document.addEventListener('DOMContentLoaded', function() {
         // Initialize filters AFTER menu is loaded
         initializeFilters();
         // Initialize mobile filters after menu data is available
-        if (window.innerWidth <= 768) {
+        if (window.innerWidth <= 768 && window.mobileFilters) {
             window.mobileFilters.init();
         }
     });
@@ -927,6 +927,10 @@ window.cmsLoader = {
     function openMobileFilters() {
         const modal = document.querySelector('.mobile-filter-modal');
         if (modal) {
+            // Sync mobile state with current filters before opening
+            mobileFilterState.category = currentFilters.category;
+            mobileFilterState.tags = [...currentFilters.tags];
+            
             modal.classList.add('active');
             document.body.style.overflow = 'hidden';
             
@@ -983,20 +987,22 @@ window.cmsLoader = {
         
         // Update UI
         updateMobileFilterUI();
+        
+        // Apply the reset immediately
+        currentFilters.category = 'all';
+        currentFilters.tags = [];
+        applyFilters();
+        updateMobileFilterBadge();
     }
     
     // Apply mobile filters
     function applyMobileFilters() {
-        // Copy mobile state to main filters
-        if (window.currentFilters) {
-            window.currentFilters.category = mobileFilterState.category;
-            window.currentFilters.tags = [...mobileFilterState.tags];
-        }
+        // Copy mobile state to main filters (use global currentFilters)
+        currentFilters.category = mobileFilterState.category;
+        currentFilters.tags = [...mobileFilterState.tags];
         
-        // Apply filters
-        if (window.applyFilters) {
-            window.applyFilters();
-        }
+        // Apply filters using the global function
+        applyFilters();
         
         // Update badge
         updateMobileFilterBadge();
@@ -1025,9 +1031,8 @@ window.cmsLoader = {
         if (!badge) return;
         
         let activeCount = 0;
-        if (window.currentFilters) {
-            activeCount = (window.currentFilters.category !== 'all' ? 1 : 0) + window.currentFilters.tags.length;
-        }
+        // Use the global currentFilters variable
+        activeCount = (currentFilters.category !== 'all' ? 1 : 0) + currentFilters.tags.length;
         
         if (activeCount > 0) {
             badge.textContent = activeCount;
@@ -1039,13 +1044,13 @@ window.cmsLoader = {
     
     // Initialize on DOM ready
     document.addEventListener('DOMContentLoaded', function() {
-        // Wait a bit for menu to load
+        // Initialize mobile filters after a short delay to ensure menu loads
         setTimeout(() => {
-            if (window.innerWidth <= 768) {
+            if (window.innerWidth <= 768 && allMenuCategories.length > 0) {
                 initializeMobileFilters();
                 updateMobileFilterBadge();
             }
-        }, 500);
+        }, 1000);
     });
     
     // Reinitialize on window resize
