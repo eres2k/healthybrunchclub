@@ -400,52 +400,40 @@ h1, h2, h3, h4, h5, h6 {
 }
 
 /* ===============================================
-   FILTER DISPLAY FIX
-   Add this to your mystyle-premium.css file
-   Replace the existing filter styles (around line 1073-1200)
+   DESKTOP FILTER SYSTEM (UNCHANGED)
    =============================================== */
 
-/* Elegant Minimal Filter System - FIXED */
+/* Filter Container - Desktop Only */
 .menu-filter-container {
     max-width: 1200px;
     margin: 0 auto var(--spacing-lg);
     position: relative;
-    opacity: 1; /* Changed from 0 to ensure visibility */
-    /* Remove animation that might be causing issues */
 }
 
-/* Filter Bar - Fixed Layout */
+/* Filter Bar */
 .filter-bar {
     display: flex;
     align-items: center;
     justify-content: space-between;
     gap: var(--spacing-md);
-    padding: var(--spacing-md) 0; /* Added padding */
+    padding: var(--spacing-md) 0;
     background: transparent;
     border-bottom: 1px solid var(--light-gray);
-    flex-wrap: wrap; /* Allow wrapping on smaller screens */
 }
 
-/* Category Filters - Fixed */
+/* Category Filters */
 .filter-group {
-    flex: 1 1 auto; /* Allow flexible sizing */
-    min-width: 0; /* Prevent overflow */
+    flex: 1 1 auto;
+    min-width: 0;
     align-content: center;
 }
 
 .filter-buttons {
+    display: flex;
     gap: 0;
     text-align: center;
     margin: 0;
-    flex-wrap: nowrap; /* Keep buttons in a row */
-    overflow-x: auto; /* Enable horizontal scroll if needed */
-    -webkit-overflow-scrolling: touch;
-    scrollbar-width: none; /* Hide scrollbar */
-    -ms-overflow-style: none; /* Hide scrollbar IE/Edge */
-}
-
-.filter-buttons::-webkit-scrollbar {
-    display: none; /* Hide scrollbar Chrome/Safari */
+    flex-wrap: nowrap;
 }
 
 .filter-btn {
@@ -462,8 +450,8 @@ h1, h2, h3, h4, h5, h6 {
     cursor: pointer;
     transition: all var(--transition-normal);
     position: relative;
-    white-space: nowrap; /* Prevent text wrapping */
-    flex-shrink: 0; /* Prevent button shrinking */
+    white-space: nowrap;
+    flex-shrink: 0;
 }
 
 .filter-btn:first-child {
@@ -494,12 +482,12 @@ h1, h2, h3, h4, h5, h6 {
     transform: scaleX(1);
 }
 
-/* Tag Filters - Fixed */
+/* Tag Filters */
 .filter-tags {
     display: flex;
     gap: var(--spacing-xs);
     align-items: center;
-    flex-wrap: wrap; /* Allow wrapping */
+    flex-wrap: wrap;
 }
 
 .tag-filter {
@@ -532,6 +520,8 @@ h1, h2, h3, h4, h5, h6 {
     background: var(--black);
     color: var(--pure-white);
     border-color: var(--black);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+    transform: translateY(-1px);
 }
 
 .tag-filter:hover .tag-label {
@@ -539,12 +529,12 @@ h1, h2, h3, h4, h5, h6 {
     color: var(--gold);
 }
 
-/* Filter Actions - Fixed */
+/* Filter Actions */
 .filter-actions {
     display: flex;
     gap: var(--spacing-sm);
     align-items: center;
-    flex-shrink: 0; /* Prevent shrinking */
+    flex-shrink: 0;
 }
 
 .btn-icon {
@@ -610,93 +600,283 @@ h1, h2, h3, h4, h5, h6 {
     }
 }
 
-/* Tablet adjustments */
-@media (max-width: 1024px) and (min-width: 769px) {
-    .filter-bar {
-        flex-wrap: wrap;
-        gap: var(--spacing-sm);
-    }
-    
-    .filter-group {
-        flex: 1 1 100%;
-    }
-    
-    .filter-actions {
-        flex: 1 1 100%;
-        justify-content: center;
-        margin-top: var(--spacing-sm);
-    }
+/* ===============================================
+   MOBILE FILTER MODAL SYSTEM (NEW)
+   =============================================== */
+
+/* Mobile Filter Button - Replaces scrollable filters */
+.mobile-filter-toggle {
+    display: none;
+    background: var(--black);
+    color: var(--pure-white);
+    padding: 0.75rem 1.5rem;
+    border: none;
+    border-radius: 25px;
+    font-family: var(--font-body);
+    font-size: 0.75rem;
+    font-weight: 500;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    cursor: pointer;
+    transition: all var(--transition-normal);
+    margin: 0 auto var(--spacing-md);
+    position: relative;
 }
 
-/* Mobile adjustments */
-@media (max-width: 768px) {
-    /* Hide desktop-only elements */
-    .desktop-only {
-        display: none !important;
-    }
-    
-    /* Filter container mobile */
-    .menu-filter-container {
-        margin: 0 var(--spacing-sm) var(--spacing-lg);
-        padding: var(--spacing-sm);
-        background: var(--pure-white);
-        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
-        border-radius: 8px;
-    }
-    
-    /* Filter bar mobile */
-    .filter-bar {
-        flex-direction: column;
-        gap: var(--spacing-sm);
-        padding: 0;
-        border-bottom: none;
-    }
-    
-    /* Category filters mobile */
-    .filter-group {
-        width: 100%;
-    }
-    
-    .filter-buttons {
-        width: 100%;
-        overflow-x: auto;
-        padding-bottom: var(--spacing-xs);
-        /* Add visual scroll indicators */
-        -webkit-mask-image: linear-gradient(to right, black 90%, transparent 100%);
-        mask-image: linear-gradient(to right, black 90%, transparent 100%);
-    }
-    
-    /* Adjust button spacing on mobile */
-    .filter-btn {
-        padding: 0.5rem 1rem;
-        font-size: 0.7rem;
-    }
-    
-    .filter-btn:first-child {
-        padding-left: 0.5rem;
-    }
-    
-    /* Filter actions mobile */
-    .filter-actions {
-        width: 100%;
-        justify-content: center;
-        border-top: 1px solid var(--light-gray);
-        padding-top: var(--spacing-sm);
-        margin-top: var(--spacing-sm);
-    }
-    
-    /* Show only icons on mobile */
-    .btn-icon .btn-text {
-        display: none;
-    }
-    
-    .btn-icon {
-        padding: 0.75rem;
-    }
-    
-    .btn-icon i {
-        font-size: 1.25rem;
-    }
+.mobile-filter-toggle:active {
+    transform: scale(0.95);
+}
+
+.mobile-filter-toggle i {
+    margin-right: 0.5rem;
+}
+
+/* Active filters indicator */
+.mobile-filter-toggle .filter-badge {
+    position: absolute;
+    top: -8px;
+    right: -8px;
+    background: var(--gold);
+    color: var(--pure-white);
+    font-size: 0.625rem;
+    font-weight: 600;
+    min-width: 20px;
+    height: 20px;
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0 6px;
+}
+
+/* Mobile Filter Modal */
+.mobile-filter-modal {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.5);
+    z-index: 2000;
+    opacity: 0;
+    transition: opacity var(--transition-normal);
+}
+
+.mobile-filter-modal.active {
+    display: block;
+    opacity: 1;
+}
+
+/* Modal Content */
+.mobile-filter-content {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background: var(--pure-white);
+    border-radius: 20px 20px 0 0;
+    max-height: 85vh;
+    transform: translateY(100%);
+    transition: transform var(--transition-normal);
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+}
+
+.mobile-filter-modal.active .mobile-filter-content {
+    transform: translateY(0);
+}
+
+/* Modal Header */
+.mobile-filter-header {
+    padding: 1.5rem;
+    border-bottom: 1px solid var(--light-gray);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-shrink: 0;
+}
+
+.mobile-filter-header h3 {
+    font-family: var(--font-body);
+    font-size: 1.125rem;
+    font-weight: 600;
+    color: var(--black);
+    margin: 0;
+}
+
+.mobile-filter-close {
+    background: none;
+    border: none;
+    font-size: 1.5rem;
+    color: var(--warm-gray);
+    cursor: pointer;
+    padding: 0;
+    width: 32px;
+    height: 32px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    transition: all var(--transition-fast);
+}
+
+.mobile-filter-close:active {
+    background: var(--light-gray);
+}
+
+/* Modal Body */
+.mobile-filter-body {
+    flex: 1;
+    overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
+    padding: 1.5rem;
+}
+
+/* Filter Sections */
+.mobile-filter-section {
+    margin-bottom: 2rem;
+}
+
+.mobile-filter-section h4 {
+    font-family: var(--font-body);
+    font-size: 0.875rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: var(--warm-gray);
+    margin-bottom: 1rem;
+}
+
+/* Category Buttons - Vertical Layout */
+.mobile-category-filters {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+}
+
+.mobile-filter-btn {
+    background: var(--pure-white);
+    border: 2px solid var(--light-gray);
+    color: var(--warm-gray);
+    padding: 1rem;
+    font-family: var(--font-body);
+    font-size: 0.875rem;
+    font-weight: 500;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    cursor: pointer;
+    transition: all var(--transition-fast);
+    border-radius: 12px;
+    text-align: left;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.mobile-filter-btn:active {
+    transform: scale(0.98);
+}
+
+.mobile-filter-btn.active {
+    background: var(--black);
+    color: var(--pure-white);
+    border-color: var(--black);
+}
+
+.mobile-filter-btn .checkmark {
+    width: 20px;
+    height: 20px;
+    border: 2px solid currentColor;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all var(--transition-fast);
+}
+
+.mobile-filter-btn.active .checkmark::after {
+    content: '✓';
+    font-size: 12px;
+}
+
+/* Tag Filters - Grid Layout */
+.mobile-tag-filters {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 0.75rem;
+}
+
+.mobile-tag-filter {
+    position: relative;
+}
+
+.mobile-tag-filter input[type="checkbox"] {
+    position: absolute;
+    opacity: 0;
+    width: 0;
+    height: 0;
+}
+
+.mobile-tag-label {
+    display: block;
+    padding: 0.75rem;
+    font-size: 0.75rem;
+    font-weight: 500;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: var(--warm-gray);
+    background: var(--pure-white);
+    border: 2px solid var(--light-gray);
+    border-radius: 12px;
+    cursor: pointer;
+    transition: all var(--transition-fast);
+    text-align: center;
+}
+
+.mobile-tag-filter input[type="checkbox"]:checked + .mobile-tag-label {
+    background: var(--gold);
+    color: var(--pure-white);
+    border-color: var(--gold);
+}
+
+/* Modal Footer */
+.mobile-filter-footer {
+    padding: 1.5rem;
+    border-top: 1px solid var(--light-gray);
+    display: flex;
+    gap: 1rem;
+    flex-shrink: 0;
+}
+
+.mobile-filter-footer button {
+    flex: 1;
+    padding: 1rem;
+    border: none;
+    font-family: var(--font-body);
+    font-size: 0.875rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    cursor: pointer;
+    transition: all var(--transition-fast);
+    border-radius: 25px;
+}
+
+.mobile-filter-reset {
+    background: var(--light-gray);
+    color: var(--warm-gray);
+}
+
+.mobile-filter-apply {
+    background: var(--black);
+    color: var(--pure-white);
+}
+
+.mobile-filter-reset:active,
+.mobile-filter-apply:active {
+    transform: scale(0.95);
 }
 
 /* Loading state for menu */
@@ -733,16 +913,10 @@ h1, h2, h3, h4, h5, h6 {
     display: block;
 }
 
-/* Menu Content - 3 Column Layout */
+/* Menu Content */
 .menu-content {
     max-width: 1400px;
     margin: 0 auto;
-}
-
-@media (max-width: 768px) {
-    .menu-content {
-        max-width: 100%;
-    }
 }
 
 /* Category container */
@@ -751,21 +925,26 @@ h1, h2, h3, h4, h5, h6 {
     position: relative;
 }
 
-/* Category Hero Image Container - Fixed initial state */
+/* Category Hero Image Container */
 .category-hero {
     position: relative;
     width: 100%;
     max-width: 1200px;
-    height: 250px; /* Reduced from 400px */
-    margin: 0 auto var(--spacing-lg); /* Reduced margin */
+    height: 250px;
+    margin: 0 auto var(--spacing-lg);
     overflow: hidden;
     border-radius: 12px;
     box-shadow: 0 8px 30px rgba(0, 0, 0, 0.12);
     background: linear-gradient(135deg, var(--cream), var(--light-gray));
-    /* Initial state for fade-in animation */
     opacity: 0;
     transform: translateY(10px);
     transition: opacity 0.6s ease, transform 0.6s ease;
+}
+
+/* Category Hero loaded state */
+.category-hero.loaded {
+    opacity: 1 !important;
+    transform: translateY(0) !important;
 }
 
 /* Category Hero Image */
@@ -777,7 +956,7 @@ h1, h2, h3, h4, h5, h6 {
     transition: transform 0.6s ease;
 }
 
-/* Dark Gradient Overlay - Enhanced for better text visibility */
+/* Dark Gradient Overlay */
 .category-hero-gradient {
     position: absolute;
     top: 0;
@@ -808,7 +987,7 @@ h1, h2, h3, h4, h5, h6 {
     padding: var(--spacing-md);
 }
 
-/* Enhanced text visibility with backdrop - Final version */
+/* Category Title Overlay */
 .category-title-overlay {
     font-family: var(--font-display);
     font-size: clamp(2rem, 5vw, 3.5rem);
@@ -824,17 +1003,16 @@ h1, h2, h3, h4, h5, h6 {
         0px 0px 40px rgba(0, 0, 0, 0.5);
     position: relative;
     line-height: 1.2;
-    /* Subtle backdrop for extra readability */
     padding: var(--spacing-sm) var(--spacing-md);
     background: rgba(0, 0, 0, 0.2);
     backdrop-filter: blur(5px);
     -webkit-backdrop-filter: blur(5px);
     border-radius: 8px;
-    /* Ensure text is always visible */
     z-index: 3;
     pointer-events: none;
 }
 
+/* Category Header */
 .category-header {
     text-align: center;
     margin-bottom: var(--spacing-xl);
@@ -877,22 +1055,15 @@ h1, h2, h3, h4, h5, h6 {
     margin: 0 auto;
 }
 
-/* When category has hero image, adjust header styling */
-.menu-category:has(.category-hero) .category-header {
-    margin-bottom: var(--spacing-md); /* Less space when hero is present */
-}
-
-/* For browsers without :has() support */
-.category-hero + .category-header {
-    margin-top: var(--spacing-md);
-}
-
 /* Menu Items Grid - 3 Columns */
 .menu-grid {
     display: grid;
     grid-template-columns: repeat(3, 1fr);
     gap: var(--spacing-lg);
     margin-bottom: var(--spacing-xl);
+    position: relative;
+    z-index: 1;
+    margin-top: var(--spacing-md);
 }
 
 /* Premium Menu Item Card */
@@ -980,6 +1151,11 @@ h1, h2, h3, h4, h5, h6 {
     font-family: var(--font-display);
     font-size: 1.375rem;
     color: var(--gold);
+    display: inline-block !important;
+    opacity: 1 !important;
+    visibility: visible !important;
+    font-weight: 400 !important;
+    white-space: nowrap;
 }
 
 .menu-item-description {
@@ -1090,19 +1266,6 @@ h1, h2, h3, h4, h5, h6 {
     align-items: center;
     justify-content: center;
     font-weight: 500;
-}
-
-/* Loading State */
-.menu-loading {
-    text-align: center;
-    padding: var(--spacing-xxl);
-    color: var(--warm-gray);
-}
-
-.menu-loading i {
-    font-size: 3rem;
-    margin-bottom: var(--spacing-md);
-    color: var(--gold);
 }
 
 /* Philosophy Section */
@@ -1479,7 +1642,7 @@ address a:hover {
     width: 60px;
     height: 60px;
     border-radius: 50%;
-    overflow: visible; /* Allow badge to show outside bounds */
+    overflow: visible;
 }
 
 .event-window.collapsed .event-content {
@@ -1515,7 +1678,7 @@ address a:hover {
 /* Event Window - Desktop specific adjustments */
 @media (min-width: 769px) {
     .event-window {
-        bottom: 11rem !important; /* Even more space from admin button */
+        bottom: 11rem !important;
         width: 350px !important;
         left: auto !important;
         right: 2rem !important;
@@ -1532,11 +1695,11 @@ address a:hover {
     .event-window.collapsed .event-toggle {
         width: 60px !important;
         height: 60px !important;
-        position: relative !important; /* For badge positioning */
+        position: relative !important;
     }
     
     .event-window:not(.collapsed) .event-toggle {
-        display: block !important; /* Keep toggle button visible on desktop */
+        display: block !important;
         position: absolute !important;
     }
     
@@ -1545,11 +1708,28 @@ address a:hover {
         max-height: 70vh !important;
     }
     
-    /* Ensure notification badge is visible on desktop */
     .event-window.collapsed:not(.interacted) .event-toggle::before {
         display: flex !important;
     }
 }
+
+/* Tablet adjustments */
+@media (max-width: 1024px) and (min-width: 769px) {
+    .filter-bar {
+        flex-wrap: wrap;
+        gap: var(--spacing-sm);
+    }
+    
+    .filter-group {
+        flex: 1 1 100%;
+    }
+    
+    .filter-actions {
+        flex: 1 1 100%;
+        justify-content: center;
+        margin-top: var(--spacing-sm);
+    }
+    
     .menu-grid {
         grid-template-columns: repeat(2, 1fr);
     }
@@ -1572,8 +1752,21 @@ address a:hover {
     }
 }
 
-/* Mobile - 1 Column */
+/* Mobile Responsive Styles */
 @media (max-width: 768px) {
+    /* Hide desktop filter system */
+    .menu-filter-container,
+    .desktop-only {
+        display: none !important;
+    }
+    
+    /* Show mobile filter toggle */
+    .mobile-filter-toggle {
+        display: flex !important;
+        align-items: center;
+        justify-content: center;
+    }
+    
     /* Navigation */
     .nav-container {
         padding: 1rem;
@@ -1604,7 +1797,7 @@ address a:hover {
         padding: var(--spacing-sm);
     }
     
-    /* Menu Section - Full Width */
+    /* Menu Section */
     .menu-premium {
         padding: var(--spacing-lg) 0;
     }
@@ -1613,43 +1806,9 @@ address a:hover {
         padding: 0 var(--spacing-sm);
     }
     
-    /* Filter Container - Full Width */
-    .menu-filter-container {
-        margin: 0 var(--spacing-sm) var(--spacing-lg);
-        padding: var(--spacing-md);
-        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
-    }
-    
-    /* Hide Tag Filters on Mobile */
-    .filter-tags,
-    .filter-group:nth-child(2) {
-        display: none;
-    }
-    
-    /* Filter Actions - Adjust for mobile */
-    .filter-actions {
-        justify-content: center;
-        gap: var(--spacing-sm);
-        margin-top: var(--spacing-sm);
-        padding-top: var(--spacing-sm);
-    }
-    
-    .btn-icon {
-        padding: 0.75rem;
-        font-size: 1rem;
-    }
-    
-    /* Hide button text on mobile, show only icons */
-    .btn-icon .btn-text {
-        display: none;
-    }
-    
-    .btn-icon i {
-        margin: 0;
-    }
-    
-    /* Menu Content - Full Width */
+    /* Menu Content */
     .menu-content {
+        max-width: 100%;
         padding: 0;
     }
     
@@ -1660,7 +1819,28 @@ address a:hover {
     /* Category Hero - Full Width */
     .category-hero {
         margin: 0 0 var(--spacing-md);
-        height: 250px;
+        height: 180px;
+        border-radius: 0;
+    }
+    
+    .category-hero-overlay {
+        padding: var(--spacing-sm);
+    }
+    
+    .category-title-overlay {
+        font-size: 1.75rem;
+        letter-spacing: 0.08em;
+        font-weight: 500;
+    }
+    
+    /* Enhanced gradient for mobile */
+    .category-hero-gradient {
+        background: linear-gradient(
+            to bottom,
+            rgba(0, 0, 0, 0.3) 0%,
+            rgba(0, 0, 0, 0.5) 50%,
+            rgba(0, 0, 0, 0.75) 100%
+        );
     }
     
     /* Menu Grid - Full Width with padding */
@@ -1802,36 +1982,19 @@ address a:hover {
         display: none;
     }
     
-    /* Filter Buttons - Horizontal Scroll */
-    .filter-buttons {
-        overflow-x: auto;
-        -webkit-overflow-scrolling: touch;
-        white-space: nowrap;
-        padding-bottom: var(--spacing-xs);
-        margin: 0 -var(--spacing-sm);
-        padding-left: var(--spacing-sm);
-        padding-right: var(--spacing-sm);
-    }
-    
-    .filter-btn {
-        display: inline-flex;
-        white-space: nowrap;
-    }
-    
     /* Event Window */
     .event-window {
         width: calc(100vw - 2rem);
         left: 1rem;
-        bottom: 4.5rem; /* Adjusted for better spacing on mobile */
+        bottom: 4.5rem;
         right: auto;
-        max-height: 60vh; /* Reasonable height limit on mobile */
+        max-height: 60vh;
         border-radius: 12px;
         box-shadow: 0 10px 40px rgba(0, 0, 0, 0.25);
     }
     
-    /* Fix toggle button position when expanded on mobile */
     .event-window:not(.collapsed) .event-toggle {
-        display: none; /* Hide floating button when expanded on mobile */
+        display: none;
     }
     
     .event-window.collapsed {
@@ -1843,7 +2006,7 @@ address a:hover {
         max-height: 50px;
         border-radius: 50%;
         box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
-        overflow: visible !important; /* Allow badge to show */
+        overflow: visible !important;
     }
     
     .event-window.collapsed .event-toggle {
@@ -1852,11 +2015,10 @@ address a:hover {
         font-size: 20px;
         top: 0;
         right: 0;
-        position: relative; /* For badge positioning */
-        display: flex; /* Ensure it's visible when collapsed */
+        position: relative;
+        display: flex;
     }
     
-    /* Event content scrollable on mobile */
     .event-content {
         padding: var(--spacing-md);
         padding-top: 2.5rem;
@@ -1865,7 +2027,6 @@ address a:hover {
         -webkit-overflow-scrolling: touch;
     }
     
-    /* Notification badge visible on mobile */
     .event-window.collapsed .event-toggle::before {
         width: 16px;
         height: 16px;
@@ -1873,12 +2034,7 @@ address a:hover {
         top: -3px;
         right: -3px;
         z-index: 2;
-        display: flex !important; /* Force display */
-    }
-    
-    /* Hide tooltip on mobile */
-    .event-tooltip {
-        display: none;
+        display: flex !important;
     }
     
     /* Admin Button */
@@ -1890,79 +2046,211 @@ address a:hover {
     }
 }
 
-/* Mobile Styles */
-@media (max-width: 768px) {
-    .category-hero {
-        height: 180px; /* Even shorter on mobile */
-        margin: 0 -var(--spacing-sm) var(--spacing-md);
-        border-radius: 0;
+/* Mobile Landscape adjustments */
+@media (max-width: 768px) and (orientation: landscape) {
+    .mobile-filter-content {
+        max-height: 95vh;
     }
-
-    .category-hero-overlay {
-        padding: var(--spacing-sm);
+    
+    .mobile-filter-body {
+        padding: 1rem;
     }
-
-    .category-title-overlay {
-        font-size: 1.75rem;
-        letter-spacing: 0.08em;
-        font-weight: 500; /* Slightly bolder on mobile for readability */
-    }
-
-    /* Enhanced gradient for mobile */
-    .category-hero-gradient {
-        background: linear-gradient(
-            to bottom,
-            rgba(0, 0, 0, 0.3) 0%,
-            rgba(0, 0, 0, 0.5) 50%,
-            rgba(0, 0, 0, 0.75) 100%
-        );
-    }
-
-    .category-name {
-        font-size: 2rem;
-        padding: 0 30px;
-    }
-
-    .category-name::before,
-    .category-name::after {
-        width: 40px;
+    
+    .mobile-tag-filters {
+        grid-template-columns: repeat(3, 1fr);
     }
 }
 
-/* Hover effect for desktop */
-@media (hover: hover) and (min-width: 769px) {
-    .category-hero {
-        transition: transform 0.3s ease, box-shadow 0.3s ease;
-    }
-
-    .category-hero:hover {
-        transform: translateY(-2px);
-        box-shadow: 0 12px 40px rgba(0, 0, 0, 0.15);
-    }
-
-    .category-hero img {
-        transition: transform 0.6s ease;
-    }
-
-    .category-hero:hover img {
-        transform: scale(1.05);
+/* Small phone adjustments */
+@media (max-width: 375px) {
+    .mobile-filter-header {
+        padding: 1rem;
     }
     
-    /* Make overlay slightly darker on hover for better text readability */
-    .category-hero:hover .category-hero-gradient {
-        background: linear-gradient(
-            to bottom,
-            rgba(0, 0, 0, 0.3) 0%,
-            rgba(0, 0, 0, 0.5) 50%,
-            rgba(0, 0, 0, 0.8) 100%
-        );
+    .mobile-filter-body {
+        padding: 1rem;
+    }
+    
+    .mobile-tag-filters {
+        grid-template-columns: 1fr;
+    }
+    
+    .mobile-filter-btn {
+        font-size: 0.8rem;
+        padding: 0.875rem;
+    }
+}
+
+/* Mobile Navigation Fixes */
+@media (max-width: 768px) {
+    .nav-menu.active {
+        display: flex !important;
+    }
+    
+    .nav-link {
+        padding: 1rem 0;
+        border-bottom: 1px solid var(--light-gray);
+        width: 100%;
+        text-align: center;
+    }
+    
+    .nav-link:last-child {
+        border-bottom: none;
+    }
+    
+    .nav-cta {
+        margin-top: 1rem;
+        display: inline-block;
+        width: 100%;
+        text-align: center;
+    }
+    
+    .mobile-menu-btn {
+        display: block !important;
+    }
+    
+    /* Animate burger menu */
+    .mobile-menu-btn.active span:nth-child(1) {
+        transform: rotate(45deg) translate(5px, 5px);
+    }
+    
+    .mobile-menu-btn.active span:nth-child(2) {
+        opacity: 0;
+    }
+    
+    .mobile-menu-btn.active span:nth-child(3) {
+        transform: rotate(-45deg) translate(7px, -6px);
+    }
+}
+
+/* Hero Mobile Fixes */
+@media (max-width: 768px) {
+    .hero-content {
+        padding: var(--spacing-md) !important;
+    }
+    
+    .hero-actions {
+        flex-direction: column !important;
+        gap: var(--spacing-sm) !important;
+    }
+    
+    .btn-luxury {
+        width: 100% !important;
+        padding: 1rem !important;
+        font-size: 0.875rem !important;
+    }
+}
+
+/* Typography Mobile */
+@media (max-width: 768px) {
+    .section-title {
+        font-size: 2rem !important;
+        margin-bottom: var(--spacing-sm) !important;
+    }
+    
+    .section-subtitle {
+        font-size: 1rem !important;
+        margin-bottom: var(--spacing-md) !important;
+    }
+    
+    .hero-title {
+        font-size: 2rem !important;
+    }
+    
+    .hero-subtitle {
+        font-size: 0.75rem !important;
+    }
+    
+    .hero-tagline {
+        font-size: 1rem !important;
+    }
+    
+    .category-name {
+        font-size: 1.75rem !important;
+    }
+}
+
+/* Ensure hamburger menu is visible on mobile */
+@media (max-width: 768px) {
+    .mobile-menu-btn,
+    .mobile-menu-toggle {
+        display: block !important;
+        background: none;
+        border: none;
+        cursor: pointer;
+        width: 30px;
+        height: 30px;
+        position: relative;
+        z-index: 1001;
+        padding: 0;
+    }
+    
+    .mobile-menu-btn span,
+    .mobile-menu-toggle span {
+        display: block !important;
+        width: 100%;
+        height: 2px;
+        background: var(--black, #1A1A1A) !important;
+        margin: 6px 0;
+        transition: all 0.3s ease;
+        opacity: 1 !important;
+    }
+    
+    .nav-menu,
+    .nav-links {
+        display: none !important;
+    }
+    
+    .nav-menu.active,
+    .nav-links.active {
+        display: flex !important;
+        position: absolute;
+        top: 100%;
+        left: 0;
+        right: 0;
+        background: white;
+        flex-direction: column;
+        padding: 20px;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+        z-index: 1000;
+    }
+}
+
+/* Desktop hamburger hidden */
+@media (min-width: 769px) {
+    .mobile-menu-btn,
+    .mobile-menu-toggle {
+        display: none !important;
+    }
+    
+    .nav-menu,
+    .nav-links {
+        display: flex !important;
+    }
+}
+
+/* Override any conflicting styles */
+@media (max-width: 768px) {
+    .nav-premium .mobile-menu-btn {
+        display: block !important;
+        opacity: 1 !important;
+        visibility: visible !important;
+    }
+    
+    .mobile-menu-btn span {
+        display: block !important;
+        opacity: 1 !important;
+        visibility: visible !important;
+        width: 25px !important;
+        height: 2px !important;
+        background-color: #1A1A1A !important;
     }
 }
 
 /* Desktop specific adjustments */
 @media (min-width: 1200px) {
     .category-hero {
-        height: 280px; /* Slightly taller on large screens */
+        height: 280px;
     }
     
     .category-title-overlay {
@@ -2000,19 +2288,6 @@ address a:hover {
 
 /* Print Styles */
 @media print {
-    .category-hero {
-        display: none !important;
-    }
-
-    /* Show text-only category names in print */
-    .menu-category .category-header .category-name {
-        display: block !important;
-    }
-}
-
-/* Print Styles */
-@media print {
-    /* Hide unnecessary elements */
     .nav-premium,
     .hero-premium,
     .philosophy-section,
@@ -2020,12 +2295,14 @@ address a:hover {
     .reservation-premium,
     .footer-premium,
     .menu-filter-container,
+    .mobile-filter-toggle,
+    .mobile-filter-modal,
     .admin-btn,
-    .event-window {
+    .event-window,
+    .category-hero {
         display: none !important;
     }
     
-    /* Optimize for print */
     body {
         font-size: 11pt;
         line-height: 1.5;
@@ -2052,10 +2329,13 @@ address a:hover {
         height: 120pt;
     }
     
-    /* Ensure allergen info is visible */
     .allergen-info {
         display: block !important;
         page-break-before: always;
+    }
+    
+    .menu-category .category-header .category-name {
+        display: block !important;
     }
 }
 
@@ -2129,943 +2409,6 @@ html {
     color: var(--pure-white);
 }
 
-/* ===============================================
-   MOBILE AND NAVIGATION FIXES
-   Add these styles to mystyle-premium.css
-   =============================================== */
-
-/* Remove the automatic euro sign - this causes double euro */
-.menu-item-price::before {
-    content: ''; /* Remove automatic euro sign */
-}
-
-/* Desktop only class for tag filters */
-@media (max-width: 768px) {
-    .desktop-only {
-        display: none !important;
-    }
-}
-
-/* Event Window Fixes for Mobile */
-@media (max-width: 768px) {
-    .event-window {
-        width: calc(100vw - 2rem) !important;
-        left: 1rem !important;
-        bottom: 5rem !important;
-        right: auto !important;
-        max-height: 60vh !important;
-        border-radius: 12px !important;
-        box-shadow: 0 10px 40px rgba(0, 0, 0, 0.25) !important;
-        z-index: 999 !important;
-    }
-    
-    .event-window.collapsed {
-        width: 50px !important;
-        height: 50px !important;
-        left: auto !important;
-        right: 1rem !important;
-        bottom: 5rem !important;
-        max-height: 50px !important;
-        border-radius: 50% !important;
-        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2) !important;
-    }
-    
-    .event-window.collapsed .event-toggle {
-        width: 50px !important;
-        height: 50px !important;
-        font-size: 20px !important;
-        top: 0 !important;
-        right: 0 !important;
-        position: relative !important;
-    }
-    
-    .event-content {
-        padding: var(--spacing-md) !important;
-        padding-top: 3rem !important;
-        max-height: calc(60vh - 4rem) !important;
-        overflow-y: auto !important;
-        -webkit-overflow-scrolling: touch !important;
-    }
-    
-    /* Close button for expanded event window on mobile */
-    .event-window:not(.collapsed) .event-toggle {
-        position: absolute !important;
-        top: 1rem !important;
-        right: 1rem !important;
-        width: 35px !important;
-        height: 35px !important;
-    }
-}
-
-/* Navigation Menu Mobile Fixes */
-@media (max-width: 768px) {
-    .nav-menu {
-        display: none;
-        position: absolute;
-        top: 100%;
-        left: 0;
-        right: 0;
-        background: var(--pure-white);
-        flex-direction: column;
-        padding: var(--spacing-lg);
-        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
-        z-index: 1000;
-    }
-    
-    .nav-menu.active {
-        display: flex !important;
-    }
-    
-    .nav-link {
-        padding: 1rem 0;
-        border-bottom: 1px solid var(--light-gray);
-        width: 100%;
-        text-align: center;
-    }
-    
-    .nav-link:last-child {
-        border-bottom: none;
-    }
-    
-    .nav-cta {
-        margin-top: 1rem;
-        display: inline-block;
-        width: 100%;
-        text-align: center;
-    }
-    
-    .mobile-menu-btn {
-        display: block !important;
-    }
-    
-    /* Animate burger menu */
-    .mobile-menu-btn.active span:nth-child(1) {
-        transform: rotate(45deg) translate(5px, 5px);
-    }
-    
-    .mobile-menu-btn.active span:nth-child(2) {
-        opacity: 0;
-    }
-    
-    .mobile-menu-btn.active span:nth-child(3) {
-        transform: rotate(-45deg) translate(7px, -6px);
-    }
-}
-
-/* Menu Grid Mobile Fixes */
-@media (max-width: 768px) {
-    .menu-grid {
-        grid-template-columns: 1fr !important;
-        gap: var(--spacing-md) !important;
-        padding: 0 var(--spacing-sm) !important;
-    }
-    
-    .menu-category {
-        margin-bottom: var(--spacing-lg) !important;
-    }
-    
-    .category-hero {
-        margin: 0 -var(--spacing-sm) var(--spacing-md) !important;
-        height: 200px !important;
-        border-radius: 0 !important;
-    }
-    
-    .menu-item-card {
-        margin: 0 !important;
-        padding: var(--spacing-md) !important;
-    }
-    
-    .menu-item-image {
-        height: 160px !important;
-        margin: -var(--spacing-md) -var(--spacing-md) var(--spacing-sm) !important;
-    }
-    
-    .menu-item-header {
-        flex-direction: column !important;
-        align-items: center !important;
-        text-align: center !important;
-        gap: 0.5rem !important;
-    }
-    
-    .menu-item-name {
-        font-size: 1.25rem !important;
-    }
-    
-    .menu-item-price {
-        font-size: 1.25rem !important;
-    }
-}
-
-/* Filter Container Mobile */
-@media (max-width: 768px) {
-    .menu-filter-container {
-        margin: 0 var(--spacing-sm) var(--spacing-lg) !important;
-        padding: var(--spacing-md) !important;
-    }
-    
-    .filter-buttons {
-        overflow-x: auto !important;
-        -webkit-overflow-scrolling: touch !important;
-        white-space: nowrap !important;
-        padding-bottom: var(--spacing-xs) !important;
-        margin: 0 -var(--spacing-md) !important;
-        padding-left: var(--spacing-md) !important;
-        padding-right: var(--spacing-md) !important;
-        
-        /* Hide scrollbar but keep functionality */
-        -ms-overflow-style: none;
-        scrollbar-width: none;
-    }
-    
-    .filter-buttons::-webkit-scrollbar {
-        display: none;
-    }
-    
-    .filter-btn {
-        display: inline-flex !important;
-        white-space: nowrap !important;
-        flex-shrink: 0 !important;
-    }
-    
-    .filter-actions {
-        justify-content: space-around !important;
-        gap: var(--spacing-sm) !important;
-    }
-    
-    /* Show only icons on mobile */
-    .btn-icon .btn-text {
-        display: none !important;
-    }
-    
-    .btn-icon {
-        padding: 0.75rem !important;
-    }
-    
-    .btn-icon i {
-        margin: 0 !important;
-        font-size: 1.25rem !important;
-    }
-}
-
-/* Form Mobile Fixes */
-@media (max-width: 768px) {
-    .form-grid {
-        grid-template-columns: 1fr !important;
-        gap: var(--spacing-sm) !important;
-    }
-    
-    .reservation-form {
-        padding: var(--spacing-md) !important;
-        margin: 0 !important;
-        border-radius: 8px !important;
-    }
-}
-
-/* Typography Mobile */
-@media (max-width: 768px) {
-    .section-title {
-        font-size: 2rem !important;
-        margin-bottom: var(--spacing-sm) !important;
-    }
-    
-    .section-subtitle {
-        font-size: 1rem !important;
-        margin-bottom: var(--spacing-md) !important;
-    }
-    
-    .hero-title {
-        font-size: 2rem !important;
-    }
-    
-    .hero-subtitle {
-        font-size: 0.75rem !important;
-    }
-    
-    .hero-tagline {
-        font-size: 1rem !important;
-    }
-    
-    .category-name {
-        font-size: 1.75rem !important;
-    }
-}
-
-/* Hero Mobile Fixes */
-@media (max-width: 768px) {
-    .hero-content {
-        padding: var(--spacing-md) !important;
-    }
-    
-    .hero-actions {
-        flex-direction: column !important;
-        gap: var(--spacing-sm) !important;
-    }
-    
-    .btn-luxury {
-        width: 100% !important;
-        padding: 1rem !important;
-        font-size: 0.875rem !important;
-    }
-}
-
-/* Admin Button Mobile */
-@media (max-width: 768px) {
-    .admin-btn {
-        width: 45px !important;
-        height: 45px !important;
-        bottom: 1rem !important;
-        right: 1rem !important;
-        font-size: 1rem !important;
-    }
-}
-
-/* Philosophy Grid Mobile */
-@media (max-width: 768px) {
-    .philosophy-grid {
-        grid-template-columns: 1fr !important;
-        gap: var(--spacing-md) !important;
-    }
-    
-    .philosophy-card {
-        padding: var(--spacing-md) !important;
-    }
-    
-    .philosophy-icon {
-        width: 60px !important;
-        height: 60px !important;
-        margin-bottom: var(--spacing-sm) !important;
-    }
-    
-    .philosophy-icon i {
-        font-size: 1.5rem !important;
-    }
-}
-
-/* Footer Mobile */
-@media (max-width: 768px) {
-    .footer-content {
-        grid-template-columns: 1fr !important;
-        text-align: center !important;
-        gap: var(--spacing-md) !important;
-    }
-    
-    .social-links {
-        justify-content: center !important;
-    }
-    
-    .newsletter-form {
-        flex-direction: column !important;
-        gap: var(--spacing-xs) !important;
-    }
-    
-    .newsletter-form input,
-    .btn-newsletter {
-        width: 100% !important;
-    }
-}
-
-/* ===============================================
-   FIX FOR MISSING EURO SIGNS AND HAMBURGER MENU
-   Add this to your mystyle-premium.css
-   =============================================== */
-
-/* FIX 1: Show Euro sign (but only once) */
-.menu-item-price {
-    font-family: var(--font-display);
-    font-size: 1.375rem;
-    color: var(--gold);
-}
-vvvvv
-
-/* FIX 2: Ensure hamburger menu is visible on mobile */
-@media (max-width: 768px) {
-    /* Force mobile menu button to show */
-    .mobile-menu-btn,
-    .mobile-menu-toggle {
-        display: block !important;
-        background: none;
-        border: none;
-        cursor: pointer;
-        width: 30px;
-        height: 30px;
-        position: relative;
-        z-index: 1001;
-        padding: 0;
-    }
-    
-    /* Hamburger lines */
-    .mobile-menu-btn span,
-    .mobile-menu-toggle span {
-        display: block !important;
-        width: 100%;
-        height: 2px;
-        background: var(--black, #1A1A1A) !important;
-        margin: 6px 0;
-        transition: all 0.3s ease;
-        opacity: 1 !important;
-    }
-    
-    /* Hide desktop navigation */
-    .nav-menu,
-    .nav-links {
-        display: none !important;
-    }
-    
-    /* Show navigation when active */
-    .nav-menu.active,
-    .nav-links.active {
-        display: flex !important;
-        position: absolute;
-        top: 100%;
-        left: 0;
-        right: 0;
-        background: white;
-        flex-direction: column;
-        padding: 20px;
-        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
-        z-index: 1000;
-    }
-}
-
-/* FIX 3: Ensure hamburger is visible on desktop too (but hidden) */
-@media (min-width: 769px) {
-    .mobile-menu-btn,
-    .mobile-menu-toggle {
-        display: none !important;
-    }
-    
-    .nav-menu,
-    .nav-links {
-        display: flex !important;
-    }
-}
-
-/* FIX 4: Price display in menu cards (for mystyle.css) */
-.menu-card-price {
-    color: var(--forest-green, #1E4A3C);
-    font-weight: 600;
-    font-size: 1.125rem;
-}
-
-/* Remove double euro from old styles too */
-.menu-card-price::before {
-    content: '';
-}
-
-/* FIX 5: Ensure prices are visible with proper color */
-.menu-item-price,
-.menu-card-price,
-.menu-item-header .menu-item-price {
-    opacity: 1 !important;
-    visibility: visible !important;
-}
-
-/* FIX 6: Mobile specific hamburger visibility */
-@media (max-width: 768px) {
-    /* Override any conflicting styles */
-    .nav-premium .mobile-menu-btn {
-        display: block !important;
-        opacity: 1 !important;
-        visibility: visible !important;
-    }
-    
-    /* Ensure spans are visible */
-    .mobile-menu-btn span {
-        display: block !important;
-        opacity: 1 !important;
-        visibility: visible !important;
-        width: 25px !important;
-        height: 2px !important;
-        background-color: #1A1A1A !important;
-    }
-}
-
-* ===============================================
-   PRICE DISPLAY FIX
-   =============================================== */
-
-/* Ensure price visibility and proper styling */
-.menu-item-price {
-    display: inline-block !important;
-    opacity: 1 !important;
-    visibility: visible !important;
-    font-weight: 400 !important;
-    white-space: nowrap;
-}
-
-/* Prevent any ::before pseudo-elements from adding extra euro signs */
-.menu-item-price::before,
-.menu-card-price::before {
-    content: none !important;
-    display: none !important;
-}
-
-/* Add these additional CSS rules for enhanced filter functionality */
-
-/* Filter Count Badge */
-.filter-count {
-    position: absolute;
-    top: -8px;
-    right: -8px;
-    background: var(--gold);
-    color: var(--pure-white);
-    font-size: 0.625rem;
-    font-weight: 600;
-    width: 20px;
-    height: 20px;
-    border-radius: 50%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
-}
-
-/* Active filters visual feedback */
-.menu-filter-container.has-active-filters {
-    border: 2px solid var(--gold);
-    box-shadow: 0 4px 20px rgba(201, 169, 97, 0.15);
-}
-
-/* Reset button position relative for badge */
-.btn-icon[onclick="resetFilters()"] {
-    position: relative;
-}
-
-/* Enhance tag filter selected state */
-.tag-filter input[type="checkbox"]:checked + .tag-label {
-    background: var(--black);
-    color: var(--pure-white);
-    border-color: var(--black);
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
-    transform: translateY(-1px);
-}
-
-/* Add subtle animation to filter state changes */
-.filter-btn,
-.tag-label {
-    transition: all 0.2s ease;
-}
-
-/* Visual indicator for scrollable category filters on mobile */
-@media (max-width: 768px) {
-    .filter-buttons {
-        position: relative;
-    }
-    
-    /* Gradient indicators for scrollable content */
-    .filter-buttons::before,
-    .filter-buttons::after {
-        content: '';
-        position: absolute;
-        top: 0;
-        bottom: 0;
-        width: 20px;
-        pointer-events: none;
-        z-index: 2;
-    }
-    
-    .filter-buttons::before {
-        left: 0;
-        background: linear-gradient(to right, var(--pure-white), transparent);
-    }
-    
-    .filter-buttons::after {
-        right: 0;
-        background: linear-gradient(to left, var(--pure-white), transparent);
-    }
-    
-    /* Show scroll hint on mobile */
-    .filter-buttons:not(:hover) {
-        scroll-behavior: smooth;
-    }
-}
-
-/* Improve filter button spacing on mobile */
-@media (max-width: 768px) {
-    .filter-btn:first-child {
-        margin-left: 20px;
-    }
-    
-    .filter-btn:last-child {
-        margin-right: 20px;
-    }
-}
-
-/* Add loading state for filter application */
-.menu-content.filtering {
-    opacity: 0.5;
-    transition: opacity 0.3s ease;
-}
-
-/* Smooth transitions for menu items */
-.menu-item-card {
-    animation: fadeIn 0.3s ease forwards;
-}
-
-@keyframes fadeIn {
-    from {
-        opacity: 0;
-        transform: translateY(10px);
-    }
-    to {
-        opacity: 1;
-        transform: translateY(0);
-    }
-}
-
-/* No results message styling */
-.no-results-message {
-    text-align: center;
-    padding: var(--spacing-xxl);
-    color: var(--warm-gray);
-    font-size: 1.125rem;
-}
-
-.no-results-message i {
-    font-size: 3rem;
-    color: var(--light-gray);
-    margin-bottom: var(--spacing-md);
-    display: block;
-}
-
-/* ===============================================
-   MOBILE FILTER DISPLAY FIX
-   Add this to the end of mystyle-premium.css
-   =============================================== */
-
-/* Remove any conflicting styles and ensure proper mobile display */
-@media (max-width: 768px) {
-    /* Filter Container - Ensure visibility and proper styling */
-    .menu-filter-container {
-        display: block !important;
-        opacity: 1 !important;
-        visibility: visible !important;
-        margin: 0 1rem 2rem !important;
-        padding: 1rem !important;
-        background: var(--pure-white) !important;
-        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.08) !important;
-        border-radius: 12px !important;
-        position: relative !important;
-        z-index: 10 !important;
-    }
-    
-    /* Filter Bar - Proper mobile layout */
-    .filter-bar {
-        display: flex !important;
-        flex-direction: column !important;
-        gap: 1rem !important;
-        padding: 0 !important;
-        border-bottom: none !important;
-        align-items: stretch !important;
-    }
-    
-    /* Filter Group - Full width on mobile */
-    .filter-group {
-        width: 100% !important;
-        flex: none !important;
-        display: block !important;
-    }
-    
-    /* Category Filters Container */
-    #categoryFilters,
-    .filter-buttons {
-        display: flex !important;
-        width: 100% !important;
-        overflow-x: auto !important;
-        overflow-y: hidden !important;
-        -webkit-overflow-scrolling: touch !important;
-        scrollbar-width: none !important;
-        -ms-overflow-style: none !important;
-        gap: 0.5rem !important;
-        padding: 0.5rem 0 !important;
-        margin: 0 -0.5rem !important;
-        padding-left: 0.5rem !important;
-        padding-right: 0.5rem !important;
-    }
-    
-    /* Hide scrollbar but keep functionality */
-    #categoryFilters::-webkit-scrollbar,
-    .filter-buttons::-webkit-scrollbar {
-        display: none !important;
-    }
-    
-    /* Filter Buttons - Ensure they don't shrink */
-    .filter-btn {
-        display: inline-flex !important;
-        align-items: center !important;
-        justify-content: center !important;
-        white-space: nowrap !important;
-        flex-shrink: 0 !important;
-        padding: 0.625rem 1.25rem !important;
-        font-size: 0.75rem !important;
-        font-weight: 500 !important;
-        background: var(--pure-white) !important;
-        border: 1px solid var(--light-gray) !important;
-        border-radius: 20px !important;
-        color: var(--warm-gray) !important;
-        transition: all 0.2s ease !important;
-        min-height: 36px !important;
-        cursor: pointer !important;
-    }
-    
-    /* Active filter button */
-    .filter-btn.active {
-        background: var(--black) !important;
-        color: var(--pure-white) !important;
-        border-color: var(--black) !important;
-    }
-    
-    /* Filter button hover state (for touch feedback) */
-    .filter-btn:active {
-        transform: scale(0.95) !important;
-        background: var(--light-gray) !important;
-    }
-    
-    .filter-btn.active:active {
-        background: var(--gold) !important;
-    }
-    
-    /* Tag Filters - Always hidden on mobile */
-    #tagFilters,
-    .filter-tags,
-    .desktop-only {
-        display: none !important;
-    }
-    
-    /* Filter Actions - Centered at bottom */
-    .filter-actions {
-        display: flex !important;
-        width: 100% !important;
-        justify-content: center !important;
-        gap: 1.5rem !important;
-        border-top: 1px solid var(--light-gray) !important;
-        padding-top: 1rem !important;
-        margin-top: 0.5rem !important;
-    }
-    
-    /* Action Buttons - Icon only on mobile */
-    .btn-icon {
-        display: flex !important;
-        align-items: center !important;
-        justify-content: center !important;
-        background: none !important;
-        border: none !important;
-        padding: 0.75rem !important;
-        font-size: 1rem !important;
-        color: var(--warm-gray) !important;
-        cursor: pointer !important;
-        transition: all 0.2s ease !important;
-        position: relative !important;
-        min-width: 44px !important;
-        min-height: 44px !important;
-    }
-    
-    .btn-icon:active {
-        color: var(--gold) !important;
-        transform: scale(0.9) !important;
-    }
-    
-    /* Hide button text, show only icons */
-    .btn-icon .btn-text {
-        display: none !important;
-    }
-    
-    .btn-icon i {
-        font-size: 1.25rem !important;
-        margin: 0 !important;
-    }
-    
-    /* Filter count badge positioning */
-    .filter-count {
-        position: absolute !important;
-        top: 0 !important;
-        right: 0 !important;
-        background: var(--gold) !important;
-        color: var(--pure-white) !important;
-        font-size: 0.625rem !important;
-        font-weight: 600 !important;
-        width: 18px !important;
-        height: 18px !important;
-        border-radius: 50% !important;
-        display: flex !important;
-        align-items: center !important;
-        justify-content: center !important;
-        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2) !important;
-    }
-    
-    /* Visual scroll indicators */
-    .filter-buttons::before,
-    .filter-buttons::after {
-        content: '' !important;
-        position: absolute !important;
-        top: 0 !important;
-        bottom: 0 !important;
-        width: 20px !important;
-        pointer-events: none !important;
-        z-index: 2 !important;
-        opacity: 0.8 !important;
-    }
-    
-    .filter-buttons::before {
-        left: 0 !important;
-        background: linear-gradient(to right, var(--pure-white), transparent) !important;
-    }
-    
-    .filter-buttons::after {
-        right: 0 !important;
-        background: linear-gradient(to left, var(--pure-white), transparent) !important;
-    }
-    
-    /* Active filters state */
-    .menu-filter-container.has-active-filters {
-        border: 2px solid var(--gold) !important;
-        box-shadow: 0 4px 20px rgba(201, 169, 97, 0.2) !important;
-    }
-    
-    /* No results message */
-    .no-results-message {
-        text-align: center !important;
-        padding: 3rem 1rem !important;
-        color: var(--warm-gray) !important;
-        font-size: 1rem !important;
-    }
-    
-    .no-results-message i {
-        font-size: 2.5rem !important;
-        color: var(--light-gray) !important;
-        margin-bottom: 1rem !important;
-        display: block !important;
-    }
-    
-    /* Menu loading state */
-    .menu-loading {
-        text-align: center !important;
-        padding: 3rem 1rem !important;
-        color: var(--warm-gray) !important;
-    }
-    
-    .menu-loading i {
-        font-size: 2.5rem !important;
-        margin-bottom: 1rem !important;
-        color: var(--gold) !important;
-    }
-}
-
-/* Additional touch-friendly improvements */
-@media (hover: none) and (pointer: coarse) {
-    /* Make touch targets larger */
-    .filter-btn {
-        min-height: 44px !important;
-        padding: 0.75rem 1.5rem !important;
-    }
-    
-    .btn-icon {
-        min-width: 48px !important;
-        min-height: 48px !important;
-    }
-    
-    /* Remove hover effects on touch devices */
-    .filter-btn:hover {
-        background: var(--pure-white) !important;
-        color: var(--warm-gray) !important;
-    }
-    
-    .filter-btn.active:hover {
-        background: var(--black) !important;
-        color: var(--pure-white) !important;
-    }
-    
-    .btn-icon:hover {
-        color: var(--warm-gray) !important;
-    }
-}
-
-/* Landscape orientation adjustments */
-@media (max-width: 768px) and (orientation: landscape) {
-    .menu-filter-container {
-        margin-bottom: 1.5rem !important;
-        padding: 0.75rem !important;
-    }
-    
-    .filter-bar {
-        flex-direction: row !important;
-        flex-wrap: wrap !important;
-    }
-    
-    .filter-group {
-        flex: 1 1 auto !important;
-    }
-    
-    .filter-actions {
-        flex: 0 0 auto !important;
-        border-top: none !important;
-        padding-top: 0 !important;
-        margin-top: 0 !important;
-        margin-left: auto !important;
-    }
-}
-
-/* Small phone specific (iPhone SE, etc.) */
-@media (max-width: 375px) {
-    .menu-filter-container {
-        margin: 0 0.5rem 1.5rem !important;
-        padding: 0.75rem !important;
-    }
-    
-    .filter-btn {
-        font-size: 0.7rem !important;
-        padding: 0.5rem 1rem !important;
-    }
-    
-    .btn-icon {
-        padding: 0.5rem !important;
-    }
-    
-    .btn-icon i {
-        font-size: 1.125rem !important;
-    }
-}
-
-/* Debug helper - remove this after testing */
-@media (max-width: 768px) {
-    /* Uncomment to debug visibility issues */
-    /*
-    .menu-filter-container {
-        border: 2px solid red !important;
-    }
-    
-    .filter-bar {
-        border: 2px solid blue !important;
-    }
-    
-    .filter-buttons {
-        border: 2px solid green !important;
-    }
-    */
-}
-
-/* ===============================================
-   CATEGORY IMAGE ANIMATIONS
-   Add this to your mystyle-premium.css
-   =============================================== */
-
-/* Initial state for category images - Fixed without conflicting animations */
-.category-hero:not(.loaded) {
-    opacity: 0;
-    transform: translateY(10px);
-}
-
-/* Loaded state - ensure this overrides initial state */
-.category-hero.loaded {
-    opacity: 1 !important;
-    transform: translateY(0) !important;
-}
-
-/* Force opacity on hover to prevent conflicts */
-.category-hero:hover {
-    opacity: 1 !important;
-}
-
 /* Shimmer loading effect while image loads */
 .category-hero::after {
     content: '';
@@ -3096,57 +2439,104 @@ vvvvv
     }
 }
 
-/* Alternative styles you can apply by adding classes */
+/* Hover effect for desktop */
+@media (hover: hover) and (min-width: 769px) {
+    .category-hero {
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
 
-/* Style 1: Elegant fade with zoom */
-.category-hero.style-elegant img {
-    transition: all 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+    .category-hero:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 12px 40px rgba(0, 0, 0, 0.15);
+    }
+
+    .category-hero img {
+        transition: transform 0.6s ease;
+    }
+
+    .category-hero:hover img {
+        transform: scale(1.05);
+    }
+    
+    .category-hero:hover .category-hero-gradient {
+        background: linear-gradient(
+            to bottom,
+            rgba(0, 0, 0, 0.3) 0%,
+            rgba(0, 0, 0, 0.5) 50%,
+            rgba(0, 0, 0, 0.8) 100%
+        );
+    }
 }
 
-.category-hero.style-elegant:hover img {
-    transform: scale(1.05);
-    filter: brightness(0.9) contrast(1.05);
+/* Accessibility improvements */
+@media (prefers-reduced-motion: reduce) {
+    .mobile-filter-modal,
+    .mobile-filter-content,
+    .category-hero,
+    .category-hero img,
+    .menu-item-card {
+        transition: none !important;
+        animation: none !important;
+    }
+    
+    .category-hero:hover img {
+        transform: none !important;
+    }
 }
 
-/* Style 2: Dramatic dark overlay */
-.category-hero.style-dramatic .category-hero-gradient {
-    background: linear-gradient(
-        180deg,
-        rgba(0, 0, 0, 0.3) 0%,
-        rgba(0, 0, 0, 0.6) 50%,
-        rgba(0, 0, 0, 0.85) 100%
-    );
+/* Better fallback styling for broken images */
+.category-hero img[src=""],
+.category-hero img:not([src]),
+.category-hero img[src*="undefined"],
+.category-hero img[src$="/"] {
+    display: none;
 }
 
-/* Style 3: Colorful overlay based on category */
-.menu-category[data-category="sets"] .category-hero-gradient {
-    background: linear-gradient(
-        180deg,
-        rgba(30, 74, 60, 0.2) 0%,
-        rgba(30, 74, 60, 0.4) 50%,
-        rgba(30, 74, 60, 0.7) 100%
-    );
+/* Style for category hero without valid image */
+.category-hero:not(:has(img[src]:not([src=""]):not([src*="undefined"]):not([src$="/"]))) {
+    background: linear-gradient(135deg, var(--gold), var(--sage));
+    height: 150px;
 }
 
-.menu-category[data-category="eggcitements"] .category-hero-gradient {
-    background: linear-gradient(
-        180deg,
-        rgba(201, 169, 97, 0.2) 0%,
-        rgba(201, 169, 97, 0.4) 50%,
-        rgba(201, 169, 97, 0.7) 100%
-    );
+/* For browsers without :has() support */
+.category-hero {
+    background: linear-gradient(135deg, var(--cream), var(--light-gray));
 }
 
-.menu-category[data-category="avo-lution"] .category-hero-gradient {
-    background: linear-gradient(
-        180deg,
-        rgba(122, 139, 104, 0.2) 0%,
-        rgba(122, 139, 104, 0.4) 50%,
-        rgba(122, 139, 104, 0.7) 100%
-    );
+.category-hero img {
+    position: relative;
+    z-index: 0;
+    background: white;
 }
 
-/* Entrance animation for menu items after category loads */
+/* Last category reduced margin */
+.menu-category:last-child {
+    margin-bottom: var(--spacing-xl);
+}
+
+/* Menu content filtering animation */
+.menu-content.filtering {
+    opacity: 0.5;
+    transition: opacity 0.3s ease;
+}
+
+/* Smooth transitions for menu items */
+.menu-item-card {
+    animation: fadeIn 0.3s ease forwards;
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* Entrance animation for menu items */
 .category-hero.loaded ~ .menu-grid .menu-item-card {
     animation: fadeInUp 0.6s ease forwards;
     opacity: 0;
@@ -3187,121 +2577,8 @@ vvvvv
         opacity: 1;
     }
     
-    /* Ensure overlay text is always visible on mobile */
     .category-title-overlay {
         background: rgba(0, 0, 0, 0.3);
         padding: 0.5rem 1rem;
     }
-}
-
-/* Reduced motion preference */
-@media (prefers-reduced-motion: reduce) {
-    .category-hero,
-    .category-hero img,
-    .menu-item-card {
-        transition: none !important;
-        animation: none !important;
-    }
-    
-    .category-hero:hover img {
-        transform: none !important;
-    }
-}
-
-/* ===============================================
-   MOBILE FILTER DISPLAY FIX
-   Add this to the end of mystyle-premium.css
-   =============================================== */
-
-/* Remove any conflicting styles and ensure proper mobile display */
-@media (max-width: 768px) {
-    /* Filter Container - Ensure visibility and proper styling */
-    .menu-filter-container {
-        display: block !important;
-        opacity: 1 !important;
-        visibility: visible !important;
-        margin: 0 0.5rem 2rem !important; /* Reduced margin to prevent cutoff */
-        padding: 1rem !important;
-        background: var(--pure-white) !important;
-        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.08) !important;
-        border-radius: 12px !important;
-        position: relative !important;
-        z-index: 10 !important;
-        max-width: 100% !important; /* Ensure container doesn't exceed viewport */
-        overflow: hidden !important; /* Prevent container overflow */
-    }
-    
-    /* Filter Bar - Proper mobile layout */
-    .filter-bar {
-        display: flex !important;
-        flex-direction: column !important;
-        gap: 1rem !important;
-        padding: 0 !important;
-        border-bottom: none !important;
-        align-items: stretch !important;
-    }
-    
-    /* Filter Group - Full width on mobile */
-    .filter-group {
-        width: 100% !important;
-        flex: none !important;
-        display: block !important;
-        position: relative !important; /* For scroll indicators */
-    }
-    
-    /* Category Filters Container - Fixed scrolling */
-    #categoryFilters,
-    .filter-buttons {
-        display: flex !important;
-        width: 100% !important;
-        overflow-x: auto !important;
-        overflow-y: hidden !important;
-        -webkit-overflow-scrolling: touch !important;
-        scrollbar-width: none !important;
-        -ms-overflow-style: none !important;
-        gap: 0.5rem !important;
-        padding: 0.75rem 1rem !important; /* Proper padding without negative margins */
-        margin: 0 !important; /* Remove negative margins that cause cutoff */
-        position: relative !important;
-    }
-
-/* ===============================================
-   CATEGORY HERO WITH OVERLAY - FIXED IMPLEMENTATION
-   =============================================== */
-
-/* Ensure proper spacing between category hero and content */
-.menu-grid {
-    position: relative;
-    z-index: 1;
-    margin-top: var(--spacing-md); /* Add spacing after category hero */
-}
-
-/* Last category reduced margin */
-.menu-category:last-child {
-    margin-bottom: var(--spacing-xl);
-}
-
-/* Better fallback styling for broken images */
-.category-hero img[src=""],
-.category-hero img:not([src]),
-.category-hero img[src*="undefined"],
-.category-hero img[src$="/"] {
-    display: none;
-}
-
-/* Style for category hero without valid image */
-.category-hero:not(:has(img[src]:not([src=""]):not([src*="undefined"]):not([src$="/"]))) {
-    background: linear-gradient(135deg, var(--gold), var(--sage));
-    height: 150px; /* Shorter when no image */
-}
-
-/* For browsers without :has() support - show gradient by default */
-.category-hero {
-    background: linear-gradient(135deg, var(--cream), var(--light-gray));
-}
-
-.category-hero img {
-    position: relative;
-    z-index: 0;
-    background: white; /* Prevents transparency issues */
 }
