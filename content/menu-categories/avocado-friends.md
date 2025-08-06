@@ -1,3 +1,4 @@
+// avocado-friends.md
 ---
 title: avo-lution
 order: 2
@@ -8,9 +9,6 @@ items:
       - vegetarisch
       - glutenfrei
       - sättigend
-      - antioxidativ
-      - belebend
-      - proteinreich
     description: eine samtige kreation aus frisch zerdrückter avocado, veredelt mit
       fein geriebenem apfel für eine süß-frische note, gekrönt von zart
       gerösteten mandeln, die einen knackigen akzent setzen. ein belebendes,
@@ -30,9 +28,6 @@ items:
       - vegetarisch
       - sättigend
       - proteinreich
-      - antioxidativ
-      - immunstärkend
-      - belebend
     description: >-
       knuspriges sauerteigbrot vom öfferl, handwerklich gebacken, großzügig
       bestrichen mit cremiger, zerdrückter avocado, verfeinert mit frischen
