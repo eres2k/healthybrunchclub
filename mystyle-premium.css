@@ -3059,7 +3059,7 @@ vvvvv
     position: relative;
     width: 100%;
     max-width: 1200px;
-    height: 300px;
+    height: 400px;
     margin: 0 auto var(--spacing-xl);
     overflow: hidden;
     border-radius: 12px;
@@ -3073,11 +3073,11 @@ vvvvv
     height: 100%;
     object-fit: cover;
     display: block;
+    transition: transform 0.6s ease;
 }
 
-/* Dark Gradient Overlay */
-.category-hero::after {
-    content: '';
+/* Dark Gradient Overlay - Using separate div for better control */
+.category-hero-gradient {
     position: absolute;
     top: 0;
     left: 0;
@@ -3090,6 +3090,7 @@ vvvvv
         rgba(0, 0, 0, 0.6) 100%
     );
     pointer-events: none;
+    z-index: 1;
 }
 
 /* Category Title Overlay Container */
@@ -3102,87 +3103,29 @@ vvvvv
     display: flex;
     align-items: center;
     justify-content: center;
-    z-index: 1;
+    z-index: 2;
     padding: var(--spacing-lg);
 }
 
 /* Category Title on Overlay */
 .category-title-overlay {
     font-family: var(--font-display);
-    font-size: 4rem;
+    font-size: clamp(2.5rem, 6vw, 4rem);
     font-weight: 300;
     color: white;
     text-transform: uppercase;
-    letter-spacing: 0.3em;
+    letter-spacing: 0.2em;
     text-align: center;
     margin: 0;
     text-shadow: 2px 2px 8px rgba(0, 0, 0, 0.8);
-    z-index: 2;
     position: relative;
+    line-height: 1.1;
 }
 
-/* Category Header (for description or non-hero titles) */
-.category-header {
-    text-align: center;
-    margin-bottom: var(--spacing-lg);
-}
-
-/* Hide extra spacing when hero is present */
-.menu-category:has(.category-hero) .category-header:empty {
-    display: none;
-}
-
-/* Category name when no hero image */
-.category-name {
-    font-family: var(--font-display);
-    font-size: 2.5rem;
-    color: var(--black);
-    text-transform: uppercase;
-    letter-spacing: 0.1em;
-    margin-bottom: var(--spacing-sm);
-    position: relative;
-    display: inline-block;
-    padding: 0 60px;
-}
-
-/* Decorative lines for non-hero category names */
-.category-name::before,
-.category-name::after {
-    content: '';
-    position: absolute;
-    top: 50%;
-    width: 70px;
-    height: 1px;
-    background: linear-gradient(to right, transparent, var(--light-gray), transparent);
-}
-
-.category-name::before {
-    right: 100%;
-}
-
-.category-name::after {
-    left: 100%;
-}
-
-/* Category Description */
-.category-description {
-    font-family: var(--font-heading);
-    font-size: 1.125rem;
-    color: var(--warm-gray);
-    font-style: italic;
-    max-width: 700px;
-    margin: 0 auto;
-    line-height: 1.8;
-}
-
-/* Tablet Styles */
-@media (max-width: 1024px) and (min-width: 769px) {
-    .category-hero {
-        height: 250px;
-    }
-
-    .category-title-overlay {
-        font-size: 3rem;
+/* Hover effect for desktop */
+@media (hover: hover) {
+    .category-hero:hover img {
+        transform: scale(1.05);
     }
 }
 
