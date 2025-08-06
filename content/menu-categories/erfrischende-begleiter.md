@@ -1,7 +1,7 @@
 ---
 title: sip happens - make it healthy
 order: 6
-image: /content/images/dsc00362.jpg
+image: ""
 items:
   - tags:
       - erfrischend
