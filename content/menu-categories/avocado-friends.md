@@ -1,13 +1,16 @@
 ---
 title: avo-lution
 order: 2
-image: ""
+image: /content/images/dsc00277.jpg
 items:
-  - tags:
-      - vegan
-      - leicht
-      - nahrhaft
-    name: avocado bowl
+  - name: avocado bowl
+    tags:
+      - vegetarisch
+      - glutenfrei
+      - sättigend
+      - antioxidativ
+      - belebend
+      - proteinreich
     description: eine samtige kreation aus frisch zerdrückter avocado, veredelt mit
       fein geriebenem apfel für eine süß-frische note, gekrönt von zart
       gerösteten mandeln, die einen knackigen akzent setzen. ein belebendes,
@@ -21,31 +24,25 @@ items:
       fat: 24g
     price: "8.90"
     image: /content/images/dsc00161.jpg
-  - tags:
+
+  - name: avocado bread
+    tags:
       - vegetarisch
-      - herzhaft
-      - anpassbar
-    name: avocado bread
+      - sättigend
+      - proteinreich
+      - antioxidativ
+      - immunstärkend
+      - belebend
     description: >-
       knuspriges sauerteigbrot vom öfferl, handwerklich gebacken, großzügig
       bestrichen mit cremiger, zerdrückter avocado, verfeinert mit frischen
       sprossen und kresse für eine lebendige, grüne frische.
 
-
       **your style:**
 
-
-      * ei (nach wunsch zubereitet)
-
-      * biospeck
-
-      * biolachs
-
-      * shiitake und champignons pilze
+      ei (nach wunsch zubereitet)/biospeck/biolachs/shiitake und champignons pilze
     allergens:
       - A
-      - C
-      - D
     nutrition:
       calories: "320"
       protein: 8g
