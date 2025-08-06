@@ -247,6 +247,9 @@ window.resetFilters = function() {
     updateFilterVisualFeedback();
 };
 
+// Replace the createCategoryHTML function in cms-loader-premium.js (around line 190)
+// with this updated version:
+
 // Create Category HTML with Overlay
 function createCategoryHTML(category, catIndex) {
     const hasImage = category.image ? true : false;
@@ -255,7 +258,10 @@ function createCategoryHTML(category, catIndex) {
         <div class="menu-category" data-category="${category.title.toLowerCase().replace(/\s+/g, '-')}">
             ${hasImage ? `
                 <div class="category-hero">
-                    <img src="${formatImageUrl(category.image)}" alt="${category.title}">
+                    <img src="${formatImageUrl(category.image)}" 
+                         alt="${category.title}" 
+                         loading="lazy"
+                         onerror="this.parentElement.style.display='none'">
                     <div class="category-hero-overlay">
                         <h3 class="category-name">${category.title}</h3>
                     </div>
