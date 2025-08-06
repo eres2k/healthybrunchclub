@@ -8,8 +8,6 @@ items:
       - adaptogen
       - belebend
       - proteinreich
-      - sättigend
-      - antioxidativ
     description: ein geschmeidiger latte, durchzogen von adaptogenem ashwaganda, der
       sanft beruhigt und stress schmelzen lässt. ein purer wohlfühlgenuss.
     allergens:
@@ -26,9 +24,6 @@ items:
       - adaptogen
       - immunstärkend
       - belebend
-      - proteinreich
-      - sättigend
-      - antioxidativ
     description: samtiger cappuccino mit adaptogenem reishi, der das immunsystem
       unterstützt und harmonischen, starken kaffeegenuss verspricht.
     allergens:
@@ -45,9 +40,6 @@ items:
       - adaptogen
       - antioxidativ
       - belebend
-      - immunstärkend
-      - zuckerarm
-      - glutenfrei
     description: kühler cold brew mit adaptogenem chaga, antioxidativ und reinigend.
       ein klarer, belebender schluck für den tag.
     allergens: []
@@ -63,9 +55,6 @@ items:
       - adaptogen
       - antioxidativ
       - belebend
-      - immunstärkend
-      - sättigend
-      - glutenfrei
     description: feuriger espresso latte mit adaptogenem kurkuma, entzündungshemmend
       und antioxidativ. ein kraftvoller energieschub.
     allergens:
@@ -82,8 +71,6 @@ items:
       - belebend
       - zuckerarm
       - glutenfrei
-      - sättigend
-      - antioxidativ
     description: |-
       * kleiner espresso 
       * großer espresso     
@@ -136,9 +123,6 @@ items:
       - adaptogen
       - antioxidativ
       - immunstärkend
-      - glutenfrei
-      - zuckerarm
-      - belebend
     description: ein kräftiger tee von myapotheke, angereichert mit chaga, der durch
       seine antioxidativen und entzündungshemmenden eigenschaften das
       immunsystem stärkt.
