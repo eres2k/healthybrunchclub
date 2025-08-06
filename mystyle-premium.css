@@ -2986,3 +2986,60 @@ vvvvv
         animation: none !important;
     }
 }
+
+/* ===============================================
+   MOBILE FILTER DISPLAY FIX
+   Add this to the end of mystyle-premium.css
+   =============================================== */
+
+/* Remove any conflicting styles and ensure proper mobile display */
+@media (max-width: 768px) {
+    /* Filter Container - Ensure visibility and proper styling */
+    .menu-filter-container {
+        display: block !important;
+        opacity: 1 !important;
+        visibility: visible !important;
+        margin: 0 0.5rem 2rem !important; /* Reduced margin to prevent cutoff */
+        padding: 1rem !important;
+        background: var(--pure-white) !important;
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.08) !important;
+        border-radius: 12px !important;
+        position: relative !important;
+        z-index: 10 !important;
+        max-width: 100% !important; /* Ensure container doesn't exceed viewport */
+        overflow: hidden !important; /* Prevent container overflow */
+    }
+    
+    /* Filter Bar - Proper mobile layout */
+    .filter-bar {
+        display: flex !important;
+        flex-direction: column !important;
+        gap: 1rem !important;
+        padding: 0 !important;
+        border-bottom: none !important;
+        align-items: stretch !important;
+    }
+    
+    /* Filter Group - Full width on mobile */
+    .filter-group {
+        width: 100% !important;
+        flex: none !important;
+        display: block !important;
+        position: relative !important; /* For scroll indicators */
+    }
+    
+    /* Category Filters Container - Fixed scrolling */
+    #categoryFilters,
+    .filter-buttons {
+        display: flex !important;
+        width: 100% !important;
+        overflow-x: auto !important;
+        overflow-y: hidden !important;
+        -webkit-overflow-scrolling: touch !important;
+        scrollbar-width: none !important;
+        -ms-overflow-style: none !important;
+        gap: 0.5rem !important;
+        padding: 0.75rem 1rem !important; /* Proper padding without negative margins */
+        margin: 0 !important; /* Remove negative margins that cause cutoff */
+        position: relative !important;
+    }
