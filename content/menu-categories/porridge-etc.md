@@ -8,8 +8,6 @@ items:
       - glutenfrei
       - proteinreich
       - sättigend
-      - antioxidativ
-      - immunstärkend
     description: ein wärmender genuss aus zarten haferflocken, verfeinert mit hanf-
       und chiasamen, kokosflocken und geriebenem apfel. ein hauch von zimt
       rundet das geschmackserlebnis ab, gekrönt mit knackigen, gehobelten
@@ -28,7 +26,6 @@ items:
       - glutenfrei
       - proteinreich
       - sättigend
-      - antioxidativ
     description: kraftvolle haferflocken, umhüllt von cremiger kokoscreme,
       kombiniert mit hanf- und chiasamen. garniert mit kokosflocken, saftigen
       heidel- und himbeeren für einen fruchtig-frischen start in den tag.
