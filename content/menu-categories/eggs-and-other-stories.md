@@ -16,8 +16,6 @@ items:
       - vegetarisch
       - glutenfrei
       - proteinreich
-      - sättigend
-      - antioxidativ
     description: >-
       bestehend aus einem oder zwei eiern, meisterhaft zubereitete eier nach
       deiner wahl, kunstvoll serviert auf süßkartoffel- und avocadoscheiben.
@@ -46,8 +44,6 @@ items:
       - vegetarisch
       - proteinreich
       - sättigend
-      - antioxidativ
-      - belebend
     description: >-
       ein luftig-lockeres omelette bestehend aus zwei eiern, präsentiert auf
       knusprigem sauerteigbrot vom öfferl, gefüllt mit zwiebeln,
@@ -80,8 +76,6 @@ items:
       - vegetarisch
       - proteinreich
       - sättigend
-      - antioxidativ
-      - belebend
     description: >-
       ein oder zwei pochierte eier auf knusprigem sauerteigbrot vom öfferl und
       einer samtigen avocadosauce, serviert mit champignons oder
