@@ -1,4 +1,4 @@
-// CMS Loader Premium - Fixed Version
+// CMS Loader Premium - Fixed Version with Category Image Overlays
 // Upper-Class Restaurant Menu System with Advanced Filtering
 
 let allMenuCategories = [];
@@ -42,6 +42,11 @@ document.addEventListener('DOMContentLoaded', function() {
     loadMenuFromCMS();
     loadEventsFromCMS();
     initializeFilters();
+    
+    // Initialize parallax if desired (desktop only)
+    if (window.innerWidth > 768) {
+        setTimeout(initCategoryParallax, 1000);
+    }
 });
 
 // Load Menu from CMS
@@ -247,6 +252,36 @@ window.resetFilters = function() {
     updateFilterVisualFeedback();
 };
 
+// Create Category HTML with Overlay
+function createCategoryHTML(category, catIndex) {
+    const hasImage = category.image ? true : false;
+    
+    return `
+        <div class="menu-category" data-category="${category.title.toLowerCase().replace(/\s+/g, '-')}">
+            ${hasImage ? `
+                <div class="category-hero">
+                    <img src="${formatImageUrl(category.image)}" alt="${category.title}" loading="lazy">
+                    <div class="category-title-overlay">
+                        <h3 class="category-name">${category.title}</h3>
+                        ${category.description ? `<p class="category-description">${category.description}</p>` : ''}
+                    </div>
+                </div>
+            ` : ''}
+            
+            <div class="category-header">
+                ${!hasImage ? `
+                    <h3 class="category-name">${category.title}</h3>
+                    ${category.description ? `<p class="category-description">${category.description}</p>` : ''}
+                ` : ''}
+            </div>
+            
+            <div class="menu-grid">
+                ${category.items ? category.items.map(item => createMenuItemCard(item)).join('') : ''}
+            </div>
+        </div>
+    `;
+}
+
 // Display Premium Menu
 function displayPremiumMenu(menuData) {
     const container = document.getElementById('menuContainer');
@@ -275,24 +310,8 @@ function displayPremiumMenu(menuData) {
             hasAllergens = true;
         }
         
-        menuHTML += `
-            <div class="menu-category" data-category="${category.title.toLowerCase().replace(/\s+/g, '-')}">
-                <div class="category-header">
-                    <h3 class="category-name">${category.title}</h3>
-                    ${category.description ? `<p class="category-description">${category.description}</p>` : ''}
-                </div>
-                
-                ${category.image ? `
-                    <div class="category-hero">
-                        <img src="${formatImageUrl(category.image)}" alt="${category.title}" loading="lazy">
-                    </div>
-                ` : ''}
-                
-                <div class="menu-grid">
-                    ${category.items ? category.items.map(item => createMenuItemCard(item)).join('') : ''}
-                </div>
-            </div>
-        `;
+        // Use the new function to create category HTML
+        menuHTML += createCategoryHTML(category, catIndex);
     });
     
     container.innerHTML = menuHTML;
@@ -306,6 +325,9 @@ function displayPremiumMenu(menuData) {
             allergenLegend.style.display = 'none';
         }
     }
+    
+    // Add animation to category images after they load
+    animateCategoryImages();
     
     console.log('CMS Loader: Menu displayed successfully');
 }
@@ -440,6 +462,48 @@ function displayAllergenLegend() {
     `).join('');
     
     container.style.display = 'block';
+}
+
+// Add smooth load animation for category images
+function animateCategoryImages() {
+    const categoryImages = document.querySelectorAll('.category-hero img');
+    
+    categoryImages.forEach((img, index) => {
+        img.addEventListener('load', function() {
+            setTimeout(() => {
+                this.parentElement.classList.add('loaded');
+            }, index * 100);
+        });
+        
+        // If image is already cached and loaded
+        if (img.complete) {
+            setTimeout(() => {
+                img.parentElement.classList.add('loaded');
+            }, index * 100);
+        }
+    });
+}
+
+// Optional: Add parallax effect on scroll for category images
+function initCategoryParallax() {
+    const categoryHeroes = document.querySelectorAll('.category-hero');
+    
+    if (categoryHeroes.length === 0) return;
+    
+    window.addEventListener('scroll', () => {
+        categoryHeroes.forEach(hero => {
+            const rect = hero.getBoundingClientRect();
+            const speed = 0.5;
+            
+            if (rect.bottom >= 0 && rect.top <= window.innerHeight) {
+                const yPos = -(rect.top * speed);
+                const img = hero.querySelector('img');
+                if (img) {
+                    img.style.transform = `translateY(${yPos}px) scale(1.1)`;
+                }
+            }
+        });
+    });
 }
 
 // Load Events
@@ -617,4 +681,4 @@ window.cmsLoader = {
     }
 };
 
-console.log('CMS Loader Premium: Initialized and ready');
+console.log('CMS Loader Premium: Initialized with category overlays');
