@@ -7,6 +7,19 @@ let currentFilters = {
     tags: []
 };
 
+// Define the 6 allowed tags globally
+const ALLOWED_TAGS = ['vegan', 'vegetarisch', 'glutenfrei', 'lactosefrei', 'proteinreich', 'superfood'];
+
+// Tag display names mapping - only for the 6 allowed tags
+const TAG_DISPLAY_NAMES = {
+    'vegan': 'Vegan',
+    'vegetarisch': 'Vegetarisch',
+    'glutenfrei': 'Glutenfrei',
+    'lactosefrei': 'Laktosefrei',
+    'proteinreich': 'High Protein',
+    'superfood': 'Superfood'
+};
+
 // Premium Allergen Mapping
 const allergenMap = {
     'A': 'Glutenhaltiges Getreide',
@@ -40,8 +53,6 @@ const categoryIcons = {
 document.addEventListener('DOMContentLoaded', function() {
     console.log('CMS Loader: Initializing...');
     loadMenuFromCMS().then(() => {
-        // Initialize filters AFTER menu is loaded
-        initializeFilters();
         // Initialize mobile filters after menu data is available
         if (window.innerWidth <= 768 && window.mobileFilters) {
             window.mobileFilters.init();
@@ -67,6 +78,7 @@ async function loadMenuFromCMS() {
         
         allMenuCategories = menuData;
         createCategoryFilters(menuData);
+        createTagFilters(menuData); // Create tag filters dynamically
         displayPremiumMenu(menuData);
         hideLoadingState();
         
@@ -123,6 +135,79 @@ function createCategoryFilters(menuData) {
     console.log('CMS Loader: Category filters created');
 }
 
+// Create Tag Filters - Always show the 6 allowed tags
+function createTagFilters(menuData) {
+    const container = document.getElementById('tagFilters');
+    if (!container) {
+        console.warn('CMS Loader: Tag filters container not found');
+        return;
+    }
+    
+    // Clear existing
+    container.innerHTML = '';
+    
+    // Count occurrences of each allowed tag
+    const tagCounts = new Map();
+    
+    // Initialize all allowed tags with 0 count
+    ALLOWED_TAGS.forEach(tag => {
+        tagCounts.set(tag, 0);
+    });
+    
+    // Count actual occurrences in menu data
+    menuData.forEach(category => {
+        if (category.items) {
+            category.items.forEach(item => {
+                if (item.tags && Array.isArray(item.tags)) {
+                    item.tags.forEach(tag => {
+                        const lowerTag = tag.toLowerCase().trim();
+                        // Only count if it's an allowed tag
+                        if (ALLOWED_TAGS.includes(lowerTag)) {
+                            tagCounts.set(lowerTag, tagCounts.get(lowerTag) + 1);
+                        }
+                    });
+                }
+            });
+        }
+    });
+    
+    console.log('CMS Loader: Tag counts for allowed tags:', 
+        Array.from(tagCounts.entries()).map(([tag, count]) => `${tag}: ${count}`).join(', '));
+    
+    // Always show all 6 allowed tags in the defined order
+    ALLOWED_TAGS.forEach(tag => {
+        const label = document.createElement('label');
+        label.className = 'tag-filter';
+        
+        const input = document.createElement('input');
+        input.type = 'checkbox';
+        input.value = tag;
+        
+        const span = document.createElement('span');
+        span.className = 'tag-label';
+        const count = tagCounts.get(tag);
+        span.textContent = TAG_DISPLAY_NAMES[tag];
+        
+        // Add count to title if there are items with this tag
+        if (count > 0) {
+            span.title = `${count} ${count === 1 ? 'Gericht' : 'Gerichte'}`;
+        } else {
+            span.title = 'Keine Gerichte mit diesem Tag';
+            // Optionally add a class to style tags with no items differently
+            label.classList.add('tag-no-items');
+        }
+        
+        label.appendChild(input);
+        label.appendChild(span);
+        container.appendChild(label);
+        
+        // Add event listener
+        input.addEventListener('change', handleTagFilter);
+    });
+    
+    console.log('CMS Loader: Created filters for all 6 allowed tags');
+}
+
 // Create Filter Button
 function createFilterButton(value, text, isActive = false) {
     const btn = document.createElement('button');
@@ -131,17 +216,6 @@ function createFilterButton(value, text, isActive = false) {
     btn.innerHTML = `<span class="btn-text">${text}</span>`;
     btn.addEventListener('click', handleCategoryFilter);
     return btn;
-}
-
-// Initialize Tag Filters
-function initializeFilters() {
-    // Initialize tag filters
-    const tagCheckboxes = document.querySelectorAll('.tag-filter input[type="checkbox"]');
-    tagCheckboxes.forEach(checkbox => {
-        checkbox.addEventListener('change', handleTagFilter);
-    });
-    
-    console.log('CMS Loader: Filters initialized');
 }
 
 // Handle Category Filter
@@ -221,11 +295,17 @@ function applyFilters() {
     if (currentFilters.tags.length > 0) {
         filteredCategories = filteredCategories.map(category => ({
             ...category,
-            items: category.items.filter(item =>
-                item.tags && currentFilters.tags.some(tag =>
-                    item.tags.some(itemTag => itemTag.toLowerCase() === tag.toLowerCase())
-                )
-            )
+            items: category.items.filter(item => {
+                if (!item.tags || !Array.isArray(item.tags)) return false;
+                
+                // Normalize item tags to lowercase
+                const itemTags = item.tags.map(tag => tag.toLowerCase().trim());
+                
+                // Check if item has at least one of the selected tags
+                return currentFilters.tags.some(filterTag => 
+                    itemTags.includes(filterTag.toLowerCase())
+                );
+            })
         })).filter(category => category.items.length > 0);
     }
     
@@ -397,7 +477,10 @@ function createMenuItemCard(item) {
             
             ${item.tags && item.tags.length > 0 ? `
                 <div class="menu-item-tags">
-                    ${item.tags.map(tag => `<span class="menu-tag">${tag}</span>`).join('')}
+                    ${item.tags
+                        .filter(tag => ALLOWED_TAGS.includes(tag.toLowerCase().trim()))
+                        .map(tag => `<span class="menu-tag">${TAG_DISPLAY_NAMES[tag.toLowerCase().trim()] || tag}</span>`)
+                        .join('')}
                 </div>
             ` : ''}
             
@@ -600,7 +683,7 @@ function displayFallbackMenu() {
                     price: "4.90",
                     description: "Warmes Wasser mit frisch gepresster Bio-Zitrone für einen sanften Start",
                     nutrition: { calories: "25", carbs: "6g" },
-                    tags: ["detox", "vegan", "glutenfrei"],
+                    tags: ["vegan", "glutenfrei"],
                     allergens: []
                 },
                 {
@@ -608,7 +691,7 @@ function displayFallbackMenu() {
                     price: "6.90",
                     description: "Kurkuma, Ingwer, schwarzer Pfeffer in cremiger Hafermilch",
                     nutrition: { calories: "180", protein: "5g", carbs: "18g", fat: "8g" },
-                    tags: ["anti-inflammatory", "lactosefrei"],
+                    tags: ["vegetarisch", "lactosefrei"],
                     allergens: ["A"],
                     special: true
                 }
@@ -626,6 +709,14 @@ function displayFallbackMenu() {
                     nutrition: { calories: "320", protein: "8g", carbs: "45g", fat: "12g" },
                     tags: ["superfood", "vegan"],
                     allergens: ["A", "H"]
+                },
+                {
+                    name: "Protein Power Bowl",
+                    price: "14.90",
+                    description: "Quinoa, Edamame, Avocado, Tempeh, Tahini-Dressing",
+                    nutrition: { calories: "380", protein: "22g", carbs: "35g", fat: "18g" },
+                    tags: ["proteinreich", "vegan", "glutenfrei"],
+                    allergens: ["F", "N"]
                 }
             ]
         }
@@ -633,6 +724,7 @@ function displayFallbackMenu() {
     
     allMenuCategories = fallbackMenu;
     createCategoryFilters(fallbackMenu);
+    createTagFilters(fallbackMenu); // Create tag filters for fallback data
     displayPremiumMenu(fallbackMenu);
 }
 
@@ -792,7 +884,7 @@ window.cmsLoader = {
         }
     }
     
-    // Populate mobile tag filters dynamically
+    // Populate mobile tag filters - Always show the 6 allowed tags
     function populateMobileTags() {
         const container = document.getElementById('mobileTagFilters');
         if (!container) return;
@@ -800,16 +892,26 @@ window.cmsLoader = {
         // Clear existing
         container.innerHTML = '';
         
-        // Collect all unique tags from menu items
-        const allTags = new Set();
+        // Count occurrences of each allowed tag
+        const tagCounts = new Map();
         
+        // Initialize all allowed tags with 0 count
+        ALLOWED_TAGS.forEach(tag => {
+            tagCounts.set(tag, 0);
+        });
+        
+        // Count actual occurrences in menu data
         if (allMenuCategories && allMenuCategories.length > 0) {
             allMenuCategories.forEach(category => {
                 if (category.items) {
                     category.items.forEach(item => {
                         if (item.tags && Array.isArray(item.tags)) {
                             item.tags.forEach(tag => {
-                                allTags.add(tag.toLowerCase());
+                                const lowerTag = tag.toLowerCase().trim();
+                                // Only count if it's an allowed tag
+                                if (ALLOWED_TAGS.includes(lowerTag)) {
+                                    tagCounts.set(lowerTag, tagCounts.get(lowerTag) + 1);
+                                }
                             });
                         }
                     });
@@ -817,31 +919,8 @@ window.cmsLoader = {
             });
         }
         
-        // Create tag filters for each unique tag
-        const tagDisplayNames = {
-            'vegan': 'Vegan',
-            'vegetarisch': 'Vegetarisch',
-            'glutenfrei': 'Glutenfrei',
-            'lactosefrei': 'Laktosefrei',
-            'laktosefrei': 'Laktosefrei',
-            'proteinreich': 'High Protein',
-            'high protein': 'High Protein',
-            'zuckerarm': 'Zuckerarm',
-            'low-carb': 'Low Carb',
-            'superfood': 'Superfood',
-            'detox': 'Detox',
-            'anti-inflammatory': 'Entzündungshemmend',
-            'ballaststoffreich': 'Ballaststoffreich',
-            'herzhaft': 'Herzhaft',
-            'süß': 'Süß',
-            'sättigend': 'Sättigend',
-            'leicht': 'Leicht'
-        };
-        
-        // Sort tags alphabetically
-        const sortedTags = Array.from(allTags).sort();
-        
-        sortedTags.forEach(tag => {
+        // Always show all 6 allowed tags
+        ALLOWED_TAGS.forEach(tag => {
             const label = document.createElement('label');
             label.className = 'mobile-tag-filter';
             
@@ -851,7 +930,12 @@ window.cmsLoader = {
             
             const span = document.createElement('span');
             span.className = 'mobile-tag-label';
-            span.textContent = tagDisplayNames[tag] || tag.charAt(0).toUpperCase() + tag.slice(1);
+            span.textContent = TAG_DISPLAY_NAMES[tag];
+            
+            const count = tagCounts.get(tag);
+            if (count === 0) {
+                label.classList.add('tag-no-items');
+            }
             
             label.appendChild(input);
             label.appendChild(span);
@@ -860,6 +944,8 @@ window.cmsLoader = {
             // Add event listener
             input.addEventListener('change', handleMobileTagFilter);
         });
+        
+        console.log('Mobile filters: Created filters for all 6 allowed tags');
     }
     
     // Create mobile category button
@@ -1078,4 +1164,4 @@ window.cmsLoader = {
     
 })();
 
-console.log('CMS Loader Premium: Initialized with category overlays and mobile filter modal');
+console.log('CMS Loader Premium: Initialized with 6 fixed tags system');
