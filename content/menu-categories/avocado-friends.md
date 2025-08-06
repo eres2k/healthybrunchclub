@@ -1,7 +1,7 @@
 ---
 title: avo-lution
 order: 2
-image: /content/images/dsc00277.jpg
+image: ""
 items:
   - tags:
       - vegan
