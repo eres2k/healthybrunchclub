@@ -1,14 +1,13 @@
 ---
 title: berry good choice
 order: 4
-image: ""
+image: /content/images/dsc00254.jpg
 items:
-  - tags:
+  - name: vollkorn pfannkuchen mit topfenhimbeer-leinöl
+    tags:
       - vegetarisch
-      - vollkorn
-      - ballaststoffreich
-      - zuckerarm
-    name: vollkorn pfannkuchen mit topfenhimbeer-leinöl
+      - proteinreich
+      - sättigend
     description: fluffige vollkorn-pfannkuchen, serviert mit cremigem
       topfenhimbeer-leinöl, verfeinert durch saftige blaubeeren und einem hauch
       ahornsirup für natürliche süße.
