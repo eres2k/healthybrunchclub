@@ -8,9 +8,6 @@ items:
       - erfrischend
       - zuckerarm
       - antioxidativ
-      - immunstärkend
-      - belebend
-      - glutenfrei
     description: prickelndes himbeersoda von sonnentor, sanft gesüßt mit
       apfelsaftkonzentrat, für einen fruchtig-leichten genuss.
     allergens: []
@@ -26,9 +23,6 @@ items:
       - erfrischend
       - zuckerarm
       - antioxidativ
-      - immunstärkend
-      - belebend
-      - glutenfrei
     description: spritziges hollundersoda von sonnentor, verfeinert mit
       apfelsaftkonzentrat, für eine blumig-frische erfrischung.
     allergens: []
@@ -44,9 +38,6 @@ items:
       - erfrischend
       - belebend
       - antioxidativ
-      - zuckerarm
-      - immunstärkend
-      - glutenfrei
     description: ein kühler mix aus frischer pfefferminze und spritziger zitrone,
       der die sinne belebt und erfrischt.
     allergens: []
@@ -62,9 +53,6 @@ items:
       - erfrischend
       - zuckerarm
       - antioxidativ
-      - immunstärkend
-      - belebend
-      - glutenfrei
     description: eine lebendige kombination aus frischer pfefferminze und saftigen
       beeren, für einen fruchtig-kühlen geschmacksmoment.
     allergens: []
@@ -78,10 +66,8 @@ items:
   - name: golden kurkuma
     tags:
       - immunstärkend
-      - antioxidativ
       - belebend
-      - zuckerarm
-      - glutenfrei
+      - antioxidativ
     description: ein goldener mix aus sonnentors ingwer-zitrone-sirup und frischer
       kurkuma, würzig und belebend für körper und geist.
     allergens: []
@@ -97,7 +83,6 @@ items:
       - immunstärkend
       - antioxidativ
       - belebend
-      - glutenfrei
     description: ein sonniger frischekick für dein immunsystem süß-würzig mit
       natürlicher power aus karotten, orangen, ingwer und kurkuma.
     allergens: []
@@ -113,7 +98,6 @@ items:
       - belebend
       - immunstärkend
       - antioxidativ
-      - glutenfrei
     description: "der sanfte weckruf nach einer langen nacht: fruchtig, belebend und
       randvoll mit natürlichen vitaminen von karotten, äpfel, zitrone, rote
       beete und ingwer."
@@ -128,9 +112,8 @@ items:
   - name: healthy green
     tags:
       - immunstärkend
-      - antioxidativ
       - belebend
-      - glutenfrei
+      - antioxidativ
     description: ein erfrischender detox-drink mit leichter schärfe. ideal für neue
       energie und klaren kopf. grün, klar und kraftvoll mit gurken, sellerie,
       zitrone und ingwer.
