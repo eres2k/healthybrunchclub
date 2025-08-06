@@ -791,28 +791,6 @@ h1, h2, h3, h4, h5, h6 {
     margin: 0 auto;
 }
 
-/* Category Hero Image */
-.category-hero {
-    width: 100%;
-    max-width: 1200px;
-    height: 400px;
-    margin: 0 auto var(--spacing-xl);
-    overflow: hidden;
-    position: relative;
-}
-
-.category-hero img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-    filter: brightness(0.9);
-    transition: transform var(--transition-slow);
-}
-
-.category-hero:hover img {
-    transform: scale(1.05);
-}
-
 /* Menu Items Grid - 3 Columns */
 .menu-grid {
     display: grid;
@@ -2851,143 +2829,6 @@ vvvvv
 }
 
 /* ===============================================
-   CATEGORY IMAGE ANIMATIONS
-   Add this to your mystyle-premium.css
-   =============================================== */
-
-/* Initial state for category images */
-.category-hero {
-    opacity: 0;
-    transform: translateY(20px);
-    transition: opacity 0.6s ease, transform 0.6s ease;
-}
-
-/* Loaded state */
-.category-hero.loaded {
-    opacity: 1;
-    transform: translateY(0);
-}
-
-/* Shimmer loading effect while image loads */
-.category-hero::after {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    background: linear-gradient(
-        90deg,
-        rgba(255, 255, 255, 0) 0%,
-        rgba(255, 255, 255, 0.2) 50%,
-        rgba(255, 255, 255, 0) 100%
-    );
-    transform: translateX(-100%);
-    animation: shimmer 1.5s infinite;
-    z-index: 0;
-    pointer-events: none;
-}
-
-.category-hero.loaded::after {
-    display: none;
-}
-
-@keyframes shimmer {
-    to {
-        transform: translateX(100%);
-    }
-}
-
-/* Alternative styles you can apply by adding classes */
-
-/* Style 1: Elegant fade with zoom */
-.category-hero.style-elegant img {
-    transition: all 0.8s cubic-bezier(0.4, 0, 0.2, 1);
-}
-
-.category-hero.style-elegant:hover img {
-    transform: scale(1.05);
-    filter: brightness(0.85) contrast(1.1);
-}
-
-/* Style 2: Dramatic dark overlay */
-.category-hero.style-dramatic::before {
-    background: linear-gradient(
-        180deg,
-        rgba(0, 0, 0, 0.2) 0%,
-        rgba(0, 0, 0, 0.5) 50%,
-        rgba(0, 0, 0, 0.9) 100%
-    );
-}
-
-/* Style 3: Colorful overlay based on category */
-.menu-category[data-category="sets"] .category-hero::before {
-    background: linear-gradient(
-        180deg,
-        rgba(30, 74, 60, 0.3) 0%,
-        rgba(30, 74, 60, 0.5) 50%,
-        rgba(30, 74, 60, 0.8) 100%
-    );
-}
-
-.menu-category[data-category="eggcitements"] .category-hero::before {
-    background: linear-gradient(
-        180deg,
-        rgba(201, 169, 97, 0.3) 0%,
-        rgba(201, 169, 97, 0.5) 50%,
-        rgba(201, 169, 97, 0.8) 100%
-    );
-}
-
-/* Entrance animation for menu items after category loads */
-.category-hero.loaded ~ .menu-grid .menu-item-card {
-    animation: fadeInUp 0.6s ease forwards;
-    opacity: 0;
-}
-
-.category-hero.loaded ~ .menu-grid .menu-item-card:nth-child(1) { animation-delay: 0.1s; }
-.category-hero.loaded ~ .menu-grid .menu-item-card:nth-child(2) { animation-delay: 0.15s; }
-.category-hero.loaded ~ .menu-grid .menu-item-card:nth-child(3) { animation-delay: 0.2s; }
-.category-hero.loaded ~ .menu-grid .menu-item-card:nth-child(4) { animation-delay: 0.25s; }
-.category-hero.loaded ~ .menu-grid .menu-item-card:nth-child(5) { animation-delay: 0.3s; }
-.category-hero.loaded ~ .menu-grid .menu-item-card:nth-child(6) { animation-delay: 0.35s; }
-
-@keyframes fadeInUp {
-    to {
-        opacity: 1;
-        transform: translateY(0);
-    }
-}
-
-/* Disable animations on mobile for performance */
-@media (max-width: 768px) {
-    .category-hero {
-        opacity: 1;
-        transform: none;
-        transition: none;
-    }
-    
-    .category-hero::after {
-        display: none;
-    }
-    
-    .category-hero.loaded ~ .menu-grid .menu-item-card {
-        animation: none;
-        opacity: 1;
-    }
-}
-
-/* Reduced motion preference */
-@media (prefers-reduced-motion: reduce) {
-    .category-hero,
-    .category-hero img,
-    .menu-item-card {
-        transition: none !important;
-        animation: none !important;
-    }
-}
-
-/* ===============================================
    MOBILE FILTER DISPLAY FIX
    Add this to the end of mystyle-premium.css
    =============================================== */
@@ -3046,29 +2887,26 @@ vvvvv
 
 /* ===============================================
    SIMPLE CATEGORY IMAGE WITH TEXT OVERLAY
-   Add this to your mystyle-premium.css
+   Static implementation for both desktop and mobile
    =============================================== */
-
-/* Category with image - half height */
+/* Category with image - consistent height */
 .category-hero {
     width: 100%;
     max-width: 1200px;
-    height: 200px; /* Half the original 400px */
+    height: 250px; /* Fixed height for consistency */
     margin: 0 auto var(--spacing-xl);
     overflow: hidden;
     position: relative;
     border-radius: 8px;
     box-shadow: 0 5px 20px rgba(0, 0, 0, 0.1);
 }
-
 /* Image styling */
 .category-hero img {
     width: 100%;
     height: 100%;
     object-fit: cover;
-    filter: brightness(0.6); /* Darken for text readability */
+    /* No transitions or transforms - completely static */
 }
-
 /* Dark overlay for better text contrast */
 .category-hero::before {
     content: '';
@@ -3077,43 +2915,131 @@ vvvvv
     left: 0;
     right: 0;
     bottom: 0;
-    background: rgba(0, 0, 0, 0.4);
+    background: linear-gradient(
+        to bottom,
+        rgba(0, 0, 0, 0.3) 0%,
+        rgba(0, 0, 0, 0.5) 50%,
+        rgba(0, 0, 0, 0.7) 100%
+    );
     z-index: 1;
 }
-
-/* Category name overlay */
-.category-hero .category-name {
+/* Category hero overlay container */
+.category-hero-overlay {
     position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
     z-index: 2;
+}
+/* Category name overlay - centered */
+.category-hero-overlay .category-name {
     font-family: var(--font-display);
     font-size: 3rem;
     color: white;
     text-transform: uppercase;
     letter-spacing: 0.2em;
     text-align: center;
-    width: 90%;
     margin: 0;
+    padding: 0 var(--spacing-md);
     text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.8);
+    /* No animations */
 }
-
 /* Hide the duplicate title below the image */
 .menu-category:has(.category-hero) .category-header .category-name {
     display: none;
 }
-
+/* Category header adjustments when image present */
+.menu-category:has(.category-hero) .category-header {
+    margin-top: 0;
+    margin-bottom: var(--spacing-lg);
+}
+/* Remove all animation-related styles */
+.category-hero,
+.category-hero img,
+.category-hero-overlay {
+    transition: none !important;
+    animation: none !important;
+    transform: none !important;
+}
+/* Remove hover effects */
+.category-hero:hover img {
+    transform: none;
+}
 /* Mobile adjustments */
 @media (max-width: 768px) {
     .category-hero {
-        height: 150px; /* Even smaller on mobile */
+        height: 150px; /* Smaller on mobile */
         margin: 0 -var(--spacing-sm) var(--spacing-md);
         border-radius: 0;
     }
-    
-    .category-hero .category-name {
+   
+    .category-hero-overlay .category-name {
         font-size: 1.75rem;
         letter-spacing: 0.1em;
+        padding: 0 var(--spacing-sm);
     }
+   
+    /* Ensure no overflow on mobile */
+    .menu-category {
+        overflow: hidden;
+    }
+}
+/* Tablet adjustments */
+@media (max-width: 1024px) and (min-width: 769px) {
+    .category-hero {
+        height: 200px;
+    }
+   
+    .category-hero-overlay .category-name {
+        font-size: 2.5rem;
+    }
+}
+/* Remove any loading states or shimmer effects */
+.category-hero::after,
+.category-hero.loaded,
+.category-hero.loading {
+    display: none !important;
+}
+/* Ensure proper spacing when no image */
+.menu-category:not(:has(.category-hero)) .category-header {
+    text-align: center;
+    margin-bottom: var(--spacing-xl);
+    position: relative;
+}
+/* Category name when no hero image */
+.menu-category:not(:has(.category-hero)) .category-name {
+    display: block !important;
+}
+/* High contrast mode support */
+@media (prefers-contrast: high) {
+    .category-hero::before {
+        background: rgba(0, 0, 0, 0.8);
+    }
+   
+    .category-hero-overlay .category-name {
+        font-weight: 700;
+        letter-spacing: 0.3em;
+    }
+}
+/* Print styles */
+@media print {
+    .category-hero {
+        display: none !important;
+    }
+   
+    /* Show category name in print */
+    .menu-category .category-header .category-name {
+        display: block !important;
+    }
+}
+/* Ensure no JavaScript-added classes affect the static design */
+.category-hero.fade-in,
+.category-hero.animate,
+.category-hero.parallax {
+    opacity: 1 !important;
+    transform: none !important;
 }
