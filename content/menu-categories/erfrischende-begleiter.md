@@ -1,7 +1,7 @@
 ---
 title: sip happens - make it healthy
 order: 6
-image: /content/images/dsc00362.jpg
+image: ""
 items:
   - name: himbeersoda
     tags:
@@ -17,7 +17,6 @@ items:
       carbs: 11g
       fat: 0g
     price: "4.10"
-
   - name: hollundersoda
     tags:
       - erfrischend
@@ -32,7 +31,6 @@ items:
       carbs: 10g
       fat: 0g
     price: "4.10"
-
   - name: minty
     tags:
       - erfrischend
@@ -47,7 +45,6 @@ items:
       carbs: 6g
       fat: 0g
     price: "4.10"
-
   - name: berry minty
     tags:
       - erfrischend
@@ -62,7 +59,6 @@ items:
       carbs: 9g
       fat: 0g
     price: "4.10"
-
   - name: golden kurkuma
     tags:
       - immunstärkend
@@ -77,7 +73,6 @@ items:
       carbs: 13g
       fat: 0g
     price: "4.10"
-
   - name: immunity
     tags:
       - immunstärkend
@@ -92,7 +87,6 @@ items:
       carbs: 22g
       fat: 0g
     price: "6.90"
-
   - name: hangover
     tags:
       - belebend
@@ -108,7 +102,6 @@ items:
       carbs: 20g
       fat: 0g
     price: "6.90"
-
   - name: healthy green
     tags:
       - immunstärkend
