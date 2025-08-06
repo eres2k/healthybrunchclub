@@ -42,11 +42,6 @@ document.addEventListener('DOMContentLoaded', function() {
     loadMenuFromCMS();
     loadEventsFromCMS();
     initializeFilters();
-    
-    // Initialize parallax if desired (desktop only)
-    if (window.innerWidth > 768) {
-        setTimeout(initCategoryParallax, 1000);
-    }
 });
 
 // Load Menu from CMS
@@ -260,7 +255,7 @@ function createCategoryHTML(category, catIndex) {
         <div class="menu-category" data-category="${category.title.toLowerCase().replace(/\s+/g, '-')}">
             ${hasImage ? `
                 <div class="category-hero">
-                    <img src="${formatImageUrl(category.image)}" alt="${category.title}" loading="lazy">
+                    <img src="${formatImageUrl(category.image)}" alt="${category.title}">
                     <div class="category-hero-overlay">
                         <h3 class="category-name">${category.title}</h3>
                     </div>
@@ -322,9 +317,6 @@ function displayPremiumMenu(menuData) {
             allergenLegend.style.display = 'none';
         }
     }
-    
-    // Add animation to category images after they load
-    animateCategoryImages();
     
     console.log('CMS Loader: Menu displayed successfully');
 }
@@ -459,48 +451,6 @@ function displayAllergenLegend() {
     `).join('');
     
     container.style.display = 'block';
-}
-
-// Add smooth load animation for category images
-function animateCategoryImages() {
-    const categoryImages = document.querySelectorAll('.category-hero img');
-    
-    categoryImages.forEach((img, index) => {
-        img.addEventListener('load', function() {
-            setTimeout(() => {
-                this.parentElement.classList.add('loaded');
-            }, index * 100);
-        });
-        
-        // If image is already cached and loaded
-        if (img.complete) {
-            setTimeout(() => {
-                img.parentElement.classList.add('loaded');
-            }, index * 100);
-        }
-    });
-}
-
-// Optional: Add parallax effect on scroll for category images
-function initCategoryParallax() {
-    const categoryHeroes = document.querySelectorAll('.category-hero');
-    
-    if (categoryHeroes.length === 0) return;
-    
-    window.addEventListener('scroll', () => {
-        categoryHeroes.forEach(hero => {
-            const rect = hero.getBoundingClientRect();
-            const speed = 0.5;
-            
-            if (rect.bottom >= 0 && rect.top <= window.innerHeight) {
-                const yPos = -(rect.top * speed);
-                const img = hero.querySelector('img');
-                if (img) {
-                    img.style.transform = `translateY(${yPos}px) scale(1.1)`;
-                }
-            }
-        });
-    });
 }
 
 // Load Events
