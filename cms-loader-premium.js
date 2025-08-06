@@ -39,9 +39,15 @@ const categoryIcons = {
 // Initialize on DOM ready
 document.addEventListener('DOMContentLoaded', function() {
     console.log('CMS Loader: Initializing...');
-    loadMenuFromCMS();
+    loadMenuFromCMS().then(() => {
+        // Initialize filters AFTER menu is loaded
+        initializeFilters();
+        // Initialize mobile filters after menu data is available
+        if (window.innerWidth <= 768) {
+            window.mobileFilters.init();
+        }
+    });
     loadEventsFromCMS();
-    initializeFilters();
 });
 
 // Load Menu from CMS
@@ -743,30 +749,7 @@ window.cmsLoader = {
                     <div class="mobile-filter-section">
                         <h4>Eigenschaften</h4>
                         <div class="mobile-tag-filters" id="mobileTagFilters">
-                            <label class="mobile-tag-filter">
-                                <input type="checkbox" value="vegan">
-                                <span class="mobile-tag-label">Vegan</span>
-                            </label>
-                            <label class="mobile-tag-filter">
-                                <input type="checkbox" value="vegetarisch">
-                                <span class="mobile-tag-label">Vegetarisch</span>
-                            </label>
-                            <label class="mobile-tag-filter">
-                                <input type="checkbox" value="glutenfrei">
-                                <span class="mobile-tag-label">Glutenfrei</span>
-                            </label>
-                            <label class="mobile-tag-filter">
-                                <input type="checkbox" value="lactosefrei">
-                                <span class="mobile-tag-label">Laktosefrei</span>
-                            </label>
-                            <label class="mobile-tag-filter">
-                                <input type="checkbox" value="proteinreich">
-                                <span class="mobile-tag-label">High Protein</span>
-                            </label>
-                            <label class="mobile-tag-filter">
-                                <input type="checkbox" value="zuckerarm">
-                                <span class="mobile-tag-label">Zuckerarm</span>
-                            </label>
+                            <!-- Will be populated dynamically -->
                         </div>
                     </div>
                 </div>
@@ -780,8 +763,9 @@ window.cmsLoader = {
         
         document.body.appendChild(modal);
         
-        // Populate categories
+        // Populate categories and tags
         populateMobileCategories();
+        populateMobileTags();
     }
     
     // Populate mobile category filters
@@ -797,8 +781,8 @@ window.cmsLoader = {
         container.appendChild(allBtn);
         
         // Add categories from loaded data
-        if (window.allMenuCategories) {
-            window.allMenuCategories.forEach(category => {
+        if (allMenuCategories && allMenuCategories.length > 0) {
+            allMenuCategories.forEach(category => {
                 const btn = createMobileCategoryButton(
                     category.title.toLowerCase().replace(/\s+/g, '-'),
                     category.title
@@ -806,6 +790,76 @@ window.cmsLoader = {
                 container.appendChild(btn);
             });
         }
+    }
+    
+    // Populate mobile tag filters dynamically
+    function populateMobileTags() {
+        const container = document.getElementById('mobileTagFilters');
+        if (!container) return;
+        
+        // Clear existing
+        container.innerHTML = '';
+        
+        // Collect all unique tags from menu items
+        const allTags = new Set();
+        
+        if (allMenuCategories && allMenuCategories.length > 0) {
+            allMenuCategories.forEach(category => {
+                if (category.items) {
+                    category.items.forEach(item => {
+                        if (item.tags && Array.isArray(item.tags)) {
+                            item.tags.forEach(tag => {
+                                allTags.add(tag.toLowerCase());
+                            });
+                        }
+                    });
+                }
+            });
+        }
+        
+        // Create tag filters for each unique tag
+        const tagDisplayNames = {
+            'vegan': 'Vegan',
+            'vegetarisch': 'Vegetarisch',
+            'glutenfrei': 'Glutenfrei',
+            'lactosefrei': 'Laktosefrei',
+            'laktosefrei': 'Laktosefrei',
+            'proteinreich': 'High Protein',
+            'high protein': 'High Protein',
+            'zuckerarm': 'Zuckerarm',
+            'low-carb': 'Low Carb',
+            'superfood': 'Superfood',
+            'detox': 'Detox',
+            'anti-inflammatory': 'Entzündungshemmend',
+            'ballaststoffreich': 'Ballaststoffreich',
+            'herzhaft': 'Herzhaft',
+            'süß': 'Süß',
+            'sättigend': 'Sättigend',
+            'leicht': 'Leicht'
+        };
+        
+        // Sort tags alphabetically
+        const sortedTags = Array.from(allTags).sort();
+        
+        sortedTags.forEach(tag => {
+            const label = document.createElement('label');
+            label.className = 'mobile-tag-filter';
+            
+            const input = document.createElement('input');
+            input.type = 'checkbox';
+            input.value = tag;
+            
+            const span = document.createElement('span');
+            span.className = 'mobile-tag-label';
+            span.textContent = tagDisplayNames[tag] || tag.charAt(0).toUpperCase() + tag.slice(1);
+            
+            label.appendChild(input);
+            label.appendChild(span);
+            container.appendChild(label);
+            
+            // Add event listener
+            input.addEventListener('change', handleMobileTagFilter);
+        });
     }
     
     // Create mobile category button
@@ -987,8 +1041,10 @@ window.cmsLoader = {
     document.addEventListener('DOMContentLoaded', function() {
         // Wait a bit for menu to load
         setTimeout(() => {
-            initializeMobileFilters();
-            updateMobileFilterBadge();
+            if (window.innerWidth <= 768) {
+                initializeMobileFilters();
+                updateMobileFilterBadge();
+            }
         }, 500);
     });
     
