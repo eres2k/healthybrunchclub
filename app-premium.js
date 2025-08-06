@@ -194,56 +194,34 @@ function initReservationForm() {
     }
 }
 
-// Fill Available Dates
 function fillAvailableDates() {
     const dateSelect = document.getElementById('date');
     if (!dateSelect) return;
     
-    // Clear existing options
+    // Reset dropdown
     dateSelect.innerHTML = '<option value="">Datum wählen</option>';
     
-    // Get next 4 weeks of available dates
+    // Compute next Monday
     const today = new Date();
-    const dates = [];
+    // Calculate days until next Monday (1): if today is Monday, move 7 days ahead
+    const daysUntilMonday = ((1 - today.getDay() + 7) % 7) || 7;
+    const nextMonday = new Date(today);
+    nextMonday.setDate(today.getDate() + daysUntilMonday);
     
-    // Special event on Sunday, August 10th, 2025
-    const specialDate = new Date(2025, 7, 10); // August 10, 2025
-    dates.push(specialDate);
-    
-    // Add next 4 Mondays
-    for (let i = 0; i < 4; i++) {
-        const date = new Date(today);
-        const daysUntilMonday = (8 - today.getDay()) % 7 || 7;
-        date.setDate(today.getDate() + daysUntilMonday + (i * 7));
-        dates.push(date);
-    }
-    
-    // Sort dates
-    dates.sort((a, b) => a - b);
-    
-    // Add to select
-    dates.forEach(date => {
-        const option = document.createElement('option');
-        option.value = date.toISOString().split('T')[0];
-        
-        const dayName = date.toLocaleDateString('de-AT', { weekday: 'long' });
-        const formattedDate = date.toLocaleDateString('de-AT', {
-            day: 'numeric',
-            month: 'long',
-            year: 'numeric'
-        });
-        
-        option.textContent = `${dayName}, ${formattedDate}`;
-        
-        // Highlight special event
-        if (date.getDay() === 0) { // Sunday
-            option.textContent += ' - Special Event';
-            option.style.fontWeight = 'bold';
-        }
-        
-        dateSelect.appendChild(option);
+    // Create option for next Monday
+    const option = document.createElement('option');
+    option.value = nextMonday.toISOString().split('T')[0];
+    const dayName = nextMonday.toLocaleDateString('de-AT', { weekday: 'long' });
+    const formattedDate = nextMonday.toLocaleDateString('de-AT', {
+        day: 'numeric',
+        month: 'long',
+        year: 'numeric'
     });
+    option.textContent = `${dayName}, ${formattedDate}`;
+    
+    dateSelect.appendChild(option);
 }
+
 
 // Animations
 function initAnimations() {
