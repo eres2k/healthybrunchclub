@@ -1,13 +1,16 @@
 ---
 title: sip happens - make it healthy
 order: 6
-image: ""
+image: /content/images/dsc00362.jpg
 items:
-  - tags:
+  - name: himbeersoda
+    tags:
       - erfrischend
-      - fruchtig
       - zuckerarm
-    name: himbeersoda
+      - antioxidativ
+      - immunstärkend
+      - belebend
+      - glutenfrei
     description: prickelndes himbeersoda von sonnentor, sanft gesüßt mit
       apfelsaftkonzentrat, für einen fruchtig-leichten genuss.
     allergens: []
@@ -17,11 +20,15 @@ items:
       carbs: 11g
       fat: 0g
     price: "4.10"
-  - tags:
+
+  - name: hollundersoda
+    tags:
       - erfrischend
-      - blumig
       - zuckerarm
-    name: hollundersoda
+      - antioxidativ
+      - immunstärkend
+      - belebend
+      - glutenfrei
     description: spritziges hollundersoda von sonnentor, verfeinert mit
       apfelsaftkonzentrat, für eine blumig-frische erfrischung.
     allergens: []
@@ -31,11 +38,15 @@ items:
       carbs: 10g
       fat: 0g
     price: "4.10"
-  - tags:
+
+  - name: minty
+    tags:
       - erfrischend
-      - zitrusartig
       - belebend
-    name: minty
+      - antioxidativ
+      - zuckerarm
+      - immunstärkend
+      - glutenfrei
     description: ein kühler mix aus frischer pfefferminze und spritziger zitrone,
       der die sinne belebt und erfrischt.
     allergens: []
@@ -45,11 +56,15 @@ items:
       carbs: 6g
       fat: 0g
     price: "4.10"
-  - tags:
+
+  - name: berry minty
+    tags:
       - erfrischend
-      - fruchtig
-      - aromatisch
-    name: berry minty
+      - zuckerarm
+      - antioxidativ
+      - immunstärkend
+      - belebend
+      - glutenfrei
     description: eine lebendige kombination aus frischer pfefferminze und saftigen
       beeren, für einen fruchtig-kühlen geschmacksmoment.
     allergens: []
@@ -59,11 +74,14 @@ items:
       carbs: 9g
       fat: 0g
     price: "4.10"
-  - tags:
-      - würzig
+
+  - name: golden kurkuma
+    tags:
+      - immunstärkend
+      - antioxidativ
       - belebend
-      - entzündungshemmend
-    name: golden kurkuma
+      - zuckerarm
+      - glutenfrei
     description: ein goldener mix aus sonnentors ingwer-zitrone-sirup und frischer
       kurkuma, würzig und belebend für körper und geist.
     allergens: []
@@ -73,11 +91,13 @@ items:
       carbs: 13g
       fat: 0g
     price: "4.10"
-  - tags:
-      - vitaminreich
+
+  - name: immunity
+    tags:
       - immunstärkend
-      - natürlich
-    name: immunity
+      - antioxidativ
+      - belebend
+      - glutenfrei
     description: ein sonniger frischekick für dein immunsystem süß-würzig mit
       natürlicher power aus karotten, orangen, ingwer und kurkuma.
     allergens: []
@@ -87,11 +107,13 @@ items:
       carbs: 22g
       fat: 0g
     price: "6.90"
-  - tags:
-      - regenerierend
-      - vitaminreich
+
+  - name: hangover
+    tags:
       - belebend
-    name: hangover
+      - immunstärkend
+      - antioxidativ
+      - glutenfrei
     description: "der sanfte weckruf nach einer langen nacht: fruchtig, belebend und
       randvoll mit natürlichen vitaminen von karotten, äpfel, zitrone, rote
       beete und ingwer."
@@ -102,11 +124,13 @@ items:
       carbs: 20g
       fat: 0g
     price: "6.90"
-  - tags:
-      - detox
-      - erfrischend
-      - reinigend
-    name: healthy green
+
+  - name: healthy green
+    tags:
+      - immunstärkend
+      - antioxidativ
+      - belebend
+      - glutenfrei
     description: ein erfrischender detox-drink mit leichter schärfe. ideal für neue
       energie und klaren kopf. grün, klar und kraftvoll mit gurken, sellerie,
       zitrone und ingwer.
