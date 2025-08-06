@@ -247,37 +247,48 @@ window.resetFilters = function() {
     updateFilterVisualFeedback();
 };
 
-// Replace the createCategoryHTML function in cms-loader-premium.js (around line 190)
-// with this updated version:
-
-// Create Category HTML with Overlay
+// Create Category HTML with Overlay - FIXED VERSION
 function createCategoryHTML(category, catIndex) {
     const hasImage = category.image ? true : false;
+    const categorySlug = category.title.toLowerCase().replace(/\s+/g, '-');
     
-    return `
-        <div class="menu-category" data-category="${category.title.toLowerCase().replace(/\s+/g, '-')}">
-            ${hasImage ? `
-                <div class="category-hero">
-                    <img src="${formatImageUrl(category.image)}" 
-                         alt="${category.title}" 
-                         loading="lazy"
-                         onerror="this.parentElement.style.display='none'">
-                    <div class="category-hero-overlay">
-                        <h3 class="category-name">${category.title}</h3>
-                    </div>
+    let html = `<div class="menu-category" data-category="${categorySlug}">`;
+    
+    if (hasImage) {
+        // Category with hero image and overlay
+        html += `
+            <div class="category-hero" style="position: relative; width: 100%; height: 300px; overflow: hidden; margin-bottom: 3rem; border-radius: 12px; box-shadow: 0 8px 30px rgba(0,0,0,0.12);">
+                <img src="${formatImageUrl(category.image)}" alt="${category.title}" style="width: 100%; height: 100%; object-fit: cover; display: block;">
+                <div style="position: absolute; top: 0; left: 0; right: 0; bottom: 0; background: linear-gradient(to bottom, rgba(0,0,0,0.1) 0%, rgba(0,0,0,0.3) 50%, rgba(0,0,0,0.6) 100%);"></div>
+                <div class="category-hero-overlay" style="position: absolute; top: 0; left: 0; right: 0; bottom: 0; display: flex; align-items: center; justify-content: center; z-index: 2;">
+                    <h3 class="category-title-overlay" style="font-family: 'Playfair Display', serif; font-size: 3.5rem; color: white; text-transform: uppercase; letter-spacing: 0.2em; text-align: center; margin: 0; text-shadow: 2px 2px 6px rgba(0,0,0,0.8);">${category.title}</h3>
                 </div>
-            ` : ''}
-            
-            <div class="category-header">
-                ${!hasImage ? `<h3 class="category-name">${category.title}</h3>` : ''}
-                ${category.description ? `<p class="category-description">${category.description}</p>` : ''}
             </div>
-            
-            <div class="menu-grid">
-                ${category.items ? category.items.map(item => createMenuItemCard(item)).join('') : ''}
-            </div>
+        `;
+    }
+    
+    // Category header (with or without description)
+    html += `<div class="category-header">`;
+    
+    // Only show category name here if there's no hero image
+    if (!hasImage) {
+        html += `<h3 class="category-name">${category.title}</h3>`;
+    }
+    
+    if (category.description) {
+        html += `<p class="category-description">${category.description}</p>`;
+    }
+    
+    html += `</div>`;
+    
+    // Menu items grid
+    html += `
+        <div class="menu-grid">
+            ${category.items ? category.items.map(item => createMenuItemCard(item)).join('') : ''}
         </div>
-    `;
+    </div>`;
+    
+    return html;
 }
 
 // Display Premium Menu
