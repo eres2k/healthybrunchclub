@@ -1,7 +1,7 @@
 ---
 title: berry good choice
 order: 4
-image: /content/images/dsc00254.jpg
+image: ""
 items:
   - tags:
       - vegetarisch
