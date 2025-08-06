@@ -1,7 +1,7 @@
 ---
 title: eggcitements
 order: 1
-image: /content/images/dsc00161.jpg
+image: ""
 description: 'Stell dir vor, Eier, die nicht nur braten, sondern tanzen! Unsere
   "Eggcitements"-Kategorie ist der ultimative Eier-Party-Hit – frisch, fluffig
   und voller Überraschungen. Ob du ein Spiegelei-Fan bist, das wie ein
@@ -25,11 +25,14 @@ items:
 
       **your style:**
 
+
       * spiegelei
 
       * pochiert
 
       * eierspeise
+
+      * a﻿ufpreis zweites ei: 1,40 EUR
     allergens:
       - C
     nutrition:
@@ -47,20 +50,26 @@ items:
       - proteinreich
     name: omelette creation
     description: >-
-      ein luftig-lockeres omelette bestehend aus zwei eiern, präsentiert auf
-      knusprigem sauerteigbrot vom öfferl, gefüllt mit zwiebeln,
-      shiitake-spilzen und frischem spinat und gekrönt mit rucula, sprossen und
-      kresse.
+      ein luftig-lockeres omelette bestehend aus zwei eiern,gefüllt mit
+      zwiebeln, shiitake-spilzen, frischem  spinat. gekrönt mit rucula, sprossen
+      und kresse.
 
       **your style:**
 
-      * tomaten
 
-      * speckwürfeln
+      \* tomaten
 
-      * käse
 
-      * avocado
+      \* speckwürfeln
+
+
+      \* käse
+
+
+      \* avocado
+
+
+      \*﻿ zwei scheiben sauerteigbrot (aufpreis 2,50)
     allergens:
       - A
       - C
@@ -82,15 +91,19 @@ items:
       ein oder zwei pochierte eier auf knusprigem sauerteigbrot vom öfferl und
       einer samtigen avocadosauce, serviert mit champignons oder
       shiitake-pilzen, garniert mit frischem rucula, sprossen, kresse und
-      knusprigen pinienkernen.
+      gerösteten pinienkernen.
+
 
       **your style:**
+
 
       * schinken
 
       * speck
 
       * lachs
+
+      * a﻿ufpreis zweites ei: 1,40 EUR
     allergens:
       - A
       - C
