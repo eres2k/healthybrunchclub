@@ -255,16 +255,31 @@ function createCategoryHTML(category, catIndex) {
     let html = `<div class="menu-category" data-category="${categorySlug}">`;
     
     if (hasImage) {
-        // Category with hero image and overlay
+        // Category with hero image and overlay - Using CSS classes instead of inline styles
         html += `
-            <div class="category-hero" style="position: relative; width: 100%; height: 300px; overflow: hidden; margin-bottom: 3rem; border-radius: 12px; box-shadow: 0 8px 30px rgba(0,0,0,0.12);">
-                <img src="${formatImageUrl(category.image)}" alt="${category.title}" style="width: 100%; height: 100%; object-fit: cover; display: block;">
-                <div style="position: absolute; top: 0; left: 0; right: 0; bottom: 0; background: linear-gradient(to bottom, rgba(0,0,0,0.1) 0%, rgba(0,0,0,0.3) 50%, rgba(0,0,0,0.6) 100%);"></div>
-                <div class="category-hero-overlay" style="position: absolute; top: 0; left: 0; right: 0; bottom: 0; display: flex; align-items: center; justify-content: center; z-index: 2;">
-                    <h3 class="category-title-overlay" style="font-family: 'Playfair Display', serif; font-size: 3.5rem; color: white; text-transform: uppercase; letter-spacing: 0.2em; text-align: center; margin: 0; text-shadow: 2px 2px 6px rgba(0,0,0,0.8);">${category.title}</h3>
+            <div class="category-hero">
+                <img src="${formatImageUrl(category.image)}" alt="${category.title}">
+                <div class="category-hero-gradient"></div>
+                <div class="category-hero-overlay">
+                    <h3 class="category-title-overlay">${category.title}</h3>
                 </div>
             </div>
         `;
+        
+        // Trigger image loaded event for animations
+        setTimeout(() => {
+            const categoryHero = document.querySelector(`.menu-category[data-category="${categorySlug}"] .category-hero`);
+            if (categoryHero) {
+                const img = categoryHero.querySelector('img');
+                if (img.complete) {
+                    categoryHero.classList.add('loaded');
+                } else {
+                    img.addEventListener('load', () => {
+                        categoryHero.classList.add('loaded');
+                    });
+                }
+            }
+        }, 100);
     }
     
     // Category header (with or without description)
