@@ -259,13 +259,32 @@ function createCategoryHTML(category, catIndex) {
     return `
         <div class="menu-category" data-category="${category.title.toLowerCase().replace(/\s+/g, '-')}">
             ${hasImage ? `
+               menuData.forEach((category, catIndex) => {
+    // Check for allergens
+    if (category.items && category.items.some(item => item.allergens && item.allergens.length > 0)) {
+        hasAllergens = true;
+    }
+    
+    menuHTML += `
+        <div class="menu-category" data-category="${category.title.toLowerCase().replace(/\s+/g, '-')}">
+            ${category.image ? `
                 <div class="category-hero">
                     <img src="${formatImageUrl(category.image)}" alt="${category.title}" loading="lazy">
-                    <div class="category-title-overlay">
-                        <h3 class="category-name">${category.title}</h3>
-                        ${category.description ? `<p class="category-description">${category.description}</p>` : ''}
-                    </div>
+                    <h3 class="category-name">${category.title}</h3>
                 </div>
+            ` : ''}
+            
+            <div class="category-header">
+                ${!category.image ? `<h3 class="category-name">${category.title}</h3>` : ''}
+                ${category.description ? `<p class="category-description">${category.description}</p>` : ''}
+            </div>
+            
+            <div class="menu-grid">
+                ${category.items ? category.items.map(item => createMenuItemCard(item)).join('') : ''}
+            </div>
+        </div>
+    `;
+});
             ` : ''}
             
             <div class="category-header">
