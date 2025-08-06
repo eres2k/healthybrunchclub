@@ -1,4 +1,3 @@
-// avocado-friends.md
 ---
 title: avo-lution
 order: 2
