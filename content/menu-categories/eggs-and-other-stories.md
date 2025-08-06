@@ -1,7 +1,7 @@
 ---
 title: eggcitements
 order: 1
-image: ""
+image: /content/images/dsc00161.jpg
 description: 'Stell dir vor, Eier, die nicht nur braten, sondern tanzen! Unsere
   "Eggcitements"-Kategorie ist der ultimative Eier-Party-Hit – frisch, fluffig
   und voller Überraschungen. Ob du ein Spiegelei-Fan bist, das wie ein
@@ -11,12 +11,13 @@ description: 'Stell dir vor, Eier, die nicht nur braten, sondern tanzen! Unsere
   Eier sind langweilig – warte, bis du unsere Omelette-Kreation siehst, die mit
   Speckwürfeln rockt oder mit Käse schmilzt!'
 items:
-  - tags:
+  - name: eggs any style
+    tags:
       - vegetarisch
       - glutenfrei
       - proteinreich
-      - gesund
-    name: eggs any style
+      - sättigend
+      - antioxidativ
     description: >-
       bestehend aus einem oder zwei eiern, meisterhaft zubereitete eier nach
       deiner wahl, kunstvoll serviert auf süßkartoffel- und avocadoscheiben.
@@ -25,14 +26,11 @@ items:
 
       **your style:**
 
-
       * spiegelei
 
       * pochiert
 
       * eierspeise
-
-      * a﻿ufpreis zweites ei: 1,40 EUR
     allergens:
       - C
     nutrition:
@@ -40,81 +38,73 @@ items:
       protein: 13g
       carbs: 27g
       fat: 15g
-    special: false
     price: "12.90"
     image: /content/images/image-1-.jpg
-  - tags:
+
+  - name: omelette creation
+    tags:
       - vegetarisch
-      - anpassbar
-      - herzhaft
       - proteinreich
-    name: omelette creation
+      - sättigend
+      - antioxidativ
+      - belebend
     description: >-
-      ein luftig-lockeres omelette bestehend aus zwei eiern,gefüllt mit
-      zwiebeln, shiitake-spilzen, frischem  spinat. gekrönt mit rucula, sprossen
-      und kresse.
+      ein luftig-lockeres omelette bestehend aus zwei eiern, präsentiert auf
+      knusprigem sauerteigbrot vom öfferl, gefüllt mit zwiebeln,
+      shiitake-spilzen und frischem spinat und gekrönt mit rucula, sprossen und
+      kresse.
 
       **your style:**
 
+      * tomaten
 
-      \* tomaten
+      * speckwürfeln
 
+      * käse
 
-      \* speckwürfeln
-
-
-      \* käse
-
-
-      \* avocado
-
-
-      \*﻿ zwei scheiben sauerteigbrot (aufpreis 2,50)
+      * avocado
     allergens:
       - A
       - C
       - G
-    price: "14.90"
     nutrition:
       calories: "300"
       protein: 22g
       carbs: 13g
       fat: 9g
+    price: "14.90"
     image: /content/images/image-2-.jpg
-  - tags:
+
+  - name: beggs enedict
+    tags:
       - vegetarisch
-      - gourmet
-      - aromatisch
+      - proteinreich
       - sättigend
-    name: beggs enedict
+      - antioxidativ
+      - belebend
     description: >-
       ein oder zwei pochierte eier auf knusprigem sauerteigbrot vom öfferl und
       einer samtigen avocadosauce, serviert mit champignons oder
       shiitake-pilzen, garniert mit frischem rucula, sprossen, kresse und
-      gerösteten pinienkernen.
-
+      knusprigen pinienkernen.
 
       **your style:**
-
 
       * schinken
 
       * speck
 
       * lachs
-
-      * a﻿ufpreis zweites ei: 1,40 EUR
     allergens:
       - A
       - C
       - H
-      - D
     nutrition:
       calories: "570"
       protein: 12g
       carbs: 54g
       fat: 34g
     price: "15.90"
-    image: /content/images/image-36-.jpg
     special: true
+    image: /content/images/image-36-.jpg
 ---
