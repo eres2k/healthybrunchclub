@@ -224,6 +224,11 @@ function applyFilters() {
     }
     
     displayPremiumMenu(filteredCategories);
+    
+    // Update mobile filter badge if it exists
+    if (window.mobileFilters && window.mobileFilters.updateBadge) {
+        window.mobileFilters.updateBadge();
+    }
 }
 
 // Reset Filters
@@ -245,6 +250,11 @@ window.resetFilters = function() {
     
     displayPremiumMenu(allMenuCategories);
     updateFilterVisualFeedback();
+    
+    // Update mobile filter badge if it exists
+    if (window.mobileFilters && window.mobileFilters.updateBadge) {
+        window.mobileFilters.updateBadge();
+    }
 };
 
 // Create Category HTML with Overlay - FIXED VERSION
@@ -660,339 +670,351 @@ window.cmsLoader = {
     }
 };
 
-// Mobile Filter Modal JavaScript
-// Add this to your cms-loader-premium.js file
-
-// Mobile filter state
-let mobileFilterState = {
-    category: 'all',
-    tags: []
-};
-
-// Initialize mobile filters
-function initializeMobileFilters() {
-    if (window.innerWidth > 768) return;
+// Mobile Filter Modal JavaScript - Wrapped to prevent conflicts
+(function() {
+    'use strict';
     
-    // Create mobile filter UI
-    createMobileFilterUI();
-    
-    // Copy current filter state
-    mobileFilterState.category = currentFilters.category;
-    mobileFilterState.tags = [...currentFilters.tags];
-    
-    // Update UI to reflect current filters
-    updateMobileFilterUI();
-    
-    // Add event listeners
-    attachMobileFilterListeners();
-}
-
-// Create mobile filter UI elements
-function createMobileFilterUI() {
-    // Check if already created
-    if (document.querySelector('.mobile-filter-toggle')) return;
-    
-    // Create filter toggle button
-    const toggleBtn = document.createElement('button');
-    toggleBtn.className = 'mobile-filter-toggle';
-    toggleBtn.innerHTML = `
-        <i class="fas fa-filter"></i>
-        <span>Filter</span>
-        <span class="filter-badge" style="display: none;">0</span>
-    `;
-    
-    // Insert after menu intro
-    const menuIntro = document.querySelector('.menu-intro');
-    if (menuIntro) {
-        menuIntro.parentNode.insertBefore(toggleBtn, menuIntro.nextSibling);
-    }
-    
-    // Create modal structure
-    const modal = document.createElement('div');
-    modal.className = 'mobile-filter-modal';
-    modal.innerHTML = `
-        <div class="mobile-filter-content">
-            <div class="mobile-filter-header">
-                <h3>Filter</h3>
-                <button class="mobile-filter-close" aria-label="Schließen">
-                    <i class="fas fa-times"></i>
-                </button>
-            </div>
-            
-            <div class="mobile-filter-body">
-                <!-- Categories -->
-                <div class="mobile-filter-section">
-                    <h4>Kategorien</h4>
-                    <div class="mobile-category-filters" id="mobileCategoryFilters">
-                        <!-- Will be populated dynamically -->
-                    </div>
-                </div>
-                
-                <!-- Tags -->
-                <div class="mobile-filter-section">
-                    <h4>Eigenschaften</h4>
-                    <div class="mobile-tag-filters" id="mobileTagFilters">
-                        <label class="mobile-tag-filter">
-                            <input type="checkbox" value="vegan">
-                            <span class="mobile-tag-label">Vegan</span>
-                        </label>
-                        <label class="mobile-tag-filter">
-                            <input type="checkbox" value="vegetarisch">
-                            <span class="mobile-tag-label">Vegetarisch</span>
-                        </label>
-                        <label class="mobile-tag-filter">
-                            <input type="checkbox" value="glutenfrei">
-                            <span class="mobile-tag-label">Glutenfrei</span>
-                        </label>
-                        <label class="mobile-tag-filter">
-                            <input type="checkbox" value="lactosefrei">
-                            <span class="mobile-tag-label">Laktosefrei</span>
-                        </label>
-                        <label class="mobile-tag-filter">
-                            <input type="checkbox" value="proteinreich">
-                            <span class="mobile-tag-label">High Protein</span>
-                        </label>
-                        <label class="mobile-tag-filter">
-                            <input type="checkbox" value="zuckerarm">
-                            <span class="mobile-tag-label">Zuckerarm</span>
-                        </label>
-                    </div>
-                </div>
-            </div>
-            
-            <div class="mobile-filter-footer">
-                <button class="mobile-filter-reset">Zurücksetzen</button>
-                <button class="mobile-filter-apply">Anwenden</button>
-            </div>
-        </div>
-    `;
-    
-    document.body.appendChild(modal);
-    
-    // Populate categories
-    populateMobileCategories();
-}
-
-// Populate mobile category filters
-function populateMobileCategories() {
-    const container = document.getElementById('mobileCategoryFilters');
-    if (!container) return;
-    
-    // Clear existing
-    container.innerHTML = '';
-    
-    // Add "All" option
-    const allBtn = createMobileCategoryButton('all', 'Alle Gerichte');
-    container.appendChild(allBtn);
-    
-    // Add categories from loaded data
-    allMenuCategories.forEach(category => {
-        const btn = createMobileCategoryButton(
-            category.title.toLowerCase().replace(/\s+/g, '-'),
-            category.title
-        );
-        container.appendChild(btn);
-    });
-}
-
-// Create mobile category button
-function createMobileCategoryButton(value, text) {
-    const btn = document.createElement('button');
-    btn.className = 'mobile-filter-btn';
-    btn.setAttribute('data-category', value);
-    btn.innerHTML = `
-        <span>${text}</span>
-        <span class="checkmark"></span>
-    `;
-    return btn;
-}
-
-// Attach mobile filter event listeners
-function attachMobileFilterListeners() {
-    // Toggle button
-    const toggleBtn = document.querySelector('.mobile-filter-toggle');
-    if (toggleBtn) {
-        toggleBtn.addEventListener('click', openMobileFilters);
-    }
-    
-    // Close button
-    const closeBtn = document.querySelector('.mobile-filter-close');
-    if (closeBtn) {
-        closeBtn.addEventListener('click', closeMobileFilters);
-    }
-    
-    // Modal backdrop
-    const modal = document.querySelector('.mobile-filter-modal');
-    if (modal) {
-        modal.addEventListener('click', (e) => {
-            if (e.target === modal) {
-                closeMobileFilters();
-            }
-        });
-    }
-    
-    // Category buttons
-    const categoryBtns = document.querySelectorAll('.mobile-filter-btn');
-    categoryBtns.forEach(btn => {
-        btn.addEventListener('click', handleMobileCategoryFilter);
-    });
-    
-    // Tag checkboxes
-    const tagInputs = document.querySelectorAll('.mobile-tag-filter input');
-    tagInputs.forEach(input => {
-        input.addEventListener('change', handleMobileTagFilter);
-    });
-    
-    // Reset button
-    const resetBtn = document.querySelector('.mobile-filter-reset');
-    if (resetBtn) {
-        resetBtn.addEventListener('click', resetMobileFilters);
-    }
-    
-    // Apply button
-    const applyBtn = document.querySelector('.mobile-filter-apply');
-    if (applyBtn) {
-        applyBtn.addEventListener('click', applyMobileFilters);
-    }
-}
-
-// Open mobile filters
-function openMobileFilters() {
-    const modal = document.querySelector('.mobile-filter-modal');
-    if (modal) {
-        modal.classList.add('active');
-        document.body.style.overflow = 'hidden';
-        
-        // Update UI to reflect current filters
-        updateMobileFilterUI();
-    }
-}
-
-// Close mobile filters
-function closeMobileFilters() {
-    const modal = document.querySelector('.mobile-filter-modal');
-    if (modal) {
-        modal.classList.remove('active');
-        document.body.style.overflow = '';
-    }
-}
-
-// Handle mobile category filter
-function handleMobileCategoryFilter(e) {
-    const btn = e.currentTarget;
-    const category = btn.getAttribute('data-category');
-    
-    // Update state
-    mobileFilterState.category = category;
-    
-    // Update UI
-    document.querySelectorAll('.mobile-filter-btn').forEach(b => {
-        b.classList.remove('active');
-    });
-    btn.classList.add('active');
-}
-
-// Handle mobile tag filter
-function handleMobileTagFilter(e) {
-    const checkbox = e.target;
-    const tag = checkbox.value;
-    
-    if (checkbox.checked) {
-        if (!mobileFilterState.tags.includes(tag)) {
-            mobileFilterState.tags.push(tag);
-        }
-    } else {
-        mobileFilterState.tags = mobileFilterState.tags.filter(t => t !== tag);
-    }
-}
-
-// Reset mobile filters
-function resetMobileFilters() {
-    // Reset state
-    mobileFilterState = {
+    // Mobile filter state
+    let mobileFilterState = {
         category: 'all',
         tags: []
     };
     
-    // Update UI
-    updateMobileFilterUI();
-}
-
-// Apply mobile filters
-function applyMobileFilters() {
-    // Copy mobile state to main filters
-    currentFilters.category = mobileFilterState.category;
-    currentFilters.tags = [...mobileFilterState.tags];
-    
-    // Apply filters
-    applyFilters();
-    
-    // Update badge
-    updateMobileFilterBadge();
-    
-    // Close modal
-    closeMobileFilters();
-}
-
-// Update mobile filter UI
-function updateMobileFilterUI() {
-    // Update category buttons
-    document.querySelectorAll('.mobile-filter-btn').forEach(btn => {
-        const category = btn.getAttribute('data-category');
-        btn.classList.toggle('active', category === mobileFilterState.category);
-    });
-    
-    // Update tag checkboxes
-    document.querySelectorAll('.mobile-tag-filter input').forEach(input => {
-        input.checked = mobileFilterState.tags.includes(input.value);
-    });
-}
-
-// Update mobile filter badge
-function updateMobileFilterBadge() {
-    const badge = document.querySelector('.mobile-filter-toggle .filter-badge');
-    if (!badge) return;
-    
-    const activeCount = (currentFilters.category !== 'all' ? 1 : 0) + currentFilters.tags.length;
-    
-    if (activeCount > 0) {
-        badge.textContent = activeCount;
-        badge.style.display = 'flex';
-    } else {
-        badge.style.display = 'none';
+    // Initialize mobile filters
+    function initializeMobileFilters() {
+        if (window.innerWidth > 768) return;
+        
+        // Create mobile filter UI
+        createMobileFilterUI();
+        
+        // Copy current filter state
+        mobileFilterState.category = currentFilters.category;
+        mobileFilterState.tags = [...currentFilters.tags];
+        
+        // Update UI to reflect current filters
+        updateMobileFilterUI();
+        
+        // Add event listeners
+        attachMobileFilterListeners();
     }
-}
-
-// Initialize on DOM ready
-document.addEventListener('DOMContentLoaded', function() {
-    // Wait a bit for menu to load
-    setTimeout(() => {
-        initializeMobileFilters();
-        updateMobileFilterBadge();
-    }, 500);
-});
-
-// Reinitialize on window resize
-let resizeTimer;
-window.addEventListener('resize', function() {
-    clearTimeout(resizeTimer);
-    resizeTimer = setTimeout(function() {
-        if (window.innerWidth <= 768 && !document.querySelector('.mobile-filter-toggle')) {
-            initializeMobileFilters();
-        } else if (window.innerWidth > 768) {
-            // Clean up mobile filters if switching to desktop
-            const modal = document.querySelector('.mobile-filter-modal');
-            const toggle = document.querySelector('.mobile-filter-toggle');
-            if (modal) modal.remove();
-            if (toggle) toggle.remove();
+    
+    // Create mobile filter UI elements
+    function createMobileFilterUI() {
+        // Check if already created
+        if (document.querySelector('.mobile-filter-toggle')) return;
+        
+        // Create filter toggle button
+        const toggleBtn = document.createElement('button');
+        toggleBtn.className = 'mobile-filter-toggle';
+        toggleBtn.innerHTML = `
+            <i class="fas fa-filter"></i>
+            <span>Filter</span>
+            <span class="filter-badge" style="display: none;">0</span>
+        `;
+        
+        // Insert after menu intro
+        const menuIntro = document.querySelector('.menu-intro');
+        if (menuIntro) {
+            menuIntro.parentNode.insertBefore(toggleBtn, menuIntro.nextSibling);
         }
-    }, 250);
-});
+        
+        // Create modal structure
+        const modal = document.createElement('div');
+        modal.className = 'mobile-filter-modal';
+        modal.innerHTML = `
+            <div class="mobile-filter-content">
+                <div class="mobile-filter-header">
+                    <h3>Filter</h3>
+                    <button class="mobile-filter-close" aria-label="Schließen">
+                        <i class="fas fa-times"></i>
+                    </button>
+                </div>
+                
+                <div class="mobile-filter-body">
+                    <!-- Categories -->
+                    <div class="mobile-filter-section">
+                        <h4>Kategorien</h4>
+                        <div class="mobile-category-filters" id="mobileCategoryFilters">
+                            <!-- Will be populated dynamically -->
+                        </div>
+                    </div>
+                    
+                    <!-- Tags -->
+                    <div class="mobile-filter-section">
+                        <h4>Eigenschaften</h4>
+                        <div class="mobile-tag-filters" id="mobileTagFilters">
+                            <label class="mobile-tag-filter">
+                                <input type="checkbox" value="vegan">
+                                <span class="mobile-tag-label">Vegan</span>
+                            </label>
+                            <label class="mobile-tag-filter">
+                                <input type="checkbox" value="vegetarisch">
+                                <span class="mobile-tag-label">Vegetarisch</span>
+                            </label>
+                            <label class="mobile-tag-filter">
+                                <input type="checkbox" value="glutenfrei">
+                                <span class="mobile-tag-label">Glutenfrei</span>
+                            </label>
+                            <label class="mobile-tag-filter">
+                                <input type="checkbox" value="lactosefrei">
+                                <span class="mobile-tag-label">Laktosefrei</span>
+                            </label>
+                            <label class="mobile-tag-filter">
+                                <input type="checkbox" value="proteinreich">
+                                <span class="mobile-tag-label">High Protein</span>
+                            </label>
+                            <label class="mobile-tag-filter">
+                                <input type="checkbox" value="zuckerarm">
+                                <span class="mobile-tag-label">Zuckerarm</span>
+                            </label>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="mobile-filter-footer">
+                    <button class="mobile-filter-reset">Zurücksetzen</button>
+                    <button class="mobile-filter-apply">Anwenden</button>
+                </div>
+            </div>
+        `;
+        
+        document.body.appendChild(modal);
+        
+        // Populate categories
+        populateMobileCategories();
+    }
+    
+    // Populate mobile category filters
+    function populateMobileCategories() {
+        const container = document.getElementById('mobileCategoryFilters');
+        if (!container) return;
+        
+        // Clear existing
+        container.innerHTML = '';
+        
+        // Add "All" option
+        const allBtn = createMobileCategoryButton('all', 'Alle Gerichte');
+        container.appendChild(allBtn);
+        
+        // Add categories from loaded data
+        if (window.allMenuCategories) {
+            window.allMenuCategories.forEach(category => {
+                const btn = createMobileCategoryButton(
+                    category.title.toLowerCase().replace(/\s+/g, '-'),
+                    category.title
+                );
+                container.appendChild(btn);
+            });
+        }
+    }
+    
+    // Create mobile category button
+    function createMobileCategoryButton(value, text) {
+        const btn = document.createElement('button');
+        btn.className = 'mobile-filter-btn';
+        btn.setAttribute('data-category', value);
+        btn.innerHTML = `
+            <span>${text}</span>
+            <span class="checkmark"></span>
+        `;
+        return btn;
+    }
+    
+    // Attach mobile filter event listeners
+    function attachMobileFilterListeners() {
+        // Toggle button
+        const toggleBtn = document.querySelector('.mobile-filter-toggle');
+        if (toggleBtn) {
+            toggleBtn.addEventListener('click', openMobileFilters);
+        }
+        
+        // Close button
+        const closeBtn = document.querySelector('.mobile-filter-close');
+        if (closeBtn) {
+            closeBtn.addEventListener('click', closeMobileFilters);
+        }
+        
+        // Modal backdrop
+        const modal = document.querySelector('.mobile-filter-modal');
+        if (modal) {
+            modal.addEventListener('click', (e) => {
+                if (e.target === modal) {
+                    closeMobileFilters();
+                }
+            });
+        }
+        
+        // Category buttons
+        const categoryBtns = document.querySelectorAll('.mobile-filter-btn');
+        categoryBtns.forEach(btn => {
+            btn.addEventListener('click', handleMobileCategoryFilter);
+        });
+        
+        // Tag checkboxes
+        const tagInputs = document.querySelectorAll('.mobile-tag-filter input');
+        tagInputs.forEach(input => {
+            input.addEventListener('change', handleMobileTagFilter);
+        });
+        
+        // Reset button
+        const resetBtn = document.querySelector('.mobile-filter-reset');
+        if (resetBtn) {
+            resetBtn.addEventListener('click', resetMobileFilters);
+        }
+        
+        // Apply button
+        const applyBtn = document.querySelector('.mobile-filter-apply');
+        if (applyBtn) {
+            applyBtn.addEventListener('click', applyMobileFilters);
+        }
+    }
+    
+    // Open mobile filters
+    function openMobileFilters() {
+        const modal = document.querySelector('.mobile-filter-modal');
+        if (modal) {
+            modal.classList.add('active');
+            document.body.style.overflow = 'hidden';
+            
+            // Update UI to reflect current filters
+            updateMobileFilterUI();
+        }
+    }
+    
+    // Close mobile filters
+    function closeMobileFilters() {
+        const modal = document.querySelector('.mobile-filter-modal');
+        if (modal) {
+            modal.classList.remove('active');
+            document.body.style.overflow = '';
+        }
+    }
+    
+    // Handle mobile category filter
+    function handleMobileCategoryFilter(e) {
+        const btn = e.currentTarget;
+        const category = btn.getAttribute('data-category');
+        
+        // Update state
+        mobileFilterState.category = category;
+        
+        // Update UI
+        document.querySelectorAll('.mobile-filter-btn').forEach(b => {
+            b.classList.remove('active');
+        });
+        btn.classList.add('active');
+    }
+    
+    // Handle mobile tag filter
+    function handleMobileTagFilter(e) {
+        const checkbox = e.target;
+        const tag = checkbox.value;
+        
+        if (checkbox.checked) {
+            if (!mobileFilterState.tags.includes(tag)) {
+                mobileFilterState.tags.push(tag);
+            }
+        } else {
+            mobileFilterState.tags = mobileFilterState.tags.filter(t => t !== tag);
+        }
+    }
+    
+    // Reset mobile filters
+    function resetMobileFilters() {
+        // Reset state
+        mobileFilterState = {
+            category: 'all',
+            tags: []
+        };
+        
+        // Update UI
+        updateMobileFilterUI();
+    }
+    
+    // Apply mobile filters
+    function applyMobileFilters() {
+        // Copy mobile state to main filters
+        if (window.currentFilters) {
+            window.currentFilters.category = mobileFilterState.category;
+            window.currentFilters.tags = [...mobileFilterState.tags];
+        }
+        
+        // Apply filters
+        if (window.applyFilters) {
+            window.applyFilters();
+        }
+        
+        // Update badge
+        updateMobileFilterBadge();
+        
+        // Close modal
+        closeMobileFilters();
+    }
+    
+    // Update mobile filter UI
+    function updateMobileFilterUI() {
+        // Update category buttons
+        document.querySelectorAll('.mobile-filter-btn').forEach(btn => {
+            const category = btn.getAttribute('data-category');
+            btn.classList.toggle('active', category === mobileFilterState.category);
+        });
+        
+        // Update tag checkboxes
+        document.querySelectorAll('.mobile-tag-filter input').forEach(input => {
+            input.checked = mobileFilterState.tags.includes(input.value);
+        });
+    }
+    
+    // Update mobile filter badge
+    function updateMobileFilterBadge() {
+        const badge = document.querySelector('.mobile-filter-toggle .filter-badge');
+        if (!badge) return;
+        
+        let activeCount = 0;
+        if (window.currentFilters) {
+            activeCount = (window.currentFilters.category !== 'all' ? 1 : 0) + window.currentFilters.tags.length;
+        }
+        
+        if (activeCount > 0) {
+            badge.textContent = activeCount;
+            badge.style.display = 'flex';
+        } else {
+            badge.style.display = 'none';
+        }
+    }
+    
+    // Initialize on DOM ready
+    document.addEventListener('DOMContentLoaded', function() {
+        // Wait a bit for menu to load
+        setTimeout(() => {
+            initializeMobileFilters();
+            updateMobileFilterBadge();
+        }, 500);
+    });
+    
+    // Reinitialize on window resize
+    let mobileFilterResizeTimer;
+    window.addEventListener('resize', function() {
+        clearTimeout(mobileFilterResizeTimer);
+        mobileFilterResizeTimer = setTimeout(function() {
+            if (window.innerWidth <= 768 && !document.querySelector('.mobile-filter-toggle')) {
+                initializeMobileFilters();
+            } else if (window.innerWidth > 768) {
+                // Clean up mobile filters if switching to desktop
+                const modal = document.querySelector('.mobile-filter-modal');
+                const toggle = document.querySelector('.mobile-filter-toggle');
+                if (modal) modal.remove();
+                if (toggle) toggle.remove();
+            }
+        }, 250);
+    });
+    
+    // Export for use in other functions
+    window.mobileFilters = {
+        init: initializeMobileFilters,
+        updateBadge: updateMobileFilterBadge
+    };
+    
+})();
 
-// Export for use in other functions
-window.mobileFilters = {
-    init: initializeMobileFilters,
-    updateBadge: updateMobileFilterBadge
-};
-
-console.log('CMS Loader Premium: Initialized with category overlays');
+console.log('CMS Loader Premium: Initialized with category overlays and mobile filter modal');
