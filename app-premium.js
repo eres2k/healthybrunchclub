@@ -201,18 +201,18 @@ function fillAvailableDates() {
     // Reset dropdown
     dateSelect.innerHTML = '<option value="">Datum wählen</option>';
     
-    // Compute next Monday
+    // Compute next Sunday
     const today = new Date();
-    // Calculate days until next Monday (1): if today is Monday, move 7 days ahead
-    const daysUntilMonday = ((1 - today.getDay() + 7) % 7) || 7;
-    const nextMonday = new Date(today);
-    nextMonday.setDate(today.getDate() + daysUntilMonday);
+    // Calculate days until next Sunday (0): if today is Sunday, move 7 days ahead
+    const daysUntilSunday = ((0 - today.getDay() + 7) % 7) || 7;
+    const nextSunday = new Date(today);
+    nextSunday.setDate(today.getDate() + daysUntilSunday);
     
-    // Create option for next Monday
+    // Create option for next Sunday
     const option = document.createElement('option');
-    option.value = nextMonday.toISOString().split('T')[0];
-    const dayName = nextMonday.toLocaleDateString('de-AT', { weekday: 'long' });
-    const formattedDate = nextMonday.toLocaleDateString('de-AT', {
+    option.value = nextSunday.toISOString().split('T')[0];
+    const dayName = nextSunday.toLocaleDateString('de-AT', { weekday: 'long' });
+    const formattedDate = nextSunday.toLocaleDateString('de-AT', {
         day: 'numeric',
         month: 'long',
         year: 'numeric'
@@ -221,6 +221,7 @@ function fillAvailableDates() {
     
     dateSelect.appendChild(option);
 }
+
 
 
 // Animations
