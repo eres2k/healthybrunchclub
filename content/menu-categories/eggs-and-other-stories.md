@@ -1,7 +1,7 @@
 ---
 title: eggcitements
 order: 1
-image: /content/images/dsc00161.jpg
+image: ""
 description: 'Stell dir vor, Eier, die nicht nur braten, sondern tanzen! Unsere
   "Eggcitements"-Kategorie ist der ultimative Eier-Party-Hit – frisch, fluffig
   und voller Überraschungen. Ob du ein Spiegelei-Fan bist, das wie ein
