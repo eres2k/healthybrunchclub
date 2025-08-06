@@ -1,13 +1,15 @@
 ---
 title: coffee, healthtea and me
 order: 5
-image: ""
+image: /content/images/dsc00407.jpg
 items:
-  - tags:
+  - name: ashwaganda latte
+    tags:
       - adaptogen
-      - beruhigend
-      - wohltuend
-    name: ashwaganda latte
+      - belebend
+      - proteinreich
+      - sättigend
+      - antioxidativ
     description: ein geschmeidiger latte, durchzogen von adaptogenem ashwaganda, der
       sanft beruhigt und stress schmelzen lässt. ein purer wohlfühlgenuss.
     allergens:
@@ -18,12 +20,15 @@ items:
       carbs: 18g
       fat: 8g
     price: "5.50"
-  - tags:
+
+  - name: reishi cappuccino
+    tags:
       - adaptogen
       - immunstärkend
-      - harmonisch
-      - kräftig
-    name: reishi cappuccino
+      - belebend
+      - proteinreich
+      - sättigend
+      - antioxidativ
     description: samtiger cappuccino mit adaptogenem reishi, der das immunsystem
       unterstützt und harmonischen, starken kaffeegenuss verspricht.
     allergens:
@@ -34,12 +39,15 @@ items:
       carbs: 14g
       fat: 7g
     price: "4.60"
-  - tags:
+
+  - name: chaga cold brew
+    tags:
       - adaptogen
       - antioxidativ
-      - reinigend
       - belebend
-    name: chaga cold brew
+      - immunstärkend
+      - zuckerarm
+      - glutenfrei
     description: kühler cold brew mit adaptogenem chaga, antioxidativ und reinigend.
       ein klarer, belebender schluck für den tag.
     allergens: []
@@ -49,14 +57,17 @@ items:
       carbs: 3g
       fat: 0g
     price: "4.90"
-  - tags:
+
+  - name: kurkuma espresso latte
+    tags:
       - adaptogen
-      - entzündungshemmend
       - antioxidativ
-      - energiespendend
-    name: kurkuma espresso latte
+      - belebend
+      - immunstärkend
+      - sättigend
+      - glutenfrei
     description: feuriger espresso latte mit adaptogenem kurkuma, entzündungshemmend
-      und antioxidativ. ein kraftvoller energieschub
+      und antioxidativ. ein kraftvoller energieschub.
     allergens:
       - G
     nutrition:
@@ -65,11 +76,14 @@ items:
       carbs: 16g
       fat: 7g
     price: "5.90"
-  - tags:
-      - klassisch
-      - kaffee
-      - traditionell
-    name: wiener klassiker
+
+  - name: wiener klassiker
+    tags:
+      - belebend
+      - zuckerarm
+      - glutenfrei
+      - sättigend
+      - antioxidativ
     description: |-
       * kleiner espresso 
       * großer espresso     
@@ -85,11 +99,12 @@ items:
       protein: 3g
       carbs: 8g
       fat: 4g
-  - tags:
-      - verdauungsfördernd
-      - wärmend
-      - harmonisch
-    name: fenchel-anis-kümmel
+
+  - name: fenchel-anis-kümmel
+    tags:
+      - glutenfrei
+      - zuckerarm
+      - belebend
     description: ein wohltuender tee von sonnentor, der mit seiner harmonischen
       mischung aus fenchel, anis und kümmel die verdauung sanft anregt und
       wohlig wärmt.
@@ -100,11 +115,12 @@ items:
       carbs: 1g
       fat: 0g
     price: "4.50"
-  - tags:
-      - beruhigend
-      - stressabbauend
-      - entspannend
-    name: melisse-verbene-lavendel
+
+  - name: melisse-verbene-lavendel
+    tags:
+      - glutenfrei
+      - zuckerarm
+      - antioxidativ
     description: ein duftender tee von sonnentor, der mit melisse, verbene und
       lavendel beruhigt, stress abbaut und für entspannte momente sorgt.
     allergens: []
@@ -114,11 +130,15 @@ items:
       carbs: 1g
       fat: 0g
     price: "4.50"
-  - tags:
+
+  - name: chaga tee
+    tags:
+      - adaptogen
       - antioxidativ
-      - entzündungshemmend
       - immunstärkend
-    name: chaga tee
+      - glutenfrei
+      - zuckerarm
+      - belebend
     description: ein kräftiger tee von myapotheke, angereichert mit chaga, der durch
       seine antioxidativen und entzündungshemmenden eigenschaften das
       immunsystem stärkt.
