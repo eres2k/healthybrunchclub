@@ -1,7 +1,7 @@
 ---
 title: coffee, healthtea and me
 order: 5
-image: /content/images/dsc00407.jpg
+image: ""
 items:
   - tags:
       - adaptogen
