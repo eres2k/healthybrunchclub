@@ -492,6 +492,7 @@ h1, h2, h3, h4, h5, h6 {
     gap: var(--spacing-xs);
     align-items: center;
     flex-wrap: wrap;
+    max-width: 600px; /* Limit width to prevent excessive stretching */
 }
 
 .tag-filter {
@@ -531,6 +532,17 @@ h1, h2, h3, h4, h5, h6 {
 .tag-filter:hover .tag-label {
     border-color: var(--gold);
     color: var(--gold);
+}
+
+/* Style for tags with no items */
+.tag-filter.tag-no-items .tag-label {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+.tag-filter.tag-no-items:hover .tag-label {
+    border-color: var(--light-gray);
+    color: var(--warm-gray);
 }
 
 /* Filter Actions */
@@ -816,6 +828,13 @@ h1, h2, h3, h4, h5, h6 {
     gap: 0.75rem;
 }
 
+/* 3 columns on larger mobile screens */
+@media (min-width: 480px) and (max-width: 768px) {
+    .mobile-tag-filters {
+        grid-template-columns: repeat(3, 1fr);
+    }
+}
+
 .mobile-tag-filter {
     position: relative;
 }
@@ -847,6 +866,13 @@ h1, h2, h3, h4, h5, h6 {
     background: var(--gold);
     color: var(--pure-white);
     border-color: var(--gold);
+}
+
+/* Style for mobile tags with no items */
+.mobile-tag-filter.tag-no-items .mobile-tag-label {
+    opacity: 0.5;
+    cursor: not-allowed;
+    background: var(--light-gray);
 }
 
 /* Modal Footer */
@@ -1739,6 +1765,10 @@ address a:hover {
     
     .filter-row-bottom {
         gap: var(--spacing-sm);
+    }
+    
+    .filter-tags {
+        max-width: 400px; /* Reduce max width on medium screens */
     }
 }
 
