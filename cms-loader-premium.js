@@ -8,16 +8,16 @@ let currentFilters = {
 };
 
 // Define the 6 allowed tags globally
-const ALLOWED_TAGS = ['vegan', 'vegetarisch', 'glutenfrei', 'lactosefrei', 'proteinreich', 'superfood'];
+const ALLOWED_TAGS = ['vegetarisch', 'glutenfrei', 'proteinreich', 'sättigend', 'belebend', 'immunstärkend'];
 
 // Tag display names mapping - only for the 6 allowed tags
 const TAG_DISPLAY_NAMES = {
-    'vegan': 'Vegan',
     'vegetarisch': 'Vegetarisch',
     'glutenfrei': 'Glutenfrei',
-    'lactosefrei': 'Laktosefrei',
-    'proteinreich': 'High Protein',
-    'superfood': 'Superfood'
+    'proteinreich': 'Proteinreich',
+    'sättigend': 'Sättigend',
+    'belebend': 'Belebend',
+    'immunstärkend': 'Immunstärkend'
 };
 
 // Premium Allergen Mapping
@@ -683,7 +683,7 @@ function displayFallbackMenu() {
                     price: "4.90",
                     description: "Warmes Wasser mit frisch gepresster Bio-Zitrone für einen sanften Start",
                     nutrition: { calories: "25", carbs: "6g" },
-                    tags: ["vegan", "glutenfrei"],
+                    tags: ["vegetarisch", "glutenfrei"],
                     allergens: []
                 },
                 {
@@ -691,7 +691,7 @@ function displayFallbackMenu() {
                     price: "6.90",
                     description: "Kurkuma, Ingwer, schwarzer Pfeffer in cremiger Hafermilch",
                     nutrition: { calories: "180", protein: "5g", carbs: "18g", fat: "8g" },
-                    tags: ["vegetarisch", "lactosefrei"],
+                    tags: ["vegetarisch", "belebend"],
                     allergens: ["A"],
                     special: true
                 }
@@ -707,7 +707,7 @@ function displayFallbackMenu() {
                     price: "12.90",
                     description: "Açaí, Banane, Beeren, Granola, Kokosflocken",
                     nutrition: { calories: "320", protein: "8g", carbs: "45g", fat: "12g" },
-                    tags: ["superfood", "vegan"],
+                    tags: ["vegetarisch", "immunstärkend"],
                     allergens: ["A", "H"]
                 },
                 {
@@ -715,7 +715,7 @@ function displayFallbackMenu() {
                     price: "14.90",
                     description: "Quinoa, Edamame, Avocado, Tempeh, Tahini-Dressing",
                     nutrition: { calories: "380", protein: "22g", carbs: "35g", fat: "18g" },
-                    tags: ["proteinreich", "vegan", "glutenfrei"],
+                    tags: ["proteinreich", "glutenfrei", "sättigend"],
                     allergens: ["F", "N"]
                 }
             ]
