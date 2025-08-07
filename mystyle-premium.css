@@ -2655,3 +2655,368 @@ html {
         padding: 0.5rem 1rem;
     }
 }
+
+/* ===============================================
+   DARK MODE STYLES - Füge diese am Ende von mystyle-premium.css hinzu
+   =============================================== */
+
+/* Dark Mode Root Variables */
+body.dark-mode {
+    --black: #FAFAF8;
+    --charcoal: #E8E8E8;
+    --warm-gray: #C0C0C0;
+    --light-gray: #2D2D2D;
+    --off-white: #1A1A1A;
+    --pure-white: #0A0A0A;
+    
+    /* Inverted accent colors for dark mode */
+    --gold: #E6D097;
+    --sage: #94A788;
+    --blush: #4A3931;
+    --cream: #2A2520;
+    
+    /* Background adjustments */
+    background-color: #0A0A0A;
+    color: #E8E8E8;
+}
+
+/* Dark Mode Toggle Button */
+.dark-mode-toggle {
+    background: none;
+    border: none;
+    color: var(--charcoal);
+    font-size: 1.125rem;
+    cursor: pointer;
+    transition: all var(--transition-normal);
+    padding: 0.5rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+}
+
+.dark-mode-toggle:hover {
+    background: var(--light-gray);
+    color: var(--gold);
+}
+
+body.dark-mode .dark-mode-toggle {
+    color: var(--gold);
+}
+
+body.dark-mode .dark-mode-toggle:hover {
+    background: var(--warm-gray);
+    color: var(--black);
+}
+
+/* Navigation divider */
+.nav-divider {
+    width: 1px;
+    height: 20px;
+    background: var(--light-gray);
+    margin: 0 var(--spacing-sm);
+}
+
+/* Dark Mode Specific Adjustments */
+body.dark-mode .nav-premium {
+    background: rgba(10, 10, 10, 0.95);
+}
+
+body.dark-mode .nav-premium.scrolled {
+    background: rgba(10, 10, 10, 0.98);
+    border-bottom-color: var(--light-gray);
+}
+
+body.dark-mode .hero-overlay {
+    background: rgba(0, 0, 0, 0.6);
+}
+
+body.dark-mode .menu-item-card {
+    background: var(--off-white);
+    box-shadow: 0 3px 20px rgba(255, 255, 255, 0.03);
+}
+
+body.dark-mode .menu-item-card:hover {
+    box-shadow: 0 8px 40px rgba(255, 255, 255, 0.08);
+}
+
+body.dark-mode .category-hero-gradient {
+    background: linear-gradient(
+        to bottom,
+        rgba(0, 0, 0, 0.4) 0%,
+        rgba(0, 0, 0, 0.6) 50%,
+        rgba(0, 0, 0, 0.85) 100%
+    );
+}
+
+body.dark-mode .filter-bar {
+    background: var(--off-white);
+    border-color: var(--light-gray);
+}
+
+body.dark-mode .mobile-filter-content {
+    background: var(--off-white);
+}
+
+body.dark-mode .mobile-filter-btn {
+    background: var(--pure-white);
+    border-color: var(--light-gray);
+    color: var(--charcoal);
+}
+
+body.dark-mode .mobile-filter-btn.active {
+    background: var(--gold);
+    color: var(--pure-white);
+    border-color: var(--gold);
+}
+
+body.dark-mode .btn-icon {
+    border-color: var(--light-gray);
+    color: var(--warm-gray);
+}
+
+body.dark-mode .btn-icon:hover {
+    color: var(--gold);
+    border-color: var(--gold);
+}
+
+body.dark-mode .tag-label {
+    background: var(--pure-white);
+    border-color: var(--light-gray);
+    color: var(--warm-gray);
+}
+
+body.dark-mode .tag-filter input[type="checkbox"]:checked + .tag-label {
+    background: var(--gold);
+    color: var(--pure-white);
+    border-color: var(--gold);
+}
+
+body.dark-mode .reservation-form {
+    background: var(--off-white);
+}
+
+body.dark-mode .form-group input,
+body.dark-mode .form-group select,
+body.dark-mode .form-group textarea {
+    background: var(--pure-white);
+    border-color: var(--light-gray);
+    color: var(--charcoal);
+}
+
+body.dark-mode .footer-premium {
+    background: var(--pure-white);
+}
+
+body.dark-mode .loading-screen {
+    background: var(--off-white);
+}
+
+/* Invert logo in dark mode */
+body.dark-mode .logo-img,
+body.dark-mode .loading-logo,
+body.dark-mode .footer-logo {
+    filter: invert(1) brightness(0.9);
+}
+
+/* Mobile PDF Download Button */
+.mobile-pdf-download {
+    display: none;
+    background: var(--black);
+    color: var(--pure-white);
+    border: none;
+    padding: 0.75rem 1.5rem;
+    border-radius: 25px;
+    font-family: var(--font-body);
+    font-size: 0.75rem;
+    font-weight: 500;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    cursor: pointer;
+    transition: all var(--transition-normal);
+    margin: 0 auto var(--spacing-md);
+    gap: 0.5rem;
+    align-items: center;
+    justify-content: center;
+}
+
+.mobile-pdf-download:hover {
+    background: var(--gold);
+    transform: translateY(-2px);
+}
+
+.mobile-pdf-download:active {
+    transform: scale(0.95);
+}
+
+.mobile-pdf-download i {
+    font-size: 1rem;
+}
+
+body.dark-mode .mobile-pdf-download {
+    background: var(--gold);
+    color: var(--pure-white);
+}
+
+body.dark-mode .mobile-pdf-download:hover {
+    background: var(--charcoal);
+}
+
+/* Mobile Responsive - Show PDF button and move dark mode to mobile menu */
+@media (max-width: 768px) {
+    /* Show mobile PDF download button */
+    .mobile-pdf-download {
+        display: flex !important;
+    }
+    
+    /* Hide desktop PDF button */
+    .filter-actions .btn-icon[onclick*="pdf"] {
+        display: none !important;
+    }
+    
+    /* Hide dark mode toggle in nav */
+    .nav-menu .dark-mode-toggle {
+        display: none;
+    }
+    
+    /* Add dark mode toggle to mobile menu */
+    .nav-menu.active {
+        position: relative;
+    }
+    
+    /* Mobile dark mode toggle */
+    .nav-menu.active::after {
+        content: '';
+        display: block;
+        width: 100%;
+        height: 1px;
+        background: var(--light-gray);
+        margin: var(--spacing-sm) 0;
+    }
+    
+    /* Create mobile dark mode button */
+    .nav-menu.active .dark-mode-toggle {
+        display: flex;
+        width: 100%;
+        justify-content: center;
+        margin-top: var(--spacing-md);
+        font-size: 1rem;
+        padding: 1rem;
+        border-radius: 0;
+    }
+    
+    .nav-menu.active .dark-mode-toggle::before {
+        content: 'Dark Mode';
+        margin-right: 0.5rem;
+        font-family: var(--font-body);
+        font-size: 0.875rem;
+        font-weight: 400;
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+    }
+    
+    body.dark-mode .nav-menu.active .dark-mode-toggle::before {
+        content: 'Light Mode';
+    }
+}
+
+/* Desktop only - hide mobile elements */
+@media (min-width: 769px) {
+    .mobile-pdf-download {
+        display: none !important;
+    }
+    
+    .nav-divider {
+        display: block !important;
+    }
+}
+
+/* Additional dark mode fixes for specific elements */
+body.dark-mode .menu-tag {
+    background: var(--light-gray);
+    color: var(--charcoal);
+}
+
+body.dark-mode .menu-tag:hover {
+    background: var(--gold);
+    color: var(--pure-white);
+}
+
+body.dark-mode .allergen-code {
+    background: var(--light-gray);
+    color: var(--charcoal);
+}
+
+body.dark-mode .allergen-info {
+    background: var(--off-white);
+}
+
+body.dark-mode .philosophy-icon {
+    background: var(--light-gray);
+}
+
+body.dark-mode .philosophy-card:hover .philosophy-icon {
+    background: var(--gold);
+}
+
+body.dark-mode .event-window {
+    background: var(--off-white);
+    color: var(--charcoal);
+}
+
+body.dark-mode .scroll-arrow {
+    border-color: var(--charcoal);
+}
+
+/* Form elements in dark mode */
+body.dark-mode input::placeholder,
+body.dark-mode textarea::placeholder {
+    color: var(--warm-gray);
+    opacity: 0.7;
+}
+
+body.dark-mode .newsletter-form input {
+    background: var(--pure-white);
+    border-color: var(--light-gray);
+    color: var(--charcoal);
+}
+
+body.dark-mode .social-links a {
+    border-color: var(--light-gray);
+}
+
+/* Video overlay adjustment for dark mode */
+body.dark-mode .hero-video {
+    opacity: 0.7;
+}
+
+/* Selection colors in dark mode */
+body.dark-mode ::selection {
+    background: var(--gold);
+    color: var(--pure-white);
+}
+
+body.dark-mode ::-moz-selection {
+    background: var(--gold);
+    color: var(--pure-white);
+}
+
+/* Scrollbar styling for dark mode */
+body.dark-mode::-webkit-scrollbar {
+    width: 10px;
+}
+
+body.dark-mode::-webkit-scrollbar-track {
+    background: var(--off-white);
+}
+
+body.dark-mode::-webkit-scrollbar-thumb {
+    background: var(--light-gray);
+    border-radius: 5px;
+}
+
+body.dark-mode::-webkit-scrollbar-thumb:hover {
+    background: var(--warm-gray);
+}
