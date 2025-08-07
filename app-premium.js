@@ -222,8 +222,6 @@ function fillAvailableDates() {
     dateSelect.appendChild(option);
 }
 
-
-
 // Animations
 function initAnimations() {
     // Intersection Observer for fade-in animations
@@ -449,8 +447,6 @@ if ('serviceWorker' in navigator) {
 }
 
 // HAMBURGER MENU FIX
-// Add this to the end of app-premium.js or in a <script> tag at the bottom of index.html
-
 // Wait for DOM to be ready
 document.addEventListener('DOMContentLoaded', function() {
     // Debug: Check what elements exist
@@ -566,7 +562,7 @@ if (window.innerWidth <= 768) {
 }
 
 // ===============================================
-// DARK MODE FUNCTIONALITY - Füge diese am Ende von app-premium.js hinzu
+// DARK MODE FUNCTIONALITY - FIXED VERSION
 // ===============================================
 
 // Dark Mode Management
@@ -642,71 +638,180 @@ function initDarkMode() {
     }
 }
 
-// Create mobile dark mode toggle
+// Create mobile dark mode toggle - FIXED VERSION
 function createMobileDarkModeToggle() {
     const navMenu = document.querySelector('.nav-menu');
     
-    if (navMenu && window.innerWidth <= 768) {
-        // Check if mobile toggle already exists
-        let mobileDarkModeItem = navMenu.querySelector('.mobile-dark-mode-item');
+    if (!navMenu) return;
+    
+    // Remove any existing mobile toggle first
+    const existingToggle = navMenu.querySelector('.mobile-dark-mode-item');
+    if (existingToggle) {
+        existingToggle.remove();
+    }
+    
+    // Create the structure
+    const mobileDarkModeItem = document.createElement('li');
+    mobileDarkModeItem.className = 'mobile-dark-mode-item';
+    mobileDarkModeItem.style.cssText = 'display: block; width: 100%; margin-top: 1rem; padding-top: 1rem; border-top: 1px solid rgba(30, 74, 60, 0.1);';
+    
+    const mobileToggle = document.createElement('button');
+    mobileToggle.className = 'mobile-dark-mode-toggle';
+    mobileToggle.setAttribute('aria-label', 'Dark Mode umschalten');
+    
+    // Inline styles for mobile toggle button
+    mobileToggle.style.cssText = `
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 0.5rem;
+        width: 100%;
+        padding: 1rem;
+        background: transparent;
+        border: 1px solid #E8E8E8;
+        color: #1E4A3C;
+        font-family: 'Montserrat', sans-serif;
+        font-size: 0.875rem;
+        font-weight: 500;
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        -webkit-appearance: none;
+        -moz-appearance: none;
+        appearance: none;
+    `;
+    
+    // Create label and icon
+    const label = document.createElement('span');
+    label.textContent = document.body.classList.contains('dark-mode') ? 'Light Mode' : 'Dark Mode';
+    
+    const icon = document.createElement('i');
+    icon.className = document.body.classList.contains('dark-mode') ? 'fas fa-sun' : 'fas fa-moon';
+    
+    mobileToggle.appendChild(label);
+    mobileToggle.appendChild(icon);
+    mobileDarkModeItem.appendChild(mobileToggle);
+    navMenu.appendChild(mobileDarkModeItem);
+    
+    // Add click handler
+    mobileToggle.addEventListener('click', function(e) {
+        e.preventDefault();
+        e.stopPropagation();
         
-        if (!mobileDarkModeItem) {
-            // Create mobile dark mode menu item
-            mobileDarkModeItem = document.createElement('li');
-            mobileDarkModeItem.className = 'mobile-dark-mode-item';
-            
-            const mobileToggle = document.createElement('button');
-            mobileToggle.className = 'dark-mode-toggle mobile-dark-toggle';
-            mobileToggle.id = 'mobileDarkModeToggle';
-            mobileToggle.setAttribute('aria-label', 'Dark Mode umschalten');
-            
-            const icon = document.createElement('i');
-            icon.className = document.body.classList.contains('dark-mode') ? 'fas fa-sun' : 'fas fa-moon';
-            icon.id = 'mobileDarkModeIcon';
-            
-            mobileToggle.appendChild(icon);
-            mobileDarkModeItem.appendChild(mobileToggle);
-            
-            // Add to nav menu
-            navMenu.appendChild(mobileDarkModeItem);
-            
-            // Add click handler
-            mobileToggle.addEventListener('click', function() {
-                const body = document.body;
-                const isDarkMode = body.classList.toggle('dark-mode');
-                
-                // Save preference
-                localStorage.setItem('theme', isDarkMode ? 'dark' : 'light');
-                
-                // Update both icons
-                const desktopIcon = document.getElementById('darkModeIcon');
-                const mobileIcon = document.getElementById('mobileDarkModeIcon');
-                
-                if (desktopIcon) {
-                    desktopIcon.className = isDarkMode ? 'fas fa-sun' : 'fas fa-moon';
-                }
-                if (mobileIcon) {
-                    mobileIcon.className = isDarkMode ? 'fas fa-sun' : 'fas fa-moon';
-                }
-                
-                // Update theme color
-                const themeColorMeta = document.querySelector('meta[name="theme-color"]');
-                if (themeColorMeta) {
-                    themeColorMeta.content = isDarkMode ? '#0A0A0A' : '#1A1A1A';
-                }
+        const body = document.body;
+        const isDarkMode = body.classList.toggle('dark-mode');
+        
+        // Save preference
+        localStorage.setItem('theme', isDarkMode ? 'dark' : 'light');
+        
+        // Update label and icon
+        label.textContent = isDarkMode ? 'Light Mode' : 'Dark Mode';
+        icon.className = isDarkMode ? 'fas fa-sun' : 'fas fa-moon';
+        
+        // Update desktop icon if exists
+        const desktopIcon = document.getElementById('darkModeIcon');
+        if (desktopIcon) {
+            desktopIcon.className = isDarkMode ? 'fas fa-sun' : 'fas fa-moon';
+        }
+        
+        // Update theme color
+        const themeColorMeta = document.querySelector('meta[name="theme-color"]');
+        if (themeColorMeta) {
+            themeColorMeta.content = isDarkMode ? '#0A0A0A' : '#1A1A1A';
+        }
+        
+        // Update button styles for dark mode
+        if (isDarkMode) {
+            mobileToggle.style.backgroundColor = '#1A1A1A';
+            mobileToggle.style.color = '#FFFFFF';
+            mobileToggle.style.borderColor = '#1A1A1A';
+        } else {
+            mobileToggle.style.backgroundColor = 'transparent';
+            mobileToggle.style.color = '#1E4A3C';
+            mobileToggle.style.borderColor = '#E8E8E8';
+        }
+    });
+    
+    // Add hover effect
+    mobileToggle.addEventListener('mouseover', function() {
+        if (!document.body.classList.contains('dark-mode')) {
+            this.style.backgroundColor = '#1E4A3C';
+            this.style.color = '#FFFFFF';
+            this.style.borderColor = '#1E4A3C';
+        }
+    });
+    
+    mobileToggle.addEventListener('mouseout', function() {
+        if (!document.body.classList.contains('dark-mode')) {
+            this.style.backgroundColor = 'transparent';
+            this.style.color = '#1E4A3C';
+            this.style.borderColor = '#E8E8E8';
+        } else {
+            this.style.backgroundColor = '#1A1A1A';
+            this.style.color = '#FFFFFF';
+            this.style.borderColor = '#1A1A1A';
+        }
+    });
+    
+    // Apply initial dark mode styles if active
+    if (document.body.classList.contains('dark-mode')) {
+        mobileToggle.style.backgroundColor = '#1A1A1A';
+        mobileToggle.style.color = '#FFFFFF';
+        mobileToggle.style.borderColor = '#1A1A1A';
+    }
+}
+
+// Robustere Initialisierung für Mobile
+function initializeMobileFeatures() {
+    // Create mobile dark mode toggle
+    if (window.innerWidth <= 768) {
+        createMobileDarkModeToggle();
+    }
+    
+    // Ensure PDF button is visible and working
+    const pdfButton = document.querySelector('.mobile-pdf-download');
+    if (pdfButton && window.innerWidth <= 768) {
+        pdfButton.style.display = 'flex';
+        
+        // Ensure onclick works
+        if (!pdfButton.hasAttribute('data-initialized')) {
+            pdfButton.setAttribute('data-initialized', 'true');
+            pdfButton.removeAttribute('onclick'); // Remove inline onclick
+            pdfButton.addEventListener('click', function(e) {
+                e.preventDefault();
+                window.open('/content/menu.pdf', '_blank');
+                trackPDFDownload();
             });
         }
     }
 }
 
+// Multiple initialization points for reliability
+document.addEventListener('DOMContentLoaded', function() {
+    initDarkMode();
+    setTimeout(initializeMobileFeatures, 100);
+});
+
+// Also try after window load
+window.addEventListener('load', function() {
+    setTimeout(initializeMobileFeatures, 200);
+});
+
+// And after a delay for slow devices
+setTimeout(function() {
+    if (window.innerWidth <= 768) {
+        initializeMobileFeatures();
+    }
+}, 1000);
+
+// Re-initialize on orientation change
+window.addEventListener('orientationchange', function() {
+    setTimeout(initializeMobileFeatures, 300);
+});
+
 // Update initialization
 document.addEventListener('DOMContentLoaded', function() {
-    // Initialize dark mode
-    initDarkMode();
-    
-    // Create mobile dark mode toggle
-    createMobileDarkModeToggle();
-    
     // Re-create mobile toggle on resize
     window.addEventListener('resize', debounce(function() {
         if (window.innerWidth <= 768) {
@@ -724,9 +829,17 @@ document.addEventListener('DOMContentLoaded', function() {
 // Listen for dark mode changes to update mobile menu if open
 window.addEventListener('darkModeToggled', function(e) {
     // Update any UI elements that need to reflect the theme change
-    const mobileIcon = document.getElementById('mobileDarkModeIcon');
-    if (mobileIcon) {
-        mobileIcon.className = e.detail.isDarkMode ? 'fas fa-sun' : 'fas fa-moon';
+    const mobileToggle = document.querySelector('.mobile-dark-mode-toggle');
+    if (mobileToggle) {
+        const label = mobileToggle.querySelector('span');
+        const icon = mobileToggle.querySelector('i');
+        
+        if (label) {
+            label.textContent = e.detail.isDarkMode ? 'Light Mode' : 'Dark Mode';
+        }
+        if (icon) {
+            icon.className = e.detail.isDarkMode ? 'fas fa-sun' : 'fas fa-moon';
+        }
     }
 });
 
@@ -766,7 +879,6 @@ document.addEventListener('DOMContentLoaded', function() {
         mobilePdfBtn.addEventListener('click', trackPDFDownload);
     }
 });
-
 
 // Log initialization
 console.log('Premium restaurant app initialized with enhanced features.');
