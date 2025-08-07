@@ -64,21 +64,12 @@ collections:
             multiple: true
             required: false
             options:
-              - {label: "Vegan", value: "vegan"}
               - {label: "Vegetarisch", value: "vegetarisch"}
               - {label: "Glutenfrei", value: "glutenfrei"}
-              - {label: "Laktosefrei", value: "lactosefrei"}
-              - {label: "Zuckerarm", value: "zuckerarm"}
-              - {label: "High Protein", value: "proteinreich"}
-              - {label: "Low Carb", value: "low-carb"}
-              - {label: "Superfood", value: "superfood"}
-              - {label: "Detox", value: "detox"}
-              - {label: "Entzündungshemmend", value: "anti-inflammatory"}
-              - {label: "Ballaststoffreich", value: "ballaststoffreich"}
-              - {label: "Herzhaft", value: "herzhaft"}
-              - {label: "Süß", value: "süß"}
-              - {label: "Leicht", value: "leicht"}
+              - {label: "Proteinreich", value: "proteinreich"}
               - {label: "Sättigend", value: "sättigend"}
+              - {label: "Belebend", value: "belebend"}
+              - {label: "Immunstärkend", value: "immunstärkend"}
           
           - label: "Allergene"
             name: "allergens"
