@@ -19,32 +19,18 @@ items:
       carbs: 11g
       fat: 0g
     price: "4.10"
-  - name: minty
+  - name: minty / berry minty
     tags:
       - erfrischend
       - belebend
       - antioxidativ
     description: ein kühler mix aus frischer pfefferminze und spritziger zitrone,
-      der die sinne belebt und erfrischt.
+      der die sinne belebt und erfrischt. Wahlweise mit safitigen Beeren
     allergens: []
     nutrition:
       calories: "25"
       protein: 0g
       carbs: 6g
-      fat: 0g
-    price: "4.10"
-  - name: berry minty
-    tags:
-      - erfrischend
-      - zuckerarm
-      - antioxidativ
-    description: eine lebendige kombination aus frischer pfefferminze und saftigen
-      beeren, für einen fruchtig-kühlen geschmacksmoment.
-    allergens: []
-    nutrition:
-      calories: "38"
-      protein: 0g
-      carbs: 9g
       fat: 0g
     price: "4.10"
   - name: golden kurkuma
