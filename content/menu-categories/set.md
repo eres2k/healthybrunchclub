@@ -1,7 +1,7 @@
 ---
 title: sets
 order: -1
-image: /content/images/set.jpg
+image: /content/images/dsc00394_ergebnis.jpg
 items:
   - tags:
       - ausgewogen
