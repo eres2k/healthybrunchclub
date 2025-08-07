@@ -3,9 +3,6 @@ const fs = require('fs').promises;
 const path = require('path');
 const matter = require('gray-matter');
 
-// Custom fonts encoding (you would need to add actual font files)
-// For now, we'll use the built-in fonts with styling
-
 // Helper function to load menu data
 async function loadMenuData() {
     const possiblePaths = [
@@ -92,8 +89,7 @@ function formatPrice(price) {
     cleanPrice = cleanPrice.replace(/,/g, '.');
     const numPrice = parseFloat(cleanPrice);
     if (isNaN(numPrice)) return `${price}`;
-    let formatted = numPrice.toFixed(2);
-    return formatted;
+    return numPrice.toFixed(2);
 }
 
 // Draw rounded rectangle
@@ -108,8 +104,52 @@ function wrapText(doc, text, maxWidth) {
     return lines;
 }
 
+// Draw custom logo
+function drawLogo(doc, x, y, size) {
+    const colors = {
+        primary: [78, 125, 102],    // Forest green from logo
+        sage: [172, 189, 168],      // Light sage
+        text: [58, 86, 75]          // Dark green
+    };
+    
+    // Main circle background
+    doc.setFillColor(...colors.sage);
+    doc.circle(x, y, size, 'F');
+    
+    // Inner circle for depth
+    doc.setFillColor(...colors.primary);
+    doc.circle(x, y, size * 0.85, 'F');
+    
+    // Leaf decoration (simplified)
+    doc.setDrawColor(...colors.sage);
+    doc.setLineWidth(1);
+    
+    // Left leaf
+    doc.beginPath();
+    doc.moveTo(x - size * 0.6, y - size * 0.2);
+    doc.bezierCurveTo(
+        x - size * 0.8, y - size * 0.4,
+        x - size * 0.7, y - size * 0.6,
+        x - size * 0.4, y - size * 0.5
+    );
+    doc.stroke();
+    
+    // Text styling
+    doc.setTextColor(255, 255, 255);
+    
+    // "healthy" text
+    doc.setFontSize(size * 0.35);
+    doc.setFont('helvetica', 'normal');
+    doc.text('healthy', x, y - size * 0.15, { align: 'center' });
+    
+    // "BRUNCHCLUB" text
+    doc.setFontSize(size * 0.28);
+    doc.setFont('helvetica', 'bold');
+    doc.text('BRUNCHCLUB', x, y + size * 0.25, { align: 'center' });
+}
+
 exports.handler = async (event, context) => {
-    console.log('Premium PDF generation function called');
+    console.log('Premium 2-column PDF generation function called');
     
     if (event.httpMethod !== 'GET') {
         return {
@@ -139,291 +179,312 @@ exports.handler = async (event, context) => {
         // PDF Configuration
         const pageWidth = doc.internal.pageSize.getWidth();
         const pageHeight = doc.internal.pageSize.getHeight();
-        const margin = 20;
-        const contentWidth = pageWidth - (margin * 2);
+        const margin = 15;
+        const columnGap = 10;
+        const columnWidth = (pageWidth - (margin * 2) - columnGap) / 2;
         
-        // Premium Color Palette
+        // Premium Color Palette (matching the logo)
         const colors = {
-            primary: [30, 74, 60],      // Forest green
-            sage: [139, 148, 116],      // Sage green
-            sageLight: [196, 208, 185], // Light sage
-            cream: [250, 248, 243],     // Cream
-            beige: [245, 232, 218],     // Beige
-            gray: [72, 72, 72],         // Warm gray
-            lightGray: [200, 200, 200], // Light gray
-            gold: [212, 196, 168],      // Taupe/gold
-            white: [255, 255, 255]      // White
+            primary: [78, 125, 102],      // Forest green from logo
+            primaryDark: [58, 86, 75],    // Darker green
+            sage: [172, 189, 168],        // Light sage from logo
+            sageLight: [196, 208, 185],   // Very light sage
+            cream: [252, 250, 247],       // Off-white cream
+            beige: [245, 238, 230],       // Warm beige
+            taupe: [225, 215, 202],       // Taupe
+            gray: [72, 72, 72],           // Charcoal
+            lightGray: [150, 150, 150],   // Medium gray
+            white: [255, 255, 255]        // Pure white
         };
         
-        // Set page background
+        // ===== COVER PAGE =====
+        // Cream background
         doc.setFillColor(...colors.cream);
         doc.rect(0, 0, pageWidth, pageHeight, 'F');
         
-        // ===== COVER PAGE =====
-        // Logo placeholder (circle with text)
-        let yPos = 50;
+        // Decorative sage accent at top
         doc.setFillColor(...colors.sageLight);
-        doc.circle(pageWidth / 2, yPos, 25, 'F');
+        doc.rect(0, 0, pageWidth, 40, 'F');
         
-        // Logo text
-        doc.setTextColor(...colors.primary);
-        doc.setFontSize(24);
-        doc.setFont('helvetica', 'bold');
-        doc.text('healthy', pageWidth / 2, yPos - 3, { align: 'center' });
-        doc.setFontSize(20);
-        doc.setFont('helvetica', 'normal');
-        doc.text('BRUNCHCLUB', pageWidth / 2, yPos + 7, { align: 'center' });
+        // Draw logo
+        drawLogo(doc, pageWidth / 2, 65, 28);
         
-        yPos = 120;
-        
-        // Introductory text
+        // Welcome section with elegant background
+        let yPos = 120;
         doc.setFillColor(...colors.white);
-        drawRoundedRect(doc, margin, yPos - 10, contentWidth, 110, 5, 'F');
+        doc.setDrawColor(...colors.sage);
+        doc.setLineWidth(0.5);
+        drawRoundedRect(doc, margin + 10, yPos - 15, pageWidth - (margin * 2) - 20, 125, 8, 'FD');
         
+        // Welcome text
+        doc.setTextColor(...colors.primaryDark);
+        doc.setFontSize(13);
+        doc.setFont('helvetica', 'italic');
+        doc.text('Willkommen', pageWidth / 2, yPos, { align: 'center' });
+        
+        yPos += 10;
         doc.setTextColor(...colors.gray);
-        doc.setFontSize(11);
+        doc.setFontSize(10);
         doc.setFont('helvetica', 'normal');
         
-        const introText = `wie schön, dass du da bist!
-
-es liegt uns sehr am herzen, dir frische, regionale
-köstlichkeiten in bio-qualität anzubieten.
-
-wir verzichten bewusst und größtenteils auf raffinierten
-zucker, weißmehl und kuhmilch.
-
-deshalb sind viele unserer speisen
-gluten- und laktosefrei und werden mit
-natürlichem zucker gesüßt
-(dattel- oder ahornsirup und honig)
-
-wer jedoch kuhmilch möchte,
-bekommt sie bei uns selbstverständlich auch!
-
-unser fokus liegt auf dem darm, denn er ist der schlüssel
-zu deinem wohlbefinden. in unserer küche findest du viele
-entzündungshemmende zutaten und
-ganz viel gutes für deine innere balance!
-
-genieß die zeit bei unserem brunch.
-wir freuen uns, dass du zu uns gefunden hast!`;
+        const introLines = [
+            'Es liegt uns sehr am Herzen, dir frische, regionale',
+            'Köstlichkeiten in Bio-Qualität anzubieten.',
+            '',
+            'Wir verzichten bewusst auf raffinierten Zucker,',
+            'Weißmehl und größtenteils auf Kuhmilch.',
+            '',
+            'Viele unserer Speisen sind gluten- und laktosefrei',
+            'und werden mit natürlichem Zucker gesüßt.',
+            '',
+            'Unser Fokus liegt auf deinem Wohlbefinden.',
+            'In unserer Küche findest du entzündungshemmende',
+            'Zutaten für deine innere Balance.',
+            '',
+            'Genieß die Zeit bei unserem Brunch!'
+        ];
         
-        const introLines = introText.split('\n');
-        let textY = yPos;
         introLines.forEach(line => {
-            doc.text(line, pageWidth / 2, textY, { align: 'center' });
-            textY += 5;
+            doc.text(line, pageWidth / 2, yPos, { align: 'center' });
+            yPos += 5;
         });
         
-        // Signature
-        textY += 5;
+        // Signature section
+        yPos += 10;
         doc.setFont('helvetica', 'italic');
-        doc.text('alles Liebe,', pageWidth / 2, textY, { align: 'center' });
-        textY += 5;
-        doc.setFontSize(12);
-        doc.text('tina, charlotte & tessa', pageWidth / 2, textY, { align: 'center' });
+        doc.setTextColor(...colors.primary);
+        doc.text('Alles Liebe,', pageWidth / 2, yPos, { align: 'center' });
+        yPos += 6;
+        doc.setFontSize(11);
+        doc.text('Tina, Charlotte & Tessa', pageWidth / 2, yPos, { align: 'center' });
         
-        // ===== MENU PAGES =====
+        // Decorative element at bottom
+        yPos = pageHeight - 40;
+        doc.setDrawColor(...colors.sage);
+        doc.setLineWidth(0.5);
+        doc.line(margin + 30, yPos, pageWidth - margin - 30, yPos);
+        
+        // ===== MENU PAGES WITH 2-COLUMN LAYOUT =====
+        let currentColumn = 0;
+        let columnYPos = [35, 35]; // Track Y position for each column
         let currentPage = 1;
-        let needNewPage = true;
         
-        for (const category of menuData) {
-            if (needNewPage) {
-                doc.addPage();
-                doc.setFillColor(...colors.cream);
-                doc.rect(0, 0, pageWidth, pageHeight, 'F');
-                yPos = 25;
-                needNewPage = false;
+        const startNewPage = () => {
+            doc.addPage();
+            doc.setFillColor(...colors.cream);
+            doc.rect(0, 0, pageWidth, pageHeight, 'F');
+            
+            // Header decoration
+            doc.setFillColor(...colors.sageLight);
+            doc.rect(0, 0, pageWidth, 20, 'F');
+            
+            // Small logo at top
+            drawLogo(doc, pageWidth / 2, 10, 8);
+            
+            columnYPos = [35, 35];
+            currentColumn = 0;
+        };
+        
+        startNewPage();
+        
+        for (let catIndex = 0; catIndex < menuData.length; catIndex++) {
+            const category = menuData[catIndex];
+            
+            // Calculate space needed for category
+            const categoryHeight = 25 + (category.items.length * 45); // Rough estimate
+            
+            // Check if we need new column or page
+            if (columnYPos[currentColumn] + categoryHeight > pageHeight - 30) {
+                if (currentColumn === 0) {
+                    currentColumn = 1;
+                } else {
+                    startNewPage();
+                }
             }
             
-            // Category header with background
-            doc.setFillColor(...colors.sageLight);
-            drawRoundedRect(doc, margin, yPos - 8, contentWidth, 12, 3, 'F');
+            const xOffset = margin + (currentColumn * (columnWidth + columnGap));
+            let yPos = columnYPos[currentColumn];
             
-            doc.setTextColor(...colors.primary);
-            doc.setFontSize(14);
+            // Category header with elegant styling
+            doc.setFillColor(...colors.primary);
+            drawRoundedRect(doc, xOffset, yPos - 8, columnWidth, 14, 3, 'F');
+            
+            doc.setTextColor(...colors.white);
+            doc.setFontSize(11);
             doc.setFont('helvetica', 'bold');
-            const categoryTitle = category.title.toUpperCase();
-            doc.text(categoryTitle, pageWidth / 2, yPos, { align: 'center' });
-            yPos += 20;
+            doc.text(category.title.toUpperCase(), xOffset + columnWidth / 2, yPos, { align: 'center' });
+            yPos += 18;
             
             // Category items
             for (const item of category.items) {
-                // Check if we need a new page (rough estimation)
-                const itemHeight = 35 + (item.nutrition ? 15 : 0) + (item.tags ? 8 : 0);
+                // Item container with subtle background
+                const itemHeight = 28 + (item.nutrition ? 10 : 0);
+                
+                // Check if item fits in current column
                 if (yPos + itemHeight > pageHeight - 30) {
-                    needNewPage = true;
-                    break;
+                    if (currentColumn === 0) {
+                        currentColumn = 1;
+                        xOffset = margin + (currentColumn * (columnWidth + columnGap));
+                        yPos = columnYPos[currentColumn];
+                    } else {
+                        startNewPage();
+                        xOffset = margin;
+                        yPos = columnYPos[0];
+                    }
                 }
                 
-                // Item container
+                // Subtle item background
                 doc.setFillColor(...colors.white);
-                drawRoundedRect(doc, margin, yPos - 5, contentWidth, itemHeight - 5, 3, 'F');
+                doc.setDrawColor(...colors.sageLight);
+                doc.setLineWidth(0.2);
+                drawRoundedRect(doc, xOffset, yPos - 4, columnWidth, itemHeight - 2, 2, 'FD');
                 
-                // Item name and price
-                doc.setTextColor(...colors.primary);
-                doc.setFontSize(11);
+                // Item name
+                doc.setTextColor(...colors.primaryDark);
+                doc.setFontSize(9);
                 doc.setFont('helvetica', 'bold');
-                const itemName = (item.name || 'Unnamed Item').toLowerCase();
-                doc.text(itemName, margin + 5, yPos);
+                const itemName = item.name || 'Unnamed Item';
+                doc.text(itemName, xOffset + 3, yPos);
                 
-                // Price
+                // Price with decorative dots
                 if (item.price) {
-                    doc.setTextColor(...colors.gold);
-                    doc.setFontSize(11);
+                    const price = formatPrice(item.price);
+                    const priceX = xOffset + columnWidth - 3;
+                    
+                    // Dotted line
+                    const nameWidth = doc.getTextWidth(itemName);
+                    const priceWidth = doc.getTextWidth(price);
+                    const dotsStart = xOffset + 3 + nameWidth + 2;
+                    const dotsEnd = priceX - priceWidth - 2;
+                    
+                    doc.setDrawColor(...colors.lightGray);
+                    doc.setLineDash([1, 2], 0);
+                    doc.line(dotsStart, yPos - 1, dotsEnd, yPos - 1);
+                    doc.setLineDash([]);
+                    
+                    doc.setTextColor(...colors.primary);
                     doc.setFont('helvetica', 'normal');
-                    doc.text(formatPrice(item.price), pageWidth - margin - 5, yPos, { align: 'right' });
+                    doc.text(price, priceX, yPos, { align: 'right' });
                 }
                 
-                yPos += 6;
+                yPos += 5;
                 
                 // Description
                 if (item.description) {
                     doc.setTextColor(...colors.gray);
-                    doc.setFontSize(8);
-                    doc.setFont('helvetica', 'italic');
+                    doc.setFontSize(7);
+                    doc.setFont('helvetica', 'normal');
                     const cleanDesc = item.description.replace(/<[^>]*>/g, '').replace(/\*\*/g, '').replace(/\*/g, '');
-                    const descLines = wrapText(doc, cleanDesc, contentWidth - 15);
-                    descLines.slice(0, 3).forEach(line => {
-                        doc.text(line, margin + 5, yPos);
-                        yPos += 4;
+                    const descLines = wrapText(doc, cleanDesc, columnWidth - 6);
+                    descLines.slice(0, 2).forEach(line => {
+                        doc.text(line, xOffset + 3, yPos);
+                        yPos += 3.5;
                     });
                 }
                 
-                yPos += 2;
-                
-                // Nutrition badges
-                if (item.nutrition && (item.nutrition.calories || item.nutrition.protein || item.nutrition.carbs || item.nutrition.fat)) {
-                    let xPos = margin + 5;
-                    const badgeSize = 18;
-                    const badgeSpacing = 22;
-                    
-                    // Calories
-                    if (item.nutrition.calories) {
-                        doc.setFillColor(...colors.beige);
-                        doc.circle(xPos + badgeSize/2, yPos + badgeSize/2, badgeSize/2, 'F');
-                        doc.setTextColor(...colors.gray);
-                        doc.setFontSize(7);
-                        doc.setFont('helvetica', 'normal');
-                        doc.text(item.nutrition.calories, xPos + badgeSize/2, yPos + badgeSize/2 - 2, { align: 'center' });
-                        doc.setFontSize(5);
-                        doc.text('kcal', xPos + badgeSize/2, yPos + badgeSize/2 + 2, { align: 'center' });
-                        xPos += badgeSpacing;
-                    }
-                    
-                    // Protein
-                    if (item.nutrition.protein) {
-                        doc.setFillColor(...colors.beige);
-                        doc.circle(xPos + badgeSize/2, yPos + badgeSize/2, badgeSize/2, 'F');
-                        doc.setTextColor(...colors.gray);
-                        doc.setFontSize(7);
-                        doc.setFont('helvetica', 'normal');
-                        doc.text(item.nutrition.protein.replace('g', ''), xPos + badgeSize/2, yPos + badgeSize/2 - 2, { align: 'center' });
-                        doc.setFontSize(5);
-                        doc.text('protein', xPos + badgeSize/2, yPos + badgeSize/2 + 2, { align: 'center' });
-                        xPos += badgeSpacing;
-                    }
-                    
-                    // Carbs
-                    if (item.nutrition.carbs) {
-                        doc.setFillColor(...colors.beige);
-                        doc.circle(xPos + badgeSize/2, yPos + badgeSize/2, badgeSize/2, 'F');
-                        doc.setTextColor(...colors.gray);
-                        doc.setFontSize(7);
-                        doc.setFont('helvetica', 'normal');
-                        doc.text(item.nutrition.carbs.replace('g', ''), xPos + badgeSize/2, yPos + badgeSize/2 - 2, { align: 'center' });
-                        doc.setFontSize(5);
-                        doc.text('carbs', xPos + badgeSize/2, yPos + badgeSize/2 + 2, { align: 'center' });
-                        xPos += badgeSpacing;
-                    }
-                    
-                    // Fat
-                    if (item.nutrition.fat) {
-                        doc.setFillColor(...colors.beige);
-                        doc.circle(xPos + badgeSize/2, yPos + badgeSize/2, badgeSize/2, 'F');
-                        doc.setTextColor(...colors.gray);
-                        doc.setFontSize(7);
-                        doc.setFont('helvetica', 'normal');
-                        doc.text(item.nutrition.fat.replace('g', ''), xPos + badgeSize/2, yPos + badgeSize/2 - 2, { align: 'center' });
-                        doc.setFontSize(5);
-                        doc.text('fett', xPos + badgeSize/2, yPos + badgeSize/2 + 2, { align: 'center' });
-                    }
-                    
-                    yPos += badgeSize + 4;
+                // Nutrition info (compact)
+                if (item.nutrition && (item.nutrition.calories || item.nutrition.protein)) {
+                    yPos += 1;
+                    doc.setFontSize(6);
+                    doc.setTextColor(...colors.lightGray);
+                    let nutritionText = [];
+                    if (item.nutrition.calories) nutritionText.push(`${item.nutrition.calories} kcal`);
+                    if (item.nutrition.protein) nutritionText.push(`${item.nutrition.protein} protein`);
+                    if (item.nutrition.carbs) nutritionText.push(`${item.nutrition.carbs} carbs`);
+                    if (item.nutrition.fat) nutritionText.push(`${item.nutrition.fat} fat`);
+                    doc.text(nutritionText.join(' • '), xOffset + 3, yPos);
+                    yPos += 3;
                 }
                 
-                // Tags and Allergens row
+                // Tags and allergens
                 if (item.tags || item.allergens) {
-                    // Tags
+                    doc.setFontSize(6);
+                    
                     if (item.tags && item.tags.length > 0) {
-                        doc.setTextColor(...colors.sage);
-                        doc.setFontSize(7);
-                        doc.setFont('helvetica', 'normal');
-                        const tagText = item.tags.join(' • ').toLowerCase();
-                        doc.text(tagText, margin + 5, yPos);
+                        doc.setTextColor(...colors.primary);
+                        doc.setFont('helvetica', 'italic');
+                        doc.text(item.tags.slice(0, 3).join(' • '), xOffset + 3, yPos);
                     }
                     
-                    // Allergens
                     if (item.allergens && item.allergens.length > 0) {
                         doc.setTextColor(...colors.gray);
-                        doc.setFontSize(7);
-                        doc.setFont('helvetica', 'bold');
-                        const allergenText = 'Allergene: ' + item.allergens.join(', ');
-                        doc.text(allergenText, pageWidth - margin - 5, yPos, { align: 'right' });
+                        doc.setFont('helvetica', 'normal');
+                        const allergenText = item.allergens.join(',');
+                        doc.text(allergenText, xOffset + columnWidth - 3, yPos, { align: 'right' });
                     }
-                    yPos += 6;
+                    yPos += 3;
                 }
                 
-                yPos += 8; // Space between items
+                yPos += 5; // Space between items
             }
             
-            yPos += 5; // Extra space after category
+            // Update column Y position
+            columnYPos[currentColumn] = yPos + 8;
+            
+            // Switch columns for next category if space allows
+            if (currentColumn === 0 && columnYPos[1] < pageHeight - 80) {
+                currentColumn = 1;
+            }
         }
         
-        // ===== ALLERGEN LEGEND PAGE =====
+        // ===== ALLERGEN INFO PAGE =====
         doc.addPage();
         doc.setFillColor(...colors.cream);
         doc.rect(0, 0, pageWidth, pageHeight, 'F');
         
-        yPos = 30;
-        doc.setTextColor(...colors.primary);
-        doc.setFontSize(14);
+        // Header
+        doc.setFillColor(...colors.sageLight);
+        doc.rect(0, 0, pageWidth, 30, 'F');
+        
+        drawLogo(doc, pageWidth / 2, 15, 8);
+        
+        yPos = 45;
+        doc.setTextColor(...colors.primaryDark);
+        doc.setFontSize(12);
         doc.setFont('helvetica', 'bold');
         doc.text('ALLERGENINFORMATIONEN', pageWidth / 2, yPos, { align: 'center' });
         
+        // Allergen grid with elegant styling
         yPos += 15;
+        const allergenColumns = 2;
+        const allergenColumnWidth = (pageWidth - (margin * 2) - 20) / allergenColumns;
+        
         doc.setFillColor(...colors.white);
-        drawRoundedRect(doc, margin, yPos - 5, contentWidth, 150, 5, 'F');
+        doc.setDrawColor(...colors.sage);
+        doc.setLineWidth(0.5);
+        drawRoundedRect(doc, margin, yPos - 5, pageWidth - (margin * 2), 100, 5, 'FD');
+        
+        const allergenEntries = Object.entries(allergenMap);
+        const itemsPerColumn = Math.ceil(allergenEntries.length / allergenColumns);
         
         yPos += 5;
-        doc.setFontSize(9);
-        doc.setFont('helvetica', 'normal');
-        let allergenY = yPos;
-        let allergenX = margin + 10;
-        let column = 0;
-        
-        Object.entries(allergenMap).forEach(([code, name], index) => {
-            if (index > 0 && index % 7 === 0) {
-                column++;
-                allergenX = margin + 10 + (column * 65);
-                allergenY = yPos;
-            }
+        allergenEntries.forEach(([code, name], index) => {
+            const column = Math.floor(index / itemsPerColumn);
+            const row = index % itemsPerColumn;
+            const xPos = margin + 10 + (column * allergenColumnWidth);
+            const itemY = yPos + (row * 7);
             
-            doc.setTextColor(...colors.gold);
+            doc.setTextColor(...colors.primary);
             doc.setFont('helvetica', 'bold');
-            doc.text(code, allergenX, allergenY);
+            doc.setFontSize(8);
+            doc.text(code, xPos, itemY);
+            
             doc.setTextColor(...colors.gray);
             doc.setFont('helvetica', 'normal');
-            doc.text(' - ' + name, allergenX + 5, allergenY);
-            allergenY += 8;
+            doc.text(' - ' + name, xPos + 8, itemY);
         });
         
-        // Footer info
-        yPos = pageHeight - 40;
+        // Footer section
+        yPos = pageHeight - 50;
+        doc.setDrawColor(...colors.sage);
+        doc.setLineWidth(0.5);
+        doc.line(margin + 30, yPos, pageWidth - margin - 30, yPos);
+        
+        yPos += 10;
         doc.setTextColor(...colors.primary);
         doc.setFontSize(10);
         doc.setFont('helvetica', 'bold');
-        doc.text('HEALTHY BRUNCH CLUB', pageWidth / 2, yPos, { align: 'center' });
+        doc.text('healthy BRUNCHCLUB', pageWidth / 2, yPos, { align: 'center' });
         
         yPos += 5;
         doc.setTextColor(...colors.gray);
@@ -433,22 +494,23 @@ wir freuen uns, dass du zu uns gefunden hast!`;
         yPos += 4;
         doc.text('hello@healthybrunchclub.at', pageWidth / 2, yPos, { align: 'center' });
         
-        yPos += 8;
+        yPos += 6;
         doc.setFontSize(7);
         doc.setFont('helvetica', 'italic');
-        doc.text('die angegebenen nährwerte sind durchschnittswerte und dienen lediglich zur orientierung', pageWidth / 2, yPos, { align: 'center' });
+        doc.setTextColor(...colors.lightGray);
+        doc.text('Alle Nährwertangaben sind Durchschnittswerte', pageWidth / 2, yPos, { align: 'center' });
         
         // Generate PDF buffer
         const pdfOutput = doc.output('arraybuffer');
         const pdfBuffer = Buffer.from(pdfOutput);
         
-        console.log('Premium PDF generated successfully, size:', pdfBuffer.length);
+        console.log('Premium 2-column PDF generated successfully, size:', pdfBuffer.length);
         
         return {
             statusCode: 200,
             headers: {
                 'Content-Type': 'application/pdf',
-                'Content-Disposition': 'inline; filename="healthy-brunch-club-menu.pdf"',
+                'Content-Disposition': 'inline; filename="healthy-brunchclub-menu.pdf"',
                 'Cache-Control': 'public, max-age=3600'
             },
             body: pdfBuffer.toString('base64'),
