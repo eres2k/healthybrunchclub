@@ -1,7 +1,7 @@
 ---
 title: sip happens - make it healthy
 order: 6
-image: ""
+image: /content/images/dsc00362_ergebnis.jpg
 items:
   - name: himbeersoda
     tags:
