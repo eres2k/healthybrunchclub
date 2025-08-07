@@ -1,7 +1,7 @@
 ---
 title: Coffee Lovers
 order: 8
-image: /content/images/coffee-category.jpg
+image: /content/images/dsc00407_ergebnis.jpg
 description: Kaffee, der nicht nur wach macht, sondern auch glücklich. Unsere
   Baristas zaubern aus jeder Bohne ein kleines Kunstwerk.
 items:
