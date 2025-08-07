@@ -483,13 +483,14 @@ exports.handler = async (event, context) => {
             const aspectRatio = 16 / 6;
             const actualImgHeight = Math.min((columnWidth - 10) / aspectRatio, 35);
             categoryHeight += actualImgHeight + 12; // Actual image height + margin
-            if (category.description) categoryHeight += 12; // Space for description
+            // Don't count description height here since it's now at the end
             category.items.forEach(item => {
                 categoryHeight += 12; // Base item height
-                if (item.description) categoryHeight += 10;
-                if (item.nutrition) categoryHeight += 3;
-                if (item.tags || item.allergens) categoryHeight += 3;
+                if (item.description) categoryHeight += 12; // Approximate for description
+                if (item.nutrition) categoryHeight += 4;
+                if (item.tags || item.allergens) categoryHeight += 4;
             });
+            if (category.description) categoryHeight += 20; // Space for description at the end
             
             // Check if we need new column or page
             if (columnYPos[currentColumn] + categoryHeight > pageHeight - 25) {
@@ -629,18 +630,7 @@ exports.handler = async (event, context) => {
             const underlineX = xOffset + (columnWidth - titleWidth) / 2;
             doc.line(underlineX, yPos, underlineX + titleWidth, yPos);
             
-            // Add category description if exists
-            if (category.description) {
-                yPos += 6;
-                doc.setTextColor(...colors.warmGray);
-                doc.setFontSize(8);
-                doc.setFont('helvetica', 'italic');
-                const descLines = wrapText(doc, category.description, columnWidth * 0.8);
-                descLines.slice(0, 2).forEach(line => {
-                    doc.text(line, xOffset + columnWidth / 2, yPos, { align: 'center' });
-                    yPos += 3.5;
-                });
-            }
+            // KEINE KATEGORIE-BESCHREIBUNG HIER
             
             yPos += 12; // More space before items
             
@@ -648,9 +638,12 @@ exports.handler = async (event, context) => {
             for (const item of category.items) {
                 // Check if item fits in current column
                 let itemHeight = 8;
-                if (item.description) itemHeight += 8;
-                if (item.nutrition) itemHeight += 3;
-                if (item.tags || item.allergens) itemHeight += 3;
+                if (item.description) {
+                    // Estimate height based on description length
+                    itemHeight += Math.min(item.description.length / 30, 4) * 3 + 2;
+                }
+                if (item.nutrition) itemHeight += 4; // Slightly more space for nutrition
+                if (item.tags || item.allergens) itemHeight += 4;
                 
                 if (yPos + itemHeight > pageHeight - 25) {
                     if (currentColumn === 0) {
@@ -665,16 +658,18 @@ exports.handler = async (event, context) => {
                 
                 const itemX = margin + (currentColumn * (columnWidth + columnGap));
                 
-                // Item name
+                // Item name and price on same line
                 doc.setTextColor(...colors.charcoal);
                 doc.setFontSize(9);
                 doc.setFont('helvetica', 'bold');
                 const itemName = item.name || 'Unnamed Item';
                 const maxNameWidth = columnWidth - 25; // Leave space for price
                 const nameLines = wrapText(doc, itemName, maxNameWidth);
+                
+                // First line of name
                 doc.text(nameLines[0], itemX, yPos);
                 
-                // Price - aligned right, same line as name
+                // Price - aligned right, same line as first line of name
                 if (item.price) {
                     doc.setTextColor(...colors.gold);
                     doc.setFont('helvetica', 'normal');
@@ -691,62 +686,134 @@ exports.handler = async (event, context) => {
                     doc.text(nameLines[1], itemX, yPos);
                 }
                 
-                yPos += 4;
+                // Always add space after name, even if no description
+                yPos += 5;
                 
-                // Description - smaller, elegant italic
+                // Description - clearly separated under the item name
                 if (item.description) {
                     doc.setTextColor(...colors.warmGray);
-                    doc.setFontSize(7);
-                    doc.setFont('helvetica', 'italic');
+                    doc.setFontSize(7.5); // Slightly larger for better readability
+                    doc.setFont('helvetica', 'normal'); // Changed from italic to normal
                     const cleanDesc = cleanDescription(item.description);
                     const descLines = wrapText(doc, cleanDesc, columnWidth - 2);
-                    descLines.slice(0, 3).forEach(line => {
+                    
+                    // Add all description lines (up to 4 for longer descriptions)
+                    descLines.slice(0, 4).forEach(line => {
                         doc.text(line, itemX, yPos);
-                        yPos += 2.5;
+                        yPos += 3; // Slightly more space between lines
                     });
-                    yPos += 1;
+                    yPos += 2; // Extra space after description
                 }
                 
-                // Nutrition info - very subtle, single line
+                // Nutrition info - with proper German abbreviations
                 if (item.nutrition && item.nutrition.calories) {
-                    doc.setFontSize(5.5);
-                    doc.setTextColor(...colors.lightGray);
+                    doc.setFontSize(6.5); // Slightly larger
+                    doc.setTextColor(150, 150, 150); // Slightly darker gray
                     doc.setFont('helvetica', 'normal');
-                    let nutritionText = item.nutrition.calories;
-                    if (item.nutrition.protein || item.nutrition.carbs || item.nutrition.fat) {
-                        nutritionText += ' • ';
-                        const parts = [];
-                        if (item.nutrition.protein) parts.push(item.nutrition.protein);
-                        if (item.nutrition.carbs) parts.push(item.nutrition.carbs);
-                        if (item.nutrition.fat) parts.push(item.nutrition.fat);
-                        nutritionText += parts.join(' ');
+                    
+                    // Format nutrition with German abbreviations
+                    let nutritionParts = [];
+                    
+                    // Calories - convert to kJ if needed
+                    if (item.nutrition.calories) {
+                        const calValue = item.nutrition.calories.replace(/[^0-9]/g, '');
+                        if (calValue) {
+                            const kj = Math.round(parseInt(calValue) * 4.184); // Convert kcal to kJ
+                            nutritionParts.push(`${kj} kJ / ${calValue} kcal`);
+                        }
                     }
+                    
+                    // Protein (Eiweiß)
+                    if (item.nutrition.protein) {
+                        const proteinValue = item.nutrition.protein.replace(/[^0-9,\.]/g, '');
+                        if (proteinValue) {
+                            nutritionParts.push(`EW: ${proteinValue}g`);
+                        }
+                    }
+                    
+                    // Carbohydrates (Kohlenhydrate)
+                    if (item.nutrition.carbs) {
+                        const carbsValue = item.nutrition.carbs.replace(/[^0-9,\.]/g, '');
+                        if (carbsValue) {
+                            nutritionParts.push(`KH: ${carbsValue}g`);
+                        }
+                    }
+                    
+                    // Fat (Fett)
+                    if (item.nutrition.fat) {
+                        const fatValue = item.nutrition.fat.replace(/[^0-9,\.]/g, '');
+                        if (fatValue) {
+                            nutritionParts.push(`Fett: ${fatValue}g`);
+                        }
+                    }
+                    
+                    const nutritionText = nutritionParts.join(' • ');
                     doc.text(nutritionText, itemX, yPos);
-                    yPos += 2.5;
+                    yPos += 3;
                 }
                 
                 // Tags and allergens - minimal, elegant
                 if (item.tags || item.allergens) {
-                    doc.setFontSize(6);
+                    doc.setFontSize(6.5);
                     
                     if (item.tags && item.tags.length > 0) {
                         doc.setTextColor(...colors.primary);
-                        doc.setFont('helvetica', 'italic');
-                        const tagText = item.tags.slice(0, 2).join(', ').toLowerCase();
+                        doc.setFont('helvetica', 'normal');
+                        const tagText = item.tags.slice(0, 3).join(', ').toLowerCase();
                         doc.text(tagText, itemX, yPos);
                     }
                     
                     if (item.allergens && item.allergens.length > 0) {
                         doc.setTextColor(...colors.warmGray);
-                        doc.setFont('helvetica', 'normal');
-                        const allergenText = item.allergens.join(',');
+                        doc.setFont('helvetica', 'bold');
+                        const allergenText = 'Allergene: ' + item.allergens.join(', ');
                         const allergenX = itemX + columnWidth;
                         doc.text(allergenText, allergenX, yPos, { align: 'right' });
                     }
-                    yPos += 2.5;
+                    yPos += 3;
                 }
                 
-                yPos += 4; // Space between items
+                yPos += 5; // More space between items
+            }
+            
+            // KATEGORIE-BESCHREIBUNG NACH ALLEN ITEMS
+            if (category.description) {
+                // Prüfen ob noch genug Platz auf der Seite ist
+                const descHeight = 25; // Geschätzte Höhe für die Beschreibung
+                if (yPos + descHeight > pageHeight - 25) {
+                    if (currentColumn === 0) {
+                        currentColumn = 1;
+                        yPos = columnYPos[1];
+                    } else {
+                        startNewPage();
+                        yPos = columnYPos[0];
+                        currentColumn = 0;
+                    }
+                }
+                
+                const descX = margin + (currentColumn * (columnWidth + columnGap));
+                
+                yPos += 8; // Extra Abstand vor der Beschreibung
+                
+                // Kleine dekorative Linie vor der Beschreibung
+                doc.setDrawColor(...colors.gold);
+                doc.setLineWidth(0.3);
+                const decorLineWidth = 30;
+                doc.line(descX + (columnWidth - decorLineWidth) / 2, yPos, descX + (columnWidth + decorLineWidth) / 2, yPos);
+                
+                yPos += 6;
+                
+                // Beschreibungstext
+                doc.setTextColor(...colors.warmGray);
+                doc.setFontSize(8);
+                doc.setFont('helvetica', 'italic');
+                const descLines = wrapText(doc, category.description, columnWidth * 0.9); // Etwas breiter als vorher
+                descLines.forEach(line => {
+                    doc.text(line, descX + columnWidth / 2, yPos, { align: 'center' });
+                    yPos += 3.5;
+                });
+                
+                yPos += 5; // Extra Abstand nach der Beschreibung
             }
             
             // Update column Y position
@@ -842,7 +909,7 @@ exports.handler = async (event, context) => {
         doc.setFontSize(6);
         doc.setFont('helvetica', 'italic');
         doc.setTextColor(...colors.lightGray);
-        doc.text('Die angegebenen Nährwerte sind Durchschnittswerte und dienen lediglich zur Orientierung', pageWidth / 2, yPos, { align: 'center' });
+        doc.text('Die angegebenen Nährwerte (kJ/kcal) sind Durchschnittswerte und dienen lediglich zur Orientierung', pageWidth / 2, yPos, { align: 'center' });
         
         // Generate PDF buffer
         const pdfOutput = doc.output('arraybuffer');
