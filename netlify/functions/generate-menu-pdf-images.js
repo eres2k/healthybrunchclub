@@ -479,7 +479,10 @@ exports.handler = async (event, context) => {
             
             // Calculate space needed for category (accurate estimation)
             let categoryHeight = 25; // Base category header height
-            categoryHeight += 52; // Always account for image/placeholder space
+            // Calculate actual image height based on aspect ratio
+            const aspectRatio = 16 / 6;
+            const actualImgHeight = Math.min((columnWidth - 10) / aspectRatio, 35);
+            categoryHeight += actualImgHeight + 12; // Actual image height + margin
             if (category.description) categoryHeight += 12; // Space for description
             category.items.forEach(item => {
                 categoryHeight += 12; // Base item height
@@ -504,26 +507,49 @@ exports.handler = async (event, context) => {
             console.log(`Processing category: ${category.title}, has image: ${!!category.image}, has imageData: ${!!category.imageData}`);
             
             // Category header with elegant image or placeholder
-            const imgWidth = columnWidth - 10;
-            const imgHeight = 40;
-            const imgX = xOffset + 5;
+            const maxImgWidth = columnWidth - 10;
+            const maxImgHeight = 35; // Reduced from 40 to match website proportions better
+            let imgX = xOffset + 5; // Changed from const to let
             
             if (category.imageData) {
                 try {
                     console.log(`Adding image for ${category.title}`);
                     
+                    // Calculate proper dimensions maintaining aspect ratio
+                    // Website uses 250px height with full width, which is roughly 16:6 ratio
+                    const aspectRatio = 16 / 6; // Website's category hero aspect ratio
+                    let imgWidth = maxImgWidth;
+                    let imgHeight = imgWidth / aspectRatio;
+                    
+                    // If height exceeds max, scale down
+                    if (imgHeight > maxImgHeight) {
+                        imgHeight = maxImgHeight;
+                        imgWidth = imgHeight * aspectRatio;
+                        // Center the narrower image
+                        const xOffsetAdjust = (maxImgWidth - imgWidth) / 2;
+                        imgX = xOffset + 5 + xOffsetAdjust;
+                    }
+                    
                     // Add subtle shadow effect
                     doc.setFillColor(230, 230, 230);
                     doc.rect(imgX + 2, yPos + 2, imgWidth, imgHeight, 'F');
                     
-                    // Add the actual image
+                    // Add white background to prevent transparency issues
+                    doc.setFillColor(255, 255, 255);
+                    doc.rect(imgX, yPos, imgWidth, imgHeight, 'F');
+                    
+                    // Add the actual image with aspect ratio preserved
+                    // Using ScaleToFit mode to prevent stretching
                     doc.addImage(
                         category.imageData.base64, 
                         category.imageData.type.toUpperCase(), 
                         imgX, 
                         yPos, 
                         imgWidth, 
-                        imgHeight
+                        imgHeight,
+                        undefined, // alias
+                        'FAST', // compression - FAST is better for quality
+                        0 // rotation
                     );
                     
                     // Add elegant thin border
@@ -538,9 +564,14 @@ exports.handler = async (event, context) => {
                 }
             }
             
-            // If no image data, always show a tasteful colored placeholder
+            // If no image data, show a tasteful colored placeholder with consistent dimensions
             if (!category.imageData) {
                 console.log(`Creating placeholder for ${category.title}`);
+                
+                // Use same dimensions as images for consistency
+                const aspectRatio = 16 / 6;
+                const imgWidth = maxImgWidth;
+                const imgHeight = Math.min(imgWidth / aspectRatio, maxImgHeight);
                 
                 // Create a colored placeholder based on category
                 const categoryColors = {
@@ -565,7 +596,7 @@ exports.handler = async (event, context) => {
                 
                 // Add category name in elegant white text
                 doc.setTextColor(255, 255, 255);
-                doc.setFontSize(16);
+                doc.setFontSize(14); // Reduced font size to fit better
                 doc.setFont('helvetica', 'bold');
                 const displayTitle = category.title.toUpperCase();
                 doc.text(displayTitle, imgX + imgWidth / 2, yPos + imgHeight / 2 + 2, { align: 'center' });
