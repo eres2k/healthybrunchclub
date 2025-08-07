@@ -1,72 +1,19 @@
-# Updated netlify.toml with style switcher support
+backend:
+  name: git-gateway
+  branch: main
 
-[build]
-  command = "npm run build"
-  functions = "netlify/functions"
-  publish = "."
+media_folder: "/content/images"
+public_folder: "/content/images"
 
-[build.environment]
-  NODE_VERSION = "18"
+# Premium CMS Configuration
+site_url: https://healthybrunchclub.at
+display_url: https://healthybrunchclub.at
+logo_url: https://healthybrunchclub.at/content/images/logo.png
 
-[functions]
-  # Include content files in the function bundle
-  included_files = ["content/**/*.md", "content/**/*.yml", "content/**/*.json"]
-  node_bundler = "esbuild"
+# Publish Mode
+publish_mode: editorial_workflow
 
-# Headers for better performance and caching
-[[headers]]
-  for = "/*.css"
-  [headers.values]
-    Cache-Control = "public, max-age=31536000"
-    
-[[headers]]
-  for = "/*.js"
-  [headers.values]
-    Cache-Control = "public, max-age=31536000"
-
-[[headers]]
-  for = "/style-switcher.js"
-  [headers.values]
-    Cache-Control = "public, max-age=3600"
-
-[[headers]]
-  for = "/dark-mode-*.css"
-  [headers.values]
-    Cache-Control = "public, max-age=604800"
-
-# Existing redirects
-[[redirects]]
-  from = "/menu-pdf"
-  to = "/.netlify/functions/generate-menu-pdf"
-  status = 200
-
-[[redirects]]
-  from = "/speisekarte.pdf"
-  to = "/.netlify/functions/generate-menu-pdf"
-  status = 200
-
-[[redirects]]
-  from = "/test-paths"
-  to = "/.netlify/functions/test-paths"
-  status = 200
-
-# Style-specific PDF generation (optional)
-[[redirects]]
-  from = "/menu-minimalist.pdf"
-  to = "/.netlify/functions/pdf-generator-minimalist"
-  status = 200
-
-# Dark mode detection redirect (optional)
-[[redirects]]
-  from = "/"
-  to = "/index.html"
-  status = 200
-  conditions = {Cookie = ["theme=dark"]}
-  headers = {X-Theme = "dark"}
-
-# PWA manifest updates for dark mode
-[[headers]]
-  for = "/manifest.json"
-  [headers.values]
-    Content-Type = "application/manifest+json"
-    Cache-Control = "public, max-age=3600"
+collections:
+  - name: "menu-categories"
+    label: "Menü Kategorien"
+    label_singular: "Menü Ka
