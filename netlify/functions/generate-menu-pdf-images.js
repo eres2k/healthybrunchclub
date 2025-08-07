@@ -504,6 +504,9 @@ exports.handler = async (event, context) => {
             const xOffset = margin + (currentColumn * (columnWidth + columnGap));
             let yPos = columnYPos[currentColumn];
             
+            // WICHTIG: Speichern Sie die Start-Y-Position der Kategorie
+            const categoryStartY = yPos;
+            
             // Debug log
             console.log(`Processing category: ${category.title}, has image: ${!!category.image}, has imageData: ${!!category.imageData}`);
             
@@ -648,7 +651,8 @@ exports.handler = async (event, context) => {
                 if (yPos + itemHeight > pageHeight - 25) {
                     if (currentColumn === 0) {
                         currentColumn = 1;
-                        yPos = columnYPos[1];
+                        // KORREKTUR: Setze Y-Position auf die gespeicherte Kategorie-Startposition
+                        yPos = categoryStartY;
                     } else {
                         startNewPage();
                         yPos = columnYPos[0];
@@ -656,6 +660,7 @@ exports.handler = async (event, context) => {
                     }
                 }
                 
+                // WICHTIG: itemX muss nach einem Spaltenwechsel neu berechnet werden
                 const itemX = margin + (currentColumn * (columnWidth + columnGap));
                 
                 // Item name and price on same line
@@ -783,7 +788,7 @@ exports.handler = async (event, context) => {
                 if (yPos + descHeight > pageHeight - 25) {
                     if (currentColumn === 0) {
                         currentColumn = 1;
-                        yPos = columnYPos[1];
+                        yPos = categoryStartY; // Auf Kategorie-Start zurücksetzen
                     } else {
                         startNewPage();
                         yPos = columnYPos[0];
