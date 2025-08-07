@@ -5,7 +5,7 @@ image: /content/images/dsc00362_ergebnis.jpg
 description: Kühle, natürliche Drinks mit Power aus Kräutern, Früchten und
   Gewürzen – für Erfrischung mit Mehrwert.
 items:
-  - name: himbeer- hollundersoda
+  - name: himbeer/ hollundersoda
     tags:
       - erfrischend
       - zuckerarm
