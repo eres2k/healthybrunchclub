@@ -1,3 +1,5 @@
+# Updated netlify.toml with style switcher support
+
 [build]
   command = "npm run build"
   functions = "netlify/functions"
@@ -11,6 +13,28 @@
   included_files = ["content/**/*.md", "content/**/*.yml", "content/**/*.json"]
   node_bundler = "esbuild"
 
+# Headers for better performance and caching
+[[headers]]
+  for = "/*.css"
+  [headers.values]
+    Cache-Control = "public, max-age=31536000"
+    
+[[headers]]
+  for = "/*.js"
+  [headers.values]
+    Cache-Control = "public, max-age=31536000"
+
+[[headers]]
+  for = "/style-switcher.js"
+  [headers.values]
+    Cache-Control = "public, max-age=3600"
+
+[[headers]]
+  for = "/dark-mode-*.css"
+  [headers.values]
+    Cache-Control = "public, max-age=604800"
+
+# Existing redirects
 [[redirects]]
   from = "/menu-pdf"
   to = "/.netlify/functions/generate-menu-pdf"
@@ -21,8 +45,28 @@
   to = "/.netlify/functions/generate-menu-pdf"
   status = 200
 
-# Test path endpoint
 [[redirects]]
   from = "/test-paths"
   to = "/.netlify/functions/test-paths"
   status = 200
+
+# Style-specific PDF generation (optional)
+[[redirects]]
+  from = "/menu-minimalist.pdf"
+  to = "/.netlify/functions/pdf-generator-minimalist"
+  status = 200
+
+# Dark mode detection redirect (optional)
+[[redirects]]
+  from = "/"
+  to = "/index.html"
+  status = 200
+  conditions = {Cookie = ["theme=dark"]}
+  headers = {X-Theme = "dark"}
+
+# PWA manifest updates for dark mode
+[[headers]]
+  for = "/manifest.json"
+  [headers.values]
+    Content-Type = "application/manifest+json"
+    Cache-Control = "public, max-age=3600"
