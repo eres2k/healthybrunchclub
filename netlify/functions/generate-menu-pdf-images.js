@@ -162,33 +162,105 @@ async function loadLocalLogo() {
     }
 }
 
-// Load category image
+// Load category image from URL
 async function loadCategoryImage(imagePath) {
     if (!imagePath) return null;
     
     try {
-        // Handle different image path formats
-        let fullPath = imagePath;
+        const https = require('https');
+        const http = require('http');
         
-        // If it's a relative path starting with /content/images/
-        if (imagePath.startsWith('/content/images/')) {
-            fullPath = path.join(process.cwd(), imagePath);
-        } else if (imagePath.startsWith('content/images/')) {
-            fullPath = path.join(process.cwd(), '/', imagePath);
-        } else if (imagePath.startsWith('/')) {
-            fullPath = path.join(process.cwd(), 'content/images', imagePath.substring(1));
-        } else {
-            fullPath = path.join(process.cwd(), 'content/images', imagePath);
+        // Construct full URL if needed
+        let imageUrl = imagePath;
+        if (!imagePath.startsWith('http')) {
+            // If it's a relative path, construct full URL
+            const baseUrl = 'https://healthybrunchclub.at';
+            if (imagePath.startsWith('/')) {
+                imageUrl = baseUrl + imagePath;
+            } else {
+                imageUrl = baseUrl + '/' + imagePath;
+            }
         }
         
-        const imageData = await fs.readFile(fullPath);
-        const base64 = imageData.toString('base64');
+        console.log('Loading category image from URL:', imageUrl);
         
-        // Determine image type from extension
-        const ext = path.extname(fullPath).toLowerCase().substring(1);
-        const imageType = ext === 'jpg' ? 'jpeg' : ext;
-        
-        return { base64, type: imageType };
+        return new Promise((resolve, reject) => {
+            const protocol = imageUrl.startsWith('https') ? https : http;
+            
+            // Set a timeout
+            const timeout = setTimeout(() => {
+                console.log('Image loading timeout for:', imageUrl);
+                resolve(null);
+            }, 5000); // 5 second timeout
+            
+            const request = protocol.get(imageUrl, (response) => {
+                if (response.statusCode === 301 || response.statusCode === 302) {
+                    // Handle redirects
+                    clearTimeout(timeout);
+                    console.log('Following redirect to:', response.headers.location);
+                    loadCategoryImage(response.headers.location).then(resolve).catch(() => resolve(null));
+                    return;
+                }
+                
+                if (response.statusCode !== 200) {
+                    clearTimeout(timeout);
+                    console.log('Failed to fetch image, status:', response.statusCode);
+                    resolve(null);
+                    return;
+                }
+                
+                const chunks = [];
+                response.on('data', (chunk) => chunks.push(chunk));
+                response.on('end', () => {
+                    clearTimeout(timeout);
+                    try {
+                        const buffer = Buffer.concat(chunks);
+                        const base64 = buffer.toString('base64');
+                        
+                        // Determine image type from URL or content-type
+                        let imageType = 'jpeg';
+                        const contentType = response.headers['content-type'];
+                        if (contentType) {
+                            if (contentType.includes('png')) imageType = 'png';
+                            else if (contentType.includes('gif')) imageType = 'gif';
+                            else if (contentType.includes('webp')) imageType = 'webp';
+                        } else {
+                            // Fallback to extension
+                            const ext = path.extname(imageUrl).toLowerCase().substring(1);
+                            if (ext === 'png' || ext === 'gif' || ext === 'webp') {
+                                imageType = ext;
+                            } else if (ext === 'jpg') {
+                                imageType = 'jpeg';
+                            }
+                        }
+                        
+                        console.log('Successfully loaded image, type:', imageType, 'size:', buffer.length);
+                        resolve({ base64, type: imageType });
+                    } catch (error) {
+                        console.error('Error processing image:', error);
+                        resolve(null);
+                    }
+                });
+                response.on('error', (error) => {
+                    clearTimeout(timeout);
+                    console.error('Error fetching image:', error);
+                    resolve(null);
+                });
+            });
+            
+            request.on('error', (error) => {
+                clearTimeout(timeout);
+                console.error('Error with image request:', error);
+                resolve(null);
+            });
+            
+            request.setTimeout(5000, () => {
+                clearTimeout(timeout);
+                request.abort();
+                console.log('Request timeout for:', imageUrl);
+                resolve(null);
+            });
+        });
     } catch (error) {
         console.log('Could not load category image:', imagePath, error.message);
         return null;
@@ -211,6 +283,13 @@ exports.handler = async (event, context) => {
         try {
             menuData = await loadMenuData();
             console.log('Loaded menu categories:', menuData.length);
+            
+            // Log category images for debugging
+            menuData.forEach(cat => {
+                if (cat.image) {
+                    console.log(`Category "${cat.title}" has image: ${cat.image}`);
+                }
+            });
         } catch (loadError) {
             console.error('Failed to load menu data:', loadError);
             throw loadError;
@@ -218,11 +297,16 @@ exports.handler = async (event, context) => {
         
         // Load category images
         console.log('Loading category images...');
-        for (let category of menuData) {
+        for (let i = 0; i < menuData.length; i++) {
+            const category = menuData[i];
             if (category.image) {
+                console.log(`Attempting to load image for ${category.title}: ${category.image}`);
                 const imageData = await loadCategoryImage(category.image);
                 if (imageData) {
                     category.imageData = imageData;
+                    console.log(`Successfully loaded image for ${category.title}`);
+                } else {
+                    console.log(`Failed to load image for ${category.title}`);
                 }
             }
         }
@@ -393,10 +477,10 @@ exports.handler = async (event, context) => {
         for (let catIndex = 0; catIndex < menuData.length; catIndex++) {
             const category = menuData[catIndex];
             
-            // Calculate space needed for category (more accurate estimation)
-            let categoryHeight = 20; // Base category header height
-            if (category.imageData) categoryHeight += 40; // Space for image
-            if (category.description) categoryHeight += 10; // Space for description
+            // Calculate space needed for category (accurate estimation)
+            let categoryHeight = 25; // Base category header height
+            categoryHeight += 52; // Always account for image/placeholder space
+            if (category.description) categoryHeight += 12; // Space for description
             category.items.forEach(item => {
                 categoryHeight += 12; // Base item height
                 if (item.description) categoryHeight += 10;
@@ -416,17 +500,21 @@ exports.handler = async (event, context) => {
             const xOffset = margin + (currentColumn * (columnWidth + columnGap));
             let yPos = columnYPos[currentColumn];
             
-            // Category header with optional elegant image
+            // Debug log
+            console.log(`Processing category: ${category.title}, has image: ${!!category.image}, has imageData: ${!!category.imageData}`);
+            
+            // Category header with elegant image or placeholder
+            const imgWidth = columnWidth - 10;
+            const imgHeight = 40;
+            const imgX = xOffset + 5;
+            
             if (category.imageData) {
                 try {
-                    // Add a small, tasteful category image
-                    const imgWidth = columnWidth * 0.9; // 90% of column width
-                    const imgHeight = 30; // Fixed height for consistency
-                    const imgX = xOffset + (columnWidth - imgWidth) / 2;
+                    console.log(`Adding image for ${category.title}`);
                     
                     // Add subtle shadow effect
-                    doc.setFillColor(220, 220, 220);
-                    doc.rect(imgX + 1, yPos + 1, imgWidth, imgHeight, 'F');
+                    doc.setFillColor(230, 230, 230);
+                    doc.rect(imgX + 2, yPos + 2, imgWidth, imgHeight, 'F');
                     
                     // Add the actual image
                     doc.addImage(
@@ -440,34 +528,72 @@ exports.handler = async (event, context) => {
                     
                     // Add elegant thin border
                     doc.setDrawColor(...colors.gold);
-                    doc.setLineWidth(0.2);
+                    doc.setLineWidth(0.3);
                     doc.rect(imgX, yPos, imgWidth, imgHeight);
                     
-                    yPos += imgHeight + 10;
+                    yPos += imgHeight + 12;
                 } catch (imgError) {
-                    console.log('Error adding category image:', imgError);
+                    console.error(`Error adding image for ${category.title}:`, imgError);
+                    // Fall through to placeholder
                 }
-            } else if (category.image) {
-                // If image path exists but couldn't load, add decorative element
+            }
+            
+            // If no image data, always show a tasteful colored placeholder
+            if (!category.imageData) {
+                console.log(`Creating placeholder for ${category.title}`);
+                
+                // Create a colored placeholder based on category
+                const categoryColors = {
+                    'sets': [30, 74, 60], // Forest green
+                    'eggcitements': [255, 193, 7], // Amber
+                    'avo-lution': [139, 195, 74], // Light green
+                    'hafer dich lieb': [188, 170, 164], // Taupe
+                    'berry good choice': [233, 30, 99], // Pink
+                    'coffee, healthtea and me': [121, 85, 72], // Brown
+                    'sip happens - make it healthy': [255, 152, 0], // Orange
+                    'morning essentials': [255, 235, 59], // Yellow
+                    'power bowls': [103, 58, 183], // Deep purple
+                    'sweet temptations': [255, 87, 34] // Deep orange
+                };
+                
+                const categoryKey = category.title.toLowerCase().replace(/\s+/g, '-');
+                const bgColor = categoryColors[categoryKey] || [201, 169, 97]; // Default to gold
+                
+                // Add gradient effect
+                doc.setFillColor(...bgColor);
+                doc.rect(imgX, yPos, imgWidth, imgHeight, 'F');
+                
+                // Add category name in elegant white text
+                doc.setTextColor(255, 255, 255);
+                doc.setFontSize(16);
+                doc.setFont('helvetica', 'bold');
+                const displayTitle = category.title.toUpperCase();
+                doc.text(displayTitle, imgX + imgWidth / 2, yPos + imgHeight / 2 + 2, { align: 'center' });
+                
+                // Reset text settings
+                doc.setTextColor(...colors.charcoal);
+                doc.setFontSize(9);
+                doc.setFont('helvetica', 'normal');
+                
+                // Add elegant border
                 doc.setDrawColor(...colors.gold);
-                doc.setLineWidth(0.3);
-                const decorWidth = 40;
-                const decorX = xOffset + (columnWidth - decorWidth) / 2;
-                doc.line(decorX, yPos, decorX + decorWidth, yPos);
-                yPos += 8;
+                doc.setLineWidth(0.5);
+                doc.rect(imgX, yPos, imgWidth, imgHeight);
+                
+                yPos += imgHeight + 12;
             }
             
             // Category title - Elegant uppercase
             doc.setTextColor(...colors.primary);
-            doc.setFontSize(11);
+            doc.setFontSize(12); // Slightly larger
             doc.setFont('helvetica', 'bold');
             const categoryTitle = category.title.toUpperCase();
             doc.text(categoryTitle, xOffset + columnWidth / 2, yPos, { align: 'center' });
             
             // Decorative underline - Properly positioned
-            yPos += 3;
+            yPos += 4;
             doc.setDrawColor(...colors.gold);
-            doc.setLineWidth(0.5);
+            doc.setLineWidth(0.6);
             const titleWidth = doc.getTextWidth(categoryTitle);
             const underlineX = xOffset + (columnWidth - titleWidth) / 2;
             doc.line(underlineX, yPos, underlineX + titleWidth, yPos);
@@ -476,16 +602,16 @@ exports.handler = async (event, context) => {
             if (category.description) {
                 yPos += 6;
                 doc.setTextColor(...colors.warmGray);
-                doc.setFontSize(7);
+                doc.setFontSize(8);
                 doc.setFont('helvetica', 'italic');
                 const descLines = wrapText(doc, category.description, columnWidth * 0.8);
                 descLines.slice(0, 2).forEach(line => {
                     doc.text(line, xOffset + columnWidth / 2, yPos, { align: 'center' });
-                    yPos += 3;
+                    yPos += 3.5;
                 });
             }
             
-            yPos += 10;
+            yPos += 12; // More space before items
             
             // Category items
             for (const item of category.items) {
