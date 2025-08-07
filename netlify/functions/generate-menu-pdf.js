@@ -88,13 +88,12 @@ function formatPrice(price) {
     cleanPrice = cleanPrice.replace(/[€$£¥\s]/g, '');
     cleanPrice = cleanPrice.replace(/,/g, '.');
     const numPrice = parseFloat(cleanPrice);
-    if (isNaN(numPrice)) return `${price}`;
-    return numPrice.toFixed(2);
-}
-
-// Draw rounded rectangle
-function drawRoundedRect(doc, x, y, w, h, r, style = 'S') {
-    doc.roundedRect(x, y, w, h, r, r, style);
+    if (isNaN(numPrice)) return `€ ${price}`;
+    let formatted = numPrice.toFixed(2);
+    if (formatted.endsWith('.00')) {
+        formatted = formatted.slice(0, -3);
+    }
+    return `€ ${formatted}`;
 }
 
 // Helper to wrap text properly
@@ -104,52 +103,32 @@ function wrapText(doc, text, maxWidth) {
     return lines;
 }
 
-// Draw custom logo
-function drawLogo(doc, x, y, size) {
-    const colors = {
-        primary: [78, 125, 102],    // Forest green from logo
-        sage: [172, 189, 168],      // Light sage
-        text: [58, 86, 75]          // Dark green
-    };
-    
-    // Main circle background
-    doc.setFillColor(...colors.sage);
-    doc.circle(x, y, size, 'F');
-    
-    // Inner circle for depth
-    doc.setFillColor(...colors.primary);
-    doc.circle(x, y, size * 0.85, 'F');
-    
-    // Leaf decoration (simplified)
-    doc.setDrawColor(...colors.sage);
-    doc.setLineWidth(1);
-    
-    // Left leaf
-    doc.beginPath();
-    doc.moveTo(x - size * 0.6, y - size * 0.2);
-    doc.bezierCurveTo(
-        x - size * 0.8, y - size * 0.4,
-        x - size * 0.7, y - size * 0.6,
-        x - size * 0.4, y - size * 0.5
-    );
-    doc.stroke();
-    
-    // Text styling
-    doc.setTextColor(255, 255, 255);
-    
-    // "healthy" text
-    doc.setFontSize(size * 0.35);
-    doc.setFont('helvetica', 'normal');
-    doc.text('healthy', x, y - size * 0.15, { align: 'center' });
-    
-    // "BRUNCHCLUB" text
-    doc.setFontSize(size * 0.28);
-    doc.setFont('helvetica', 'bold');
-    doc.text('BRUNCHCLUB', x, y + size * 0.25, { align: 'center' });
+// Clean description text
+function cleanDescription(text) {
+    if (!text) return '';
+    // Remove markdown formatting
+    return text
+        .replace(/\*\*(.*?)\*\*/g, '$1')  // Bold
+        .replace(/\*(.*?)\*/g, '$1')      // Italic
+        .replace(/^- /gm, '• ')           // List items
+        .replace(/\n\n+/g, '\n')          // Multiple newlines
+        .trim();
+}
+
+// Load logo image
+async function loadLogoImage() {
+    try {
+        const logoPath = path.join(process.cwd(), 'content/images/logo-high.png');
+        const logoData = await fs.readFile(logoPath);
+        return logoData.toString('base64');
+    } catch (error) {
+        console.log('Could not load logo-high.png, using text fallback');
+        return null;
+    }
 }
 
 exports.handler = async (event, context) => {
-    console.log('Premium 2-column PDF generation function called');
+    console.log('Premium Restaurant PDF generation function called');
     
     if (event.httpMethod !== 'GET') {
         return {
@@ -169,6 +148,9 @@ exports.handler = async (event, context) => {
             throw loadError;
         }
         
+        // Load logo
+        const logoBase64 = await loadLogoImage();
+        
         // Create PDF with custom settings
         const doc = new jsPDF({
             orientation: 'portrait',
@@ -179,109 +161,127 @@ exports.handler = async (event, context) => {
         // PDF Configuration
         const pageWidth = doc.internal.pageSize.getWidth();
         const pageHeight = doc.internal.pageSize.getHeight();
-        const margin = 15;
-        const columnGap = 10;
+        const margin = 20;
+        const columnGap = 15;
         const columnWidth = (pageWidth - (margin * 2) - columnGap) / 2;
         
-        // Premium Color Palette (matching the logo)
+        // Premium Color Palette
         const colors = {
-            primary: [78, 125, 102],      // Forest green from logo
-            primaryDark: [58, 86, 75],    // Darker green
-            sage: [172, 189, 168],        // Light sage from logo
-            sageLight: [196, 208, 185],   // Very light sage
-            cream: [252, 250, 247],       // Off-white cream
-            beige: [245, 238, 230],       // Warm beige
-            taupe: [225, 215, 202],       // Taupe
-            gray: [72, 72, 72],           // Charcoal
-            lightGray: [150, 150, 150],   // Medium gray
+            primary: [30, 74, 60],        // #1E4A3C - Forest green
+            gold: [201, 169, 97],         // #C9A961 - Gold
+            charcoal: [42, 42, 42],       // #2A2A2A - Dark text
+            warmGray: [72, 72, 72],       // #484848 - Secondary text
+            lightGray: [200, 200, 200],   // Light gray
+            cream: [250, 248, 243],       // #FAF8F3 - Background
             white: [255, 255, 255]        // Pure white
         };
         
         // ===== COVER PAGE =====
-        // Cream background
+        // Cream background for elegance
         doc.setFillColor(...colors.cream);
         doc.rect(0, 0, pageWidth, pageHeight, 'F');
         
-        // Decorative sage accent at top
-        doc.setFillColor(...colors.sageLight);
-        doc.rect(0, 0, pageWidth, 40, 'F');
+        // Logo section
+        let yPos = 40;
+        if (logoBase64) {
+            // Add actual logo image
+            const logoWidth = 60;
+            const logoHeight = 30;
+            doc.addImage(logoBase64, 'PNG', (pageWidth - logoWidth) / 2, yPos, logoWidth, logoHeight);
+            yPos += logoHeight + 20;
+        } else {
+            // Text fallback
+            doc.setTextColor(...colors.primary);
+            doc.setFontSize(26);
+            doc.setFont('helvetica', 'bold');
+            doc.text('HEALTHY', pageWidth / 2, yPos, { align: 'center' });
+            
+            yPos += 10;
+            doc.setFontSize(22);
+            doc.setFont('helvetica', 'normal');
+            doc.text('BRUNCH CLUB', pageWidth / 2, yPos, { align: 'center' });
+            yPos += 20;
+        }
         
-        // Draw logo
-        drawLogo(doc, pageWidth / 2, 65, 28);
+        // Elegant divider
+        doc.setDrawColor(...colors.gold);
+        doc.setLineWidth(0.8);
+        const lineWidth = 80;
+        doc.line((pageWidth - lineWidth) / 2, yPos, (pageWidth + lineWidth) / 2, yPos);
         
-        // Welcome section with elegant background
-        let yPos = 120;
-        doc.setFillColor(...colors.white);
-        doc.setDrawColor(...colors.sage);
-        doc.setLineWidth(0.5);
-        drawRoundedRect(doc, margin + 10, yPos - 15, pageWidth - (margin * 2) - 20, 125, 8, 'FD');
-        
-        // Welcome text
-        doc.setTextColor(...colors.primaryDark);
-        doc.setFontSize(13);
-        doc.setFont('helvetica', 'italic');
-        doc.text('Willkommen', pageWidth / 2, yPos, { align: 'center' });
-        
-        yPos += 10;
-        doc.setTextColor(...colors.gray);
+        // Welcome message
+        yPos += 35;
+        doc.setTextColor(...colors.charcoal);
         doc.setFontSize(10);
-        doc.setFont('helvetica', 'normal');
+        doc.setFont('helvetica', 'italic');
         
         const introLines = [
+            'Wie schön, dass du da bist!',
+            '',
             'Es liegt uns sehr am Herzen, dir frische, regionale',
             'Köstlichkeiten in Bio-Qualität anzubieten.',
             '',
-            'Wir verzichten bewusst auf raffinierten Zucker,',
-            'Weißmehl und größtenteils auf Kuhmilch.',
+            'Wir verzichten bewusst und größtenteils auf raffinierten',
+            'Zucker, Weißmehl und Kuhmilch.',
             '',
-            'Viele unserer Speisen sind gluten- und laktosefrei',
-            'und werden mit natürlichem Zucker gesüßt.',
+            'Deshalb sind viele unserer Speisen',
+            'gluten- und laktosefrei und werden mit',
+            'natürlichem Zucker gesüßt',
+            '(Dattel- oder Ahornsirup und Honig).',
             '',
-            'Unser Fokus liegt auf deinem Wohlbefinden.',
-            'In unserer Küche findest du entzündungshemmende',
-            'Zutaten für deine innere Balance.',
+            'Wer jedoch Kuhmilch möchte,',
+            'bekommt sie bei uns selbstverständlich auch!',
             '',
-            'Genieß die Zeit bei unserem Brunch!'
+            'Unser Fokus liegt auf dem Darm, denn er ist der Schlüssel',
+            'zu deinem Wohlbefinden. In unserer Küche findest du viele',
+            'entzündungshemmende Zutaten und',
+            'ganz viel Gutes für deine innere Balance!',
+            '',
+            'Genieß die Zeit bei unserem Brunch.',
+            'Wir freuen uns, dass du zu uns gefunden hast!'
         ];
         
+        doc.setFont('helvetica', 'normal');
         introLines.forEach(line => {
             doc.text(line, pageWidth / 2, yPos, { align: 'center' });
             yPos += 5;
         });
         
-        // Signature section
+        // Signature
         yPos += 10;
         doc.setFont('helvetica', 'italic');
-        doc.setTextColor(...colors.primary);
+        doc.setTextColor(...colors.gold);
+        doc.setFontSize(11);
         doc.text('Alles Liebe,', pageWidth / 2, yPos, { align: 'center' });
         yPos += 6;
-        doc.setFontSize(11);
+        doc.setFontSize(12);
         doc.text('Tina, Charlotte & Tessa', pageWidth / 2, yPos, { align: 'center' });
-        
-        // Decorative element at bottom
-        yPos = pageHeight - 40;
-        doc.setDrawColor(...colors.sage);
-        doc.setLineWidth(0.5);
-        doc.line(margin + 30, yPos, pageWidth - margin - 30, yPos);
         
         // ===== MENU PAGES WITH 2-COLUMN LAYOUT =====
         let currentColumn = 0;
-        let columnYPos = [35, 35]; // Track Y position for each column
-        let currentPage = 1;
+        let columnYPos = [35, 35];
         
         const startNewPage = () => {
             doc.addPage();
             doc.setFillColor(...colors.cream);
             doc.rect(0, 0, pageWidth, pageHeight, 'F');
             
-            // Header decoration
-            doc.setFillColor(...colors.sageLight);
-            doc.rect(0, 0, pageWidth, 20, 'F');
+            // Subtle header with small logo or text
+            if (logoBase64) {
+                doc.addImage(logoBase64, 'PNG', pageWidth / 2 - 20, 10, 40, 20);
+            } else {
+                doc.setTextColor(...colors.primary);
+                doc.setFontSize(12);
+                doc.setFont('helvetica', 'bold');
+                doc.text('HEALTHY BRUNCH CLUB', pageWidth / 2, 20, { align: 'center' });
+            }
             
-            // Small logo at top
-            drawLogo(doc, pageWidth / 2, 10, 8);
+            // Decorative line
+            doc.setDrawColor(...colors.gold);
+            doc.setLineWidth(0.3);
+            doc.line(margin + 20, 30, pageWidth - margin - 20, 30);
             
-            columnYPos = [35, 35];
+            columnYPos = [40, 40];
             currentColumn = 0;
         };
         
@@ -290,12 +290,18 @@ exports.handler = async (event, context) => {
         for (let catIndex = 0; catIndex < menuData.length; catIndex++) {
             const category = menuData[catIndex];
             
-            // Calculate space needed for category
-            const categoryHeight = 25 + (category.items.length * 45); // Rough estimate
+            // Calculate space needed for category (more accurate estimation)
+            let categoryHeight = 20; // Category header with image
+            category.items.forEach(item => {
+                categoryHeight += 12; // Base item height
+                if (item.description) categoryHeight += 10;
+                if (item.nutrition) categoryHeight += 3;
+                if (item.tags || item.allergens) categoryHeight += 3;
+            });
             
             // Check if we need new column or page
-            if (columnYPos[currentColumn] + categoryHeight > pageHeight - 30) {
-                if (currentColumn === 0) {
+            if (columnYPos[currentColumn] + categoryHeight > pageHeight - 25) {
+                if (currentColumn === 0 && columnYPos[1] < pageHeight - 50) {
                     currentColumn = 1;
                 } else {
                     startNewPage();
@@ -305,126 +311,139 @@ exports.handler = async (event, context) => {
             const xOffset = margin + (currentColumn * (columnWidth + columnGap));
             let yPos = columnYPos[currentColumn];
             
-            // Category header with elegant styling
-            doc.setFillColor(...colors.primary);
-            drawRoundedRect(doc, xOffset, yPos - 8, columnWidth, 14, 3, 'F');
+            // Category header with optional small image
+            if (category.image) {
+                // Small decorative image line
+                const imgHeight = 8;
+                doc.setDrawColor(...colors.lightGray);
+                doc.setLineWidth(0.1);
+                doc.line(xOffset, yPos - 2, xOffset + columnWidth, yPos - 2);
+            }
             
-            doc.setTextColor(...colors.white);
+            // Category title - Elegant uppercase
+            doc.setTextColor(...colors.primary);
             doc.setFontSize(11);
             doc.setFont('helvetica', 'bold');
-            doc.text(category.title.toUpperCase(), xOffset + columnWidth / 2, yPos, { align: 'center' });
-            yPos += 18;
+            const categoryTitle = category.title.toUpperCase();
+            doc.text(categoryTitle, xOffset + columnWidth / 2, yPos, { align: 'center' });
+            
+            // Decorative underline
+            yPos += 3;
+            doc.setDrawColor(...colors.gold);
+            doc.setLineWidth(0.5);
+            const titleWidth = doc.getTextWidth(categoryTitle);
+            const underlineX = xOffset + (columnWidth - titleWidth) / 2;
+            doc.line(underlineX, yPos, underlineX + titleWidth, yPos);
+            
+            yPos += 10;
             
             // Category items
             for (const item of category.items) {
-                // Item container with subtle background
-                const itemHeight = 28 + (item.nutrition ? 10 : 0);
-                
                 // Check if item fits in current column
-                if (yPos + itemHeight > pageHeight - 30) {
+                let itemHeight = 8;
+                if (item.description) itemHeight += 8;
+                if (item.nutrition) itemHeight += 3;
+                if (item.tags || item.allergens) itemHeight += 3;
+                
+                if (yPos + itemHeight > pageHeight - 25) {
                     if (currentColumn === 0) {
                         currentColumn = 1;
-                        xOffset = margin + (currentColumn * (columnWidth + columnGap));
-                        yPos = columnYPos[currentColumn];
+                        yPos = columnYPos[1];
                     } else {
                         startNewPage();
-                        xOffset = margin;
                         yPos = columnYPos[0];
+                        currentColumn = 0;
                     }
                 }
                 
-                // Subtle item background
-                doc.setFillColor(...colors.white);
-                doc.setDrawColor(...colors.sageLight);
-                doc.setLineWidth(0.2);
-                drawRoundedRect(doc, xOffset, yPos - 4, columnWidth, itemHeight - 2, 2, 'FD');
+                const itemX = margin + (currentColumn * (columnWidth + columnGap));
                 
                 // Item name
-                doc.setTextColor(...colors.primaryDark);
+                doc.setTextColor(...colors.charcoal);
                 doc.setFontSize(9);
                 doc.setFont('helvetica', 'bold');
                 const itemName = item.name || 'Unnamed Item';
-                doc.text(itemName, xOffset + 3, yPos);
+                const maxNameWidth = columnWidth - 25; // Leave space for price
+                const nameLines = wrapText(doc, itemName, maxNameWidth);
+                doc.text(nameLines[0], itemX, yPos);
                 
-                // Price with decorative dots
+                // Price - aligned right, same line as name
                 if (item.price) {
+                    doc.setTextColor(...colors.gold);
+                    doc.setFont('helvetica', 'normal');
                     const price = formatPrice(item.price);
-                    const priceX = xOffset + columnWidth - 3;
-                    
-                    // Dotted line
-                    const nameWidth = doc.getTextWidth(itemName);
-                    const priceWidth = doc.getTextWidth(price);
-                    const dotsStart = xOffset + 3 + nameWidth + 2;
-                    const dotsEnd = priceX - priceWidth - 2;
-                    
-                    doc.setDrawColor(...colors.lightGray);
-                    doc.setLineDash([1, 2], 0);
-                    doc.line(dotsStart, yPos - 1, dotsEnd, yPos - 1);
-                    doc.setLineDash([]);
-                    
-                    doc.setTextColor(...colors.primary);
-                    doc.setFont('helvetica', 'normal');
-                    doc.text(price, priceX, yPos, { align: 'right' });
+                    doc.text(price, itemX + columnWidth, yPos, { align: 'right' });
                 }
                 
-                yPos += 5;
-                
-                // Description
-                if (item.description) {
-                    doc.setTextColor(...colors.gray);
-                    doc.setFontSize(7);
-                    doc.setFont('helvetica', 'normal');
-                    const cleanDesc = item.description.replace(/<[^>]*>/g, '').replace(/\*\*/g, '').replace(/\*/g, '');
-                    const descLines = wrapText(doc, cleanDesc, columnWidth - 6);
-                    descLines.slice(0, 2).forEach(line => {
-                        doc.text(line, xOffset + 3, yPos);
-                        yPos += 3.5;
-                    });
-                }
-                
-                // Nutrition info (compact)
-                if (item.nutrition && (item.nutrition.calories || item.nutrition.protein)) {
-                    yPos += 1;
-                    doc.setFontSize(6);
-                    doc.setTextColor(...colors.lightGray);
-                    let nutritionText = [];
-                    if (item.nutrition.calories) nutritionText.push(`${item.nutrition.calories} kcal`);
-                    if (item.nutrition.protein) nutritionText.push(`${item.nutrition.protein} protein`);
-                    if (item.nutrition.carbs) nutritionText.push(`${item.nutrition.carbs} carbs`);
-                    if (item.nutrition.fat) nutritionText.push(`${item.nutrition.fat} fat`);
-                    doc.text(nutritionText.join(' • '), xOffset + 3, yPos);
+                // If name wraps to second line
+                if (nameLines.length > 1) {
                     yPos += 3;
+                    doc.setTextColor(...colors.charcoal);
+                    doc.setFont('helvetica', 'bold');
+                    doc.setFontSize(9);
+                    doc.text(nameLines[1], itemX, yPos);
                 }
                 
-                // Tags and allergens
+                yPos += 4;
+                
+                // Description - smaller, elegant italic
+                if (item.description) {
+                    doc.setTextColor(...colors.warmGray);
+                    doc.setFontSize(7);
+                    doc.setFont('helvetica', 'italic');
+                    const cleanDesc = cleanDescription(item.description);
+                    const descLines = wrapText(doc, cleanDesc, columnWidth - 2);
+                    descLines.slice(0, 3).forEach(line => {
+                        doc.text(line, itemX, yPos);
+                        yPos += 2.5;
+                    });
+                    yPos += 1;
+                }
+                
+                // Nutrition info - very subtle, single line
+                if (item.nutrition && item.nutrition.calories) {
+                    doc.setFontSize(5.5);
+                    doc.setTextColor(...colors.lightGray);
+                    doc.setFont('helvetica', 'normal');
+                    let nutritionText = item.nutrition.calories;
+                    if (item.nutrition.protein || item.nutrition.carbs || item.nutrition.fat) {
+                        nutritionText += ' • ';
+                        const parts = [];
+                        if (item.nutrition.protein) parts.push(item.nutrition.protein);
+                        if (item.nutrition.carbs) parts.push(item.nutrition.carbs);
+                        if (item.nutrition.fat) parts.push(item.nutrition.fat);
+                        nutritionText += parts.join(' ');
+                    }
+                    doc.text(nutritionText, itemX, yPos);
+                    yPos += 2.5;
+                }
+                
+                // Tags and allergens - minimal, elegant
                 if (item.tags || item.allergens) {
                     doc.setFontSize(6);
                     
                     if (item.tags && item.tags.length > 0) {
                         doc.setTextColor(...colors.primary);
                         doc.setFont('helvetica', 'italic');
-                        doc.text(item.tags.slice(0, 3).join(' • '), xOffset + 3, yPos);
+                        const tagText = item.tags.slice(0, 2).join(', ').toLowerCase();
+                        doc.text(tagText, itemX, yPos);
                     }
                     
                     if (item.allergens && item.allergens.length > 0) {
-                        doc.setTextColor(...colors.gray);
+                        doc.setTextColor(...colors.warmGray);
                         doc.setFont('helvetica', 'normal');
                         const allergenText = item.allergens.join(',');
-                        doc.text(allergenText, xOffset + columnWidth - 3, yPos, { align: 'right' });
+                        const allergenX = itemX + columnWidth;
+                        doc.text(allergenText, allergenX, yPos, { align: 'right' });
                     }
-                    yPos += 3;
+                    yPos += 2.5;
                 }
                 
-                yPos += 5; // Space between items
+                yPos += 4; // Space between items
             }
             
             // Update column Y position
             columnYPos[currentColumn] = yPos + 8;
-            
-            // Switch columns for next category if space allows
-            if (currentColumn === 0 && columnYPos[1] < pageHeight - 80) {
-                currentColumn = 1;
-            }
         }
         
         // ===== ALLERGEN INFO PAGE =====
@@ -433,78 +452,87 @@ exports.handler = async (event, context) => {
         doc.rect(0, 0, pageWidth, pageHeight, 'F');
         
         // Header
-        doc.setFillColor(...colors.sageLight);
-        doc.rect(0, 0, pageWidth, 30, 'F');
-        
-        drawLogo(doc, pageWidth / 2, 15, 8);
-        
-        yPos = 45;
-        doc.setTextColor(...colors.primaryDark);
-        doc.setFontSize(12);
+        yPos = 30;
+        doc.setTextColor(...colors.primary);
+        doc.setFontSize(13);
         doc.setFont('helvetica', 'bold');
         doc.text('ALLERGENINFORMATIONEN', pageWidth / 2, yPos, { align: 'center' });
         
-        // Allergen grid with elegant styling
-        yPos += 15;
+        // Decorative line
+        yPos += 5;
+        doc.setDrawColor(...colors.gold);
+        doc.setLineWidth(0.5);
+        doc.line(margin + 50, yPos, pageWidth - margin - 50, yPos);
+        
+        // Allergen list - elegant 2 column layout
+        yPos += 20;
         const allergenColumns = 2;
         const allergenColumnWidth = (pageWidth - (margin * 2) - 20) / allergenColumns;
-        
-        doc.setFillColor(...colors.white);
-        doc.setDrawColor(...colors.sage);
-        doc.setLineWidth(0.5);
-        drawRoundedRect(doc, margin, yPos - 5, pageWidth - (margin * 2), 100, 5, 'FD');
         
         const allergenEntries = Object.entries(allergenMap);
         const itemsPerColumn = Math.ceil(allergenEntries.length / allergenColumns);
         
-        yPos += 5;
         allergenEntries.forEach(([code, name], index) => {
             const column = Math.floor(index / itemsPerColumn);
             const row = index % itemsPerColumn;
-            const xPos = margin + 10 + (column * allergenColumnWidth);
+            const xPos = margin + (column * allergenColumnWidth);
             const itemY = yPos + (row * 7);
             
-            doc.setTextColor(...colors.primary);
+            // Code in gold
+            doc.setTextColor(...colors.gold);
             doc.setFont('helvetica', 'bold');
             doc.setFontSize(8);
             doc.text(code, xPos, itemY);
             
-            doc.setTextColor(...colors.gray);
+            // Name in warm gray
+            doc.setTextColor(...colors.warmGray);
             doc.setFont('helvetica', 'normal');
-            doc.text(' - ' + name, xPos + 8, itemY);
+            doc.setFontSize(8);
+            doc.text(` — ${name}`, xPos + 8, itemY);
         });
         
         // Footer section
         yPos = pageHeight - 50;
-        doc.setDrawColor(...colors.sage);
+        
+        // Decorative line
+        doc.setDrawColor(...colors.gold);
         doc.setLineWidth(0.5);
-        doc.line(margin + 30, yPos, pageWidth - margin - 30, yPos);
+        doc.line(margin + 60, yPos, pageWidth - margin - 60, yPos);
         
+        // Logo or text
         yPos += 10;
-        doc.setTextColor(...colors.primary);
-        doc.setFontSize(10);
-        doc.setFont('helvetica', 'bold');
-        doc.text('healthy BRUNCHCLUB', pageWidth / 2, yPos, { align: 'center' });
+        if (logoBase64) {
+            doc.addImage(logoBase64, 'PNG', pageWidth / 2 - 15, yPos, 30, 15);
+            yPos += 20;
+        } else {
+            doc.setTextColor(...colors.primary);
+            doc.setFontSize(10);
+            doc.setFont('helvetica', 'bold');
+            doc.text('HEALTHY BRUNCH CLUB', pageWidth / 2, yPos, { align: 'center' });
+            yPos += 8;
+        }
         
-        yPos += 5;
-        doc.setTextColor(...colors.gray);
-        doc.setFontSize(8);
+        doc.setTextColor(...colors.charcoal);
+        doc.setFontSize(9);
         doc.setFont('helvetica', 'normal');
-        doc.text('Gumpendorfer Straße 9, 1060 Wien', pageWidth / 2, yPos, { align: 'center' });
+        doc.text('Gumpendorfer Straße 9 • 1060 Wien', pageWidth / 2, yPos, { align: 'center' });
+        
         yPos += 4;
+        doc.setTextColor(...colors.warmGray);
+        doc.setFontSize(8);
         doc.text('hello@healthybrunchclub.at', pageWidth / 2, yPos, { align: 'center' });
         
-        yPos += 6;
-        doc.setFontSize(7);
+        yPos += 8;
+        doc.setFontSize(6);
         doc.setFont('helvetica', 'italic');
         doc.setTextColor(...colors.lightGray);
-        doc.text('Alle Nährwertangaben sind Durchschnittswerte', pageWidth / 2, yPos, { align: 'center' });
+        doc.text('Die angegebenen Nährwerte sind Durchschnittswerte und dienen lediglich zur Orientierung', pageWidth / 2, yPos, { align: 'center' });
         
         // Generate PDF buffer
         const pdfOutput = doc.output('arraybuffer');
         const pdfBuffer = Buffer.from(pdfOutput);
         
-        console.log('Premium 2-column PDF generated successfully, size:', pdfBuffer.length);
+        console.log('Premium Restaurant PDF generated successfully, size:', pdfBuffer.length);
         
         return {
             statusCode: 200,
