@@ -115,14 +115,49 @@ function cleanDescription(text) {
         .trim();
 }
 
-// Load logo image
+// Load logo image with HTTPS URL
 async function loadLogoImage() {
+    try {
+        // Try to fetch from HTTPS URL first
+        const https = require('https');
+        const logoUrl = 'https://healthybrunchclub.at/content/images/logo-high.png';
+        
+        return new Promise((resolve, reject) => {
+            https.get(logoUrl, (response) => {
+                if (response.statusCode !== 200) {
+                    console.log('Failed to fetch logo from URL, trying local file');
+                    // Fall back to local file
+                    loadLocalLogo().then(resolve).catch(reject);
+                    return;
+                }
+                
+                const chunks = [];
+                response.on('data', (chunk) => chunks.push(chunk));
+                response.on('end', () => {
+                    const buffer = Buffer.concat(chunks);
+                    resolve(buffer.toString('base64'));
+                });
+                response.on('error', reject);
+            }).on('error', (error) => {
+                console.log('Error fetching logo from URL:', error.message);
+                // Fall back to local file
+                loadLocalLogo().then(resolve).catch(reject);
+            });
+        });
+    } catch (error) {
+        console.log('Could not load logo from URL, trying local file');
+        return loadLocalLogo();
+    }
+}
+
+// Load local logo as fallback
+async function loadLocalLogo() {
     try {
         const logoPath = path.join(process.cwd(), 'content/images/logo-high.png');
         const logoData = await fs.readFile(logoPath);
         return logoData.toString('base64');
     } catch (error) {
-        console.log('Could not load logo-high.png, using text fallback');
+        console.log('Could not load local logo file');
         return null;
     }
 }
@@ -184,11 +219,26 @@ exports.handler = async (event, context) => {
         // Logo section
         let yPos = 40;
         if (logoBase64) {
-            // Add actual logo image
-            const logoWidth = 60;
-            const logoHeight = 30;
-            doc.addImage(logoBase64, 'PNG', (pageWidth - logoWidth) / 2, yPos, logoWidth, logoHeight);
-            yPos += logoHeight + 20;
+            try {
+                // Add actual logo image
+                const logoWidth = 80;  // Increased size
+                const logoHeight = 40; // Adjusted for better proportions
+                doc.addImage(logoBase64, 'PNG', (pageWidth - logoWidth) / 2, yPos, logoWidth, logoHeight);
+                yPos += logoHeight + 20;
+            } catch (imgError) {
+                console.error('Error adding logo image:', imgError);
+                // Fall back to text
+                doc.setTextColor(...colors.primary);
+                doc.setFontSize(26);
+                doc.setFont('helvetica', 'bold');
+                doc.text('HEALTHY', pageWidth / 2, yPos, { align: 'center' });
+                
+                yPos += 10;
+                doc.setFontSize(22);
+                doc.setFont('helvetica', 'normal');
+                doc.text('BRUNCH CLUB', pageWidth / 2, yPos, { align: 'center' });
+                yPos += 20;
+            }
         } else {
             // Text fallback
             doc.setTextColor(...colors.primary);
@@ -203,14 +253,15 @@ exports.handler = async (event, context) => {
             yPos += 20;
         }
         
-        // Elegant divider
+        // Elegant divider - Fixed positioning
         doc.setDrawColor(...colors.gold);
         doc.setLineWidth(0.8);
         const lineWidth = 80;
-        doc.line((pageWidth - lineWidth) / 2, yPos, (pageWidth + lineWidth) / 2, yPos);
+        const lineY = yPos + 5; // Add some spacing
+        doc.line((pageWidth - lineWidth) / 2, lineY, (pageWidth + lineWidth) / 2, lineY);
         
         // Welcome message
-        yPos += 35;
+        yPos = lineY + 30; // Ensure proper spacing after line
         doc.setTextColor(...colors.charcoal);
         doc.setFontSize(10);
         doc.setFont('helvetica', 'italic');
@@ -268,7 +319,15 @@ exports.handler = async (event, context) => {
             
             // Subtle header with small logo or text
             if (logoBase64) {
-                doc.addImage(logoBase64, 'PNG', pageWidth / 2 - 20, 10, 40, 20);
+                try {
+                    doc.addImage(logoBase64, 'PNG', pageWidth / 2 - 20, 10, 40, 20);
+                } catch (e) {
+                    // Fallback to text
+                    doc.setTextColor(...colors.primary);
+                    doc.setFontSize(12);
+                    doc.setFont('helvetica', 'bold');
+                    doc.text('HEALTHY BRUNCH CLUB', pageWidth / 2, 20, { align: 'center' });
+                }
             } else {
                 doc.setTextColor(...colors.primary);
                 doc.setFontSize(12);
@@ -276,7 +335,7 @@ exports.handler = async (event, context) => {
                 doc.text('HEALTHY BRUNCH CLUB', pageWidth / 2, 20, { align: 'center' });
             }
             
-            // Decorative line
+            // Decorative line - Fixed positioning
             doc.setDrawColor(...colors.gold);
             doc.setLineWidth(0.3);
             doc.line(margin + 20, 30, pageWidth - margin - 20, 30);
@@ -291,7 +350,7 @@ exports.handler = async (event, context) => {
             const category = menuData[catIndex];
             
             // Calculate space needed for category (more accurate estimation)
-            let categoryHeight = 20; // Category header with image
+            let categoryHeight = 20; // Category header
             category.items.forEach(item => {
                 categoryHeight += 12; // Base item height
                 if (item.description) categoryHeight += 10;
@@ -311,15 +370,7 @@ exports.handler = async (event, context) => {
             const xOffset = margin + (currentColumn * (columnWidth + columnGap));
             let yPos = columnYPos[currentColumn];
             
-            // Category header with optional small image
-            if (category.image) {
-                // Small decorative image line
-                const imgHeight = 8;
-                doc.setDrawColor(...colors.lightGray);
-                doc.setLineWidth(0.1);
-                doc.line(xOffset, yPos - 2, xOffset + columnWidth, yPos - 2);
-            }
-            
+            // Category header - No image reference to avoid lines
             // Category title - Elegant uppercase
             doc.setTextColor(...colors.primary);
             doc.setFontSize(11);
@@ -327,7 +378,7 @@ exports.handler = async (event, context) => {
             const categoryTitle = category.title.toUpperCase();
             doc.text(categoryTitle, xOffset + columnWidth / 2, yPos, { align: 'center' });
             
-            // Decorative underline
+            // Decorative underline - Properly positioned
             yPos += 3;
             doc.setDrawColor(...colors.gold);
             doc.setLineWidth(0.5);
@@ -502,8 +553,17 @@ exports.handler = async (event, context) => {
         // Logo or text
         yPos += 10;
         if (logoBase64) {
-            doc.addImage(logoBase64, 'PNG', pageWidth / 2 - 15, yPos, 30, 15);
-            yPos += 20;
+            try {
+                doc.addImage(logoBase64, 'PNG', pageWidth / 2 - 15, yPos, 30, 15);
+                yPos += 20;
+            } catch (e) {
+                // Fallback to text
+                doc.setTextColor(...colors.primary);
+                doc.setFontSize(10);
+                doc.setFont('helvetica', 'bold');
+                doc.text('HEALTHY BRUNCH CLUB', pageWidth / 2, yPos, { align: 'center' });
+                yPos += 8;
+            }
         } else {
             doc.setTextColor(...colors.primary);
             doc.setFontSize(10);
