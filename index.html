@@ -23,9 +23,9 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     
     <!-- Main Styles -->
-    <link rel="stylesheet" href="mystyle-premium.css" id="mainStylesheet">
+    <link rel="stylesheet" href="mystyle-premium.css">
     
-    <!-- Style Switcher CSS -->
+    <!-- Dark Mode Toggle CSS -->
     <link rel="stylesheet" href="style-switcher.css">
     
     <!-- Dark Mode Support -->
@@ -44,12 +44,11 @@
     <meta property="og:image" content="/og-image.jpg">
     <meta property="og:type" content="restaurant">
     
-    <!-- Early Style Detection -->
+    <!-- Early Theme Detection -->
     <script>
-        // Apply stored style preference immediately to prevent flash
+        // Apply stored theme preference immediately to prevent flash
         (function() {
             const storedTheme = localStorage.getItem('hbc-theme-preference');
-            const storedStyle = localStorage.getItem('hbc-style-preference');
             
             // Apply theme immediately
             if (storedTheme) {
@@ -57,24 +56,11 @@
             } else if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
                 document.documentElement.setAttribute('data-theme', 'dark');
             }
-            
-            // Apply style class immediately
-            if (storedStyle) {
-                document.documentElement.className = 'style-' + storedStyle;
-            }
         })();
     </script>
 </head>
 
 <body>
-    <!-- Debug Console -->
-    <script>
-        console.log('Page loading started');
-        window.addEventListener('error', function(e) {
-            console.error('Script error:', e.message, e.filename, e.lineno, e.error);
-        });
-    </script>
-
     <!-- Elegant Loading Screen -->
     <div class="loading-screen" id="loadingScreen">
         <div class="loading-content">
@@ -369,52 +355,11 @@
     <!-- Scripts -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
     
-    <!-- Load Premium CMS Loader and App immediately -->
+    <!-- Load Premium CMS Loader and App -->
     <script src="cms-loader-premium.js"></script>
     <script src="app-premium.js"></script>
     
-    <!-- Style Switcher (loads after main functionality) -->
+    <!-- Dark Mode Toggle -->
     <script src="style-switcher.js"></script>
-    
-    <!-- Initialize Everything -->
-    <script>
-        // Ensure everything is loaded properly
-        document.addEventListener('DOMContentLoaded', function() {
-            console.log('DOM Content Loaded');
-            
-            // Verify CMS loader is available
-            if (typeof window.cmsLoader === 'undefined') {
-                console.error('CMS Loader not found! Loading fallback...');
-                // Try to load it again
-                const script = document.createElement('script');
-                script.src = 'cms-loader-premium.js';
-                script.onload = function() {
-                    console.log('CMS Loader loaded via fallback');
-                };
-                document.body.appendChild(script);
-            }
-            
-            // Check for any loading errors
-            setTimeout(function() {
-                const menuContainer = document.getElementById('menuContainer');
-                if (menuContainer && menuContainer.innerHTML.includes('Speisekarte wird geladen')) {
-                    console.error('Menu still loading after 5 seconds - checking API');
-                    
-                    // Test API directly
-                    fetch('/.netlify/functions/get-menu')
-                        .then(response => {
-                            console.log('API Response Status:', response.status);
-                            return response.text();
-                        })
-                        .then(text => {
-                            console.log('API Response:', text);
-                        })
-                        .catch(error => {
-                            console.error('API Error:', error);
-                        });
-                }
-            }, 5000);
-        });
-    </script>
 </body>
 </html>
