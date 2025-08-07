@@ -1,4 +1,4 @@
-// style-switcher.js - Complete Style Switcher with Dark Mode
+// style-switcher.js - Fixed Style Switcher with Better Loading
 (function() {
     'use strict';
     
@@ -24,19 +24,26 @@
             this.currentStyle = this.getStoredStyle() || STYLES.PREMIUM;
             this.currentTheme = this.getStoredTheme() || THEMES.LIGHT;
             this.dropdown = null;
+            this.isInitialized = false;
             this.init();
         }
         
         init() {
+            console.log('StyleSwitcher: Initializing with style:', this.currentStyle);
+            
             // Apply stored preferences immediately
             this.applyStyle(this.currentStyle, false);
             this.applyTheme(this.currentTheme);
             
             // Create UI after DOM is ready
             if (document.readyState === 'loading') {
-                document.addEventListener('DOMContentLoaded', () => this.createUI());
+                document.addEventListener('DOMContentLoaded', () => {
+                    this.createUI();
+                    this.isInitialized = true;
+                });
             } else {
                 this.createUI();
+                this.isInitialized = true;
             }
             
             // Listen for system theme changes
@@ -44,6 +51,8 @@
         }
         
         createUI() {
+            console.log('StyleSwitcher: Creating UI');
+            
             // Remove any existing switcher
             const existing = document.querySelector('.style-switcher');
             if (existing) existing.remove();
@@ -124,6 +133,8 @@
         switchStyle(newStyle) {
             if (!Object.values(STYLES).includes(newStyle)) return;
             
+            console.log('StyleSwitcher: Switching to style:', newStyle);
+            
             this.currentStyle = newStyle;
             this.saveStylePreference(newStyle);
             this.applyStyle(newStyle);
@@ -131,30 +142,29 @@
         }
         
         applyStyle(style, reload = true) {
-            if (style === STYLES.MINIMALIST) {
-                // Load minimalist resources
-                this.loadMinimalistStyle();
-            } else {
-                // Load premium resources
-                this.loadPremiumStyle();
-            }
+            console.log('StyleSwitcher: Applying style:', style, 'Reload:', reload);
             
             // Update body class
             document.body.classList.remove('style-minimalist', 'style-premium');
             document.body.classList.add(`style-${style}`);
             
-            // Reload CMS content with new style if needed
-            if (reload && window.cmsLoader) {
-                window.cmsLoader.refresh();
-            } else if (reload && window.cmsLoaderMinimalist) {
-                window.cmsLoaderMinimalist.refresh();
+            if (style === STYLES.MINIMALIST) {
+                // Load minimalist resources
+                this.loadMinimalistStyle(reload);
+            } else {
+                // Load premium resources
+                this.loadPremiumStyle(reload);
             }
         }
         
-        loadMinimalistStyle() {
-            // Remove premium styles
+        loadMinimalistStyle(reload = true) {
+            console.log('StyleSwitcher: Loading minimalist style');
+            
+            // Remove premium-specific styles if they exist
             const premiumStyles = document.querySelector('link[href*="mystyle-premium.css"]');
-            if (premiumStyles) premiumStyles.remove();
+            if (premiumStyles && !document.querySelector('link[href*="mystyle-minimalist.css"]')) {
+                premiumStyles.remove();
+            }
             
             // Add minimalist styles if not present
             if (!document.querySelector('link[href*="mystyle-minimalist.css"]')) {
@@ -164,28 +174,76 @@
                 document.head.appendChild(link);
             }
             
-            // Load minimalist CMS loader
-            if (!window.cmsLoaderMinimalist) {
-                const script = document.createElement('script');
-                script.src = 'cms-loader-minimalist.js';
-                script.onload = () => {
-                    if (window.cmsLoaderMinimalist) {
-                        window.cmsLoaderMinimalist.refresh();
+            // Only load minimalist CMS loader if we need to reload and it's not already loaded
+            if (reload) {
+                // First, check if premium CMS loader exists and has data
+                if (window.cmsLoader && window.allMenuCategories && window.allMenuCategories.length > 0) {
+                    console.log('StyleSwitcher: Using existing menu data for minimalist view');
+                    
+                    // Load minimalist CMS loader
+                    if (!window.cmsLoaderMinimalist) {
+                        const script = document.createElement('script');
+                        script.src = 'cms-loader-minimalist.js';
+                        script.onload = () => {
+                            console.log('StyleSwitcher: Minimalist CMS loader loaded');
+                            // Copy data from premium loader
+                            if (window.cmsLoaderMinimalist) {
+                                window.cmsLoaderMinimalist.allMenuCategories = window.allMenuCategories;
+                                window.cmsLoaderMinimalist.displayMinimalistMenu(window.allMenuCategories);
+                            }
+                        };
+                        document.body.appendChild(script);
+                    } else {
+                        // Just redisplay with existing data
+                        window.cmsLoaderMinimalist.displayMinimalistMenu(window.allMenuCategories);
                     }
-                };
-                document.body.appendChild(script);
+                } else {
+                    // No data available, load minimalist CMS loader fresh
+                    this.loadMinimalistCMSLoader();
+                }
             }
         }
         
-        loadPremiumStyle() {
+        loadMinimalistCMSLoader() {
+            console.log('StyleSwitcher: Loading minimalist CMS loader fresh');
+            
+            if (!document.querySelector('script[src*="cms-loader-minimalist.js"]')) {
+                const script = document.createElement('script');
+                script.src = 'cms-loader-minimalist.js';
+                script.onload = () => {
+                    console.log('StyleSwitcher: Minimalist CMS loader script loaded');
+                    // The script should auto-initialize
+                };
+                script.onerror = (error) => {
+                    console.error('StyleSwitcher: Failed to load minimalist CMS loader:', error);
+                };
+                document.body.appendChild(script);
+            } else if (window.cmsLoaderMinimalist && window.cmsLoaderMinimalist.refresh) {
+                window.cmsLoaderMinimalist.refresh();
+            }
+        }
+        
+        loadPremiumStyle(reload = true) {
+            console.log('StyleSwitcher: Loading premium style');
+            
             // Remove minimalist styles
             const minimalistStyles = document.querySelector('link[href*="mystyle-minimalist.css"]');
             if (minimalistStyles) minimalistStyles.remove();
             
             // Premium styles should already be loaded from index.html
             // Just ensure CMS loader is available
-            if (window.cmsLoader) {
+            if (reload && window.cmsLoader && window.cmsLoader.refresh) {
+                console.log('StyleSwitcher: Refreshing premium CMS loader');
                 window.cmsLoader.refresh();
+            } else if (reload && !window.cmsLoader) {
+                console.error('StyleSwitcher: Premium CMS loader not found!');
+                // Try to reload it
+                const script = document.createElement('script');
+                script.src = 'cms-loader-premium.js';
+                script.onload = () => {
+                    console.log('StyleSwitcher: Premium CMS loader reloaded');
+                };
+                document.body.appendChild(script);
             }
         }
         
@@ -208,9 +266,13 @@
         }
         
         updateUI() {
+            if (!this.dropdown) return;
+            
             // Update dropdown toggle text
             const toggleText = this.dropdown.querySelector('.style-dropdown-toggle span');
-            toggleText.textContent = this.getDisplayName();
+            if (toggleText) {
+                toggleText.textContent = this.getDisplayName();
+            }
             
             // Update active style
             const styleOptions = this.dropdown.querySelectorAll('.style-option[data-style]');
@@ -220,15 +282,17 @@
             
             // Update theme toggle
             const themeToggle = this.dropdown.querySelector('.theme-toggle');
-            const themeIcon = themeToggle.querySelector('i');
-            const themeText = themeToggle.querySelector('span');
-            
-            if (this.currentTheme === THEMES.DARK) {
-                themeIcon.className = 'fas fa-sun';
-                themeText.textContent = 'Light Mode';
-            } else {
-                themeIcon.className = 'fas fa-moon';
-                themeText.textContent = 'Dark Mode';
+            if (themeToggle) {
+                const themeIcon = themeToggle.querySelector('i');
+                const themeText = themeToggle.querySelector('span');
+                
+                if (this.currentTheme === THEMES.DARK) {
+                    themeIcon.className = 'fas fa-sun';
+                    themeText.textContent = 'Light Mode';
+                } else {
+                    themeIcon.className = 'fas fa-moon';
+                    themeText.textContent = 'Dark Mode';
+                }
             }
         }
         
@@ -283,6 +347,7 @@
     }
     
     // Initialize style switcher
+    console.log('StyleSwitcher: Creating new instance');
     window.styleSwitcher = new StyleSwitcher();
     
     // Export for global access
