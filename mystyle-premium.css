@@ -2655,3 +2655,235 @@ html {
         padding: 0.5rem 1rem;
     }
 }
+
+/* ===============================================
+   MOBILE SPECIFIC FIXES - Add to end of mystyle-premium.css
+   =============================================== */
+
+/* Force mobile PDF button visibility */
+@media (max-width: 768px) {
+    .mobile-pdf-download {
+        display: flex !important;
+        background: #1A1A1A !important;
+        color: #FFFFFF !important;
+        border: none !important;
+        padding: 0.75rem 1.5rem !important;
+        border-radius: 25px !important;
+        font-family: 'Montserrat', sans-serif !important;
+        font-size: 0.75rem !important;
+        font-weight: 500 !important;
+        text-transform: uppercase !important;
+        letter-spacing: 0.1em !important;
+        cursor: pointer !important;
+        transition: all 0.3s ease !important;
+        margin: 0 auto 2rem !important;
+        gap: 0.5rem !important;
+        align-items: center !important;
+        justify-content: center !important;
+        -webkit-appearance: none !important;
+        -moz-appearance: none !important;
+        appearance: none !important;
+        -webkit-tap-highlight-color: transparent !important;
+        touch-action: manipulation !important;
+    }
+    
+    .mobile-pdf-download:active {
+        transform: scale(0.95) !important;
+        background: #C9A961 !important;
+    }
+    
+    body.dark-mode .mobile-pdf-download {
+        background: #C9A961 !important;
+        color: #0A0A0A !important;
+    }
+    
+    body.dark-mode .mobile-pdf-download:active {
+        background: #E6D097 !important;
+    }
+}
+
+/* Mobile Dark Mode Toggle Styles */
+.mobile-dark-mode-item {
+    display: block !important;
+    width: 100% !important;
+    margin-top: 1rem !important;
+    padding-top: 1rem !important;
+    border-top: 1px solid rgba(30, 74, 60, 0.1) !important;
+    list-style: none !important;
+}
+
+body.dark-mode .mobile-dark-mode-item {
+    border-top-color: rgba(255, 255, 255, 0.1) !important;
+}
+
+.mobile-dark-mode-toggle {
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    gap: 0.5rem !important;
+    width: 100% !important;
+    padding: 1rem !important;
+    background: transparent !important;
+    border: 1px solid #E8E8E8 !important;
+    color: #1E4A3C !important;
+    font-family: 'Montserrat', sans-serif !important;
+    font-size: 0.875rem !important;
+    font-weight: 500 !important;
+    text-transform: uppercase !important;
+    letter-spacing: 0.05em !important;
+    cursor: pointer !important;
+    transition: all 0.3s ease !important;
+    -webkit-appearance: none !important;
+    -moz-appearance: none !important;
+    appearance: none !important;
+    -webkit-tap-highlight-color: transparent !important;
+    touch-action: manipulation !important;
+}
+
+.mobile-dark-mode-toggle:hover {
+    background: #1E4A3C !important;
+    color: #FFFFFF !important;
+    border-color: #1E4A3C !important;
+}
+
+body.dark-mode .mobile-dark-mode-toggle {
+    background: #1A1A1A !important;
+    color: #FFFFFF !important;
+    border-color: #1A1A1A !important;
+}
+
+body.dark-mode .mobile-dark-mode-toggle:hover {
+    background: #C9A961 !important;
+    color: #0A0A0A !important;
+    border-color: #C9A961 !important;
+}
+
+/* iOS Specific Fixes */
+@supports (-webkit-touch-callout: none) {
+    /* iOS Safari button fixes */
+    .mobile-pdf-download,
+    .mobile-dark-mode-toggle,
+    .btn-luxury,
+    .filter-btn,
+    .btn-icon {
+        -webkit-tap-highlight-color: transparent !important;
+        -webkit-touch-callout: none !important;
+        -webkit-user-select: none !important;
+        touch-action: manipulation !important;
+    }
+    
+    /* Prevent iOS zoom on form inputs */
+    input[type="text"],
+    input[type="email"],
+    input[type="tel"],
+    input[type="date"],
+    select,
+    textarea {
+        font-size: 16px !important;
+    }
+    
+    /* Fix for iOS button appearance */
+    button,
+    input[type="button"],
+    input[type="submit"] {
+        -webkit-appearance: none !important;
+        border-radius: 0 !important;
+    }
+    
+    /* Maintain border radius where needed */
+    .mobile-pdf-download {
+        border-radius: 25px !important;
+    }
+    
+    .mobile-dark-mode-toggle {
+        border-radius: 0 !important;
+    }
+}
+
+/* Android Specific Fixes */
+@media (max-width: 768px) {
+    /* Fix button tap states on Android */
+    button:active,
+    .btn-luxury:active,
+    .mobile-pdf-download:active,
+    .mobile-dark-mode-toggle:active {
+        outline: none !important;
+        -webkit-tap-highlight-color: transparent !important;
+    }
+    
+    /* Ensure proper button sizing on small screens */
+    .mobile-pdf-download,
+    .mobile-dark-mode-toggle {
+        min-height: 44px !important; /* Minimum touch target size */
+    }
+}
+
+/* Force visibility of mobile elements */
+@media (max-width: 768px) {
+    .mobile-dark-mode-item,
+    .mobile-pdf-download {
+        opacity: 1 !important;
+        visibility: visible !important;
+        pointer-events: auto !important;
+    }
+}
+
+/* Fix for Samsung Internet Browser */
+@media (max-width: 768px) {
+    input,
+    select,
+    textarea,
+    button {
+        -webkit-appearance: none !important;
+        -moz-appearance: none !important;
+        appearance: none !important;
+    }
+}
+
+/* Ensure mobile menu is properly styled */
+@media (max-width: 768px) {
+    .nav-menu.active {
+        display: flex !important;
+        position: absolute !important;
+        top: 100% !important;
+        left: 0 !important;
+        right: 0 !important;
+        background: white !important;
+        flex-direction: column !important;
+        padding: 20px !important;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1) !important;
+        z-index: 1000 !important;
+        max-height: calc(100vh - 80px) !important;
+        overflow-y: auto !important;
+        -webkit-overflow-scrolling: touch !important;
+    }
+    
+    body.dark-mode .nav-menu.active {
+        background: #0A0A0A !important;
+        box-shadow: 0 10px 30px rgba(255, 255, 255, 0.05) !important;
+    }
+}
+
+/* Ensure icons are visible */
+.mobile-pdf-download i,
+.mobile-dark-mode-toggle i {
+    display: inline-block !important;
+    font-size: 1rem !important;
+    line-height: 1 !important;
+}
+
+/* Fix potential z-index issues */
+@media (max-width: 768px) {
+    .mobile-pdf-download {
+        position: relative !important;
+        z-index: 10 !important;
+    }
+    
+    .nav-premium {
+        z-index: 1000 !important;
+    }
+    
+    .nav-menu.active {
+        z-index: 999 !important;
+    }
+}
