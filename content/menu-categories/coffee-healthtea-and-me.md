@@ -1,5 +1,6 @@
 ---
 title: coffee, healthtea and me
+description: "Von Wiener Klassikern bis adaptogene Superdrinks – Kaffee, Tee und mehr für deinen Energie-Boost."
 order: 5
 image: /content/images/dsc00407_ergebnis.jpg
 items:

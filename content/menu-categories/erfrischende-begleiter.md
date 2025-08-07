@@ -1,5 +1,6 @@
 ---
 title: sip happens - make it healthy
+description: "Kühle, natürliche Drinks mit Power aus Kräutern, Früchten und Gewürzen – für Erfrischung mit Mehrwert."
 order: 6
 image: /content/images/dsc00362_ergebnis.jpg
 items:

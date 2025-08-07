@@ -1,5 +1,6 @@
 ---
 title: sets
+description: "Perfekt kombiniert: Unsere Sets bringen dir ausgewogene Vielfalt und Genuss in einem cleveren Paket."
 order: -1
 image: /content/images/dsc00394_ergebnis.jpg
 items:

@@ -1,5 +1,6 @@
 ---
 title: hafer dich lieb
+description: "Haferflocken neu gedacht – warm, proteinreich und mit Superfoods verfeinert. Ideal für den gesunden Start in den Tag."
 order: 3
 image: /content/images/dsc00344_ergebnis.jpg
 items:

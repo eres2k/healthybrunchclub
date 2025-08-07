@@ -1,5 +1,6 @@
 ---
 title: eggcitements
+description: "Frisch, fluffig, voller Protein: Unsere Eiergerichte tanzen auf deinem Teller. Perfekt für den energiereichen Start in den Tag."
 order: 1
 image: /content/images/dsc00153_ergebnis.jpg
 description: 'Stell dir vor, Eier, die nicht nur braten, sondern tanzen! Unsere

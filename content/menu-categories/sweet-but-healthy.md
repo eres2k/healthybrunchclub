@@ -1,5 +1,6 @@
 ---
 title: berry good choice
+description: "Süß, aber gesund: Vollkorn, Topfen und Beeren für den genussvollen Brunchmoment ohne Reue."
 order: 4
 image: /content/images/dsc00302_ergebnis.jpg
 items:
