@@ -58,6 +58,12 @@
                 <li><a href="#menu" class="nav-link">Speisekarte</a></li>
                 <li><a href="#about" class="nav-link">Über uns</a></li>
                 <li><a href="#reservierung" class="nav-link nav-cta">Reservierung</a></li>
+                <li class="nav-divider desktop-only"></li>
+                <li>
+                    <button class="dark-mode-toggle" id="darkModeToggle" aria-label="Dark Mode umschalten">
+                        <i class="fas fa-moon" id="darkModeIcon"></i>
+                    </button>
+                </li>
             </ul>
             
             <button class="mobile-menu-btn" aria-label="Menu">
@@ -102,6 +108,12 @@
             <p class="section-subtitle">Eine kulinarische Reise durch biologische Exzellenz</p>
         </div>
 
+        <!-- Mobile PDF Download Button -->
+        <button class="mobile-pdf-download" onclick="window.open('/speisekarte.pdf', '_blank')">
+            <i class="fas fa-download"></i>
+            <span>Speisekarte PDF</span>
+        </button>
+
      <!-- Elegant Minimal Filter System -->
         <div class="menu-filter-container">
             <div class="filter-bar">
@@ -126,7 +138,7 @@
                             <i class="fas fa-undo"></i>
                             <span class="btn-text">Zurücksetzen</span>
                         </button>
-                       <button class="btn-icon" onclick="window.location.href='/content/menu.pdf'">
+                       <button class="btn-icon" onclick="window.location.href='/speisekarte.pdf'">
                             <i class="fas fa-download"></i>
                             <span class="btn-text">PDF</span>
                         </button>
