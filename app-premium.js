@@ -564,5 +564,209 @@ window.fixHamburgerMenu = function() {
 if (window.innerWidth <= 768) {
     fixHamburgerMenu();
 }
+
+// ===============================================
+// DARK MODE FUNCTIONALITY - Füge diese am Ende von app-premium.js hinzu
+// ===============================================
+
+// Dark Mode Management
+function initDarkMode() {
+    const darkModeToggle = document.getElementById('darkModeToggle');
+    const darkModeIcon = document.getElementById('darkModeIcon');
+    const body = document.body;
+    
+    // Check for saved dark mode preference or default to light mode
+    const currentTheme = localStorage.getItem('theme') || 'light';
+    
+    // Apply saved theme
+    if (currentTheme === 'dark') {
+        body.classList.add('dark-mode');
+        updateDarkModeIcon(true);
+    }
+    
+    // Toggle dark mode on button click
+    if (darkModeToggle) {
+        darkModeToggle.addEventListener('click', function() {
+            const isDarkMode = body.classList.toggle('dark-mode');
+            
+            // Save preference
+            localStorage.setItem('theme', isDarkMode ? 'dark' : 'light');
+            
+            // Update icon
+            updateDarkModeIcon(isDarkMode);
+            
+            // Update meta theme-color for mobile browsers
+            updateThemeColor(isDarkMode);
+            
+            // Trigger event for other components that might need to update
+            window.dispatchEvent(new CustomEvent('darkModeToggled', { detail: { isDarkMode } }));
+        });
+    }
+    
+    // Update icon based on mode
+    function updateDarkModeIcon(isDarkMode) {
+        if (darkModeIcon) {
+            darkModeIcon.className = isDarkMode ? 'fas fa-sun' : 'fas fa-moon';
+        }
+    }
+    
+    // Update theme color for mobile address bar
+    function updateThemeColor(isDarkMode) {
+        const themeColorMeta = document.querySelector('meta[name="theme-color"]');
+        if (themeColorMeta) {
+            themeColorMeta.content = isDarkMode ? '#0A0A0A' : '#1A1A1A';
+        }
+    }
+    
+    // Handle system theme changes
+    if (window.matchMedia) {
+        const darkModeQuery = window.matchMedia('(prefers-color-scheme: dark)');
+        
+        // Check if user has no saved preference and system prefers dark
+        if (!localStorage.getItem('theme') && darkModeQuery.matches) {
+            body.classList.add('dark-mode');
+            updateDarkModeIcon(true);
+            updateThemeColor(true);
+        }
+        
+        // Listen for system theme changes
+        darkModeQuery.addEventListener('change', function(e) {
+            // Only apply system theme if user hasn't set a preference
+            if (!localStorage.getItem('theme')) {
+                const isDarkMode = e.matches;
+                body.classList.toggle('dark-mode', isDarkMode);
+                updateDarkModeIcon(isDarkMode);
+                updateThemeColor(isDarkMode);
+            }
+        });
+    }
+}
+
+// Create mobile dark mode toggle
+function createMobileDarkModeToggle() {
+    const navMenu = document.querySelector('.nav-menu');
+    
+    if (navMenu && window.innerWidth <= 768) {
+        // Check if mobile toggle already exists
+        let mobileDarkModeItem = navMenu.querySelector('.mobile-dark-mode-item');
+        
+        if (!mobileDarkModeItem) {
+            // Create mobile dark mode menu item
+            mobileDarkModeItem = document.createElement('li');
+            mobileDarkModeItem.className = 'mobile-dark-mode-item';
+            
+            const mobileToggle = document.createElement('button');
+            mobileToggle.className = 'dark-mode-toggle mobile-dark-toggle';
+            mobileToggle.id = 'mobileDarkModeToggle';
+            mobileToggle.setAttribute('aria-label', 'Dark Mode umschalten');
+            
+            const icon = document.createElement('i');
+            icon.className = document.body.classList.contains('dark-mode') ? 'fas fa-sun' : 'fas fa-moon';
+            icon.id = 'mobileDarkModeIcon';
+            
+            mobileToggle.appendChild(icon);
+            mobileDarkModeItem.appendChild(mobileToggle);
+            
+            // Add to nav menu
+            navMenu.appendChild(mobileDarkModeItem);
+            
+            // Add click handler
+            mobileToggle.addEventListener('click', function() {
+                const body = document.body;
+                const isDarkMode = body.classList.toggle('dark-mode');
+                
+                // Save preference
+                localStorage.setItem('theme', isDarkMode ? 'dark' : 'light');
+                
+                // Update both icons
+                const desktopIcon = document.getElementById('darkModeIcon');
+                const mobileIcon = document.getElementById('mobileDarkModeIcon');
+                
+                if (desktopIcon) {
+                    desktopIcon.className = isDarkMode ? 'fas fa-sun' : 'fas fa-moon';
+                }
+                if (mobileIcon) {
+                    mobileIcon.className = isDarkMode ? 'fas fa-sun' : 'fas fa-moon';
+                }
+                
+                // Update theme color
+                const themeColorMeta = document.querySelector('meta[name="theme-color"]');
+                if (themeColorMeta) {
+                    themeColorMeta.content = isDarkMode ? '#0A0A0A' : '#1A1A1A';
+                }
+            });
+        }
+    }
+}
+
+// Update initialization
+document.addEventListener('DOMContentLoaded', function() {
+    // Initialize dark mode
+    initDarkMode();
+    
+    // Create mobile dark mode toggle
+    createMobileDarkModeToggle();
+    
+    // Re-create mobile toggle on resize
+    window.addEventListener('resize', debounce(function() {
+        if (window.innerWidth <= 768) {
+            createMobileDarkModeToggle();
+        } else {
+            // Remove mobile toggle on desktop
+            const mobileToggle = document.querySelector('.mobile-dark-mode-item');
+            if (mobileToggle) {
+                mobileToggle.remove();
+            }
+        }
+    }, 250));
+});
+
+// Listen for dark mode changes to update mobile menu if open
+window.addEventListener('darkModeToggled', function(e) {
+    // Update any UI elements that need to reflect the theme change
+    const mobileIcon = document.getElementById('mobileDarkModeIcon');
+    if (mobileIcon) {
+        mobileIcon.className = e.detail.isDarkMode ? 'fas fa-sun' : 'fas fa-moon';
+    }
+});
+
+// Add smooth transition for theme changes
+document.addEventListener('DOMContentLoaded', function() {
+    // Add transition class to body after initial load to prevent flash
+    setTimeout(() => {
+        document.body.style.transition = 'background-color 0.3s ease, color 0.3s ease';
+    }, 100);
+});
+
+// PDF Download tracking (optional)
+function trackPDFDownload() {
+    // Track PDF download event if analytics is set up
+    if (typeof gtag !== 'undefined') {
+        gtag('event', 'download', {
+            'event_category': 'Menu',
+            'event_label': 'PDF Menu Download'
+        });
+    }
+    
+    // Or custom tracking
+    console.log('Menu PDF downloaded');
+}
+
+// Add tracking to PDF buttons
+document.addEventListener('DOMContentLoaded', function() {
+    // Desktop PDF button
+    const desktopPdfBtn = document.querySelector('.btn-icon[onclick*="pdf"]');
+    if (desktopPdfBtn) {
+        desktopPdfBtn.addEventListener('click', trackPDFDownload);
+    }
+    
+    // Mobile PDF button
+    const mobilePdfBtn = document.querySelector('.mobile-pdf-download');
+    if (mobilePdfBtn) {
+        mobilePdfBtn.addEventListener('click', trackPDFDownload);
+    }
+});
+
+
 // Log initialization
 console.log('Premium restaurant app initialized with enhanced features.');
