@@ -1,7 +1,7 @@
 ---
 title: avo-lution
 order: 2
-image: /content/images/dsc00277.jpg
+image: /content/images/dsc00338_ergebnis.jpg
 items:
   - name: avocado bowl
     tags:
@@ -21,7 +21,6 @@ items:
       fat: 24g
     price: "8.90"
     image: /content/images/dsc00161.jpg
-
   - name: avocado bread
     tags:
       - vegetarisch
