@@ -21,33 +21,67 @@
     
     class StyleSwitcher {
         constructor() {
+            // Default to premium light (elegant light)
             this.currentStyle = this.getStoredStyle() || STYLES.PREMIUM;
             this.currentTheme = this.getStoredTheme() || THEMES.LIGHT;
             this.dropdown = null;
             this.isInitialized = false;
+            this.menuData = null; // Store menu data to prevent reloading
             this.init();
         }
         
         init() {
-            console.log('StyleSwitcher: Initializing with style:', this.currentStyle);
+            console.log('StyleSwitcher: Initializing with style:', this.currentStyle, 'theme:', this.currentTheme);
             
             // Apply stored preferences immediately
-            this.applyStyle(this.currentStyle, false);
-            this.applyTheme(this.currentTheme);
+            this.applyInitialStyles();
             
             // Create UI after DOM is ready
             if (document.readyState === 'loading') {
                 document.addEventListener('DOMContentLoaded', () => {
                     this.createUI();
                     this.isInitialized = true;
+                    this.captureMenuData();
                 });
             } else {
                 this.createUI();
                 this.isInitialized = true;
+                this.captureMenuData();
             }
             
             // Listen for system theme changes
             this.listenForSystemThemeChanges();
+        }
+        
+        captureMenuData() {
+            // Capture menu data when available to prevent reloading
+            if (window.allMenuCategories) {
+                this.menuData = window.allMenuCategories;
+            }
+            
+            // Listen for menu data loading
+            const checkMenuData = setInterval(() => {
+                if (window.allMenuCategories && window.allMenuCategories.length > 0) {
+                    this.menuData = window.allMenuCategories;
+                    clearInterval(checkMenuData);
+                }
+            }, 100);
+            
+            // Stop checking after 10 seconds
+            setTimeout(() => clearInterval(checkMenuData), 10000);
+        }
+        
+        applyInitialStyles() {
+            // Apply theme
+            document.documentElement.setAttribute('data-theme', this.currentTheme);
+            
+            // Apply style class
+            document.body.classList.add(`style-${this.currentStyle}`);
+            
+            // Don't load minimalist styles on initial load if premium is selected
+            if (this.currentStyle === STYLES.MINIMALIST) {
+                this.loadMinimalistStylesheet();
+            }
         }
         
         createUI() {
@@ -59,13 +93,14 @@
             
             // Create switcher container
             const switcher = document.createElement('div');
-            switcher.className = 'style-switcher';
+            switcher.className = 'style-switcher style-switcher-top';
             
             // Create dropdown
             this.dropdown = document.createElement('div');
             this.dropdown.className = 'style-dropdown';
             this.dropdown.innerHTML = `
                 <button class="style-dropdown-toggle" aria-label="Style Switcher">
+                    <i class="fas fa-palette"></i>
                     <span>${this.getDisplayName()}</span>
                     <i class="fas fa-chevron-down"></i>
                 </button>
@@ -73,7 +108,7 @@
                     <button class="style-option ${this.currentStyle === STYLES.PREMIUM ? 'active' : ''}" 
                             data-style="${STYLES.PREMIUM}">
                         <i class="fas fa-crown"></i>
-                        <span>Premium</span>
+                        <span>Elegant</span>
                     </button>
                     <button class="style-option ${this.currentStyle === STYLES.MINIMALIST ? 'active' : ''}" 
                             data-style="${STYLES.MINIMALIST}">
@@ -89,7 +124,14 @@
             `;
             
             switcher.appendChild(this.dropdown);
-            document.body.appendChild(switcher);
+            
+            // Insert after navigation
+            const nav = document.querySelector('.nav-premium');
+            if (nav) {
+                nav.parentNode.insertBefore(switcher, nav.nextSibling);
+            } else {
+                document.body.insertBefore(switcher, document.body.firstChild);
+            }
             
             // Add event listeners
             this.attachEventListeners();
@@ -108,6 +150,11 @@
             // Close dropdown when clicking outside
             document.addEventListener('click', () => {
                 this.dropdown.classList.remove('active');
+            });
+            
+            // Prevent closing when clicking inside menu
+            menu.addEventListener('click', (e) => {
+                e.stopPropagation();
             });
             
             // Style options
@@ -135,116 +182,155 @@
             
             console.log('StyleSwitcher: Switching to style:', newStyle);
             
+            // Show loading state
+            document.body.classList.add('switching-styles');
+            
             this.currentStyle = newStyle;
             this.saveStylePreference(newStyle);
             this.applyStyle(newStyle);
             this.updateUI();
+            
+            // Remove loading state
+            setTimeout(() => {
+                document.body.classList.remove('switching-styles');
+            }, 300);
         }
         
-        applyStyle(style, reload = true) {
-            console.log('StyleSwitcher: Applying style:', style, 'Reload:', reload);
+        applyStyle(style) {
+            console.log('StyleSwitcher: Applying style:', style);
             
             // Update body class
             document.body.classList.remove('style-minimalist', 'style-premium');
             document.body.classList.add(`style-${style}`);
             
             if (style === STYLES.MINIMALIST) {
-                // Load minimalist resources
-                this.loadMinimalistStyle(reload);
+                this.switchToMinimalist();
             } else {
-                // Load premium resources
-                this.loadPremiumStyle(reload);
+                this.switchToPremium();
             }
         }
         
-        loadMinimalistStyle(reload = true) {
-            console.log('StyleSwitcher: Loading minimalist style');
+        switchToMinimalist() {
+            console.log('StyleSwitcher: Switching to minimalist');
             
-            // Remove premium-specific styles if they exist
-            const premiumStyles = document.querySelector('link[href*="mystyle-premium.css"]');
-            if (premiumStyles && !document.querySelector('link[href*="mystyle-minimalist.css"]')) {
-                premiumStyles.remove();
+            // Add minimalist stylesheet if not present
+            this.loadMinimalistStylesheet();
+            
+            // Hide premium-specific elements
+            document.querySelectorAll('.hero-premium, .philosophy-section, .about-premium, .reservation-premium').forEach(el => {
+                el.style.display = 'none';
+            });
+            
+            // Use stored menu data or get from premium loader
+            if (this.menuData || window.allMenuCategories) {
+                const data = this.menuData || window.allMenuCategories;
+                this.displayMinimalistMenu(data);
+            }
+        }
+        
+        switchToPremium() {
+            console.log('StyleSwitcher: Switching to premium');
+            
+            // Remove minimalist stylesheet
+            const minimalistLink = document.querySelector('link[href*="mystyle-minimalist.css"]');
+            if (minimalistLink) {
+                minimalistLink.remove();
             }
             
-            // Add minimalist styles if not present
+            // Show premium elements
+            document.querySelectorAll('.hero-premium, .philosophy-section, .about-premium, .reservation-premium').forEach(el => {
+                el.style.display = '';
+            });
+            
+            // Restore premium menu display
+            if (this.menuData || window.allMenuCategories) {
+                const data = this.menuData || window.allMenuCategories;
+                if (window.cmsLoader && window.cmsLoader.displayPremiumMenu) {
+                    window.cmsLoader.displayPremiumMenu(data);
+                }
+            }
+        }
+        
+        loadMinimalistStylesheet() {
             if (!document.querySelector('link[href*="mystyle-minimalist.css"]')) {
                 const link = document.createElement('link');
                 link.rel = 'stylesheet';
                 link.href = 'mystyle-minimalist.css';
                 document.head.appendChild(link);
             }
+        }
+        
+        displayMinimalistMenu(menuData) {
+            // Import minimalist display function inline to avoid loading issues
+            const container = document.getElementById('menuContainer');
+            if (!container || !menuData) return;
             
-            // Only load minimalist CMS loader if we need to reload and it's not already loaded
-            if (reload) {
-                // First, check if premium CMS loader exists and has data
-                if (window.cmsLoader && window.allMenuCategories && window.allMenuCategories.length > 0) {
-                    console.log('StyleSwitcher: Using existing menu data for minimalist view');
-                    
-                    // Load minimalist CMS loader
-                    if (!window.cmsLoaderMinimalist) {
-                        const script = document.createElement('script');
-                        script.src = 'cms-loader-minimalist.js';
-                        script.onload = () => {
-                            console.log('StyleSwitcher: Minimalist CMS loader loaded');
-                            // Copy data from premium loader
-                            if (window.cmsLoaderMinimalist) {
-                                window.cmsLoaderMinimalist.allMenuCategories = window.allMenuCategories;
-                                window.cmsLoaderMinimalist.displayMinimalistMenu(window.allMenuCategories);
-                            }
-                        };
-                        document.body.appendChild(script);
-                    } else {
-                        // Just redisplay with existing data
-                        window.cmsLoaderMinimalist.displayMinimalistMenu(window.allMenuCategories);
-                    }
-                } else {
-                    // No data available, load minimalist CMS loader fresh
-                    this.loadMinimalistCMSLoader();
+            let menuHTML = '';
+            menuData.forEach((category) => {
+                const spacedTitle = category.title.toUpperCase().split('').join(' ');
+                
+                menuHTML += `
+                    <div class="menu-category" data-category="${category.title.toLowerCase().replace(/\s+/g, '-')}">
+                        <div class="category-header">
+                            <h3 class="category-name">${spacedTitle}</h3>
+                            ${category.description ? `<p class="category-description">${category.description.toLowerCase()}</p>` : ''}
+                        </div>
+                        <div class="menu-grid">
+                            ${category.items ? category.items.map(item => this.createMinimalistItem(item)).join('') : ''}
+                        </div>
+                    </div>
+                `;
+            });
+            
+            container.innerHTML = menuHTML + `
+                <div class="pdf-footer-note">
+                    die angegebenen nährwerte sind durchschnittswerte und dienen lediglich zur orientierung
+                </div>
+            `;
+        }
+        
+        createMinimalistItem(item) {
+            const formatPrice = (price) => {
+                if (!price) return '';
+                let cleanPrice = String(price).replace(/[€$£¥\s]/g, '').replace(/,/g, '.');
+                const numPrice = parseFloat(cleanPrice);
+                if (isNaN(numPrice)) return price;
+                let formatted = numPrice.toFixed(2);
+                if (formatted.endsWith('.00')) formatted = formatted.slice(0, -3);
+                return formatted;
+            };
+            
+            let nutritionBadges = '';
+            if (item.nutrition) {
+                if (item.nutrition.calories) {
+                    const calories = item.nutrition.calories.replace(/[^0-9]/g, '');
+                    nutritionBadges += `<div class="nutrition-badge"><span class="nutrition-value">${calories}</span><span class="nutrition-label">kcal</span></div>`;
+                }
+                if (item.nutrition.protein) {
+                    const protein = item.nutrition.protein.replace(/[^0-9,\.]/g, '');
+                    nutritionBadges += `<div class="nutrition-badge"><span class="nutrition-value">${protein} g</span><span class="nutrition-label">protein</span></div>`;
+                }
+                if (item.nutrition.carbs) {
+                    const carbs = item.nutrition.carbs.replace(/[^0-9,\.]/g, '');
+                    nutritionBadges += `<div class="nutrition-badge"><span class="nutrition-value">${carbs} g</span><span class="nutrition-label">carbs</span></div>`;
+                }
+                if (item.nutrition.fat) {
+                    const fat = item.nutrition.fat.replace(/[^0-9,\.]/g, '');
+                    nutritionBadges += `<div class="nutrition-badge"><span class="nutrition-value">${fat} g</span><span class="nutrition-label">fett</span></div>`;
                 }
             }
-        }
-        
-        loadMinimalistCMSLoader() {
-            console.log('StyleSwitcher: Loading minimalist CMS loader fresh');
             
-            if (!document.querySelector('script[src*="cms-loader-minimalist.js"]')) {
-                const script = document.createElement('script');
-                script.src = 'cms-loader-minimalist.js';
-                script.onload = () => {
-                    console.log('StyleSwitcher: Minimalist CMS loader script loaded');
-                    // The script should auto-initialize
-                };
-                script.onerror = (error) => {
-                    console.error('StyleSwitcher: Failed to load minimalist CMS loader:', error);
-                };
-                document.body.appendChild(script);
-            } else if (window.cmsLoaderMinimalist && window.cmsLoaderMinimalist.refresh) {
-                window.cmsLoaderMinimalist.refresh();
-            }
-        }
-        
-        loadPremiumStyle(reload = true) {
-            console.log('StyleSwitcher: Loading premium style');
-            
-            // Remove minimalist styles
-            const minimalistStyles = document.querySelector('link[href*="mystyle-minimalist.css"]');
-            if (minimalistStyles) minimalistStyles.remove();
-            
-            // Premium styles should already be loaded from index.html
-            // Just ensure CMS loader is available
-            if (reload && window.cmsLoader && window.cmsLoader.refresh) {
-                console.log('StyleSwitcher: Refreshing premium CMS loader');
-                window.cmsLoader.refresh();
-            } else if (reload && !window.cmsLoader) {
-                console.error('StyleSwitcher: Premium CMS loader not found!');
-                // Try to reload it
-                const script = document.createElement('script');
-                script.src = 'cms-loader-premium.js';
-                script.onload = () => {
-                    console.log('StyleSwitcher: Premium CMS loader reloaded');
-                };
-                document.body.appendChild(script);
-            }
+            return `
+                <div class="menu-item-card">
+                    <div class="menu-item-header">
+                        <h4 class="menu-item-name">${item.name.toLowerCase()}</h4>
+                        ${item.price ? `<span class="menu-item-price">${formatPrice(item.price)}</span>` : ''}
+                    </div>
+                    <div class="menu-item-description">${item.description ? item.description.toLowerCase() : ''}</div>
+                    ${nutritionBadges ? `<div class="menu-item-nutrition">${nutritionBadges}</div>` : ''}
+                    ${item.allergens && item.allergens.length > 0 ? `<div class="menu-item-allergens">(${item.allergens.join(',')})</div>` : ''}
+                </div>
+            `;
         }
         
         toggleTheme() {
@@ -297,9 +383,9 @@
         }
         
         getDisplayName() {
-            const styleText = this.currentStyle === STYLES.MINIMALIST ? 'Minimalist' : 'Premium';
-            const themeIcon = this.currentTheme === THEMES.DARK ? '🌙' : '☀️';
-            return `${styleText} ${themeIcon}`;
+            const styleText = this.currentStyle === STYLES.MINIMALIST ? 'Minimalist' : 'Elegant';
+            const themeText = this.currentTheme === THEMES.DARK ? 'Dark' : 'Light';
+            return `${styleText} ${themeText}`;
         }
         
         listenForSystemThemeChanges() {
@@ -326,15 +412,7 @@
         }
         
         getStoredTheme() {
-            const stored = localStorage.getItem(STORAGE_KEYS.THEME);
-            if (stored) return stored;
-            
-            // Check system preference
-            if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
-                return THEMES.DARK;
-            }
-            
-            return THEMES.LIGHT;
+            return localStorage.getItem(STORAGE_KEYS.THEME);
         }
         
         saveThemePreference(theme) {
