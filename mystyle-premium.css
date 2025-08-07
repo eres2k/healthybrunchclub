@@ -3020,3 +3020,10 @@ body.dark-mode::-webkit-scrollbar-thumb {
 body.dark-mode::-webkit-scrollbar-thumb:hover {
     background: var(--warm-gray);
 }
+
+/* Desktop only - versteckt Elemente auf Mobile */
+@media (max-width: 768px) {
+    .desktop-only {
+        display: none !important;
+    }
+}
