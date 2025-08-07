@@ -1,7 +1,7 @@
 ---
 title: hafer dich lieb
 order: 3
-image: /content/images/dsc00300_ergebnis.jpg
+image: /content/images/dsc00344_ergebnis.jpg
 items:
   - name: premium-porridge
     tags:
