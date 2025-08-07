@@ -26,3 +26,18 @@
   from = "/test-paths"
   to = "/.netlify/functions/test-paths"
   status = 200
+
+[[redirects]]
+  from = "/menu-pdf"
+  to = "/.netlify/functions/generate-menu-pdf"
+  status = 200
+
+[[redirects]]
+  from = "/speisekarte.pdf"
+  to = "/.netlify/functions/generate-menu-pdf"
+  status = 200
+
+[[redirects]]
+  from = "/content/menu.pdf"
+  to = "/.netlify/functions/generate-menu-pdf"
+  status = 200
