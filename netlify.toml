@@ -1,19 +1,58 @@
-backend:
-  name: git-gateway
-  branch: main
+# Updated netlify.toml with dark mode support only
 
-media_folder: "/content/images"
-public_folder: "/content/images"
+[build]
+  command = "npm run build"
+  functions = "netlify/functions"
+  publish = "."
 
-# Premium CMS Configuration
-site_url: https://healthybrunchclub.at
-display_url: https://healthybrunchclub.at
-logo_url: https://healthybrunchclub.at/content/images/logo.png
+[build.environment]
+  NODE_VERSION = "18"
 
-# Publish Mode
-publish_mode: editorial_workflow
+[functions]
+  # Include content files in the function bundle
+  included_files = ["content/**/*.md", "content/**/*.yml", "content/**/*.json"]
+  node_bundler = "esbuild"
 
-collections:
-  - name: "menu-categories"
-    label: "Menü Kategorien"
-    label_singular: "Menü Ka
+# Headers for better performance and caching
+[[headers]]
+  for = "/*.css"
+  [headers.values]
+    Cache-Control = "public, max-age=31536000"
+    
+[[headers]]
+  for = "/*.js"
+  [headers.values]
+    Cache-Control = "public, max-age=31536000"
+
+[[headers]]
+  for = "/style-switcher.js"
+  [headers.values]
+    Cache-Control = "public, max-age=3600"
+
+[[headers]]
+  for = "/dark-mode-*.css"
+  [headers.values]
+    Cache-Control = "public, max-age=604800"
+
+# Existing redirects
+[[redirects]]
+  from = "/menu-pdf"
+  to = "/.netlify/functions/generate-menu-pdf"
+  status = 200
+
+[[redirects]]
+  from = "/speisekarte.pdf"
+  to = "/.netlify/functions/generate-menu-pdf"
+  status = 200
+
+[[redirects]]
+  from = "/test-paths"
+  to = "/.netlify/functions/test-paths"
+  status = 200
+
+# PWA manifest
+[[headers]]
+  for = "/manifest.json"
+  [headers.values]
+    Content-Type = "application/manifest+json"
+    Cache-Control = "public, max-age=3600"
