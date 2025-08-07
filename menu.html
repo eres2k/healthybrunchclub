@@ -233,7 +233,7 @@
     <!-- Main Content -->
     <main class="main">
         <div class="menu-options">
-            <a href="/.netlify/functions/generate-menu-pdf" class="menu-btn gold" target="_blank">
+            <a href="/content/menu.pdf" class="menu-btn gold" target="_blank">
                 <span class="icon">📄</span>
                 <span>Speisekarte öffnen</span>
             </a>
@@ -248,7 +248,7 @@
                 <span>Speisekarte hier anzeigen</span>
             </button>
             
-            <a href="/.netlify/functions/generate-menu-pdf" download="healthy-brunch-club-menu.pdf" class="menu-btn">
+            <a href="/content/menu.pdf" download="healthy-brunch-club-menu.pdf" class="menu-btn">
                 <span class="icon">⬇️</span>
                 <span>Speisekarte herunterladen</span>
             </a>
@@ -294,7 +294,7 @@
             
             if (viewer.style.display === 'none') {
                 viewer.style.display = 'block';
-                frame.src = '/.netlify/functions/generate-menu-pdf';
+                frame.src = '/content/menu.pdf';
                 
                 // Scroll to PDF viewer
                 setTimeout(() => {
