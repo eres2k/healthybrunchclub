@@ -1,7 +1,7 @@
 ---
 title: coffee, healthtea and me
 order: 5
-image: /content/images/dsc00407.jpg
+image: /content/images/dsc00407_ergebnis.jpg
 items:
   - name: ashwaganda latte
     tags:
@@ -18,7 +18,6 @@ items:
       carbs: 18g
       fat: 8g
     price: "5.50"
-
   - name: reishi cappuccino
     tags:
       - adaptogen
@@ -34,7 +33,6 @@ items:
       carbs: 14g
       fat: 7g
     price: "4.60"
-
   - name: chaga cold brew
     tags:
       - adaptogen
@@ -49,7 +47,6 @@ items:
       carbs: 3g
       fat: 0g
     price: "4.90"
-
   - name: kurkuma espresso latte
     tags:
       - adaptogen
@@ -65,7 +62,6 @@ items:
       carbs: 16g
       fat: 7g
     price: "5.90"
-
   - name: wiener klassiker
     tags:
       - belebend
@@ -86,7 +82,6 @@ items:
       protein: 3g
       carbs: 8g
       fat: 4g
-
   - name: fenchel-anis-kümmel
     tags:
       - glutenfrei
@@ -102,7 +97,6 @@ items:
       carbs: 1g
       fat: 0g
     price: "4.50"
-
   - name: melisse-verbene-lavendel
     tags:
       - glutenfrei
@@ -117,7 +111,6 @@ items:
       carbs: 1g
       fat: 0g
     price: "4.50"
-
   - name: chaga tee
     tags:
       - adaptogen
