@@ -492,7 +492,7 @@ h1, h2, h3, h4, h5, h6 {
     gap: var(--spacing-xs);
     align-items: center;
     flex-wrap: wrap;
-    max-width: 600px; /* Limit width to prevent excessive stretching */
+    max-width: 670px; /* Limit width to prevent excessive stretching */
 }
 
 .tag-filter {
