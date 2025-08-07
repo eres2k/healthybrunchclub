@@ -1,35 +1,22 @@
 ---
 title: sip happens - make it healthy
-description: "Kühle, natürliche Drinks mit Power aus Kräutern, Früchten und Gewürzen – für Erfrischung mit Mehrwert."
 order: 6
 image: /content/images/dsc00362_ergebnis.jpg
+description: Kühle, natürliche Drinks mit Power aus Kräutern, Früchten und
+  Gewürzen – für Erfrischung mit Mehrwert.
 items:
-  - name: himbeersoda
+  - name: himbeer- hollundersoda
     tags:
       - erfrischend
       - zuckerarm
       - antioxidativ
-    description: prickelndes himbeersoda von sonnentor, sanft gesüßt mit
-      apfelsaftkonzentrat, für einen fruchtig-leichten genuss.
+    description: prickelndes himbeeroder hollundasoda  von sonnentor, sanft gesüßt
+      mit apfelsaftkonzentrat, für einen fruchtig-leichten genuss
     allergens: []
     nutrition:
       calories: "45"
       protein: 0g
       carbs: 11g
-      fat: 0g
-    price: "4.10"
-  - name: hollundersoda
-    tags:
-      - erfrischend
-      - zuckerarm
-      - antioxidativ
-    description: spritziges hollundersoda von sonnentor, verfeinert mit
-      apfelsaftkonzentrat, für eine blumig-frische erfrischung.
-    allergens: []
-    nutrition:
-      calories: "42"
-      protein: 0g
-      carbs: 10g
       fat: 0g
     price: "4.10"
   - name: minty
