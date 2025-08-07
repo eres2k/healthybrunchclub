@@ -1,7 +1,7 @@
 ---
 title: hafer dich lieb
 order: 3
-image: /content/images/dsc00254.jpg
+image: /content/images/dsc00300_ergebnis.jpg
 items:
   - name: premium-porridge
     tags:
@@ -20,7 +20,6 @@ items:
       carbs: 48g
       fat: 16g
     price: "8.90"
-
   - name: kokoscreme power-oats
     tags:
       - glutenfrei
