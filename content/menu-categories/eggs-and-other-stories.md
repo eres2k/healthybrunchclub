@@ -1,7 +1,7 @@
 ---
 title: eggcitements
 order: 1
-image: /content/images/dsc00161.jpg
+image: /content/images/dsc00153_ergebnis.jpg
 description: 'Stell dir vor, Eier, die nicht nur braten, sondern tanzen! Unsere
   "Eggcitements"-Kategorie ist der ultimative Eier-Party-Hit – frisch, fluffig
   und voller Überraschungen. Ob du ein Spiegelei-Fan bist, das wie ein
@@ -38,7 +38,6 @@ items:
       fat: 15g
     price: "12.90"
     image: /content/images/image-1-.jpg
-
   - name: omelette creation
     tags:
       - vegetarisch
@@ -70,7 +69,6 @@ items:
       fat: 9g
     price: "14.90"
     image: /content/images/image-2-.jpg
-
   - name: beggs enedict
     tags:
       - vegetarisch
