@@ -637,6 +637,9 @@ exports.handler = async (event, context) => {
             
             yPos += 12; // More space before items
             
+            // WICHTIG: Speichern Sie die Y-Position des ersten Items
+            const firstItemY = yPos;
+            
             // Category items
             for (const item of category.items) {
                 // Check if item fits in current column
@@ -651,8 +654,8 @@ exports.handler = async (event, context) => {
                 if (yPos + itemHeight > pageHeight - 25) {
                     if (currentColumn === 0) {
                         currentColumn = 1;
-                        // KORREKTUR: Setze Y-Position auf die gespeicherte Kategorie-Startposition
-                        yPos = categoryStartY;
+                        // KORREKTUR: Setze Y-Position auf die Position des ersten Items
+                        yPos = firstItemY;
                     } else {
                         startNewPage();
                         yPos = columnYPos[0];
@@ -788,7 +791,7 @@ exports.handler = async (event, context) => {
                 if (yPos + descHeight > pageHeight - 25) {
                     if (currentColumn === 0) {
                         currentColumn = 1;
-                        yPos = categoryStartY; // Auf Kategorie-Start zurücksetzen
+                        yPos = firstItemY; // Auf erstes Item zurücksetzen
                     } else {
                         startNewPage();
                         yPos = columnYPos[0];
