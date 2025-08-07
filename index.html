@@ -9,11 +9,6 @@
     <meta name="author" content="Healthy Brunch Club">
     <link rel="canonical" href="https://healthybrunchclub.at/">
     
-    <!-- Dark Mode Support -->
-    <meta name="color-scheme" content="light dark">
-    <meta name="theme-color" content="#FAFAF8" media="(prefers-color-scheme: light)">
-    <meta name="theme-color" content="#1A1A1A" media="(prefers-color-scheme: dark)">
-    
     <!-- Refined Typography -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -22,14 +17,8 @@
     <!-- Icons -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     
-    <!-- Main Styles -->
-    <link rel="stylesheet" href="mystyle-premium.css" id="mainStylesheet">
-    
-    <!-- Style Switcher CSS -->
-    <link rel="stylesheet" href="style-switcher.css">
-    
-    <!-- Dark Mode Support -->
-    <link rel="stylesheet" href="dark-mode-premium.css">
+    <!-- Styles -->
+    <link rel="stylesheet" href="mystyle-premium.css">
     
     <!-- Netlify Identity -->
     <script type="text/javascript" src="https://identity.netlify.com/v1/netlify-identity-widget.js"></script>
@@ -43,38 +32,9 @@
     <meta property="og:description" content="Gehobene Bio-Küche in stilvollem Ambiente">
     <meta property="og:image" content="/og-image.jpg">
     <meta property="og:type" content="restaurant">
-    
-    <!-- Early Style Detection -->
-    <script>
-        // Apply stored style preference immediately to prevent flash
-        (function() {
-            const storedTheme = localStorage.getItem('hbc-theme-preference');
-            const storedStyle = localStorage.getItem('hbc-style-preference');
-            
-            // Apply theme immediately
-            if (storedTheme) {
-                document.documentElement.setAttribute('data-theme', storedTheme);
-            } else if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
-                document.documentElement.setAttribute('data-theme', 'dark');
-            }
-            
-            // Apply style class immediately
-            if (storedStyle) {
-                document.documentElement.className = 'style-' + storedStyle;
-            }
-        })();
-    </script>
 </head>
 
 <body>
-    <!-- Debug Console -->
-    <script>
-        console.log('Page loading started');
-        window.addEventListener('error', function(e) {
-            console.error('Script error:', e.message, e.filename, e.lineno, e.error);
-        });
-    </script>
-
     <!-- Elegant Loading Screen -->
     <div class="loading-screen" id="loadingScreen">
         <div class="loading-content">
@@ -142,7 +102,7 @@
             <p class="section-subtitle">Eine kulinarische Reise durch biologische Exzellenz</p>
         </div>
 
-        <!-- Elegant Minimal Filter System -->
+     <!-- Elegant Minimal Filter System -->
         <div class="menu-filter-container">
             <div class="filter-bar">
                 <!-- Category Filters Row -->
@@ -154,7 +114,8 @@
                     </div>
                 </div>
                 
-                <!-- Tags and Actions Row -->
+            
+              <!-- Tags and Actions Row -->
                 <div class="filter-row-bottom">
                     <div class="filter-tags desktop-only" id="tagFilters">
                         <!-- Tag filters will be populated dynamically -->
@@ -165,7 +126,7 @@
                             <i class="fas fa-undo"></i>
                             <span class="btn-text">Zurücksetzen</span>
                         </button>
-                        <button class="btn-icon" onclick="window.location.href='/content/menu.pdf'">
+                       <button class="btn-icon" onclick="window.location.href='/content/menu.pdf'">
                             <i class="fas fa-download"></i>
                             <span class="btn-text">PDF</span>
                         </button>
@@ -191,30 +152,31 @@
         </div>
     </section>
 
+
     <!-- About Section -->
     <section class="about-premium" id="about">
         <div class="about-container">
             <div class="about-content">
-                <h2 class="section-title">Unsere Geschichte</h2>
-                <p class="about-lead">
-                    Was einst als einfaches Geburtstagsritual begann, lebt heute in unserem Brunchlokal weiter.
-                </p>
-                <p>
-                    Drei Schwestern – eine Ärztin und zwei Flugbegleiterinnen – vereint durch die Liebe zum Reisen, zur Familie und natürlich: zum Brunchen. Ob in New York, Chicago, an der Amalfiküste oder ganz klassisch in unserer Heimatstadt Wien – das gemeinsame Brunchen war immer ein besonderer Moment. Und mit jedem Bissen, jedem Kaffee und jeder neuen Idee wuchs auch der Wunsch, diesen Genuss zu teilen.
-                </p>
-                <p>
-                    Unsere Wurzeln liegen auf den Philippinen – und mit ihnen eine tiefe Verbundenheit zu Gastfreundschaft, Aromenvielfalt und dem Herz für gutes Essen. Diese Einflüsse spiegeln sich heute in unserer Speisekarte genauso wider wie die Erfahrungen aus aller Welt.
-                </p>
-                <p>
-                    Als bei Tina eine chronische Darmentzündung diagnostiziert wurde, wurde das Thema Ernährung für uns noch bedeutungsvoller. Seither setzen wir gezielt auf gesunde Alternativen und entzündungshemmende Zutaten – ohne auf Geschmack oder Kreativität zu verzichten.
-                </p>
-                <p>
-                    Das Ergebnis: Eine bunte Auswahl an trendigen, ausgewogenen und international inspirierten Brunchgerichten, die nicht nur sättigen, sondern glücklich machen.
-                </p>
-                <p class="about-cta">
-                    Kommt vorbei, bruncht mit uns!
-                </p>
-            </div>
+    <h2 class="section-title">Unsere Geschichte</h2>
+    <p class="about-lead">
+        Was einst als einfaches Geburtstagsritual begann, lebt heute in unserem Brunchlokal weiter.
+    </p>
+    <p>
+        Drei Schwestern – eine Ärztin und zwei Flugbegleiterinnen – vereint durch die Liebe zum Reisen, zur Familie und natürlich: zum Brunchen. Ob in New York, Chicago, an der Amalfiküste oder ganz klassisch in unserer Heimatstadt Wien – das gemeinsame Brunchen war immer ein besonderer Moment. Und mit jedem Bissen, jedem Kaffee und jeder neuen Idee wuchs auch der Wunsch, diesen Genuss zu teilen.
+    </p>
+    <p>
+        Unsere Wurzeln liegen auf den Philippinen – und mit ihnen eine tiefe Verbundenheit zu Gastfreundschaft, Aromenvielfalt und dem Herz für gutes Essen. Diese Einflüsse spiegeln sich heute in unserer Speisekarte genauso wider wie die Erfahrungen aus aller Welt.
+    </p>
+    <p>
+        Als bei Tina eine chronische Darmentzündung diagnostiziert wurde, wurde das Thema Ernährung für uns noch bedeutungsvoller. Seither setzen wir gezielt auf gesunde Alternativen und entzündungshemmende Zutaten – ohne auf Geschmack oder Kreativität zu verzichten.
+    </p>
+    <p>
+        Das Ergebnis: Eine bunte Auswahl an trendigen, ausgewogenen und international inspirierten Brunchgerichten, die nicht nur sättigen, sondern glücklich machen.
+    </p>
+    <p class="about-cta">
+        Kommt vorbei, bruncht mit uns!
+    </p>
+</div>
             <div class="about-image">
                 <img src="content/images/p38.png" alt="Die Gründerinnen" class="founder-image">
                 <div class="image-caption">Die drei Schwestern – vereint in ihrer Vision</div>
@@ -254,18 +216,19 @@
                         </select>
                     </div>
                     
-                    <div class="form-group">
-                        <label for="time">Uhrzeit *</label>
-                        <select id="time" name="time" required>
-                            <option value="09:00-11:00">09:00–11:00 Uhr</option>
-                            <option value="09:30-11:30">09:30–11:30 Uhr</option>
-                            <option value="10:00-12:00">10:00–12:00 Uhr</option>
-                            <option value="10:30-12:30">10:30–12:30 Uhr</option>
-                            <option value="11:00-13:00">11:00–13:00 Uhr</option>
-                            <option value="11:30-13:30">11:30–13:30 Uhr</option>
-                            <option value="12:00-14:00">12:00–14:00 Uhr</option>
-                        </select>
-                    </div>
+         
+<div class="form-group">
+  <label for="time">Uhrzeit *</label>
+  <select id="time" name="time" required>
+    <option value="09:00-11:00">09:00–11:00 Uhr</option>
+    <option value="09:30-11:30">09:30–11:30 Uhr</option>
+    <option value="10:00-12:00">10:00–12:00 Uhr</option>
+    <option value="10:30-12:30">10:30–12:30 Uhr</option>
+    <option value="11:00-13:00">11:00–13:00 Uhr</option>
+    <option value="11:30-13:30">11:30–13:30 Uhr</option>
+    <option value="12:00-14:00">12:00–14:00 Uhr</option>
+  </select>
+</div>
                     
                     <div class="form-group">
                         <label for="guests">Personen *</label>
@@ -368,53 +331,7 @@
 
     <!-- Scripts -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
-    
-    <!-- Load Premium CMS Loader and App immediately -->
     <script src="cms-loader-premium.js"></script>
     <script src="app-premium.js"></script>
-    
-    <!-- Style Switcher (loads after main functionality) -->
-    <script src="style-switcher.js"></script>
-    
-    <!-- Initialize Everything -->
-    <script>
-        // Ensure everything is loaded properly
-        document.addEventListener('DOMContentLoaded', function() {
-            console.log('DOM Content Loaded');
-            
-            // Verify CMS loader is available
-            if (typeof window.cmsLoader === 'undefined') {
-                console.error('CMS Loader not found! Loading fallback...');
-                // Try to load it again
-                const script = document.createElement('script');
-                script.src = 'cms-loader-premium.js';
-                script.onload = function() {
-                    console.log('CMS Loader loaded via fallback');
-                };
-                document.body.appendChild(script);
-            }
-            
-            // Check for any loading errors
-            setTimeout(function() {
-                const menuContainer = document.getElementById('menuContainer');
-                if (menuContainer && menuContainer.innerHTML.includes('Speisekarte wird geladen')) {
-                    console.error('Menu still loading after 5 seconds - checking API');
-                    
-                    // Test API directly
-                    fetch('/.netlify/functions/get-menu')
-                        .then(response => {
-                            console.log('API Response Status:', response.status);
-                            return response.text();
-                        })
-                        .then(text => {
-                            console.log('API Response:', text);
-                        })
-                        .catch(error => {
-                            console.error('API Error:', error);
-                        });
-                }
-            }, 5000);
-        });
-    </script>
 </body>
 </html>
