@@ -1,7 +1,7 @@
 ---
 title: berry good choice
 order: 4
-image: /content/images/dsc00254.jpg
+image: /content/images/dsc00344_ergebnis.jpg
 items:
   - name: vollkorn pfannkuchen mit topfenhimbeer-leinöl
     tags:
