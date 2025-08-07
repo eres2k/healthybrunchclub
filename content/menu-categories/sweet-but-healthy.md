@@ -1,8 +1,9 @@
 ---
 title: berry good choice
-description: "Süß, aber gesund: Vollkorn, Topfen und Beeren für den genussvollen Brunchmoment ohne Reue."
 order: 4
 image: /content/images/dsc00302_ergebnis.jpg
+description: "Süß, aber gesund: Vollkorn, Topfen und Beeren für den genussvollen
+  Brunchmoment ohne Reue."
 items:
   - name: vollkorn pfannkuchen mit topfenhimbeer-leinöl
     tags:
@@ -22,4 +23,19 @@ items:
       carbs: 42g
       fat: 12g
     price: "10.50"
+  - special: true
+    name: chia lovers
+    price: "8.5"
+    description: zarte chiasamen, sanft in kokosdrink gequollen, treffen auf frische
+      und samtige mangocreme, getoppt mit fruchtigen heidelbeeren - natürlich,
+      leicht und voller energie
+    nutrition:
+      calories: "418"
+      protein: "10"
+      carbs: "45"
+      fat: "22"
+    tags:
+      - sättigend
+      - immunstärkend
+      - belebend
 ---
