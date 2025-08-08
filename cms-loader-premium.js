@@ -1,3085 +1,1197 @@
-/********************************************************
-   healthy brunch club - premium restaurant design
-   upper-class fine dining experience
-   ********************************************************/
-/* custom properties */
-:root {
-    /* premium color palette */
-    --black: #1a1a1a;
-    --charcoal: #2d2d2d;
-    --warm-gray: #484848;
-    --light-gray: #e8e8e8;
-    --off-white: #fafaf8;
-    --pure-white: #ffffff;
-   
-    /* accent colors */
-    --gold: #c9a961;
-    --sage: #7a8b68;
-    --blush: #e6d5c7;
-    --cream: #f5f0e8;
-   
-    /* typography */
-    --font-display: 'playfair display', serif;
-    --font-heading: 'cormorant garamond', serif;
-    --font-body: 'montserrat', sans-serif;
-    --font-light: 'lato', sans-serif;
-   
-    /* spacing */
-    --spacing-xs: 0.5rem;
-    --spacing-sm: 1rem;
-    --spacing-md: 2rem;
-    --spacing-lg: 3rem;
-    --spacing-xl: 5rem;
-    --spacing-xxl: 8rem;
-   
-    /* transitions */
-    --transition-fast: 0.2s ease;
-    --transition-normal: 0.3s ease;
-    --transition-slow: 0.6s ease;
-}
-/* global reset */
-*, *::before, *::after {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-}
-/* base styles */
-html {
-    font-size: 16px;
-    scroll-behavior: smooth;
-    overflow-x: hidden;
-}
-body {
-    font-family: var(--font-body);
-    font-weight: 300;
-    line-height: 1.6;
-    color: var(--charcoal);
-    background-color: var(--pure-white);
-    overflow-x: hidden;
-    -webkit-font-smoothing: antialiased;
-    -moz-osx-font-smoothing: grayscale;
-}
-/* typography */
-h1, h2, h3, h4, h5, h6 {
-    font-family: var(--font-display);
-    font-weight: 400;
-    line-height: 1.2;
-    color: var(--black);
-}
-.section-title {
-    font-size: clamp(2.5rem, 5vw, 4rem);
-    text-align: center;
-    margin-bottom: var(--spacing-md);
-    letter-spacing: -0.02em;
-}
-.section-subtitle {
-    font-family: var(--font-light);
-    font-size: 1.125rem;
-    text-align: center;
-    color: var(--warm-gray);
-    margin-bottom: var(--spacing-xl);
-    font-weight: 300;
-}
-/* loading screen */
-.loading-screen {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background: var(--off-white);
-    z-index: 10000;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    transition: opacity 0.8s ease;
-}
-.loading-screen.hidden {
-    opacity: 0;
-    pointer-events: none;
-}
-.loading-content {
-    text-align: center;
-}
-.loading-logo {
-    width: 150px;
-    height: auto;
-    margin-bottom: var(--spacing-lg);
-    opacity: 0;
-    animation: fadeinscale 1s ease forwards;
-}
-.loading-bar {
-    width: 200px;
-    height: 1px;
-    background: var(--light-gray);
-    margin: 0 auto var(--spacing-sm);
-    overflow: hidden;
-}
-.loading-progress {
-    height: 100%;
-    background: var(--gold);
-    animation: loadprogress 2s ease-out forwards;
-}
-.loading-text {
-    font-family: var(--font-light);
-    font-size: 0.875rem;
-    color: var(--warm-gray);
-    letter-spacing: 0.1em;
-    text-transform: uppercase;
-}
-/* premium navigation */
-.nav-premium {
-    position: fixed;
-    top: 0;
-    left: 0;
-    right: 0;
-    background: rgba(255, 255, 255, 0.95);
-    backdrop-filter: blur(10px);
-    z-index: 1000;
-    transition: all var(--transition-normal);
-    border-bottom: 1px solid transparent;
-}
-.nav-premium.scrolled {
-    background: rgba(255, 255, 255, 0.98);
-    border-bottom-color: var(--light-gray);
-    box-shadow: 0 2px 20px rgba(0, 0, 0, 0.05);
-}
-.nav-container {
-    max-width: 1400px;
-    margin: 0 auto;
-    padding: 1.5rem 2rem;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-}
-.logo-img {
-    height: 45px;
-    transition: transform var(--transition-normal);
-}
-.logo-premium:hover .logo-img {
-    transform: scale(1.05);
-}
-.nav-menu {
-    display: flex;
-    list-style: none;
-    gap: var(--spacing-lg);
-    align-items: center;
-}
-.nav-link {
-    font-family: var(--font-body);
-    font-size: 0.875rem;
-    font-weight: 400;
-    text-decoration: none;
-    color: var(--charcoal);
-    letter-spacing: 0.05em;
-    text-transform: uppercase;
-    transition: color var(--transition-fast);
-    position: relative;
-}
-.nav-link::after {
-    content: '';
-    position: absolute;
-    bottom: -5px;
-    left: 0;
-    width: 0;
-    height: 1px;
-    background: var(--gold);
-    transition: width var(--transition-normal);
-}
-.nav-link:hover {
-    color: var(--gold);
-}
-.nav-link:hover::after {
-    width: 100%;
-}
-.nav-cta {
-    background: var(--black);
-    color: var(--pure-white) !important;
-    padding: 0.75rem 2rem;
-    border-radius: 0;
-    transition: all var(--transition-normal);
-}
-.nav-cta:hover {
-    background: var(--gold);
-    transform: translatey(-2px);
-}
-.nav-cta::after {
-    display: none;
-}
-/* mobile menu */
-.mobile-menu-btn {
-    display: none;
-    background: none;
-    border: none;
-    cursor: pointer;
-    width: 30px;
-    height: 30px;
-    position: relative;
-}
-.mobile-menu-btn span {
-    display: block;
-    width: 100%;
-    height: 1px;
-    background: var(--black);
-    margin: 7px 0;
-    transition: all var(--transition-normal);
-}
-/* hero section */
-.hero-premium {
-    position: relative;
-    height: 100vh;
-    min-height: 600px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    overflow: hidden;
-}
-.hero-video-container {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-}
-.hero-video {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-}
-.hero-overlay {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background: rgba(0, 0, 0, 0.4);
-}
-.hero-content {
-    position: relative;
-    z-index: 2;
-    text-align: center;
-    color: var(--pure-white);
-    padding: var(--spacing-md);
-}
-.hero-title {
-    font-family: var(--font-display);
-    font-size: clamp(3rem, 8vw, 6rem);
-    font-weight: 300;
-    line-height: 1.1;
-    margin-bottom: var(--spacing-lg);
-}
-.hero-subtitle {
-    display: block;
-    font-family: var(--font-light);
-    font-size: 1rem;
-    font-weight: 300;
-    letter-spacing: 0.2em;
-    text-transform: uppercase;
-    margin-bottom: var(--spacing-sm);
-    opacity: 0.8;
-}
-.hero-tagline {
-    display: block;
-    font-family: var(--font-heading);
-    font-size: 1.5rem;
-    font-weight: 300;
-    font-style: italic;
-    margin-top: var(--spacing-sm);
-    opacity: 0.9;
-}
-.hero-actions {
-    display: flex;
-    gap: var(--spacing-md);
-    justify-content: center;
-    flex-wrap: wrap;
-}
-/* luxury buttons */
-.btn-luxury {
-    display: inline-block;
-    padding: 1rem 3rem;
-    font-family: var(--font-body);
-    font-size: 0.875rem;
-    font-weight: 400;
-    text-decoration: none;
-    text-transform: uppercase;
-    letter-spacing: 0.1em;
-    transition: all var(--transition-normal);
-    position: relative;
-    overflow: hidden;
-}
-.btn-primary {
-    background: var(--pure-white);
-    color: var(--black);
-    border: 1px solid var(--pure-white);
-}
-.btn-primary:hover {
-    background: transparent;
-    color: var(--pure-white);
-}
-.btn-secondary {
-    background: transparent;
-    color: var(--pure-white);
-    border: 1px solid var(--pure-white);
-}
-.btn-secondary:hover {
-    background: var(--pure-white);
-    color: var(--black);
-}
-/* scroll indicator */
-.scroll-indicator {
-    position: absolute;
-    bottom: 2rem;
-    left: 50%;
-    transform: translatex(-50%);
-    animation: bounce 2s infinite;
-}
-.scroll-arrow {
-    width: 30px;
-    height: 30px;
-    border-right: 1px solid var(--pure-white);
-    border-bottom: 1px solid var(--pure-white);
-    transform: rotate(45deg);
-    opacity: 0.7;
-}
-/* premium menu section */
-.menu-premium {
-    padding: var(--spacing-xxl) var(--spacing-md);
-    background: var(--off-white);
-}
-.menu-intro {
-    max-width: 800px;
-    margin: 0 auto var(--spacing-xl);
-    text-align: center;
-}
-/* ===============================================
-   desktop filter system (updated)
-   =============================================== */
-/* filter container - desktop only */
-.menu-filter-container {
-    max-width: 1200px;
-    margin: 0 auto var(--spacing-xl);
-    position: relative;
-    padding: 0 var(--spacing-md);
-}
-/* filter bar */
-.filter-bar {
-    display: flex;
-    flex-direction: column;
-    gap: var(--spacing-md);
-    padding: var(--spacing-md);
-    background: var(--pure-white);
-    border: 1px solid var(--light-gray);
-    border-radius: 12px;
-    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
-}
-/* category filters row */
-.filter-bar > .filter-group:first-child {
-    width: 100%;
-}
-.filter-buttons {
-    display: flex;
-    gap: 0;
-    justify-content: center;
-    margin: 0;
-    flex-wrap: wrap;
-}
-.filter-btn {
-    background: none;
-    border: none;
-    border-bottom: 2px solid transparent;
-    padding: 0.5rem 1.25rem;
-    font-family: var(--font-body);
-    font-size: 0.75rem;
-    font-weight: 500;
-    text-transform: uppercase;
-    letter-spacing: 0.1em;
-    color: var(--warm-gray);
-    cursor: pointer;
-    transition: all var(--transition-normal);
-    position: relative;
-    white-space: nowrap;
-}
-.filter-btn::after {
-    content: '';
-    position: absolute;
-    bottom: -2px;
-    left: 0;
-    width: 100%;
-    height: 2px;
-    background: var(--gold);
-    transform: scalex(0);
-    transition: transform var(--transition-normal);
-}
-.filter-btn:hover {
-    color: var(--black);
-}
-.filter-btn.active {
-    color: var(--black);
-}
-.filter-btn.active::after {
-    transform: scalex(1);
-}
-/* tags and actions row */
-.filter-row-bottom {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    width: 100%;
-    gap: var(--spacing-md);
-}
-/* tag filters */
-.filter-tags {
-    display: flex;
-    gap: var(--spacing-xs);
-    align-items: center;
-    flex-wrap: wrap;
-    max-width: 670px; /* limit width to prevent excessive stretching */
-}
-.tag-filter {
-    position: relative;
-}
-.tag-filter input[type="checkbox"] {
-    position: absolute;
-    opacity: 0;
-    width: 0;
-    height: 0;
-}
-.tag-label {
-    display: inline-block;
-    padding: 0.375rem 1rem;
-    font-size: 0.625rem;
-    font-weight: 500;
-    text-transform: uppercase;
-    letter-spacing: 0.05em;
-    color: var(--warm-gray);
-    background: transparent;
-    border: 1px solid var(--light-gray);
-    cursor: pointer;
-    transition: all var(--transition-fast);
-    white-space: nowrap;
-    border-radius: 20px;
-}
-.tag-filter input[type="checkbox"]:checked + .tag-label {
-    background: var(--black);
-    color: var(--pure-white);
-    border-color: var(--black);
-    transform: translatey(-1px);
-}
-.tag-filter:hover .tag-label {
-    border-color: var(--gold);
-    color: var(--gold);
-}
-/* style for tags with no items */
-.tag-filter.tag-no-items .tag-label {
-    opacity: 0.5;
-    cursor: not-allowed;
-}
-.tag-filter.tag-no-items:hover .tag-label {
-    border-color: var(--light-gray);
-    color: var(--warm-gray);
-}
-/* filter actions */
-.filter-actions {
-    display: flex;
-    gap: var(--spacing-sm);
-    align-items: center;
-    flex-shrink: 0;
-}
-.btn-icon {
-    background: none;
-    border: 1px solid var(--light-gray);
-    padding: 0.5rem 1rem;
-    font-size: 0.875rem;
-    color: var(--warm-gray);
-    cursor: pointer;
-    transition: all var(--transition-fast);
-    display: flex;
-    align-items: center;
-    gap: 0.5rem;
-    position: relative;
-    border-radius: 20px;
-}
-.btn-icon:hover {
-    color: var(--gold);
-    border-color: var(--gold);
-    transform: translatey(-1px);
-}
-.btn-icon .btn-text {
-    font-size: 0.625rem;
-    font-weight: 500;
-    text-transform: uppercase;
-    letter-spacing: 0.05em;
-}
-.btn-icon i {
-    font-size: 0.875rem;
-}
-/* filter count badge */
-.filter-count {
-    position: absolute;
-    top: -8px;
-    right: -8px;
-    background: var(--gold);
-    color: var(--pure-white);
-    font-size: 0.625rem;
-    font-weight: 600;
-    width: 20px;
-    height: 20px;
-    border-radius: 50%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
-}
-/* active filters visual feedback */
-.menu-filter-container.has-active-filters .filter-bar {
-    border-color: var(--gold);
-    box-shadow: 0 4px 20px rgba(201, 169, 97, 0.15);
-}
-/* desktop only class */
-.desktop-only {
-    display: block !important;
-}
-@media (max-width: 768px) {
-    .desktop-only {
-        display: none !important;
+// CMS Loader Premium - Fixed Version with Category Image Overlays and Dark Mode Support
+// Upper-Class Restaurant Menu System with Advanced Filtering
+
+let allMenuCategories = [];
+let currentFilters = {
+    category: 'all',
+    tags: []
+};
+
+// Define the 6 allowed tags globally
+const ALLOWED_TAGS = ['vegetarisch', 'glutenfrei', 'proteinreich', 'sättigend', 'belebend', 'immunstärkend'];
+
+// Tag display names mapping - only for the 6 allowed tags
+const TAG_DISPLAY_NAMES = {
+    'vegetarisch': 'Vegetarisch',
+    'glutenfrei': 'Glutenfrei',
+    'proteinreich': 'Proteinreich',
+    'sättigend': 'Sättigend',
+    'belebend': 'Belebend',
+    'immunstärkend': 'Immunstärkend'
+};
+
+// Premium Allergen Mapping
+const allergenMap = {
+    'A': 'Glutenhaltiges Getreide',
+    'B': 'Krebstiere',
+    'C': 'Eier',
+    'D': 'Fisch',
+    'E': 'Erdnüsse',
+    'F': 'Soja',
+    'G': 'Milch/Laktose',
+    'H': 'Schalenfrüchte',
+    'L': 'Sellerie',
+    'M': 'Senf',
+    'N': 'Sesam',
+    'O': 'Sulfite',
+    'P': 'Lupinen',
+    'R': 'Weichtiere'
+};
+
+// Category Icons with dark mode consideration
+const categoryIcons = {
+    'sets': '🍽️',
+    'eggcitements': '🥚',
+    'avo-lution': '🥑',
+    'hafer dich lieb': '🌾',
+    'berry good choice': '🫐',
+    'coffee, healthtea and me': '☕',
+    'sip happens - make it healthy': '🥤'
+};
+
+// Initialize on DOM ready
+document.addEventListener('DOMContentLoaded', function() {
+    console.log('CMS Loader: Initializing...');
+    loadMenuFromCMS().then(() => {
+        // Initialize mobile filters after menu data is available
+        if (window.innerWidth <= 768 && window.mobileFilters) {
+            window.mobileFilters.init();
+        }
+    });
+    loadEventsFromCMS();
+    
+    // Listen for theme changes to update any dynamic content
+    window.addEventListener('themeChanged', handleThemeChange);
+});
+
+// Handle theme changes for dynamically loaded content
+function handleThemeChange(e) {
+    console.log('CMS Loader: Theme changed to', e.detail.theme);
+    // Re-render allergen legend if visible to update colors
+    const allergenLegend = document.getElementById('allergenLegend');
+    if (allergenLegend && allergenLegend.style.display !== 'none') {
+        displayAllergenLegend();
     }
 }
-/* ===============================================
-   mobile filter modal system (new)
-   =============================================== */
-/* mobile filter button - replaces scrollable filters */
-.mobile-filter-toggle {
-    display: none;
-    background: var(--black);
-    color: var(--pure-white);
-    padding: 0.75rem 1.5rem;
-    border: none;
-    border-radius: 25px;
-    font-family: var(--font-body);
-    font-size: 0.75rem;
-    font-weight: 500;
-    text-transform: uppercase;
-    letter-spacing: 0.1em;
-    cursor: pointer;
-    transition: all var(--transition-normal);
-    margin: 0 auto var(--spacing-md);
-    position: relative;
-}
-.mobile-filter-toggle:active {
-    transform: scale(0.95);
-}
-.mobile-filter-toggle i {
-    margin-right: 0.5rem;
-}
-/* active filters indicator */
-.mobile-filter-toggle .filter-badge {
-    position: absolute;
-    top: -8px;
-    right: -8px;
-    background: var(--gold);
-    color: var(--pure-white);
-    font-size: 0.625rem;
-    font-weight: 600;
-    min-width: 20px;
-    height: 20px;
-    border-radius: 10px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    padding: 0 6px;
-}
-/* mobile filter modal */
-.mobile-filter-modal {
-    display: none;
-    position: fixed;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    background: rgba(0, 0, 0, 0.5);
-    z-index: 2000;
-    opacity: 0;
-    transition: opacity var(--transition-normal);
-}
-.mobile-filter-modal.active {
-    display: block;
-    opacity: 1;
-}
-/* modal content */
-.mobile-filter-content {
-    position: absolute;
-    bottom: 0;
-    left: 0;
-    right: 0;
-    background: var(--pure-white);
-    border-radius: 20px 20px 0 0;
-    max-height: 85vh;
-    transform: translatey(100%);
-    transition: transform var(--transition-normal);
-    overflow: hidden;
-    display: flex;
-    flex-direction: column;
-}
-.mobile-filter-modal.active .mobile-filter-content {
-    transform: translatey(0);
-}
-/* modal header */
-.mobile-filter-header {
-    padding: 1.5rem;
-    border-bottom: 1px solid var(--light-gray);
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    flex-shrink: 0;
-}
-.mobile-filter-header h3 {
-    font-family: var(--font-body);
-    font-size: 1.125rem;
-    font-weight: 600;
-    color: var(--black);
-    margin: 0;
-}
-.mobile-filter-close {
-    background: none;
-    border: none;
-    font-size: 1.5rem;
-    color: var(--warm-gray);
-    cursor: pointer;
-    padding: 0;
-    width: 32px;
-    height: 32px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    border-radius: 50%;
-    transition: all var(--transition-fast);
-}
-.mobile-filter-close:active {
-    background: var(--light-gray);
-}
-/* modal body */
-.mobile-filter-body {
-    flex: 1;
-    overflow-y: auto;
-    -webkit-overflow-scrolling: touch;
-    padding: 1.5rem;
-}
-/* filter sections */
-.mobile-filter-section {
-    margin-bottom: 2rem;
-}
-.mobile-filter-section h4 {
-    font-family: var(--font-body);
-    font-size: 0.875rem;
-    font-weight: 600;
-    text-transform: uppercase;
-    letter-spacing: 0.05em;
-    color: var(--warm-gray);
-    margin-bottom: 1rem;
-}
-/* category buttons - vertical layout */
-.mobile-category-filters {
-    display: flex;
-    flex-direction: column;
-    gap: 0.75rem;
-}
-.mobile-filter-btn {
-    background: var(--pure-white);
-    border: 2px solid var(--light-gray);
-    color: var(--warm-gray);
-    padding: 1rem;
-    font-family: var(--font-body);
-    font-size: 0.875rem;
-    font-weight: 500;
-    text-transform: uppercase;
-    letter-spacing: 0.05em;
-    cursor: pointer;
-    transition: all var(--transition-fast);
-    border-radius: 12px;
-    text-align: left;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-}
-.mobile-filter-btn:active {
-    transform: scale(0.98);
-}
-.mobile-filter-btn.active {
-    background: var(--black);
-    color: var(--pure-white);
-    border-color: var(--black);
-}
-.mobile-filter-btn .checkmark {
-    width: 20px;
-    height: 20px;
-    border: 2px solid currentcolor;
-    border-radius: 50%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    transition: all var(--transition-fast);
-}
-.mobile-filter-btn.active .checkmark::after {
-    content: '✓';
-    font-size: 12px;
-}
-/* tag filters - grid layout */
-.mobile-tag-filters {
-    display: grid;
-    grid-template-columns: repeat(2, 1fr);
-    gap: 0.75rem;
-}
-/* 3 columns on larger mobile screens */
-@media (min-width: 480px) and (max-width: 768px) {
-    .mobile-tag-filters {
-        grid-template-columns: repeat(3, 1fr);
+
+// Load Menu from CMS
+async function loadMenuFromCMS() {
+    try {
+        console.log('CMS Loader: Loading menu from Netlify function...');
+        showLoadingState();
+        
+        const response = await fetch('/.netlify/functions/get-menu');
+        
+        if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+        }
+        
+        const menuData = await response.json();
+        console.log('CMS Loader: Menu data loaded successfully:', menuData);
+        
+        allMenuCategories = menuData;
+        createCategoryFilters(menuData);
+        createTagFilters(menuData); // Create tag filters dynamically
+        displayPremiumMenu(menuData);
+        hideLoadingState();
+        
+    } catch (error) {
+        console.error('CMS Loader: Error loading menu:', error);
+        displayFallbackMenu();
+        hideLoadingState();
     }
 }
-.mobile-tag-filter {
-    position: relative;
-}
-.mobile-tag-filter input[type="checkbox"] {
-    position: absolute;
-    opacity: 0;
-    width: 0;
-    height: 0;
-}
-.mobile-tag-label {
-    display: block;
-    padding: 0.75rem;
-    font-size: 0.75rem;
-    font-weight: 500;
-    text-transform: uppercase;
-    letter-spacing: 0.05em;
-    color: var(--warm-gray);
-    background: var(--pure-white);
-    border: 2px solid var(--light-gray);
-    border-radius: 12px;
-    cursor: pointer;
-    transition: all var(--transition-fast);
-    text-align: center;
-}
-.mobile-tag-filter input[type="checkbox"]:checked + .mobile-tag-label {
-    background: var(--gold);
-    color: var(--pure-white);
-    border-color: var(--gold);
-}
-/* style for mobile tags with no items */
-.mobile-tag-filter.tag-no-items .mobile-tag-label {
-    opacity: 0.5;
-    cursor: not-allowed;
-    background: var(--light-gray);
-}
-/* modal footer */
-.mobile-filter-footer {
-    padding: 1.5rem;
-    border-top: 1px solid var(--light-gray);
-    display: flex;
-    gap: 1rem;
-    flex-shrink: 0;
-}
-.mobile-filter-footer button {
-    flex: 1;
-    padding: 1rem;
-    border: none;
-    font-family: var(--font-body);
-    font-size: 0.875rem;
-    font-weight: 600;
-    text-transform: uppercase;
-    letter-spacing: 0.05em;
-    cursor: pointer;
-    transition: all var(--transition-fast);
-    border-radius: 25px;
-}
-.mobile-filter-reset {
-    background: var(--light-gray);
-    color: var(--warm-gray);
-}
-.mobile-filter-apply {
-    background: var(--black);
-    color: var(--pure-white);
-}
-.mobile-filter-reset:active,
-.mobile-filter-apply:active {
-    transform: scale(0.95);
-}
-/* loading state for menu */
-.menu-loading {
-    text-align: center;
-    padding: var(--spacing-xxl);
-    color: var(--warm-gray);
-}
-.menu-loading i {
-    font-size: 3rem;
-    margin-bottom: var(--spacing-md);
-    color: var(--gold);
-    animation: spin 1s linear infinite;
-}
-@keyframes spin {
-    from { transform: rotate(0deg); }
-    to { transform: rotate(360deg); }
-}
-/* no results message */
-.no-results-message {
-    text-align: center;
-    padding: var(--spacing-xxl);
-    color: var(--warm-gray);
-    font-size: 1.125rem;
-}
-.no-results-message i {
-    font-size: 3rem;
-    color: var(--light-gray);
-    margin-bottom: var(--spacing-md);
-    display: block;
-}
-/* menu content */
-.menu-content {
-    max-width: 1400px;
-    margin: 0 auto;
-}
-/* category container */
-.menu-category {
-    margin-bottom: var(--spacing-xxl);
-    position: relative;
-}
-/* category hero image container */
-.category-hero {
-    position: relative;
-    width: 100%;
-    max-width: 1200px;
-    height: 250px;
-    margin: 0 auto var(--spacing-lg);
-    overflow: hidden;
-    border-radius: 12px;
-    box-shadow: 0 8px 30px rgba(0, 0, 0, 0.12);
-    background: linear-gradient(135deg, var(--cream), var(--light-gray));
-    opacity: 0;
-    transform: translatey(10px);
-    transition: opacity 0.6s ease, transform 0.6s ease;
-}
-/* category hero loaded state */
-.category-hero.loaded {
-    opacity: 1 !important;
-    transform: translatey(0) !important;
-}
-/* category hero image */
-.category-hero img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-    display: block;
-    transition: transform 0.6s ease;
-}
-/* dark gradient overlay */
-.category-hero-gradient {
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    background: linear-gradient(
-        to bottom,
-        rgba(0, 0, 0, 0.2) 0%,
-        rgba(0, 0, 0, 0.4) 50%,
-        rgba(0, 0, 0, 0.7) 100%
-    );
-    pointer-events: none;
-    z-index: 1;
-}
-/* category title overlay container */
-.category-hero-overlay {
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    z-index: 2;
-    padding: var(--spacing-md);
-}
-/* category title overlay */
-.category-title-overlay {
-    font-family: var(--font-display);
-    font-size: clamp(2rem, 5vw, 3.5rem);
-    font-weight: 400;
-    color: white;
-    text-transform: uppercase;
-    letter-spacing: 0.15em;
-    text-align: center;
-    margin: 0;
-    text-shadow:
-        2px 2px 4px rgba(0, 0, 0, 0.9),
-        0px 0px 20px rgba(0, 0, 0, 0.7),
-        0px 0px 40px rgba(0, 0, 0, 0.5);
-    position: relative;
-    line-height: 1.2;
-    padding: var(--spacing-sm) var(--spacing-md);
-    background: rgba(0, 0, 0, 0.2);
-    backdrop-filter: blur(5px);
-    -webkit-backdrop-filter: blur(5px);
-    border-radius: 8px;
-    z-index: 3;
-    pointer-events: none;
-}
-/* category header */
-.category-header {
-    text-align: center;
-    margin-bottom: var(--spacing-xl);
-    position: relative;
-}
-.category-header::before,
-.category-header::after {
-    content: '';
-    position: absolute;
-    top: 50%;
-    width: 100px;
-    height: 1px;
-    background: linear-gradient(to right, transparent, var(--light-gray), transparent);
-}
-.category-header::before {
-    right: calc(50% + 200px);
-}
-.category-header::after {
-    left: calc(50% + 200px);
-}
-.category-name {
-    font-family: var(--font-display);
-    font-size: 2.5rem;
-    color: var(--black);
-    text-transform: uppercase;
-    letter-spacing: 0.1em;
-    margin-bottom: var(--spacing-sm);
-}
-.category-description {
-    font-family: var(--font-heading);
-    font-size: 1.125rem;
-    color: var(--warm-gray);
-    font-style: italic;
-    max-width: 600px;
-    margin: 0 auto;
-}
-/* menu items grid - 3 columns */
-.menu-grid {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: var(--spacing-lg);
-    margin-bottom: var(--spacing-xl);
-    position: relative;
-    z-index: 1;
-    margin-top: var(--spacing-md);
-}
-/* premium menu item card */
-.menu-item-card {
-    background: var(--pure-white);
-    padding: var(--spacing-lg);
-    box-shadow: 0 3px 20px rgba(0, 0, 0, 0.06);
-    transition: all var(--transition-normal);
-    position: relative;
-    overflow: hidden;
-}
-.menu-item-card:hover {
-    transform: translatey(-5px);
-    box-shadow: 0 8px 40px rgba(0, 0, 0, 0.12);
-}
-/* special/recommended badge */
-.menu-item-card.special::before {
-    content: 'chef\'s choice';
-    position: absolute;
-    top: 20px;
-    right: -40px;
-    background: var(--gold);
-    color: var(--pure-white);
-    padding: 5px 50px;
-    font-size: 0.75rem;
-    text-transform: uppercase;
-    letter-spacing: 0.05em;
-    transform: rotate(45deg);
-}
-/* menu item image */
-.menu-item-image {
-    width: 100%;
-    height: 200px;
-    margin: -var(--spacing-lg) -var(--spacing-lg) var(--spacing-md);
-    overflow: hidden;
-    position: relative;
-}
-.menu-item-image img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-    transition: transform var(--transition-slow);
-}
-.menu-item-card:hover .menu-item-image img {
-    transform: scale(1.1);
-}
-/* no image placeholder */
-.menu-item-card.no-image {
-    text-align: left;
-}
-.menu-item-icon {
-    width: 80px;
-    height: 80px;
-    margin: 0 auto var(--spacing-md);
-    background: var(--cream);
-    border-radius: 50%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 2.5rem;
-}
-/* menu item content */
-.menu-item-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: baseline;
-    margin-bottom: var(--spacing-sm);
-}
-.menu-item-name {
-    font-family: var(--font-heading);
-    font-size: 1.5rem;
-    color: var(--black);
-}
-.menu-item-price {
-    font-family: var(--font-display);
-    font-size: 1.375rem;
-    color: var(--gold);
-    display: inline-block !important;
-    opacity: 1 !important;
-    visibility: visible !important;
-    font-weight: 400 !important;
-    white-space: nowrap;
-}
-.menu-item-description {
-    font-family: var(--font-light);
-    font-size: 0.875rem;
-    line-height: 1.6;
-    color: var(--warm-gray);
-    margin-bottom: var(--spacing-md);
-}
-/* nutrition info */
-.menu-item-nutrition {
-    display: flex;
-    gap: var(--spacing-sm);
-    margin-bottom: var(--spacing-sm);
-    font-size: 0.75rem;
-    color: var(--warm-gray);
-}
-.nutrition-item {
-    display: flex;
-    align-items: center;
-    gap: 0.25rem;
-}
-.nutrition-value {
-    font-weight: 500;
-    color: var(--charcoal);
-}
-/* tags */
-.menu-item-tags {
-    display: flex;
-    gap: var(--spacing-xs);
-    flex-wrap: wrap;
-    margin-bottom: var(--spacing-sm);
-}
-.menu-tag {
-    background: var(--cream);
-    color: var(--charcoal);
-    padding: 0.25rem 0.75rem;
-    font-size: 0.625rem;
-    text-transform: uppercase;
-    letter-spacing: 0.05em;
-    transition: all var(--transition-fast);
-}
-.menu-tag:hover {
-    background: var(--gold);
-    color: var(--pure-white);
-}
-/* allergens */
-.menu-item-allergens {
-    font-size: 0.75rem;
-    color: var(--warm-gray);
-}
-.allergen-codes {
-    display: inline-flex;
-    gap: 0.25rem;
-    margin-left: 0.25rem;
-}
-.allergen-code {
-    background: var(--light-gray);
-    color: var(--charcoal);
-    padding: 0.125rem 0.375rem;
-    font-weight: 500;
-}
-/* allergen legend */
-.allergen-info {
-    max-width: 1200px;
-    margin: var(--spacing-xl) auto 0;
-    padding: var(--spacing-lg);
-    background: var(--pure-white);
-    box-shadow: 0 3px 20px rgba(0, 0, 0, 0.06);
-}
-.allergen-title {
-    font-family: var(--font-heading);
-    font-size: 1.5rem;
-    margin-bottom: var(--spacing-md);
-    text-align: center;
-}
-.allergen-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-    gap: var(--spacing-sm);
-}
-.allergen-item {
-    display: flex;
-    align-items: center;
-    gap: var(--spacing-sm);
-    font-size: 0.875rem;
-}
-.allergen-letter {
-    background: var(--black);
-    color: var(--pure-white);
-    width: 24px;
-    height: 24px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-weight: 500;
-}
-/* philosophy section */
-.philosophy-section {
-    padding: var(--spacing-xxl) var(--spacing-md);
-    background: var(--pure-white);
-}
-.philosophy-container {
-    max-width: 1200px;
-    margin: 0 auto;
-}
-.philosophy-grid {
-    display: grid;
-    grid-template-columns: repeat(4, 1fr);
-    gap: var(--spacing-lg);
-}
-.philosophy-card {
-    text-align: center;
-    padding: var(--spacing-lg);
-    transition: transform var(--transition-normal);
-}
-.philosophy-card:hover {
-    transform: translatey(-10px);
-}
-.philosophy-icon {
-    width: 80px;
-    height: 80px;
-    margin: 0 auto var(--spacing-md);
-    background: var(--cream);
-    border-radius: 50%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    transition: all var(--transition-normal);
-}
-.philosophy-icon i {
-    font-size: 2rem;
-    color: var(--gold);
-}
-.philosophy-card:hover .philosophy-icon {
-    background: var(--gold);
-}
-.philosophy-card:hover .philosophy-icon i {
-    color: var(--pure-white);
-}
-.philosophy-card h3 {
-    font-family: var(--font-heading);
-    font-size: 1.5rem;
-    margin-bottom: var(--spacing-sm);
-}
-.philosophy-card p {
-    font-size: 0.875rem;
-    line-height: 1.6;
-    color: var(--warm-gray);
-}
-/* about section */
-.about-premium {
-    padding: var(--spacing-xxl) var(--spacing-md);
-    background: var(--off-white);
-}
-.about-container {
-    max-width: 1200px;
-    margin: 0 auto;
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: var(--spacing-xl);
-    align-items: center;
-}
-.about-content {
-    padding-right: var(--spacing-lg);
-}
-.about-lead {
-    font-family: var(--font-heading);
-    font-size: 1.5rem;
-    font-style: italic;
-    margin-bottom: var(--spacing-md);
-    color: var(--black);
-}
-.about-content p {
-    margin-bottom: var(--spacing-md);
-    line-height: 1.8;
-}
-.about-image {
-    position: relative;
-}
-.founder-image {
-    width: 100%;
-    height: auto;
-    filter: grayscale(20%);
-}
-.image-caption {
-    font-family: var(--font-light);
-    font-size: 0.875rem;
-    font-style: italic;
-    text-align: center;
-    margin-top: var(--spacing-sm);
-    color: var(--warm-gray);
-}
-/* reservation section */
-.reservation-premium {
-    padding: var(--spacing-xxl) var(--spacing-md);
-    background: var(--pure-white);
-}
-.reservation-container {
-    max-width: 800px;
-    margin: 0 auto;
-}
-.reservation-form {
-    background: var(--off-white);
-    padding: var(--spacing-xl);
-    box-shadow: 0 5px 30px rgba(0, 0, 0, 0.08);
-}
-.form-grid {
-    display: grid;
-    grid-template-columns: repeat(2, 1fr);
-    gap: var(--spacing-md);
-    margin-bottom: var(--spacing-md);
-}
-.form-group {
-    display: flex;
-    flex-direction: column;
-}
-.form-group.form-full {
-    grid-column: 1 / -1;
-}
-.form-group label {
-    font-family: var(--font-body);
-    font-size: 0.875rem;
-    font-weight: 500;
-    text-transform: uppercase;
-    letter-spacing: 0.05em;
-    margin-bottom: var(--spacing-xs);
-    color: var(--charcoal);
-}
-.form-group input,
-.form-group select,
-.form-group textarea {
-    padding: 1rem;
-    border: 1px solid var(--light-gray);
-    background: var(--pure-white);
-    font-family: var(--font-light);
-    font-size: 1rem;
-    transition: all var(--transition-fast);
-}
-.form-group input:focus,
-.form-group select:focus,
-.form-group textarea:focus {
-    outline: none;
-    border-color: var(--gold);
-}
-.btn-submit {
-    width: 100%;
-    padding: 1.25rem;
-    background: var(--black);
-    color: var(--pure-white);
-    border: none;
-    font-family: var(--font-body);
-    font-size: 0.875rem;
-    font-weight: 500;
-    text-transform: uppercase;
-    letter-spacing: 0.1em;
-    cursor: pointer;
-    transition: all var(--transition-normal);
-    margin-top: var(--spacing-md);
-}
-.btn-submit:hover {
-    background: var(--gold);
-    transform: translatey(-2px);
-}
-/* premium footer */
-.footer-premium {
-    background: var(--black);
-    color: var(--pure-white);
-    padding: var(--spacing-xl) var(--spacing-md) var(--spacing-md);
-}
-.footer-content {
-    max-width: 1200px;
-    margin: 0 auto;
-    display: grid;
-    grid-template-columns: repeat(4, 1fr);
-    gap: var(--spacing-xl);
-    margin-bottom: var(--spacing-xl);
-}
-.footer-section h4 {
-    font-family: var(--font-heading);
-    font-size: 1.25rem;
-    margin-bottom: var(--spacing-md);
-    color: var(--pure-white);
-}
-.footer-logo {
-    width: 120px;
-    height: auto;
-    margin-bottom: var(--spacing-sm);
-    filter: brightness(0) invert(1);
-}
-.footer-tagline {
-    font-family: var(--font-heading);
-    font-style: italic;
-    margin-bottom: var(--spacing-md);
-    opacity: 0.8;
-}
-.social-links {
-    display: flex;
-    gap: var(--spacing-sm);
-}
-.social-links a {
-    width: 40px;
-    height: 40px;
-    border: 1px solid rgba(255, 255, 255, 0.3);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    color: var(--pure-white);
-    transition: all var(--transition-fast);
-}
-.social-links a:hover {
-    border-color: var(--gold);
-    background: var(--gold);
-}
-.hours, address {
-    font-style: normal;
-    line-height: 1.8;
-    opacity: 0.9;
-}
-.hours-note {
-    font-size: 0.875rem;
-    opacity: 0.7;
-}
-.closed {
-    opacity: 0.6;
-}
-address a {
-    color: var(--pure-white);
-    text-decoration: none;
-    transition: color var(--transition-fast);
-}
-address a:hover {
-    color: var(--gold);
-}
-/* newsletter form */
-.newsletter-form {
-    display: flex;
-    margin-top: var(--spacing-sm);
-}
-.newsletter-form input {
-    flex: 1;
-    padding: 0.75rem;
-    border: 1px solid rgba(255, 255, 255, 0.3);
-    background: transparent;
-    color: var(--pure-white);
-}
-.newsletter-form input::placeholder {
-    color: rgba(255, 255, 255, 0.5);
-}
-.btn-newsletter {
-    padding: 0.75rem 1.5rem;
-    background: var(--gold);
-    border: none;
-    color: var(--pure-white);
-    cursor: pointer;
-    transition: all var(--transition-fast);
-}
-.btn-newsletter:hover {
-    background: var(--pure-white);
-    color: var(--black);
-}
-.footer-bottom {
-    text-align: center;
-    padding-top: var(--spacing-lg);
-    border-top: 1px solid rgba(255, 255, 255, 0.1);
-    font-size: 0.875rem;
-    opacity: 0.6;
-}
-.footer-bottom a {
-    color: var(--pure-white);
-    text-decoration: none;
-    margin: 0 var(--spacing-sm);
-    transition: color var(--transition-fast);
-}
-.footer-bottom a:hover {
-    color: var(--gold);
-}
-/* admin button */
-.admin-btn {
-    position: fixed;
-    bottom: 2rem;
-    right: 2rem;
-    width: 50px;
-    height: 50px;
-    background: var(--black);
-    color: var(--pure-white);
-    border-radius: 50%;
-    display: none;
-    align-items: center;
-    justify-content: center;
-    text-decoration: none;
-    box-shadow: 0 5px 20px rgba(0, 0, 0, 0.3);
-    transition: all var(--transition-normal);
-}
-.admin-btn:hover {
-    background: var(--gold);
-    transform: scale(1.1);
-}
-.admin-btn.show {
-    display: flex;
-}
-/* event window */
-.event-window {
-    position: fixed;
-    bottom: 2rem;
-    right: 2rem;
-    width: 350px;
-    background: var(--pure-white);
-    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.15);
-    transition: all var(--transition-normal);
-    overflow: hidden;
-}
-.event-window.collapsed {
-    width: 60px;
-    height: 60px;
-    border-radius: 50%;
-    overflow: visible;
-}
-.event-window.collapsed .event-content {
-    display: none;
-}
-.event-toggle {
-    position: absolute;
-    top: 1rem;
-    right: 1rem;
-    width: 40px;
-    height: 40px;
-    background: var(--gold);
-    color: var(--pure-white);
-    border: none;
-    border-radius: 50%;
-    cursor: pointer;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    transition: all var(--transition-fast);
-}
-.event-toggle:hover {
-    background: var(--black);
-}
-.event-content {
-    padding: var(--spacing-lg);
-    padding-top: 4rem;
-}
-/* event window - desktop specific adjustments */
-@media (min-width: 769px) {
-    .event-window {
-        bottom: 11rem !important;
-        width: 350px !important;
-        left: auto !important;
-        right: 2rem !important;
-    }
-   
-    .event-window.collapsed {
-        bottom: 11rem !important;
-        width: 60px !important;
-        height: 60px !important;
-        right: 2rem !important;
-        overflow: visible !important;
-    }
-   
-    .event-window.collapsed .event-toggle {
-        width: 60px !important;
-        height: 60px !important;
-        position: relative !important;
-    }
-   
-    .event-window:not(.collapsed) .event-toggle {
-        display: block !important;
-        position: absolute !important;
-    }
-   
-    .event-content {
-        padding-top: 4rem !important;
-        max-height: 70vh !important;
-    }
-   
-    .event-window.collapsed:not(.interacted) .event-toggle::before {
-        display: flex !important;
+
+// Show/Hide Loading State
+function showLoadingState() {
+    const container = document.getElementById('menuContainer');
+    if (container) {
+        container.innerHTML = `
+            <div class="menu-loading">
+                <i class="fas fa-spinner fa-spin"></i>
+                <p>Speisekarte wird geladen...</p>
+            </div>
+        `;
     }
 }
-/* medium screens filter adjustments */
-@media (max-width: 1199px) and (min-width: 769px) {
-    .filter-btn {
-        padding: 0.5rem 1rem;
-        font-size: 0.7rem;
+
+function hideLoadingState() {
+    // Loading will be replaced by content
+    console.log('CMS Loader: Loading state hidden');
+}
+
+// Create Category Filter Buttons
+function createCategoryFilters(menuData) {
+    const container = document.getElementById('categoryFilters');
+    if (!container) {
+        console.warn('CMS Loader: Category filters container not found');
+        return;
     }
-   
-    .tag-label {
-        padding: 0.375rem 0.75rem;
-        font-size: 0.6rem;
+    
+    // Clear existing
+    container.innerHTML = '';
+    
+    // All categories button
+    const allBtn = createFilterButton('all', 'Alle Gerichte', true);
+    container.appendChild(allBtn);
+    
+    // Individual category buttons
+    menuData.forEach(category => {
+        const btn = createFilterButton(
+            category.title.toLowerCase().replace(/\s+/g, '-'),
+            category.title,
+            false
+        );
+        container.appendChild(btn);
+    });
+    
+    console.log('CMS Loader: Category filters created');
+}
+
+// Create Tag Filters - Always show the 6 allowed tags
+function createTagFilters(menuData) {
+    const container = document.getElementById('tagFilters');
+    if (!container) {
+        console.warn('CMS Loader: Tag filters container not found');
+        return;
     }
-   
-    .btn-icon .btn-text {
-        display: none;
+    
+    // Clear existing
+    container.innerHTML = '';
+    
+    // Count occurrences of each allowed tag
+    const tagCounts = new Map();
+    
+    // Initialize all allowed tags with 0 count
+    ALLOWED_TAGS.forEach(tag => {
+        tagCounts.set(tag, 0);
+    });
+    
+    // Count actual occurrences in menu data
+    menuData.forEach(category => {
+        if (category.items) {
+            category.items.forEach(item => {
+                if (item.tags && Array.isArray(item.tags)) {
+                    item.tags.forEach(tag => {
+                        const lowerTag = tag.toLowerCase().trim();
+                        // Only count if it's an allowed tag
+                        if (ALLOWED_TAGS.includes(lowerTag)) {
+                            tagCounts.set(lowerTag, tagCounts.get(lowerTag) + 1);
+                        }
+                    });
+                }
+            });
+        }
+    });
+    
+    console.log('CMS Loader: Tag counts for allowed tags:', 
+        Array.from(tagCounts.entries()).map(([tag, count]) => `${tag}: ${count}`).join(', '));
+    
+    // Always show all 6 allowed tags in the defined order
+    ALLOWED_TAGS.forEach(tag => {
+        const label = document.createElement('label');
+        label.className = 'tag-filter';
+        
+        const input = document.createElement('input');
+        input.type = 'checkbox';
+        input.value = tag;
+        
+        const span = document.createElement('span');
+        span.className = 'tag-label';
+        const count = tagCounts.get(tag);
+        span.textContent = TAG_DISPLAY_NAMES[tag];
+        
+        // Add count to title if there are items with this tag
+        if (count > 0) {
+            span.title = `${count} ${count === 1 ? 'Gericht' : 'Gerichte'}`;
+        } else {
+            span.title = 'Keine Gerichte mit diesem Tag';
+            // Optionally add a class to style tags with no items differently
+            label.classList.add('tag-no-items');
+        }
+        
+        label.appendChild(input);
+        label.appendChild(span);
+        container.appendChild(label);
+        
+        // Add event listener
+        input.addEventListener('change', handleTagFilter);
+    });
+    
+    console.log('CMS Loader: Created filters for all 6 allowed tags');
+}
+
+// Create Filter Button
+function createFilterButton(value, text, isActive = false) {
+    const btn = document.createElement('button');
+    btn.className = `filter-btn ${isActive ? 'active' : ''}`;
+    btn.setAttribute('data-filter', value);
+    btn.innerHTML = `<span class="btn-text">${text}</span>`;
+    btn.addEventListener('click', handleCategoryFilter);
+    return btn;
+}
+
+// Handle Category Filter
+function handleCategoryFilter(e) {
+    const filterValue = e.currentTarget.getAttribute('data-filter');
+    currentFilters.category = filterValue;
+    
+    // Update active state
+    document.querySelectorAll('.filter-btn').forEach(btn => {
+        btn.classList.remove('active');
+    });
+    e.currentTarget.classList.add('active');
+    
+    applyFilters();
+    updateFilterVisualFeedback();
+}
+
+// Handle Tag Filter
+function handleTagFilter(e) {
+    const tag = e.target.value;
+    
+    if (e.target.checked) {
+        if (!currentFilters.tags.includes(tag)) {
+            currentFilters.tags.push(tag);
+        }
+    } else {
+        currentFilters.tags = currentFilters.tags.filter(t => t !== tag);
     }
-   
-    .filter-row-bottom {
-        gap: var(--spacing-sm);
+    
+    applyFilters();
+    updateFilterVisualFeedback();
+}
+
+// Update visual feedback for active filters
+function updateFilterVisualFeedback() {
+    const hasActiveFilters = currentFilters.category !== 'all' || currentFilters.tags.length > 0;
+    const filterContainer = document.querySelector('.menu-filter-container');
+    
+    if (filterContainer) {
+        if (hasActiveFilters) {
+            filterContainer.classList.add('has-active-filters');
+        } else {
+            filterContainer.classList.remove('has-active-filters');
+        }
     }
-   
-    .filter-tags {
-        max-width: 400px; /* reduce max width on medium screens */
+    
+    // Show filter count badge
+    const activeFilterCount = (currentFilters.category !== 'all' ? 1 : 0) + currentFilters.tags.length;
+    const resetButton = document.querySelector('.btn-icon[onclick="resetFilters()"]');
+    
+    if (resetButton && activeFilterCount > 0) {
+        let badge = resetButton.querySelector('.filter-count');
+        if (!badge) {
+            badge = document.createElement('span');
+            badge.className = 'filter-count';
+            resetButton.appendChild(badge);
+        }
+        badge.textContent = activeFilterCount;
+    } else if (resetButton) {
+        const badge = resetButton.querySelector('.filter-count');
+        if (badge) badge.remove();
     }
 }
-/* tablet adjustments */
-@media (max-width: 1024px) and (min-width: 769px) {
-    .filter-bar {
-        flex-direction: column;
-        gap: var(--spacing-md);
-    }
-   
-    .filter-row-bottom {
-        flex-direction: column;
-        gap: var(--spacing-md);
-        align-items: center;
-    }
-   
-    .filter-tags {
-        justify-content: center;
-    }
-   
-    .filter-buttons {
-        justify-content: center;
-        flex-wrap: wrap;
-    }
-   
-    .menu-grid {
-        grid-template-columns: repeat(2, 1fr);
-    }
-   
-    .philosophy-grid {
-        grid-template-columns: repeat(2, 1fr);
-    }
-   
-    .footer-content {
-        grid-template-columns: repeat(2, 1fr);
-    }
-   
-    .about-container {
-        grid-template-columns: 1fr;
-    }
-   
-    .about-content {
-        padding-right: 0;
-        margin-bottom: var(--spacing-lg);
-    }
-}
-/* mobile responsive styles */
-@media (max-width: 768px) {
-    /* hide desktop filter system */
-    .menu-filter-container,
-    .desktop-only {
-        display: none !important;
-    }
-   
-    /* show mobile filter toggle */
-    .mobile-filter-toggle {
-        display: flex !important;
-        align-items: center;
-        justify-content: center;
-    }
-   
-    /* navigation */
-    .nav-container {
-        padding: 1rem;
-    }
-   
-    .nav-menu {
-        display: none;
-        position: absolute;
-        top: 100%;
-        left: 0;
-        right: 0;
-        background: var(--pure-white);
-        flex-direction: column;
-        padding: var(--spacing-lg);
-        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
-    }
-   
-    .nav-menu.active {
-        display: flex;
-    }
-   
-    .mobile-menu-btn {
-        display: block;
-    }
-   
-    /* hero adjustments */
-    .hero-content {
-        padding: var(--spacing-sm);
-    }
-   
-    /* menu section */
-    .menu-premium {
-        padding: var(--spacing-lg) 0;
-    }
-   
-    .menu-intro {
-        padding: 0 var(--spacing-sm);
-    }
-   
-    /* menu content */
-    .menu-content {
-        max-width: 100%;
-        padding: 0;
-    }
-   
-    .menu-category {
-        margin-bottom: var(--spacing-lg);
-    }
-   
-    /* category hero - full width */
-    .category-hero {
-        margin: 0 0 var(--spacing-md);
-        height: 180px;
-        border-radius: 0;
-    }
-   
-    .category-hero-overlay {
-        padding: var(--spacing-sm);
-    }
-   
-    .category-title-overlay {
-        font-size: 1.75rem;
-        letter-spacing: 0.08em;
-        font-weight: 500;
-    }
-   
-    /* enhanced gradient for mobile */
-    .category-hero-gradient {
-        background: linear-gradient(
-            to bottom,
-            rgba(0, 0, 0, 0.3) 0%,
-            rgba(0, 0, 0, 0.5) 50%,
-            rgba(0, 0, 0, 0.75) 100%
+
+// Apply All Filters
+function applyFilters() {
+    let filteredCategories = [...allMenuCategories];
+    
+    // Apply category filter
+    if (currentFilters.category !== 'all') {
+        filteredCategories = filteredCategories.filter(category =>
+            category.title.toLowerCase().replace(/\s+/g, '-') === currentFilters.category
         );
     }
-   
-    /* menu grid - full width with padding */
-    .menu-grid {
-        grid-template-columns: 1fr;
-        gap: var(--spacing-md);
-        padding: 0 var(--spacing-sm);
-    }
-   
-    /* menu item cards */
-    .menu-item-card {
-        margin: 0;
-        padding: var(--spacing-md);
-    }
-   
-    .menu-item-image {
-        height: 180px;
-        margin: -var(--spacing-md) -var(--spacing-md) var(--spacing-sm);
-    }
-   
-    /* allergen info */
-    .allergen-info {
-        margin: var(--spacing-lg) var(--spacing-sm) 0;
-        padding: var(--spacing-md);
-    }
-   
-    /* philosophy section */
-    .philosophy-section {
-        padding: var(--spacing-lg) 0;
-    }
-   
-    .philosophy-container {
-        padding: 0 var(--spacing-sm);
-    }
-   
-    .philosophy-grid {
-        grid-template-columns: 1fr;
-        gap: var(--spacing-md);
-    }
-   
-    .philosophy-card {
-        padding: var(--spacing-md);
-    }
-   
-    /* about section */
-    .about-premium {
-        padding: var(--spacing-lg) 0;
-    }
-   
-    .about-container {
-        padding: 0 var(--spacing-sm);
-        grid-template-columns: 1fr;
-    }
-   
-    .about-content {
-        padding-right: 0;
-        margin-bottom: var(--spacing-lg);
-    }
-   
-    .about-image {
-        margin: 0 -var(--spacing-sm);
-    }
-   
-    .founder-image {
-        width: 100%;
-        height: auto;
-    }
-   
-    /* reservation section */
-    .reservation-premium {
-        padding: var(--spacing-lg) 0;
-    }
-   
-    .reservation-container {
-        padding: 0 var(--spacing-sm);
-    }
-   
-    .reservation-form {
-        padding: var(--spacing-md);
-        margin: 0 -var(--spacing-sm);
-        border-radius: 0;
-    }
-   
-    /* forms */
-    .form-grid {
-        grid-template-columns: 1fr;
-        gap: var(--spacing-sm);
-    }
-   
-    /* footer */
-    .footer-premium {
-        padding: var(--spacing-lg) 0 var(--spacing-sm);
-    }
-   
-    .footer-content {
-        grid-template-columns: 1fr;
-        text-align: center;
-        padding: 0 var(--spacing-sm);
-        gap: var(--spacing-lg);
-    }
-   
-    /* typography */
-    .section-title {
-        font-size: 2rem;
-    }
-   
-    .hero-title {
-        font-size: 2.5rem;
-    }
-   
-    .hero-subtitle {
-        font-size: 0.875rem;
-    }
-   
-    .hero-tagline {
-        font-size: 1.125rem;
-    }
-   
-    /* spacing adjustments */
-    :root {
-        --spacing-xxl: 4rem;
-        --spacing-xl: 3rem;
-        --spacing-lg: 2rem;
-    }
-   
-    /* category header */
-    .category-header {
-        margin-bottom: var(--spacing-md);
-        padding: 0 var(--spacing-sm);
-    }
-   
-    .category-name {
-        font-size: 2rem;
-    }
-   
-    /* category header decoration */
-    .category-header::before,
-    .category-header::after {
-        display: none;
-    }
-   
-    /* event window */
-    .event-window {
-        width: calc(100vw - 2rem);
-        left: 1rem;
-        bottom: 4.5rem;
-        right: auto;
-        max-height: 60vh;
-        border-radius: 12px;
-        box-shadow: 0 10px 40px rgba(0, 0, 0, 0.25);
-    }
-   
-    .event-window:not(.collapsed) .event-toggle {
-        display: none;
-    }
-   
-    .event-window.collapsed {
-        width: 50px;
-        height: 50px;
-        left: auto;
-        right: 1rem;
-        bottom: 4.5rem;
-        max-height: 50px;
-        border-radius: 50%;
-        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
-        overflow: visible !important;
-    }
-   
-    .event-window.collapsed .event-toggle {
-        width: 50px;
-        height: 50px;
-        font-size: 20px;
-        top: 0;
-        right: 0;
-        position: relative;
-        display: flex;
-    }
-   
-    .event-content {
-        padding: var(--spacing-md);
-        padding-top: 2.5rem;
-        max-height: calc(60vh - 3rem);
-        overflow-y: auto;
-        -webkit-overflow-scrolling: touch;
-    }
-   
-    .event-window.collapsed .event-toggle::before {
-        width: 16px;
-        height: 16px;
-        font-size: 10px;
-        top: -3px;
-        right: -3px;
-        z-index: 2;
-        display: flex !important;
-    }
-   
-    /* admin button */
-    .admin-btn {
-        bottom: 1rem;
-        right: 1rem;
-        width: 45px;
-        height: 45px;
-    }
-}
-/* mobile landscape adjustments */
-@media (max-width: 768px) and (orientation: landscape) {
-    .mobile-filter-content {
-        max-height: 95vh;
-    }
-   
-    .mobile-filter-body {
-        padding: 1rem;
-    }
-   
-    .mobile-tag-filters {
-        grid-template-columns: repeat(3, 1fr);
-    }
-}
-/* small phone adjustments */
-@media (max-width: 375px) {
-    .mobile-filter-header {
-        padding: 1rem;
-    }
-   
-    .mobile-filter-body {
-        padding: 1rem;
-    }
-   
-    .mobile-tag-filters {
-        grid-template-columns: 1fr;
-    }
-   
-    .mobile-filter-btn {
-        font-size: 0.8rem;
-        padding: 0.875rem;
-    }
-}
-/* mobile navigation fixes */
-@media (max-width: 768px) {
-    .nav-menu.active {
-        display: flex !important;
-    }
-   
-    .nav-link {
-        padding: 1rem 0;
-        border-bottom: 1px solid var(--light-gray);
-        width: 100%;
-        text-align: center;
-    }
-   
-    .nav-link:last-child {
-        border-bottom: none;
-    }
-   
-    .nav-cta {
-        margin-top: 1rem;
-        display: inline-block;
-        width: 100%;
-        text-align: center;
-    }
-   
-    .mobile-menu-btn {
-        display: block !important;
-    }
-   
-    /* animate burger menu */
-    .mobile-menu-btn.active span:nth-child(1) {
-        transform: rotate(45deg) translate(5px, 5px);
-    }
-   
-    .mobile-menu-btn.active span:nth-child(2) {
-        opacity: 0;
-    }
-   
-    .mobile-menu-btn.active span:nth-child(3) {
-        transform: rotate(-45deg) translate(7px, -6px);
-    }
-}
-/* hero mobile fixes */
-@media (max-width: 768px) {
-    .hero-content {
-        padding: var(--spacing-md) !important;
-    }
-   
-    .hero-actions {
-        flex-direction: column !important;
-        gap: var(--spacing-sm) !important;
-    }
-   
-    .btn-luxury {
-        width: 100% !important;
-        padding: 1rem !important;
-        font-size: 0.875rem !important;
-    }
-}
-/* typography mobile */
-@media (max-width: 768px) {
-    .section-title {
-        font-size: 2rem !important;
-        margin-bottom: var(--spacing-sm) !important;
-    }
-   
-    .section-subtitle {
-        font-size: 1rem !important;
-        margin-bottom: var(--spacing-md) !important;
-    }
-   
-    .hero-title {
-        font-size: 2rem !important;
-    }
-   
-    .hero-subtitle {
-        font-size: 0.75rem !important;
-    }
-   
-    .hero-tagline {
-        font-size: 1rem !important;
-    }
-   
-    .category-name {
-        font-size: 1.75rem !important;
-    }
-}
-/* ensure hamburger menu is visible on mobile */
-@media (max-width: 768px) {
-    .mobile-menu-btn,
-    .mobile-menu-toggle {
-        display: block !important;
-        background: none;
-        border: none;
-        cursor: pointer;
-        width: 30px;
-        height: 30px;
-        position: relative;
-        z-index: 1001;
-        padding: 0;
-    }
-   
-    .mobile-menu-btn span,
-    .mobile-menu-toggle span {
-        display: block !important;
-        width: 100%;
-        height: 2px;
-        background: var(--black, #1a1a1a) !important;
-        margin: 6px 0;
-        transition: all 0.3s ease;
-        opacity: 1 !important;
-    }
-   
-    .nav-menu,
-    .nav-links {
-        display: none !important;
-    }
-   
-    .nav-menu.active,
-    .nav-links.active {
-        display: flex !important;
-        position: absolute;
-        top: 100%;
-        left: 0;
-        right: 0;
-        background: white;
-        flex-direction: column;
-        padding: 20px;
-        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
-        z-index: 1000;
-    }
-}
-/* desktop hamburger hidden */
-@media (min-width: 769px) {
-    .mobile-menu-btn,
-    .mobile-menu-toggle {
-        display: none !important;
-    }
-   
-    .nav-menu,
-    .nav-links {
-        display: flex !important;
-    }
-}
-/* override any conflicting styles */
-@media (max-width: 768px) {
-    .nav-premium .mobile-menu-btn {
-        display: block !important;
-        opacity: 1 !important;
-        visibility: visible !important;
-    }
-   
-    .mobile-menu-btn span {
-        display: block !important;
-        opacity: 1 !important;
-        visibility: visible !important;
-        width: 25px !important;
-        height: 2px !important;
-        background-color: #1a1a1a !important;
-    }
-}
-/* desktop specific adjustments */
-@media (min-width: 1200px) {
-    .category-hero {
-        height: 280px;
-    }
-   
-    .category-title-overlay {
-        font-size: 3.5rem;
-    }
-   
-    .filter-buttons {
-        gap: 0.5rem;
-    }
-   
-    .filter-btn {
-        padding: 0.5rem 1.5rem;
-        font-size: 0.8rem;
-    }
-}
-/* tablet adjustments */
-@media (min-width: 769px) and (max-width: 1199px) {
-    .category-hero {
-        height: 240px;
-    }
-   
-    .category-title-overlay {
-        font-size: 3rem;
-    }
-}
-/* high contrast mode */
-@media (prefers-contrast: high) {
-    .category-hero-gradient {
-        background: linear-gradient(
-            to bottom,
-            rgba(0, 0, 0, 0.4) 0%,
-            rgba(0, 0, 0, 0.7) 50%,
-            rgba(0, 0, 0, 0.9) 100%
-        );
-    }
-    .category-title-overlay {
-        font-weight: 600;
-        background: rgba(0, 0, 0, 0.5);
-    }
-}
-/* print styles */
-@media print {
-    .nav-premium,
-    .hero-premium,
-    .philosophy-section,
-    .about-premium,
-    .reservation-premium,
-    .footer-premium,
-    .menu-filter-container,
-    .mobile-filter-toggle,
-    .mobile-filter-modal,
-    .admin-btn,
-    .event-window,
-    .category-hero {
-        display: none !important;
-    }
-   
-    body {
-        font-size: 11pt;
-        line-height: 1.5;
-        color: #000;
-        background: #fff;
-    }
-   
-    .menu-premium {
-        padding: 0;
-    }
-   
-    .menu-grid {
-        grid-template-columns: repeat(2, 1fr);
-        gap: 20pt;
-    }
-   
-    .menu-item-card {
-        box-shadow: none;
-        border: 0.5pt solid #ddd;
-        page-break-inside: avoid;
-    }
-   
-    .menu-item-image {
-        height: 120pt;
-    }
-   
-    .allergen-info {
-        display: block !important;
-        page-break-before: always;
-    }
-   
-    .menu-category .category-header .category-name {
-        display: block !important;
-    }
-}
-/* animations */
-@keyframes fadeinscale {
-    from {
-        opacity: 0;
-        transform: scale(0.95);
-    }
-    to {
-        opacity: 1;
-        transform: scale(1);
-    }
-}
-@keyframes loadprogress {
-    from { width: 0; }
-    to { width: 100%; }
-}
-@keyframes bounce {
-    0%, 20%, 50%, 80%, 100% {
-        transform: translatex(-50%) translatey(0);
-    }
-    40% {
-        transform: translatex(-50%) translatey(-10px);
-    }
-    60% {
-        transform: translatex(-50%) translatey(-5px);
-    }
-}
-/* utility classes */
-.text-center { text-align: center; }
-.text-left { text-align: left; }
-.text-right { text-align: right; }
-.mb-0 { margin-bottom: 0; }
-.mb-1 { margin-bottom: var(--spacing-xs); }
-.mb-2 { margin-bottom: var(--spacing-sm); }
-.mb-3 { margin-bottom: var(--spacing-md); }
-.mb-4 { margin-bottom: var(--spacing-lg); }
-.mb-5 { margin-bottom: var(--spacing-xl); }
-/* mobile hide */
-@media (max-width: 768px) {
-    .mobile-hide {
-        display: none !important;
-    }
-}
-/* smooth scrolling */
-html {
-    scroll-behavior: smooth;
-}
-/* focus styles */
-*:focus {
-    outline: 2px solid var(--gold);
-    outline-offset: 2px;
-}
-/* selection */
-::selection {
-    background: var(--gold);
-    color: var(--pure-white);
-}
-::-moz-selection {
-    background: var(--gold);
-    color: var(--pure-white);
-}
-/* shimmer loading effect while image loads */
-.category-hero::after {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    background: linear-gradient(
-        90deg,
-        rgba(255, 255, 255, 0) 0%,
-        rgba(255, 255, 255, 0.2) 50%,
-        rgba(255, 255, 255, 0) 100%
-    );
-    transform: translatex(-100%);
-    animation: shimmer 1.5s infinite;
-    z-index: 0;
-    pointer-events: none;
-}
-.category-hero.loaded::after {
-    display: none;
-}
-@keyframes shimmer {
-    to {
-        transform: translatex(100%);
-    }
-}
-/* hover effect for desktop */
-@media (hover: hover) and (min-width: 769px) {
-    .category-hero {
-        transition: transform 0.3s ease, box-shadow 0.3s ease;
-    }
-    .category-hero:hover {
-        transform: translatey(-2px);
-        box-shadow: 0 12px 40px rgba(0, 0, 0, 0.15);
-    }
-    .category-hero img {
-        transition: transform 0.6s ease;
-    }
-    .category-hero:hover img {
-        transform: scale(1.05);
-    }
-   
-    .category-hero:hover .category-hero-gradient {
-        background: linear-gradient(
-            to bottom,
-            rgba(0, 0, 0, 0.3) 0%,
-            rgba(0, 0, 0, 0.5) 50%,
-            rgba(0, 0, 0, 0.8) 100%
-        );
-    }
-}
-/* accessibility improvements */
-@media (prefers-reduced-motion: reduce) {
-    .mobile-filter-modal,
-    .mobile-filter-content,
-    .category-hero,
-    .category-hero img,
-    .menu-item-card {
-        transition: none !important;
-        animation: none !important;
-    }
-   
-    .category-hero:hover img {
-        transform: none !important;
-    }
-}
-/* better fallback styling for broken images */
-.category-hero img[src=""],
-.category-hero img:not([src]),
-.category-hero img[src*="undefined"],
-.category-hero img[src$="/"] {
-    display: none;
-}
-/* style for category hero without valid image */
-.category-hero:not(:has(img[src]:not([src=""]):not([src*="undefined"]):not([src$="/"]))) {
-    background: linear-gradient(135deg, var(--gold), var(--sage));
-    height: 150px;
-}
-/* for browsers without :has() support */
-.category-hero {
-    background: linear-gradient(135deg, var(--cream), var(--light-gray));
-}
-.category-hero img {
-    position: relative;
-    z-index: 0;
-    background: white;
-}
-/* last category reduced margin */
-.menu-category:last-child {
-    margin-bottom: var(--spacing-xl);
-}
-/* menu content filtering animation */
-.menu-content.filtering {
-    opacity: 0.5;
-    transition: opacity 0.3s ease;
-}
-/* smooth transitions for menu items */
-.menu-item-card {
-    animation: fadein 0.3s ease forwards;
-}
-@keyframes fadein {
-    from {
-        opacity: 0;
-        transform: translatey(10px);
-    }
-    to {
-        opacity: 1;
-        transform: translatey(0);
-    }
-}
-/* entrance animation for menu items */
-.category-hero.loaded ~ .menu-grid .menu-item-card {
-    animation: fadeinup 0.6s ease forwards;
-    opacity: 0;
-}
-.category-hero.loaded ~ .menu-grid .menu-item-card:nth-child(1) { animation-delay: 0.05s; }
-.category-hero.loaded ~ .menu-grid .menu-item-card:nth-child(2) { animation-delay: 0.1s; }
-.category-hero.loaded ~ .menu-grid .menu-item-card:nth-child(3) { animation-delay: 0.15s; }
-.category-hero.loaded ~ .menu-grid .menu-item-card:nth-child(4) { animation-delay: 0.2s; }
-.category-hero.loaded ~ .menu-grid .menu-item-card:nth-child(5) { animation-delay: 0.25s; }
-.category-hero.loaded ~ .menu-grid .menu-item-card:nth-child(6) { animation-delay: 0.3s; }
-@keyframes fadeinup {
-    from {
-        opacity: 0;
-        transform: translatey(20px);
-    }
-    to {
-        opacity: 1;
-        transform: translatey(0);
-    }
-}
-/* disable animations on mobile for performance */
-@media (max-width: 768px) {
-    .category-hero {
-        opacity: 1;
-        transform: none;
-        transition: none;
-    }
-   
-    .category-hero::after {
-        display: none;
-    }
-   
-    .category-hero.loaded ~ .menu-grid .menu-item-card {
-        animation: none;
-        opacity: 1;
-    }
-   
-    .category-title-overlay {
-        background: rgba(0, 0, 0, 0.3);
-        padding: 0.5rem 1rem;
-    }
-}
-/* ===============================================
-   mobile specific fixes - add to end of mystyle-premium.css
-   =============================================== */
-/* force mobile pdf button visibility */
-@media (max-width: 768px) {
-    .mobile-pdf-download {
-        display: flex !important;
-        background: #1a1a1a !important;
-        color: #ffffff !important;
-        border: none !important;
-        padding: 0.75rem 1.5rem !important;
-        border-radius: 25px !important;
-        font-family: 'montserrat', sans-serif !important;
-        font-size: 0.75rem !important;
-        font-weight: 500 !important;
-        text-transform: uppercase !important;
-        letter-spacing: 0.1em !important;
-        cursor: pointer !important;
-        transition: all 0.3s ease !important;
-        margin: 0 auto 2rem !important;
-        gap: 0.5rem !important;
-        align-items: center !important;
-        justify-content: center !important;
-        -webkit-appearance: none !important;
-        -moz-appearance: none !important;
-        appearance: none !important;
-        -webkit-tap-highlight-color: transparent !important;
-        touch-action: manipulation !important;
-    }
-   
-    .mobile-pdf-download:active {
-        transform: scale(0.95) !important;
-        background: #c9a961 !important;
-    }
-   
-    body.dark-mode .mobile-pdf-download {
-        background: #c9a961 !important;
-        color: #0a0a0a !important;
-    }
-   
-    body.dark-mode .mobile-pdf-download:active {
-        background: #e6d097 !important;
-    }
-}
-/* mobile dark mode toggle styles */
-.mobile-dark-mode-item {
-    display: block !important;
-    width: 100% !important;
-    margin-top: 1rem !important;
-    padding-top: 1rem !important;
-    border-top: 1px solid rgba(30, 74, 60, 0.1) !important;
-    list-style: none !important;
-}
-body.dark-mode .mobile-dark-mode-item {
-    border-top-color: rgba(255, 255, 255, 0.1) !important;
-}
-.mobile-dark-mode-toggle {
-    display: flex !important;
-    align-items: center !important;
-    justify-content: center !important;
-    gap: 0.5rem !important;
-    width: 100% !important;
-    padding: 1rem !important;
-    background: transparent !important;
-    border: 1px solid #e8e8e8 !important;
-    color: #1e4a3c !important;
-    font-family: 'montserrat', sans-serif !important;
-    font-size: 0.875rem !important;
-    font-weight: 500 !important;
-    text-transform: uppercase !important;
-    letter-spacing: 0.05em !important;
-    cursor: pointer !important;
-    transition: all 0.3s ease !important;
-    -webkit-appearance: none !important;
-    -moz-appearance: none !important;
-    appearance: none !important;
-    -webkit-tap-highlight-color: transparent !important;
-    touch-action: manipulation !important;
-}
-.mobile-dark-mode-toggle:hover {
-    background: #1e4a3c !important;
-    color: #ffffff !important;
-    border-color: #1e4a3c !important;
-}
-body.dark-mode .mobile-dark-mode-toggle {
-    background: #1a1a1a !important;
-    color: #ffffff !important;
-    border-color: #1a1a1a !important;
-}
-body.dark-mode .mobile-dark-mode-toggle:hover {
-    background: #c9a961 !important;
-    color: #0a0a0a !important;
-    border-color: #c9a961 !important;
-}
-/* ios specific fixes */
-@supports (-webkit-touch-callout: none) {
-    /* ios safari button fixes */
-    .mobile-pdf-download,
-    .mobile-dark-mode-toggle,
-    .btn-luxury,
-    .filter-btn,
-    .btn-icon {
-        -webkit-tap-highlight-color: transparent !important;
-        -webkit-touch-callout: none !important;
-        -webkit-user-select: none !important;
-        touch-action: manipulation !important;
-    }
-   
-    /* prevent ios zoom on form inputs */
-    input[type="text"],
-    input[type="email"],
-    input[type="tel"],
-    input[type="date"],
-    select,
-    textarea {
-        font-size: 16px !important;
-    }
-   
-    /* fix for ios button appearance */
-    button,
-    input[type="button"],
-    input[type="submit"] {
-        -webkit-appearance: none !important;
-        border-radius: 0 !important;
-    }
-   
-    /* maintain border radius where needed */
-    .mobile-pdf-download {
-        border-radius: 25px !important;
-    }
-   
-    .mobile-dark-mode-toggle {
-        border-radius: 0 !important;
-    }
-}
-/* android specific fixes */
-@media (max-width: 768px) {
-    /* fix button tap states on android */
-    button:active,
-    .btn-luxury:active,
-    .mobile-pdf-download:active,
-    .mobile-dark-mode-toggle:active {
-        outline: none !important;
-        -webkit-tap-highlight-color: transparent !important;
-    }
-   
-    /* ensure proper button sizing on small screens */
-    .mobile-pdf-download,
-    .mobile-dark-mode-toggle {
-        min-height: 44px !important; /* minimum touch target size */
-    }
-}
-/* force visibility of mobile elements */
-@media (max-width: 768px) {
-    .mobile-dark-mode-item,
-    .mobile-pdf-download {
-        opacity: 1 !important;
-        visibility: visible !important;
-        pointer-events: auto !important;
-    }
-}
-/* fix for samsung internet browser */
-@media (max-width: 768px) {
-    input,
-    select,
-    textarea,
-    button {
-        -webkit-appearance: none !important;
-        -moz-appearance: none !important;
-        appearance: none !important;
-    }
-}
-/* ensure mobile menu is properly styled */
-@media (max-width: 768px) {
-    .nav-menu.active {
-        display: flex !important;
-        position: absolute !important;
-        top: 100% !important;
-        left: 0 !important;
-        right: 0 !important;
-        background: white !important;
-        flex-direction: column !important;
-        padding: 20px !important;
-        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1) !important;
-        z-index: 1000 !important;
-        max-height: calc(100vh - 80px) !important;
-        overflow-y: auto !important;
-        -webkit-overflow-scrolling: touch !important;
-    }
-   
-    body.dark-mode .nav-menu.active {
-        background: #0a0a0a !important;
-        box-shadow: 0 10px 30px rgba(255, 255, 255, 0.05) !important;
-    }
-}
-/* ensure icons are visible */
-.mobile-pdf-download i,
-.mobile-dark-mode-toggle i {
-    display: inline-block !important;
-    font-size: 1rem !important;
-    line-height: 1 !important;
-}
-/* fix potential z-index issues */
-@media (max-width: 768px) {
-    .mobile-pdf-download {
-        position: relative !important;
-        z-index: 10 !important;
-    }
-   
-    .nav-premium {
-        z-index: 1000 !important;
-    }
-   
-    .nav-menu.active {
-        z-index: 999 !important;
-    }
-}
-/* ===============================================
-   dark mode implementation
-   add this section after your :root variables
-   =============================================== */
-/* dark mode color variables */
-body.dark-mode {
-    /* dark mode color palette */
-    --black: #fafaf8;
-    --charcoal: #e8e8e8;
-    --warm-gray: #c0c0c0;
-    --light-gray: #2d2d2d;
-    --off-white: #0a0a0a;
-    --pure-white: #121212;
-   
-    /* inverted accent colors */
-    --gold: #e6d097;
-    --sage: #8fa17c;
-    --blush: #1a0e02;
-    --cream: #1a1614;
-   
-    /* shadows for dark mode */
-    --shadow-sm: 0 2px 4px rgba(255, 255, 255, 0.05);
-    --shadow-md: 0 4px 20px rgba(255, 255, 255, 0.08);
-    --shadow-lg: 0 10px 40px rgba(255, 255, 255, 0.1);
-}
-/* base dark mode styles */
-body.dark-mode {
-    background-color: var(--pure-white);
-    color: var(--charcoal);
-}
-/* navigation dark mode */
-body.dark-mode .nav-premium {
-    background: rgba(18, 18, 18, 0.95);
-    border-bottom-color: var(--light-gray);
-}
-body.dark-mode .nav-premium.scrolled {
-    background: rgba(18, 18, 18, 0.98);
-    box-shadow: var(--shadow-md);
-}
-body.dark-mode .nav-link {
-    color: var(--charcoal);
-}
-body.dark-mode .nav-link:hover {
-    color: var(--gold);
-}
-body.dark-mode .nav-cta {
-    background: var(--gold);
-    color: var(--pure-white) !important;
-}
-body.dark-mode .nav-cta:hover {
-    background: var(--sage);
-}
-body.dark-mode .logo-img {
-    filter: brightness(0) invert(1);
-}
-/* mobile menu dark mode */
-body.dark-mode .mobile-menu-btn span {
-    background: var(--charcoal);
-}
-body.dark-mode .nav-menu {
-    background: var(--pure-white);
-    box-shadow: var(--shadow-lg);
-}
-/* hero section dark mode */
-body.dark-mode .hero-overlay {
-    background: rgba(0, 0, 0, 0.6);
-}
-/* buttons dark mode */
-body.dark-mode .btn-luxury.btn-primary {
-    background: var(--gold);
-    color: var(--pure-white);
-    border-color: var(--gold);
-}
-body.dark-mode .btn-luxury.btn-primary:hover {
-    background: transparent;
-    color: var(--gold);
-}
-body.dark-mode .btn-luxury.btn-secondary {
-    border-color: var(--charcoal);
-    color: var(--charcoal);
-}
-body.dark-mode .btn-luxury.btn-secondary:hover {
-    background: var(--charcoal);
-    color: var(--pure-white);
-}
-/* menu section dark mode */
-body.dark-mode .menu-premium {
-    background: var(--off-white);
-}
-body.dark-mode .menu-intro {
-    color: var(--charcoal);
-}
-/* filter system dark mode */
-body.dark-mode .filter-bar {
-    background: var(--pure-white);
-    border-color: var(--light-gray);
-    box-shadow: var(--shadow-md);
-}
-body.dark-mode .filter-btn {
-    color: var(--warm-gray);
-    border-bottom-color: transparent;
-}
-body.dark-mode .filter-btn:hover {
-    color: var(--charcoal);
-}
-body.dark-mode .filter-btn.active {
-    color: var(--charcoal);
-}
-body.dark-mode .filter-btn.active::after {
-    background: var(--gold);
-}
-body.dark-mode .tag-label {
-    color: var(--warm-gray);
-    background: transparent;
-    border-color: var(--light-gray);
-}
-body.dark-mode .tag-filter input[type="checkbox"]:checked + .tag-label {
-    background: var(--gold);
-    color: var(--pure-white);
-    border-color: var(--gold);
-}
-body.dark-mode .tag-filter:hover .tag-label {
-    border-color: var(--sage);
-    color: var(--sage);
-}
-body.dark-mode .btn-icon {
-    border-color: var(--light-gray);
-    color: var(--warm-gray);
-}
-body.dark-mode .btn-icon:hover {
-    color: var(--gold);
-    border-color: var(--gold);
-}
-/* menu categories dark mode */
-body.dark-mode .menu-category {
-    background: var(--pure-white);
-}
-body.dark-mode .category-hero {
-    box-shadow: var(--shadow-lg);
-}
-body.dark-mode .category-hero-gradient {
-    background: linear-gradient(
-        to bottom,
-        rgba(0, 0, 0, 0.4) 0%,
-        rgba(0, 0, 0, 0.6) 50%,
-        rgba(0, 0, 0, 0.8) 100%
-    );
-}
-body.dark-mode .category-name {
-    color: var(--charcoal);
-}
-body.dark-mode .category-description {
-    color: var(--warm-gray);
-}
-/* menu item cards dark mode */
-body.dark-mode .menu-item-card {
-    background: #1a1a1a;
-    box-shadow: var(--shadow-md);
-}
-body.dark-mode .menu-item-card:hover {
-    box-shadow: var(--shadow-lg);
-}
-body.dark-mode .menu-item-icon {
-    background: var(--light-gray);
-}
-body.dark-mode .menu-item-name {
-    color: var(--charcoal);
-}
-body.dark-mode .menu-item-price {
-    color: var(--gold);
-}
-body.dark-mode .menu-item-description {
-    color: var(--warm-gray);
-}
-body.dark-mode .menu-tag {
-    background: var(--light-gray);
-    color: var(--charcoal);
-}
-body.dark-mode .menu-tag:hover {
-    background: var(--gold);
-    color: var(--pure-white);
-}
-body.dark-mode .allergen-code {
-    background: var(--light-gray);
-    color: var(--charcoal);
-}
-/* allergen info dark mode */
-body.dark-mode .allergen-info {
-    background: #1a1a1a;
-    box-shadow: var(--shadow-md);
-}
-body.dark-mode .allergen-letter {
-    background: var(--gold);
-    color: var(--pure-white);
-}
-/* about section dark mode */
-body.dark-mode .about-premium {
-    background: var(--off-white);
-}
-body.dark-mode .founder-image {
-    filter: brightness(0.8);
-}
-/* reservation section dark mode */
-body.dark-mode .reservation-premium {
-    background: var(--pure-white);
-}
-body.dark-mode .reservation-form {
-    background: #1a1a1a;
-    box-shadow: var(--shadow-lg);
-}
-body.dark-mode .form-group input,
-body.dark-mode .form-group select,
-body.dark-mode .form-group textarea {
-    background: var(--off-white);
-    border-color: var(--light-gray);
-    color: var(--charcoal);
-}
-body.dark-mode .form-group input:focus,
-body.dark-mode .form-group select:focus,
-body.dark-mode .form-group textarea:focus {
-    border-color: var(--gold);
-}
-body.dark-mode .btn-submit {
-    background: var(--gold);
-    color: var(--pure-white);
-}
-body.dark-mode .btn-submit:hover {
-    background: var(--sage);
-}
-/* footer dark mode */
-body.dark-mode .footer-premium {
-    background: #0a0a0a;
-    border-top: 1px solid var(--light-gray);
-}
-body.dark-mode .footer-logo {
-    filter: brightness(0) invert(1);
-}
-body.dark-mode .social-links a {
-    border-color: rgba(255, 255, 255, 0.2);
-    color: var(--charcoal);
-}
-body.dark-mode .social-links a:hover {
-    border-color: var(--gold);
-    background: var(--gold);
-    color: var(--pure-white);
-}
-body.dark-mode address a {
-    color: var(--charcoal);
-}
-body.dark-mode address a:hover {
-    color: var(--gold);
-}
-body.dark-mode .newsletter-form input {
-    border-color: rgba(255, 255, 255, 0.2);
-    background: rgba(255, 255, 255, 0.05);
-    color: var(--charcoal);
-}
-body.dark-mode .newsletter-form input::placeholder {
-    color: rgba(255, 255, 255, 0.3);
-}
-body.dark-mode .btn-newsletter {
-    background: var(--gold);
-    color: var(--pure-white);
-}
-body.dark-mode .btn-newsletter:hover {
-    background: var(--charcoal);
-    color: var(--pure-white);
-}
-body.dark-mode .footer-bottom {
-    border-top-color: rgba(255, 255, 255, 0.1);
-}
-body.dark-mode .footer-bottom a {
-    color: var(--charcoal);
-}
-body.dark-mode .footer-bottom a:hover {
-    color: var(--gold);
-}
-/* admin button dark mode */
-body.dark-mode .admin-btn {
-    background: var(--gold);
-    color: var(--pure-white);
-    box-shadow: var(--shadow-lg);
-}
-body.dark-mode .admin-btn:hover {
-    background: var(--sage);
-}
-/* event window dark mode */
-body.dark-mode .event-window {
-    background: #1a1a1a;
-    box-shadow: var(--shadow-lg);
-}
-body.dark-mode .event-toggle {
-    background: var(--gold);
-    color: var(--pure-white);
-}
-body.dark-mode .event-toggle:hover {
-    background: var(--sage);
-}
-/* loading screen dark mode */
-body.dark-mode .loading-screen {
-    background: var(--off-white);
-}
-body.dark-mode .loading-logo {
-    filter: brightness(0) invert(1);
-}
-body.dark-mode .loading-bar {
-    background: var(--light-gray);
-}
-body.dark-mode .loading-progress {
-    background: var(--gold);
-}
-body.dark-mode .loading-text {
-    color: var(--warm-gray);
-}
-/* mobile filter modal dark mode */
-body.dark-mode .mobile-filter-modal {
-    background: rgba(0, 0, 0, 0.8);
-}
-body.dark-mode .mobile-filter-content {
-    background: #1a1a1a;
-}
-body.dark-mode .mobile-filter-header {
-    border-bottom-color: var(--light-gray);
-}
-body.dark-mode .mobile-filter-header h3 {
-    color: var(--charcoal);
-}
-body.dark-mode .mobile-filter-close {
-    color: var(--warm-gray);
-}
-body.dark-mode .mobile-filter-close:active {
-    background: var(--light-gray);
-}
-body.dark-mode .mobile-filter-section h4 {
-    color: var(--warm-gray);
-}
-body.dark-mode .mobile-filter-btn {
-    background: var(--off-white);
-    border-color: var(--light-gray);
-    color: var(--warm-gray);
-}
-body.dark-mode .mobile-filter-btn.active {
-    background: var(--gold);
-    color: var(--pure-white);
-    border-color: var(--gold);
-}
-body.dark-mode .mobile-tag-label {
-    background: var(--off-white);
-    border-color: var(--light-gray);
-    color: var(--warm-gray);
-}
-body.dark-mode .mobile-tag-filter input[type="checkbox"]:checked + .mobile-tag-label {
-    background: var(--gold);
-    color: var(--pure-white);
-    border-color: var(--gold);
-}
-body.dark-mode .mobile-filter-footer {
-    border-top-color: var(--light-gray);
-}
-body.dark-mode .mobile-filter-reset {
-    background: var(--light-gray);
-    color: var(--charcoal);
-}
-body.dark-mode .mobile-filter-apply {
-    background: var(--gold);
-    color: var(--pure-white);
-}
-/* scroll indicator dark mode */
-body.dark-mode .scroll-arrow {
-    border-color: var(--charcoal);
-}
-/* loading states dark mode */
-body.dark-mode .menu-loading {
-    color: var(--warm-gray);
-}
-body.dark-mode .menu-loading i {
-    color: var(--gold);
-}
-body.dark-mode .no-results-message {
-    color: var(--warm-gray);
-}
-body.dark-mode .no-results-message i {
-    color: var(--light-gray);
-}
-/* category header decorations dark mode */
-body.dark-mode .category-header::before,
-body.dark-mode .category-header::after {
-    background: linear-gradient(to right, transparent, var(--light-gray), transparent);
-}
-/* dark mode toggle button desktop */
-.dark-mode-toggle {
-    background: none;
-    border: none;
-    cursor: pointer;
-    padding: 0.5rem;
-    color: var(--charcoal);
-    font-size: 1.125rem;
-    transition: all var(--transition-fast);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-}
-.dark-mode-toggle:hover {
-    color: var(--gold);
-    transform: rotate(15deg);
-}
-body.dark-mode .dark-mode-toggle {
-    color: var(--gold);
-}
-body.dark-mode .dark-mode-toggle:hover {
-    color: var(--sage);
-}
-/* nav divider dark mode */
-body.dark-mode .nav-divider {
-    background: var(--light-gray);
-    opacity: 0.3;
-}
-/* fix for mobile dark mode toggle in navigation */
-body.dark-mode .mobile-dark-mode-item {
-    border-top-color: rgba(255, 255, 255, 0.1) !important;
-}
-body.dark-mode .mobile-dark-mode-toggle {
-    background: var(--gold) !important;
-    color: var(--pure-white) !important;
-    border-color: var(--gold) !important;
-}
-body.dark-mode .mobile-dark-mode-toggle:hover {
-    background: var(--sage) !important;
-    border-color: var(--sage) !important;
-}
-/* smooth transitions for dark mode */
-body,
-body * {
-    transition: background-color 0.3s ease,
-                color 0.3s ease,
-                border-color 0.3s ease,
-                box-shadow 0.3s ease;
-}
-/* prevent transition on page load */
-body.no-transition,
-body.no-transition * {
-    transition: none !important;
-}
-/* selection colors for dark mode */
-body.dark-mode ::selection {
-    background: var(--gold);
-    color: var(--pure-white);
-}
-body.dark-mode ::-moz-selection {
-    background: var(--gold);
-    color: var(--pure-white);
-}
-/* focus styles for dark mode */
-body.dark-mode *:focus {
-    outline-color: var(--gold);
-}
-/* special case for images and videos in dark mode */
-body.dark-mode img:not(.logo-img):not(.footer-logo),
-body.dark-mode video {
-    opacity: 0.85;
-}
-body.dark-mode img:hover:not(.logo-img):not(.footer-logo),
-body.dark-mode video:hover {
-    opacity: 1;
-}
-/* print styles should not be affected by dark mode */
-@media print {
-    body.dark-mode,
-    body.dark-mode * {
-        background: white !important;
-        color: black !important;
-    }
-}
+    
+    // Apply tag filters
+    if (currentFilters.tags.length > 0) {
+        filteredCategories = filteredCategories.map(category => ({
+            ...category,
+            items: category.items.filter(item => {
+                if (!item.tags || !Array.isArray(item.tags)) return false;
+                
+                // Normalize item tags to lowercase
+                const itemTags = item.tags.map(tag => tag.toLowerCase().trim());
+                
+                // Check if item has at least one of the selected tags
+                return currentFilters.tags.some(filterTag => 
+                    itemTags.includes(filterTag.toLowerCase())
+                );
+            })
+        })).filter(category => category.items.length > 0);
+    }
+    
+    // Add filtering class for smooth transition
+    const container = document.getElementById('menuContainer');
+    if (container) {
+        container.classList.add('filtering');
+        
+        setTimeout(() => {
+            displayPremiumMenu(filteredCategories);
+            container.classList.remove('filtering');
+        }, 200);
+    }
+    
+    // Update mobile filter badge if it exists
+    if (window.mobileFilters && window.mobileFilters.updateBadge) {
+        window.mobileFilters.updateBadge();
+    }
+}
+
+// Reset Filters
+window.resetFilters = function() {
+    currentFilters = {
+        category: 'all',
+        tags: []
+    };
+    
+    document.querySelectorAll('.filter-btn').forEach(btn => {
+        btn.classList.remove('active');
+    });
+    const allBtn = document.querySelector('.filter-btn[data-filter="all"]');
+    if (allBtn) allBtn.classList.add('active');
+    
+    document.querySelectorAll('.tag-filter input[type="checkbox"]').forEach(checkbox => {
+        checkbox.checked = false;
+    });
+    
+    displayPremiumMenu(allMenuCategories);
+    updateFilterVisualFeedback();
+    
+    // Update mobile filter badge if it exists
+    if (window.mobileFilters && window.mobileFilters.updateBadge) {
+        window.mobileFilters.updateBadge();
+    }
+};
+
+// Create Category HTML with Overlay - Dark Mode Aware
+function createCategoryHTML(category, catIndex) {
+    const hasImage = category.image ? true : false;
+    const categorySlug = category.title.toLowerCase().replace(/\s+/g, '-');
+    
+    let html = `<div class="menu-category" data-category="${categorySlug}">`;
+    
+    if (hasImage) {
+        // Category with hero image and overlay
+        html += `
+            <div class="category-hero">
+                <img src="${formatImageUrl(category.image)}" alt="${category.title}" loading="lazy">
+                <div class="category-hero-gradient"></div>
+                <div class="category-hero-overlay">
+                    <h3 class="category-title-overlay">${category.title}</h3>
+                </div>
+            </div>
+        `;
+        
+        // Trigger image loaded event for animations
+        setTimeout(() => {
+            const categoryHero = document.querySelector(`.menu-category[data-category="${categorySlug}"] .category-hero`);
+            if (categoryHero) {
+                const img = categoryHero.querySelector('img');
+                if (img.complete) {
+                    categoryHero.classList.add('loaded');
+                } else {
+                    img.addEventListener('load', () => {
+                        categoryHero.classList.add('loaded');
+                    });
+                }
+            }
+        }, 100);
+    }
+    
+    // Category header (with or without description)
+    html += `<div class="category-header">`;
+    
+    // Only show category name here if there's no hero image
+    if (!hasImage) {
+        html += `<h3 class="category-name">${category.title}</h3>`;
+    }
+    
+    if (category.description) {
+        html += `<p class="category-description">${category.description}</p>`;
+    }
+    
+    html += `</div>`;
+    
+    // Menu items grid
+    html += `
+        <div class="menu-grid">
+            ${category.items ? category.items.map(item => createMenuItemCard(item)).join('') : ''}
+        </div>
+    </div>`;
+    
+    return html;
+}
+
+// Display Premium Menu
+function displayPremiumMenu(menuData) {
+    const container = document.getElementById('menuContainer');
+    if (!container) {
+        console.error('CMS Loader: Menu container not found!');
+        return;
+    }
+    
+    if (!menuData || menuData.length === 0) {
+        container.innerHTML = `
+            <div class="no-results-message">
+                <i class="fas fa-search"></i>
+                <p>Keine Gerichte gefunden. Bitte passen Sie Ihre Filter an.</p>
+            </div>
+        `;
+        document.getElementById('allergenLegend').style.display = 'none';
+        return;
+    }
+    
+    let hasAllergens = false;
+    let menuHTML = '';
+    
+    menuData.forEach((category, catIndex) => {
+        // Check for allergens
+        if (category.items && category.items.some(item => item.allergens && item.allergens.length > 0)) {
+            hasAllergens = true;
+        }
+        
+        // Use the new function to create category HTML
+        menuHTML += createCategoryHTML(category, catIndex);
+    });
+    
+    container.innerHTML = menuHTML;
+    
+    // Show/hide allergen legend
+    const allergenLegend = document.getElementById('allergenLegend');
+    if (allergenLegend) {
+        if (hasAllergens) {
+            displayAllergenLegend();
+        } else {
+            allergenLegend.style.display = 'none';
+        }
+    }
+    
+    console.log('CMS Loader: Menu displayed successfully');
+}
+
+// Create Menu Item Card - Dark Mode Aware
+function createMenuItemCard(item) {
+    const hasImage = item.image ? true : false;
+    const isSpecial = item.special || false;
+    
+    return `
+        <div class="menu-item-card ${isSpecial ? 'special' : ''} ${!hasImage ? 'no-image' : ''}">
+            ${hasImage ? `
+                <div class="menu-item-image">
+                    <img src="${formatImageUrl(item.image)}" alt="${item.name}" loading="lazy">
+                </div>
+            ` : `
+                <div class="menu-item-icon">${getItemIcon(item)}</div>
+            `}
+            
+            <div class="menu-item-header">
+                <h4 class="menu-item-name">${item.name}</h4>
+                ${item.price ? `<span class="menu-item-price">${formatPrice(item.price)}</span>` : ''}
+            </div>
+            
+            <div class="menu-item-description">
+                ${processDescription(item.description)}
+            </div>
+            
+            ${item.nutrition ? createNutritionInfo(item.nutrition) : ''}
+            
+            ${item.tags && item.tags.length > 0 ? `
+                <div class="menu-item-tags">
+                    ${item.tags
+                        .filter(tag => ALLOWED_TAGS.includes(tag.toLowerCase().trim()))
+                        .map(tag => `<span class="menu-tag">${TAG_DISPLAY_NAMES[tag.toLowerCase().trim()] || tag}</span>`)
+                        .join('')}
+                </div>
+            ` : ''}
+            
+            ${item.allergens && item.allergens.length > 0 ? `
+                <div class="menu-item-allergens">
+                    <span>Allergene:</span>
+                    <span class="allergen-codes">
+                        ${item.allergens.map(code => `<span class="allergen-code">${code}</span>`).join('')}
+                    </span>
+                </div>
+            ` : ''}
+        </div>
+    `;
+}
+
+// Format Price
+function formatPrice(price) {
+    if (!price && price !== 0) return '';
+    
+    let cleanPrice = String(price).trim();
+    cleanPrice = cleanPrice.replace(/[€$£¥\s]/g, '');
+    cleanPrice = cleanPrice.replace(/,/g, '.');
+    
+    const numPrice = parseFloat(cleanPrice);
+    if (isNaN(numPrice)) {
+        return `€\u00A0${price}`;
+    }
+    
+    let formatted = numPrice.toFixed(2);
+    if (formatted.endsWith('.00')) {
+        formatted = formatted.slice(0, -3);
+    }
+    
+    return `€\u00A0${formatted}`;
+}
+
+// Get Item Icon - Consider dark mode
+function getItemIcon(item) {
+    const name = item.name.toLowerCase();
+    if (name.includes('kaffee') || name.includes('coffee')) return '☕';
+    if (name.includes('ei') || name.includes('egg')) return '🥚';
+    if (name.includes('bowl')) return '🥣';
+    if (name.includes('avocado')) return '🥑';
+    if (name.includes('saft') || name.includes('juice')) return '🥤';
+    if (name.includes('pancake') || name.includes('pfannkuchen')) return '🥞';
+    if (name.includes('toast')) return '🍞';
+    return '🌿';
+}
+
+// Create Nutrition Info
+function createNutritionInfo(nutrition) {
+    if (!nutrition || !nutrition.calories) return '';
+    
+    const items = [];
+    if (nutrition.calories) items.push(`<span class="nutrition-item"><span class="nutrition-value">${nutrition.calories}</span> kcal</span>`);
+    if (nutrition.protein) items.push(`<span class="nutrition-item"><span class="nutrition-value">${nutrition.protein}</span> Protein</span>`);
+    if (nutrition.carbs) items.push(`<span class="nutrition-item"><span class="nutrition-value">${nutrition.carbs}</span> Kohlenhydrate</span>`);
+    if (nutrition.fat) items.push(`<span class="nutrition-item"><span class="nutrition-value">${nutrition.fat}</span> Fett</span>`);
+    
+    return `<div class="menu-item-nutrition">${items.join('')}</div>`;
+}
+
+// Process Description
+function processDescription(text) {
+    if (!text) return '';
+    
+    let html = text;
+    html = html.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>');
+    html = html.replace(/\*(.*?)\*/g, '<em>$1</em>');
+    html = html.replace(/\n/g, '<br>');
+    html = html.replace(/^- (.+)$/gm, '<li>$1</li>');
+    html = html.replace(/(<li>.*<\/li>)/s, '<ul>$1</ul>');
+    
+    return html;
+}
+
+// Format Image URL
+function formatImageUrl(url) {
+    if (!url) return '';
+    // If it already starts with http, return as is
+    if (url.startsWith('http')) return url;
+    // Otherwise ensure it starts with /
+    return url.startsWith('/') ? url : `/${url}`;
+}
+
+// Display Allergen Legend - Dark Mode Aware
+function displayAllergenLegend() {
+    const container = document.getElementById('allergenLegend');
+    if (!container) return;
+    
+    const grid = container.querySelector('.allergen-grid');
+    if (!grid) return;
+    
+    grid.innerHTML = Object.entries(allergenMap).map(([code, name]) => `
+        <div class="allergen-item">
+            <span class="allergen-letter">${code}</span>
+            <span class="allergen-name">${name}</span>
+        </div>
+    `).join('');
+    
+    container.style.display = 'block';
+}
+
+// Load Events
+async function loadEventsFromCMS() {
+    try {
+        console.log('CMS Loader: Loading events...');
+        const response = await fetch('/.netlify/functions/get-events');
+        if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
+        
+        const eventsData = await response.json();
+        console.log('CMS Loader: Events loaded:', eventsData);
+        displayEvents(eventsData);
+        
+    } catch (error) {
+        console.error('CMS Loader: Error loading events:', error);
+        displayFallbackEvent();
+    }
+}
+
+// Display Events - Dark Mode Aware
+function displayEvents(eventsData) {
+    const eventWindow = document.getElementById('eventWindow');
+    const eventContent = document.getElementById('eventContent');
+    
+    if (!eventWindow || !eventContent) {
+        console.warn('CMS Loader: Event window elements not found');
+        return;
+    }
+    
+    if (!eventsData || eventsData.length === 0) {
+        eventWindow.style.display = 'none';
+        return;
+    }
+    
+    const nextEvent = eventsData[0];
+    const eventDate = new Date(nextEvent.date);
+    const formattedDate = eventDate.toLocaleDateString('de-AT', {
+        weekday: 'long',
+        day: 'numeric',
+        month: 'long'
+    });
+    
+    // Use CSS variables for colors that adapt to dark mode
+    eventContent.innerHTML = `
+        ${nextEvent.featuredImage ? `
+            <div class="event-image" style="margin-bottom: 1rem;">
+                <img src="${formatImageUrl(nextEvent.featuredImage)}" alt="${nextEvent.title}"
+                     style="width: 100%; height: auto; border-radius: 8px;">
+            </div>
+        ` : ''}
+        
+        <h3 style="font-family: var(--font-heading); font-size: 1.5rem; margin-bottom: 0.5rem; color: var(--charcoal);">
+            ${nextEvent.title}
+        </h3>
+        
+        <p style="color: var(--warm-gray); font-size: 0.875rem; margin-bottom: 1rem;">
+            ${formattedDate}
+        </p>
+        
+        <p style="font-size: 0.875rem; line-height: 1.6; color: var(--charcoal);">
+            ${nextEvent.body || nextEvent.description || ''}
+        </p>
+        
+        ${nextEvent.audioAnnouncement ? `
+            <div style="margin-top: 1.5rem; padding-top: 1.5rem; border-top: 1px solid var(--light-gray);">
+                <h4 style="font-size: 0.875rem; margin-bottom: 0.75rem; text-transform: uppercase; letter-spacing: 0.05em; color: var(--warm-gray);">
+                    🎧 Sound Preview
+                </h4>
+                <audio controls style="width: 100%;">
+                    <source src="${formatImageUrl(nextEvent.audioAnnouncement)}" type="audio/mpeg">
+                    Your browser does not support the audio element.
+                </audio>
+            </div>
+        ` : ''}
+    `;
+    
+    eventWindow.classList.add('collapsed');
+    eventWindow.style.display = 'block';
+}
+
+// Toggle Event Window
+window.toggleEventWindow = function() {
+    const eventWindow = document.getElementById('eventWindow');
+    if (eventWindow) {
+        eventWindow.classList.toggle('collapsed');
+    }
+};
+
+// Fallback Menu
+function displayFallbackMenu() {
+    console.log('CMS Loader: Displaying fallback menu');
+    const fallbackMenu = [
+        {
+            title: "Morning Essentials",
+            order: 1,
+            description: "Der perfekte Start in Ihren Tag",
+            items: [
+                {
+                    name: "Bio-Zitronenwasser",
+                    price: "4.90",
+                    description: "Warmes Wasser mit frisch gepresster Bio-Zitrone für einen sanften Start",
+                    nutrition: { calories: "25", carbs: "6g" },
+                    tags: ["vegetarisch", "glutenfrei"],
+                    allergens: []
+                },
+                {
+                    name: "Golden Turmeric Latte",
+                    price: "6.90",
+                    description: "Kurkuma, Ingwer, schwarzer Pfeffer in cremiger Hafermilch",
+                    nutrition: { calories: "180", protein: "5g", carbs: "18g", fat: "8g" },
+                    tags: ["vegetarisch", "belebend"],
+                    allergens: ["A"],
+                    special: true
+                }
+            ]
+        },
+        {
+            title: "Power Bowls",
+            order: 2,
+            description: "Energie für den ganzen Tag",
+            items: [
+                {
+                    name: "Açaí Energy Bowl",
+                    price: "12.90",
+                    description: "Açaí, Banane, Beeren, Granola, Kokosflocken",
+                    nutrition: { calories: "320", protein: "8g", carbs: "45g", fat: "12g" },
+                    tags: ["vegetarisch", "immunstärkend"],
+                    allergens: ["A", "H"]
+                },
+                {
+                    name: "Protein Power Bowl",
+                    price: "14.90",
+                    description: "Quinoa, Edamame, Avocado, Tempeh, Tahini-Dressing",
+                    nutrition: { calories: "380", protein: "22g", carbs: "35g", fat: "18g" },
+                    tags: ["proteinreich", "glutenfrei", "sättigend"],
+                    allergens: ["F", "N"]
+                }
+            ]
+        }
+    ];
+    
+    allMenuCategories = fallbackMenu;
+    createCategoryFilters(fallbackMenu);
+    createTagFilters(fallbackMenu); // Create tag filters for fallback data
+    displayPremiumMenu(fallbackMenu);
+}
+
+// Fallback Event
+function displayFallbackEvent() {
+    const fallbackEvent = [{
+        title: "Live Music Monday",
+        date: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000).toISOString(),
+        description: "Genießen Sie sanfte Jazz-Klänge zu Ihrem Brunch. Jeden Montag live!"
+    }];
+    
+    displayEvents(fallbackEvent);
+}
+
+// Initialize Admin Features
+if (window.netlifyIdentity) {
+    window.netlifyIdentity.on("init", user => {
+        if (user) {
+            const adminBtn = document.getElementById('adminBtn');
+            if (adminBtn) adminBtn.classList.add('show');
+        }
+    });
+    
+    window.netlifyIdentity.on("login", () => {
+        const adminBtn = document.getElementById('adminBtn');
+        if (adminBtn) adminBtn.classList.add('show');
+    });
+    
+    window.netlifyIdentity.on("logout", () => {
+        const adminBtn = document.getElementById('adminBtn');
+        if (adminBtn) adminBtn.classList.remove('show');
+    });
+}
+
+// Export for global access
+window.cmsLoader = {
+    refresh: function() {
+        console.log('CMS Loader: Refreshing content...');
+        loadMenuFromCMS();
+        loadEventsFromCMS();
+    },
+    getCurrentFilters: function() {
+        return currentFilters;
+    },
+    applyExternalFilters: function(filters) {
+        currentFilters = { ...currentFilters, ...filters };
+        applyFilters();
+    }
+};
+
+// Mobile Filter Modal JavaScript - Enhanced for Dark Mode
+(function() {
+    'use strict';
+    
+    // Mobile filter state
+    let mobileFilterState = {
+        category: 'all',
+        tags: []
+    };
+    
+    // Initialize mobile filters
+    function initializeMobileFilters() {
+        if (window.innerWidth > 768) return;
+        
+        // Create mobile filter UI
+        createMobileFilterUI();
+        
+        // Copy current filter state
+        mobileFilterState.category = currentFilters.category;
+        mobileFilterState.tags = [...currentFilters.tags];
+        
+        // Update UI to reflect current filters
+        updateMobileFilterUI();
+        
+        // Add event listeners
+        attachMobileFilterListeners();
+    }
+    
+    // Create mobile filter UI elements
+    function createMobileFilterUI() {
+        // Check if already created
+        if (document.querySelector('.mobile-filter-toggle')) return;
+        
+        // Create filter toggle button
+        const toggleBtn = document.createElement('button');
+        toggleBtn.className = 'mobile-filter-toggle';
+        toggleBtn.innerHTML = `
+            <i class="fas fa-filter"></i>
+            <span>Filter</span>
+            <span class="filter-badge" style="display: none;">0</span>
+        `;
+        
+        // Insert after menu intro
+        const menuIntro = document.querySelector('.menu-intro');
+        if (menuIntro) {
+            menuIntro.parentNode.insertBefore(toggleBtn, menuIntro.nextSibling);
+        }
+        
+        // Create modal structure
+        const modal = document.createElement('div');
+        modal.className = 'mobile-filter-modal';
+        modal.innerHTML = `
+            <div class="mobile-filter-content">
+                <div class="mobile-filter-header">
+                    <h3>Filter</h3>
+                    <button class="mobile-filter-close" aria-label="Schließen">
+                        <i class="fas fa-times"></i>
+                    </button>
+                </div>
+                
+                <div class="mobile-filter-body">
+                    <!-- Categories -->
+                    <div class="mobile-filter-section">
+                        <h4>Kategorien</h4>
+                        <div class="mobile-category-filters" id="mobileCategoryFilters">
+                            <!-- Will be populated dynamically -->
+                        </div>
+                    </div>
+                    
+                    <!-- Tags -->
+                    <div class="mobile-filter-section">
+                        <h4>Eigenschaften</h4>
+                        <div class="mobile-tag-filters" id="mobileTagFilters">
+                            <!-- Will be populated dynamically -->
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="mobile-filter-footer">
+                    <button class="mobile-filter-reset">Zurücksetzen</button>
+                    <button class="mobile-filter-apply">Anwenden</button>
+                </div>
+            </div>
+        `;
+        
+        document.body.appendChild(modal);
+        
+        // Populate categories and tags
+        populateMobileCategories();
+        populateMobileTags();
+    }
+    
+    // Populate mobile category filters
+    function populateMobileCategories() {
+        const container = document.getElementById('mobileCategoryFilters');
+        if (!container) return;
+        
+        // Clear existing
+        container.innerHTML = '';
+        
+        // Add "All" option
+        const allBtn = createMobileCategoryButton('all', 'Alle Gerichte');
+        container.appendChild(allBtn);
+        
+        // Add categories from loaded data
+        if (allMenuCategories && allMenuCategories.length > 0) {
+            allMenuCategories.forEach(category => {
+                const btn = createMobileCategoryButton(
+                    category.title.toLowerCase().replace(/\s+/g, '-'),
+                    category.title
+                );
+                container.appendChild(btn);
+            });
+        }
+    }
+    
+    // Populate mobile tag filters - Always show the 6 allowed tags
+    function populateMobileTags() {
+        const container = document.getElementById('mobileTagFilters');
+        if (!container) return;
+        
+        // Clear existing
+        container.innerHTML = '';
+        
+        // Count occurrences of each allowed tag
+        const tagCounts = new Map();
+        
+        // Initialize all allowed tags with 0 count
+        ALLOWED_TAGS.forEach(tag => {
+            tagCounts.set(tag, 0);
+        });
+        
+        // Count actual occurrences in menu data
+        if (allMenuCategories && allMenuCategories.length > 0) {
+            allMenuCategories.forEach(category => {
+                if (category.items) {
+                    category.items.forEach(item => {
+                        if (item.tags && Array.isArray(item.tags)) {
+                            item.tags.forEach(tag => {
+                                const lowerTag = tag.toLowerCase().trim();
+                                // Only count if it's an allowed tag
+                                if (ALLOWED_TAGS.includes(lowerTag)) {
+                                    tagCounts.set(lowerTag, tagCounts.get(lowerTag) + 1);
+                                }
+                            });
+                        }
+                    });
+                }
+            });
+        }
+        
+        // Always show all 6 allowed tags
+        ALLOWED_TAGS.forEach(tag => {
+            const label = document.createElement('label');
+            label.className = 'mobile-tag-filter';
+            
+            const input = document.createElement('input');
+            input.type = 'checkbox';
+            input.value = tag;
+            
+            const span = document.createElement('span');
+            span.className = 'mobile-tag-label';
+            span.textContent = TAG_DISPLAY_NAMES[tag];
+            
+            const count = tagCounts.get(tag);
+            if (count === 0) {
+                label.classList.add('tag-no-items');
+            }
+            
+            label.appendChild(input);
+            label.appendChild(span);
+            container.appendChild(label);
+            
+            // Add event listener
+            input.addEventListener('change', handleMobileTagFilter);
+        });
+        
+        console.log('Mobile filters: Created filters for all 6 allowed tags');
+    }
+    
+    // Create mobile category button
+    function createMobileCategoryButton(value, text) {
+        const btn = document.createElement('button');
+        btn.className = 'mobile-filter-btn';
+        btn.setAttribute('data-category', value);
+        btn.innerHTML = `
+            <span>${text}</span>
+            <span class="checkmark"></span>
+        `;
+        return btn;
+    }
+    
+    // Attach mobile filter event listeners
+    function attachMobileFilterListeners() {
+        // Toggle button
+        const toggleBtn = document.querySelector('.mobile-filter-toggle');
+        if (toggleBtn) {
+            toggleBtn.addEventListener('click', openMobileFilters);
+        }
+        
+        // Close button
+        const closeBtn = document.querySelector('.mobile-filter-close');
+        if (closeBtn) {
+            closeBtn.addEventListener('click', closeMobileFilters);
+        }
+        
+        // Modal backdrop
+        const modal = document.querySelector('.mobile-filter-modal');
+        if (modal) {
+            modal.addEventListener('click', (e) => {
+                if (e.target === modal) {
+                    closeMobileFilters();
+                }
+            });
+        }
+        
+        // Category buttons
+        const categoryBtns = document.querySelectorAll('.mobile-filter-btn');
+        categoryBtns.forEach(btn => {
+            btn.addEventListener('click', handleMobileCategoryFilter);
+        });
+        
+        // Tag checkboxes
+        const tagInputs = document.querySelectorAll('.mobile-tag-filter input');
+        tagInputs.forEach(input => {
+            input.addEventListener('change', handleMobileTagFilter);
+        });
+        
+        // Reset button
+        const resetBtn = document.querySelector('.mobile-filter-reset');
+        if (resetBtn) {
+            resetBtn.addEventListener('click', resetMobileFilters);
+        }
+        
+        // Apply button
+        const applyBtn = document.querySelector('.mobile-filter-apply');
+        if (applyBtn) {
+            applyBtn.addEventListener('click', applyMobileFilters);
+        }
+    }
+    
+    // Open mobile filters
+    function openMobileFilters() {
+        const modal = document.querySelector('.mobile-filter-modal');
+        if (modal) {
+            // Sync mobile state with current filters before opening
+            mobileFilterState.category = currentFilters.category;
+            mobileFilterState.tags = [...currentFilters.tags];
+            
+            modal.classList.add('active');
+            document.body.style.overflow = 'hidden';
+            
+            // Update UI to reflect current filters
+            updateMobileFilterUI();
+        }
+    }
+    
+    // Close mobile filters
+    function closeMobileFilters() {
+        const modal = document.querySelector('.mobile-filter-modal');
+        if (modal) {
+            modal.classList.remove('active');
+            document.body.style.overflow = '';
+        }
+    }
+    
+    // Handle mobile category filter
+    function handleMobileCategoryFilter(e) {
+        const btn = e.currentTarget;
+        const category = btn.getAttribute('data-category');
+        
+        // Update state
+        mobileFilterState.category = category;
+        
+        // Update UI
+        document.querySelectorAll('.mobile-filter-btn').forEach(b => {
+            b.classList.remove('active');
+        });
+        btn.classList.add('active');
+    }
+    
+    // Handle mobile tag filter
+    function handleMobileTagFilter(e) {
+        const checkbox = e.target;
+        const tag = checkbox.value;
+        
+        if (checkbox.checked) {
+            if (!mobileFilterState.tags.includes(tag)) {
+                mobileFilterState.tags.push(tag);
+            }
+        } else {
+            mobileFilterState.tags = mobileFilterState.tags.filter(t => t !== tag);
+        }
+    }
+    
+    // Reset mobile filters
+    function resetMobileFilters() {
+        // Reset state
+        mobileFilterState = {
+            category: 'all',
+            tags: []
+        };
+        
+        // Update UI
+        updateMobileFilterUI();
+        
+        // Apply the reset immediately
+        currentFilters.category = 'all';
+        currentFilters.tags = [];
+        applyFilters();
+        updateMobileFilterBadge();
+    }
+    
+    // Apply mobile filters
+    function applyMobileFilters() {
+        // Copy mobile state to main filters (use global currentFilters)
+        currentFilters.category = mobileFilterState.category;
+        currentFilters.tags = [...mobileFilterState.tags];
+        
+        // Apply filters using the global function
+        applyFilters();
+        
+        // Update badge
+        updateMobileFilterBadge();
+        
+        // Close modal
+        closeMobileFilters();
+    }
+    
+    // Update mobile filter UI
+    function updateMobileFilterUI() {
+        // Update category buttons
+        document.querySelectorAll('.mobile-filter-btn').forEach(btn => {
+            const category = btn.getAttribute('data-category');
+            btn.classList.toggle('active', category === mobileFilterState.category);
+        });
+        
+        // Update tag checkboxes
+        document.querySelectorAll('.mobile-tag-filter input').forEach(input => {
+            input.checked = mobileFilterState.tags.includes(input.value);
+        });
+    }
+    
+    // Update mobile filter badge
+    function updateMobileFilterBadge() {
+        const badge = document.querySelector('.mobile-filter-toggle .filter-badge');
+        if (!badge) return;
+        
+        let activeCount = 0;
+        // Use the global currentFilters variable
+        activeCount = (currentFilters.category !== 'all' ? 1 : 0) + currentFilters.tags.length;
+        
+        if (activeCount > 0) {
+            badge.textContent = activeCount;
+            badge.style.display = 'flex';
+        } else {
+            badge.style.display = 'none';
+        }
+    }
+    
+    // Initialize on DOM ready
+    document.addEventListener('DOMContentLoaded', function() {
+        // Initialize mobile filters after a short delay to ensure menu loads
+        setTimeout(() => {
+            if (window.innerWidth <= 768 && allMenuCategories.length > 0) {
+                initializeMobileFilters();
+                updateMobileFilterBadge();
+            }
+        }, 1000);
+    });
+    
+    // Reinitialize on window resize
+    let mobileFilterResizeTimer;
+    window.addEventListener('resize', function() {
+        clearTimeout(mobileFilterResizeTimer);
+        mobileFilterResizeTimer = setTimeout(function() {
+            if (window.innerWidth <= 768 && !document.querySelector('.mobile-filter-toggle')) {
+                initializeMobileFilters();
+            } else if (window.innerWidth > 768) {
+                // Clean up mobile filters if switching to desktop
+                const modal = document.querySelector('.mobile-filter-modal');
+                const toggle = document.querySelector('.mobile-filter-toggle');
+                if (modal) modal.remove();
+                if (toggle) toggle.remove();
+            }
+        }, 250);
+    });
+    
+    // Export for use in other functions
+    window.mobileFilters = {
+        init: initializeMobileFilters,
+        updateBadge: updateMobileFilterBadge
+    };
+    
+})();
+
+console.log('CMS Loader Premium: Initialized with 6 fixed tags system and dark mode support');
