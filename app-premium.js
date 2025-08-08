@@ -661,7 +661,7 @@ document.addEventListener('DOMContentLoaded', function() {
             pdfButton.removeAttribute('onclick'); // Remove inline onclick
             pdfButton.addEventListener('click', function(e) {
                 e.preventDefault();
-                window.open('/content/menu.pdf', '_blank');
+                window.open('content/menu.pdf', '_blank');
                 trackPDFDownload();
             });
         }
