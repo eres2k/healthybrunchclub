@@ -1,39 +1,42 @@
 ---
-title: hafer dich lieb
+title: "Hafer dich lieb"
 description: "Haferflocken neu gedacht – warm, proteinreich und mit Superfoods verfeinert. Ideal für den gesunden Start in den Tag."
 order: 3
-image: /content/images/dsc00344_ergebnis.jpg
+image: "/content/images/dsc00344_ergebnis.jpg"
 items:
-  - name: premium-porridge
+  - name: "Premium-Porridge"
     tags:
-      - glutenfrei
-      - proteinreich
-      - sättigend
-    description: ein wärmender genuss aus zarten haferflocken, verfeinert mit hanf-
-      und chiasamen, kokosflocken und geriebenem apfel. ein hauch von zimt
-      rundet das geschmackserlebnis ab, gekrönt mit knackigen, gehobelten
-      mandeln und frischen heidel- und himbeeren.
+      - "glutenfrei"
+      - "proteinreich"
+      - "sättigend"
+    description: |
+      Ein wärmender Genuss aus zarten Haferflocken, verfeinert mit Hanf-
+      und Chiasamen, Kokosflocken und geriebenem Apfel.
+      Ein Hauch von Zimt rundet das Geschmackserlebnis ab, gekrönt mit knackigen,
+      gehobelten Mandeln und frischen Heidel- und Himbeeren.
     allergens:
-      - H
+      - "H"
     nutrition:
-      calories: "380"
-      protein: 12g
-      carbs: 48g
-      fat: 16g
-    price: "8.90"
-  - name: kokoscreme power-oats
+      calories: 380
+      protein: "12g"
+      carbs: "48g"
+      fat: "16g"
+    price: 8.90
+  - name: "Kokoscreme Power-Oats"
     tags:
-      - glutenfrei
-      - proteinreich
-      - sättigend
-    description: kraftvolle haferflocken, umhüllt von cremiger kokoscreme,
-      kombiniert mit hanf- und chiasamen. garniert mit kokosflocken, saftigen
-      heidel- und himbeeren für einen fruchtig-frischen start in den tag.
+      - "glutenfrei"
+      - "proteinreich"
+      - "sättigend"
+    description: |
+      Kraftvolle Haferflocken, umhüllt von cremiger Kokoscreme,
+      kombiniert mit Hanf- und Chiasamen.
+      Garniert mit Kokosflocken, saftigen Heidel- und Himbeeren
+      für einen fruchtig-frischen Start in den Tag.
     allergens: []
     nutrition:
-      calories: "415"
-      protein: 10g
-      carbs: 45g
-      fat: 22g
-    price: "8.50"
+      calories: 415
+      protein: "10g"
+      carbs: "45g"
+      fat: "22g"
+    price: 8.50
 ---
