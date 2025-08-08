@@ -1,4 +1,4 @@
-// CMS Loader Premium - Fixed Version with Category Image Overlays
+// CMS Loader Premium - Fixed Version with Category Image Overlays and Dark Mode Support
 // Upper-Class Restaurant Menu System with Advanced Filtering
 
 let allMenuCategories = [];
@@ -38,7 +38,7 @@ const allergenMap = {
     'R': 'Weichtiere'
 };
 
-// Category Icons
+// Category Icons with dark mode consideration
 const categoryIcons = {
     'sets': '🍽️',
     'eggcitements': '🥚',
@@ -59,7 +59,20 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     });
     loadEventsFromCMS();
+    
+    // Listen for theme changes to update any dynamic content
+    window.addEventListener('themeChanged', handleThemeChange);
 });
+
+// Handle theme changes for dynamically loaded content
+function handleThemeChange(e) {
+    console.log('CMS Loader: Theme changed to', e.detail.theme);
+    // Re-render allergen legend if visible to update colors
+    const allergenLegend = document.getElementById('allergenLegend');
+    if (allergenLegend && allergenLegend.style.display !== 'none') {
+        displayAllergenLegend();
+    }
+}
 
 // Load Menu from CMS
 async function loadMenuFromCMS() {
@@ -309,7 +322,16 @@ function applyFilters() {
         })).filter(category => category.items.length > 0);
     }
     
-    displayPremiumMenu(filteredCategories);
+    // Add filtering class for smooth transition
+    const container = document.getElementById('menuContainer');
+    if (container) {
+        container.classList.add('filtering');
+        
+        setTimeout(() => {
+            displayPremiumMenu(filteredCategories);
+            container.classList.remove('filtering');
+        }, 200);
+    }
     
     // Update mobile filter badge if it exists
     if (window.mobileFilters && window.mobileFilters.updateBadge) {
@@ -343,7 +365,7 @@ window.resetFilters = function() {
     }
 };
 
-// Create Category HTML with Overlay - FIXED VERSION
+// Create Category HTML with Overlay - Dark Mode Aware
 function createCategoryHTML(category, catIndex) {
     const hasImage = category.image ? true : false;
     const categorySlug = category.title.toLowerCase().replace(/\s+/g, '-');
@@ -351,10 +373,10 @@ function createCategoryHTML(category, catIndex) {
     let html = `<div class="menu-category" data-category="${categorySlug}">`;
     
     if (hasImage) {
-        // Category with hero image and overlay - Using CSS classes instead of inline styles
+        // Category with hero image and overlay
         html += `
             <div class="category-hero">
-                <img src="${formatImageUrl(category.image)}" alt="${category.title}">
+                <img src="${formatImageUrl(category.image)}" alt="${category.title}" loading="lazy">
                 <div class="category-hero-gradient"></div>
                 <div class="category-hero-overlay">
                     <h3 class="category-title-overlay">${category.title}</h3>
@@ -449,7 +471,7 @@ function displayPremiumMenu(menuData) {
     console.log('CMS Loader: Menu displayed successfully');
 }
 
-// Create Menu Item Card
+// Create Menu Item Card - Dark Mode Aware
 function createMenuItemCard(item) {
     const hasImage = item.image ? true : false;
     const isSpecial = item.special || false;
@@ -517,7 +539,7 @@ function formatPrice(price) {
     return `€\u00A0${formatted}`;
 }
 
-// Get Item Icon
+// Get Item Icon - Consider dark mode
 function getItemIcon(item) {
     const name = item.name.toLowerCase();
     if (name.includes('kaffee') || name.includes('coffee')) return '☕';
@@ -566,7 +588,7 @@ function formatImageUrl(url) {
     return url.startsWith('/') ? url : `/${url}`;
 }
 
-// Display Allergen Legend
+// Display Allergen Legend - Dark Mode Aware
 function displayAllergenLegend() {
     const container = document.getElementById('allergenLegend');
     if (!container) return;
@@ -601,7 +623,7 @@ async function loadEventsFromCMS() {
     }
 }
 
-// Display Events
+// Display Events - Dark Mode Aware
 function displayEvents(eventsData) {
     const eventWindow = document.getElementById('eventWindow');
     const eventContent = document.getElementById('eventContent');
@@ -624,6 +646,7 @@ function displayEvents(eventsData) {
         month: 'long'
     });
     
+    // Use CSS variables for colors that adapt to dark mode
     eventContent.innerHTML = `
         ${nextEvent.featuredImage ? `
             <div class="event-image" style="margin-bottom: 1rem;">
@@ -632,7 +655,7 @@ function displayEvents(eventsData) {
             </div>
         ` : ''}
         
-        <h3 style="font-family: var(--font-heading); font-size: 1.5rem; margin-bottom: 0.5rem;">
+        <h3 style="font-family: var(--font-heading); font-size: 1.5rem; margin-bottom: 0.5rem; color: var(--charcoal);">
             ${nextEvent.title}
         </h3>
         
@@ -640,13 +663,13 @@ function displayEvents(eventsData) {
             ${formattedDate}
         </p>
         
-        <p style="font-size: 0.875rem; line-height: 1.6;">
+        <p style="font-size: 0.875rem; line-height: 1.6; color: var(--charcoal);">
             ${nextEvent.body || nextEvent.description || ''}
         </p>
         
         ${nextEvent.audioAnnouncement ? `
             <div style="margin-top: 1.5rem; padding-top: 1.5rem; border-top: 1px solid var(--light-gray);">
-                <h4 style="font-size: 0.875rem; margin-bottom: 0.75rem; text-transform: uppercase; letter-spacing: 0.05em;">
+                <h4 style="font-size: 0.875rem; margin-bottom: 0.75rem; text-transform: uppercase; letter-spacing: 0.05em; color: var(--warm-gray);">
                     🎧 Sound Preview
                 </h4>
                 <audio controls style="width: 100%;">
@@ -765,10 +788,17 @@ window.cmsLoader = {
         console.log('CMS Loader: Refreshing content...');
         loadMenuFromCMS();
         loadEventsFromCMS();
+    },
+    getCurrentFilters: function() {
+        return currentFilters;
+    },
+    applyExternalFilters: function(filters) {
+        currentFilters = { ...currentFilters, ...filters };
+        applyFilters();
     }
 };
 
-// Mobile Filter Modal JavaScript - Wrapped to prevent conflicts
+// Mobile Filter Modal JavaScript - Enhanced for Dark Mode
 (function() {
     'use strict';
     
@@ -1164,4 +1194,4 @@ window.cmsLoader = {
     
 })();
 
-console.log('CMS Loader Premium: Initialized with 6 fixed tags system');
+console.log('CMS Loader Premium: Initialized with 6 fixed tags system and dark mode support');
