@@ -1,7 +1,7 @@
 ---
 title: Wiener Klassiker
-order: 8
-image: /content/images/dsc00342_ergebnis.jpg
+order: 9
+image: /content/images/dsc00407_ergebnis.jpg
 description: Die klassischen Kaffeevariationen Wiens – zeitlos und köstlich.
 items:
   - name: Großer Espresso
