@@ -22,7 +22,7 @@ items:
       carbs: 18g
       fat: 24g
     price: "8.90"
-    image: /content/images/dsc00161.jpg
+    image: /content/images/img-20250806-wa0004.jpg
   - name: avocado bread
     tags:
       - vegetarisch
