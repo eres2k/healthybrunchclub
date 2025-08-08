@@ -2887,3 +2887,588 @@ body.dark-mode .mobile-dark-mode-toggle:hover {
         z-index: 999 !important;
     }
 }
+
+/* ===============================================
+   DARK MODE IMPLEMENTATION
+   Add this section after your :root variables
+   =============================================== */
+
+/* Dark Mode Color Variables */
+body.dark-mode {
+    /* Dark Mode Color Palette */
+    --black: #FAFAF8;
+    --charcoal: #E8E8E8;
+    --warm-gray: #C0C0C0;
+    --light-gray: #2D2D2D;
+    --off-white: #0A0A0A;
+    --pure-white: #121212;
+    
+    /* Inverted Accent Colors */
+    --gold: #E6D097;
+    --sage: #8FA17C;
+    --blush: #1A0E02;
+    --cream: #1A1614;
+    
+    /* Shadows for dark mode */
+    --shadow-sm: 0 2px 4px rgba(255, 255, 255, 0.05);
+    --shadow-md: 0 4px 20px rgba(255, 255, 255, 0.08);
+    --shadow-lg: 0 10px 40px rgba(255, 255, 255, 0.1);
+}
+
+/* Base Dark Mode Styles */
+body.dark-mode {
+    background-color: var(--pure-white);
+    color: var(--charcoal);
+}
+
+/* Navigation Dark Mode */
+body.dark-mode .nav-premium {
+    background: rgba(18, 18, 18, 0.95);
+    border-bottom-color: var(--light-gray);
+}
+
+body.dark-mode .nav-premium.scrolled {
+    background: rgba(18, 18, 18, 0.98);
+    box-shadow: var(--shadow-md);
+}
+
+body.dark-mode .nav-link {
+    color: var(--charcoal);
+}
+
+body.dark-mode .nav-link:hover {
+    color: var(--gold);
+}
+
+body.dark-mode .nav-cta {
+    background: var(--gold);
+    color: var(--pure-white) !important;
+}
+
+body.dark-mode .nav-cta:hover {
+    background: var(--sage);
+}
+
+body.dark-mode .logo-img {
+    filter: brightness(0) invert(1);
+}
+
+/* Mobile Menu Dark Mode */
+body.dark-mode .mobile-menu-btn span {
+    background: var(--charcoal);
+}
+
+body.dark-mode .nav-menu {
+    background: var(--pure-white);
+    box-shadow: var(--shadow-lg);
+}
+
+/* Hero Section Dark Mode */
+body.dark-mode .hero-overlay {
+    background: rgba(0, 0, 0, 0.6);
+}
+
+/* Buttons Dark Mode */
+body.dark-mode .btn-luxury.btn-primary {
+    background: var(--gold);
+    color: var(--pure-white);
+    border-color: var(--gold);
+}
+
+body.dark-mode .btn-luxury.btn-primary:hover {
+    background: transparent;
+    color: var(--gold);
+}
+
+body.dark-mode .btn-luxury.btn-secondary {
+    border-color: var(--charcoal);
+    color: var(--charcoal);
+}
+
+body.dark-mode .btn-luxury.btn-secondary:hover {
+    background: var(--charcoal);
+    color: var(--pure-white);
+}
+
+/* Menu Section Dark Mode */
+body.dark-mode .menu-premium {
+    background: var(--off-white);
+}
+
+body.dark-mode .menu-intro {
+    color: var(--charcoal);
+}
+
+/* Filter System Dark Mode */
+body.dark-mode .filter-bar {
+    background: var(--pure-white);
+    border-color: var(--light-gray);
+    box-shadow: var(--shadow-md);
+}
+
+body.dark-mode .filter-btn {
+    color: var(--warm-gray);
+    border-bottom-color: transparent;
+}
+
+body.dark-mode .filter-btn:hover {
+    color: var(--charcoal);
+}
+
+body.dark-mode .filter-btn.active {
+    color: var(--charcoal);
+}
+
+body.dark-mode .filter-btn.active::after {
+    background: var(--gold);
+}
+
+body.dark-mode .tag-label {
+    color: var(--warm-gray);
+    background: transparent;
+    border-color: var(--light-gray);
+}
+
+body.dark-mode .tag-filter input[type="checkbox"]:checked + .tag-label {
+    background: var(--gold);
+    color: var(--pure-white);
+    border-color: var(--gold);
+}
+
+body.dark-mode .tag-filter:hover .tag-label {
+    border-color: var(--sage);
+    color: var(--sage);
+}
+
+body.dark-mode .btn-icon {
+    border-color: var(--light-gray);
+    color: var(--warm-gray);
+}
+
+body.dark-mode .btn-icon:hover {
+    color: var(--gold);
+    border-color: var(--gold);
+}
+
+/* Menu Categories Dark Mode */
+body.dark-mode .menu-category {
+    background: var(--pure-white);
+}
+
+body.dark-mode .category-hero {
+    box-shadow: var(--shadow-lg);
+}
+
+body.dark-mode .category-hero-gradient {
+    background: linear-gradient(
+        to bottom,
+        rgba(0, 0, 0, 0.4) 0%,
+        rgba(0, 0, 0, 0.6) 50%,
+        rgba(0, 0, 0, 0.8) 100%
+    );
+}
+
+body.dark-mode .category-name {
+    color: var(--charcoal);
+}
+
+body.dark-mode .category-description {
+    color: var(--warm-gray);
+}
+
+/* Menu Item Cards Dark Mode */
+body.dark-mode .menu-item-card {
+    background: #1A1A1A;
+    box-shadow: var(--shadow-md);
+}
+
+body.dark-mode .menu-item-card:hover {
+    box-shadow: var(--shadow-lg);
+}
+
+body.dark-mode .menu-item-icon {
+    background: var(--light-gray);
+}
+
+body.dark-mode .menu-item-name {
+    color: var(--charcoal);
+}
+
+body.dark-mode .menu-item-price {
+    color: var(--gold);
+}
+
+body.dark-mode .menu-item-description {
+    color: var(--warm-gray);
+}
+
+body.dark-mode .menu-tag {
+    background: var(--light-gray);
+    color: var(--charcoal);
+}
+
+body.dark-mode .menu-tag:hover {
+    background: var(--gold);
+    color: var(--pure-white);
+}
+
+body.dark-mode .allergen-code {
+    background: var(--light-gray);
+    color: var(--charcoal);
+}
+
+/* Allergen Info Dark Mode */
+body.dark-mode .allergen-info {
+    background: #1A1A1A;
+    box-shadow: var(--shadow-md);
+}
+
+body.dark-mode .allergen-letter {
+    background: var(--gold);
+    color: var(--pure-white);
+}
+
+/* About Section Dark Mode */
+body.dark-mode .about-premium {
+    background: var(--off-white);
+}
+
+body.dark-mode .founder-image {
+    filter: brightness(0.8);
+}
+
+/* Reservation Section Dark Mode */
+body.dark-mode .reservation-premium {
+    background: var(--pure-white);
+}
+
+body.dark-mode .reservation-form {
+    background: #1A1A1A;
+    box-shadow: var(--shadow-lg);
+}
+
+body.dark-mode .form-group input,
+body.dark-mode .form-group select,
+body.dark-mode .form-group textarea {
+    background: var(--off-white);
+    border-color: var(--light-gray);
+    color: var(--charcoal);
+}
+
+body.dark-mode .form-group input:focus,
+body.dark-mode .form-group select:focus,
+body.dark-mode .form-group textarea:focus {
+    border-color: var(--gold);
+}
+
+body.dark-mode .btn-submit {
+    background: var(--gold);
+    color: var(--pure-white);
+}
+
+body.dark-mode .btn-submit:hover {
+    background: var(--sage);
+}
+
+/* Footer Dark Mode */
+body.dark-mode .footer-premium {
+    background: #0A0A0A;
+    border-top: 1px solid var(--light-gray);
+}
+
+body.dark-mode .footer-logo {
+    filter: brightness(0) invert(1);
+}
+
+body.dark-mode .social-links a {
+    border-color: rgba(255, 255, 255, 0.2);
+    color: var(--charcoal);
+}
+
+body.dark-mode .social-links a:hover {
+    border-color: var(--gold);
+    background: var(--gold);
+    color: var(--pure-white);
+}
+
+body.dark-mode address a {
+    color: var(--charcoal);
+}
+
+body.dark-mode address a:hover {
+    color: var(--gold);
+}
+
+body.dark-mode .newsletter-form input {
+    border-color: rgba(255, 255, 255, 0.2);
+    background: rgba(255, 255, 255, 0.05);
+    color: var(--charcoal);
+}
+
+body.dark-mode .newsletter-form input::placeholder {
+    color: rgba(255, 255, 255, 0.3);
+}
+
+body.dark-mode .btn-newsletter {
+    background: var(--gold);
+    color: var(--pure-white);
+}
+
+body.dark-mode .btn-newsletter:hover {
+    background: var(--charcoal);
+    color: var(--pure-white);
+}
+
+body.dark-mode .footer-bottom {
+    border-top-color: rgba(255, 255, 255, 0.1);
+}
+
+body.dark-mode .footer-bottom a {
+    color: var(--charcoal);
+}
+
+body.dark-mode .footer-bottom a:hover {
+    color: var(--gold);
+}
+
+/* Admin Button Dark Mode */
+body.dark-mode .admin-btn {
+    background: var(--gold);
+    color: var(--pure-white);
+    box-shadow: var(--shadow-lg);
+}
+
+body.dark-mode .admin-btn:hover {
+    background: var(--sage);
+}
+
+/* Event Window Dark Mode */
+body.dark-mode .event-window {
+    background: #1A1A1A;
+    box-shadow: var(--shadow-lg);
+}
+
+body.dark-mode .event-toggle {
+    background: var(--gold);
+    color: var(--pure-white);
+}
+
+body.dark-mode .event-toggle:hover {
+    background: var(--sage);
+}
+
+/* Loading Screen Dark Mode */
+body.dark-mode .loading-screen {
+    background: var(--off-white);
+}
+
+body.dark-mode .loading-logo {
+    filter: brightness(0) invert(1);
+}
+
+body.dark-mode .loading-bar {
+    background: var(--light-gray);
+}
+
+body.dark-mode .loading-progress {
+    background: var(--gold);
+}
+
+body.dark-mode .loading-text {
+    color: var(--warm-gray);
+}
+
+/* Mobile Filter Modal Dark Mode */
+body.dark-mode .mobile-filter-modal {
+    background: rgba(0, 0, 0, 0.8);
+}
+
+body.dark-mode .mobile-filter-content {
+    background: #1A1A1A;
+}
+
+body.dark-mode .mobile-filter-header {
+    border-bottom-color: var(--light-gray);
+}
+
+body.dark-mode .mobile-filter-header h3 {
+    color: var(--charcoal);
+}
+
+body.dark-mode .mobile-filter-close {
+    color: var(--warm-gray);
+}
+
+body.dark-mode .mobile-filter-close:active {
+    background: var(--light-gray);
+}
+
+body.dark-mode .mobile-filter-section h4 {
+    color: var(--warm-gray);
+}
+
+body.dark-mode .mobile-filter-btn {
+    background: var(--off-white);
+    border-color: var(--light-gray);
+    color: var(--warm-gray);
+}
+
+body.dark-mode .mobile-filter-btn.active {
+    background: var(--gold);
+    color: var(--pure-white);
+    border-color: var(--gold);
+}
+
+body.dark-mode .mobile-tag-label {
+    background: var(--off-white);
+    border-color: var(--light-gray);
+    color: var(--warm-gray);
+}
+
+body.dark-mode .mobile-tag-filter input[type="checkbox"]:checked + .mobile-tag-label {
+    background: var(--gold);
+    color: var(--pure-white);
+    border-color: var(--gold);
+}
+
+body.dark-mode .mobile-filter-footer {
+    border-top-color: var(--light-gray);
+}
+
+body.dark-mode .mobile-filter-reset {
+    background: var(--light-gray);
+    color: var(--charcoal);
+}
+
+body.dark-mode .mobile-filter-apply {
+    background: var(--gold);
+    color: var(--pure-white);
+}
+
+/* Scroll Indicator Dark Mode */
+body.dark-mode .scroll-arrow {
+    border-color: var(--charcoal);
+}
+
+/* Loading States Dark Mode */
+body.dark-mode .menu-loading {
+    color: var(--warm-gray);
+}
+
+body.dark-mode .menu-loading i {
+    color: var(--gold);
+}
+
+body.dark-mode .no-results-message {
+    color: var(--warm-gray);
+}
+
+body.dark-mode .no-results-message i {
+    color: var(--light-gray);
+}
+
+/* Category Header Decorations Dark Mode */
+body.dark-mode .category-header::before,
+body.dark-mode .category-header::after {
+    background: linear-gradient(to right, transparent, var(--light-gray), transparent);
+}
+
+/* Dark Mode Toggle Button Desktop */
+.dark-mode-toggle {
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 0.5rem;
+    color: var(--charcoal);
+    font-size: 1.125rem;
+    transition: all var(--transition-fast);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.dark-mode-toggle:hover {
+    color: var(--gold);
+    transform: rotate(15deg);
+}
+
+body.dark-mode .dark-mode-toggle {
+    color: var(--gold);
+}
+
+body.dark-mode .dark-mode-toggle:hover {
+    color: var(--sage);
+}
+
+/* Nav Divider Dark Mode */
+body.dark-mode .nav-divider {
+    background: var(--light-gray);
+    opacity: 0.3;
+}
+
+/* Fix for mobile dark mode toggle in navigation */
+body.dark-mode .mobile-dark-mode-item {
+    border-top-color: rgba(255, 255, 255, 0.1) !important;
+}
+
+body.dark-mode .mobile-dark-mode-toggle {
+    background: var(--gold) !important;
+    color: var(--pure-white) !important;
+    border-color: var(--gold) !important;
+}
+
+body.dark-mode .mobile-dark-mode-toggle:hover {
+    background: var(--sage) !important;
+    border-color: var(--sage) !important;
+}
+
+/* Smooth transitions for dark mode */
+body,
+body * {
+    transition: background-color 0.3s ease, 
+                color 0.3s ease, 
+                border-color 0.3s ease,
+                box-shadow 0.3s ease;
+}
+
+/* Prevent transition on page load */
+body.no-transition,
+body.no-transition * {
+    transition: none !important;
+}
+
+/* Selection colors for dark mode */
+body.dark-mode ::selection {
+    background: var(--gold);
+    color: var(--pure-white);
+}
+
+body.dark-mode ::-moz-selection {
+    background: var(--gold);
+    color: var(--pure-white);
+}
+
+/* Focus styles for dark mode */
+body.dark-mode *:focus {
+    outline-color: var(--gold);
+}
+
+/* Special case for images and videos in dark mode */
+body.dark-mode img:not(.logo-img):not(.footer-logo),
+body.dark-mode video {
+    opacity: 0.85;
+}
+
+body.dark-mode img:hover:not(.logo-img):not(.footer-logo),
+body.dark-mode video:hover {
+    opacity: 1;
+}
+
+/* Print styles should not be affected by dark mode */
+@media print {
+    body.dark-mode,
+    body.dark-mode * {
+        background: white !important;
+        color: black !important;
+    }
+}
