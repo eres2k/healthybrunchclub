@@ -1,6 +1,6 @@
 ---
 title: Wiener Klassiker
-order: 7
+order: 8
 image: /content/images/dsc00342_ergebnis.jpg
 description: Die klassischen Kaffeevariationen Wiens – zeitlos und köstlich.
 items:
