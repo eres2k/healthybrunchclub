@@ -1,7 +1,7 @@
 ---
 title: Coffee Health Tea and Me
 order: 7
-image: /content/images/dsc00340_ergebnis.jpg
+image: /content/images/dsc00414_ergebnis.jpg
 description: Adaptogene Lattes und Kaffees für dein Wohlbefinden – sanft
   beruhigend, immunstärkend und belebend.
 items:
