@@ -9,6 +9,20 @@
     <meta name="author" content="Healthy Brunch Club">
     <link rel="canonical" href="https://healthybrunchclub.at/">
     
+    <!-- Theme Color for Mobile Browsers -->
+    <meta name="theme-color" content="#1A1A1A">
+    
+    <!-- Prevent Flash of Unstyled Content -->
+    <script>
+        // Apply saved theme immediately to prevent flash
+        (function() {
+            const savedTheme = localStorage.getItem('healthy-brunch-theme');
+            if (savedTheme === 'dark' || (!savedTheme && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+                document.documentElement.classList.add('dark-mode-loading');
+            }
+        })();
+    </script>
+    
     <!-- Refined Typography -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -22,6 +36,11 @@
     
     <!-- Mobile Specific Inline Styles -->
     <style>
+        /* Dark mode loading state */
+        .dark-mode-loading {
+            background: #0A0A0A !important;
+        }
+        
         /* Mobile PDF Button Fallback Styles */
         .mobile-pdf-download {
             display: none;
@@ -101,13 +120,18 @@
         body.dark-mode .mobile-dark-mode-item {
             border-top-color: rgba(255, 255, 255, 0.1) !important;
         }
+        
+        /* No transition class for initial load */
+        body.no-transition,
+        body.no-transition * {
+            transition: none !important;
+        }
     </style>
     
     <!-- Netlify Identity -->
     <script type="text/javascript" src="https://identity.netlify.com/v1/netlify-identity-widget.js"></script>
     
     <!-- PWA -->
-    <meta name="theme-color" content="#1A1A1A">
     <link rel="manifest" href="/manifest.json">
     
     <!-- Open Graph -->
@@ -117,7 +141,7 @@
     <meta property="og:type" content="restaurant">
 </head>
 
-<body>
+<body class="no-transition">
     <!-- Elegant Loading Screen -->
     <div class="loading-screen" id="loadingScreen">
         <div class="loading-content">
@@ -143,13 +167,13 @@
                 <li><a href="#reservierung" class="nav-link nav-cta">Reservierung</a></li>
                 <li class="nav-divider desktop-only"></li>
                 <li class="desktop-only">
-                    <button class="dark-mode-toggle" id="darkModeToggle" aria-label="Dark Mode umschalten">
+                    <button class="dark-mode-toggle" id="darkModeToggle" aria-label="Dark Mode umschalten" type="button">
                         <i class="fas fa-moon" id="darkModeIcon"></i>
                     </button>
                 </li>
             </ul>
             
-            <button class="mobile-menu-btn" aria-label="Menu">
+            <button class="mobile-menu-btn" aria-label="Menu" type="button">
                 <span></span>
                 <span></span>
                 <span></span>
@@ -216,11 +240,11 @@
                     </div>
                     
                     <div class="filter-actions">
-                        <button class="btn-icon" onclick="resetFilters()">
+                        <button class="btn-icon" onclick="resetFilters()" type="button">
                             <i class="fas fa-undo"></i>
                             <span class="btn-text">Zurücksetzen</span>
                         </button>
-                        <button class="btn-icon" onclick="window.location.href='/content/menu.pdf'">
+                        <button class="btn-icon" onclick="window.location.href='/content/menu.pdf'" type="button">
                             <i class="fas fa-download"></i>
                             <span class="btn-text">PDF</span>
                         </button>
@@ -415,7 +439,7 @@
 
     <!-- Event Window -->
     <div class="event-window" id="eventWindow" style="display: none;">
-        <button class="event-toggle" onclick="toggleEventWindow()">
+        <button class="event-toggle" onclick="toggleEventWindow()" type="button">
             <i class="fas fa-music"></i>
         </button>
         <div class="event-content" id="eventContent"></div>
@@ -425,5 +449,10 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
     <script src="cms-loader-premium.js"></script>
     <script src="app-premium.js"></script>
+    
+    <!-- Remove dark mode loading class after scripts load -->
+    <script>
+        document.documentElement.classList.remove('dark-mode-loading');
+    </script>
 </body>
 </html>
