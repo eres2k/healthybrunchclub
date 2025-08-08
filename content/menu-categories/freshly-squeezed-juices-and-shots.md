@@ -1,6 +1,6 @@
 ---
 title: Freshly Squeezed Juices and Shots
-order: 5
+order: 6
 image: /content/images/dsc00348_ergebnis.jpg
 description: Frisch gepresste Säfte und Shots für einen natürlichen Energieschub.
 items:
