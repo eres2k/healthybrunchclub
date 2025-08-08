@@ -1,8 +1,9 @@
 ---
 title: avo-lution
-description: "Avocado in ihrer besten Form – auf Brot oder in der Bowl. Frisch, cremig und voll guter Fette für Körper und Geist."
 order: 2
 image: /content/images/dsc00338_ergebnis.jpg
+description: Avocado in ihrer besten Form – auf Brot oder in der Bowl. Frisch,
+  cremig und voll guter Fette für Körper und Geist.
 items:
   - name: avocado bowl
     tags:
@@ -43,4 +44,5 @@ items:
       carbs: 38g
       fat: 16g
     price: "12.90"
+    image: /content/images/img-20250806-wa0002.jpg
 ---
