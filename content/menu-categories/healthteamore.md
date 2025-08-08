@@ -1,60 +1,42 @@
 ---
-title: HealthTea & More
+title: Health Tea & More
+description: Tees und Aufgüsse, die Körper und Seele wärmen – natürlich und belebend.
 order: 7
-image: /content/images/dsc00414_ergebnis.jpg
-description: Tees und Aufgüsse, die Körper und Seele wärmen. Jede Tasse ist eine
-  kleine Auszeit vom Alltag.
+image: /content/images/dsc00364_ergebnis.jpg
 items:
-  - name: Maltesisch-Verbene-Lavendel
-    price: 4.5
-    description: Ein erfrischender Kräutertee mit muskatnässeähnlichem Geschmack,
-      der nicht nur zuckerarm und antioxidativ ist, sondern auch entschlackend
-      und beruhigend wirkt
-    allergens: []
+  - name: Fenchel-Anis-Kümmel
     tags:
       - erfrischend
-      - zuckerarm
-      - antioxidativ
-  - name: Green Detox Tea
-    price: 4.5
-    description: Grüner Tee mit Matcha, Ingwer und Zitronengras - perfekt zum Entgiften
+      - verdauungsfördernd
+    description: Harmonische Mischung, die die Verdauung sanft anregt und wohlig wärmt.
     allergens: []
+    nutrition:  
+      calories: ""  
+    price: "4.50"
+  - name: Melisse-Verbene-Lavendel
     tags:
-      - vegan
-      - glutenfrei
-      - antioxidativ
-  - name: Immunity Boost
-    price: 4.9
-    description: Kraftvoller Mix aus Kurkuma, Ingwer, Zitrone und schwarzem Pfeffer
+      - beruhigend
+      - entspannend
+    description: Duftender Kräutertee, der Stress abbaut und für entspannte Momente sorgt.
     allergens: []
+    nutrition:
+      calories: ""
+    price: "4.50"
+  - name: Chaga Tee
     tags:
-      - vegan
-      - glutenfrei
       - immunstärkend
-  - name: Berry Good Tea
-    price: 4.5
-    description: Früchtetee mit Waldbeeren, Hibiskus und Hagebutte
+      - antioxidativ
+    description: Kräftiger Tee mit Chaga, der das Immunsystem stärkt und entzündungshemmend wirkt.
     allergens: []
+    nutrition:
+      calories: ""
+    price: "4.10"
+  - name: Moringa-Minz-Tee
     tags:
-      - vegan
-      - glutenfrei
-      - vitaminreich
-  - name: Golden Milk Latte
-    price: 5.9
-    description: Warme Pflanzenmilch mit Kurkuma, Zimt und einer Prise schwarzem Pfeffer
-    allergens:
-      - G
-      - H
-    tags:
-      - vegetarisch
-      - entzündungshemmend
-  - name: Matcha Latte
-    price: 5.9
-    description: Ceremonial Grade Matcha mit aufgeschäumter Pflanzenmilch
-    allergens:
-      - G
-      - H
-    tags:
-      - vegetarisch
-      - energetisierend
----
+      - belebend
+      - revitalisierend
+    description: Belebender Kräutertee aus Moringa-Blättern und erfrischender Minze.
+    allergens: []
+    nutrition:
+      calories: ""
+    price: "4.50"

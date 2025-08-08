@@ -1,56 +1,64 @@
 ---
-title: sets
-description: "Perfekt kombiniert: Unsere Sets bringen dir ausgewogene Vielfalt und Genuss in einem cleveren Paket."
-order: -1
+title: Sets
+description: Perfekt kombiniert: Unsere Sets bringen dir ausgewogene Vielfalt und Genuss in einem cleveren Paket.
+order: 8
 image: /content/images/dsc00394_ergebnis.jpg
 items:
-  - tags:
+  - name: Tessa's Feel Good Combi
+    tags:
       - ausgewogen
       - belebend
       - sättigend
-    special: false
-    name: tessa's feel good combi
-    description: |-
-      * einen wiener klassiker kaffee
-      * premium porridge
-      * frisch gepressten saft deiner wahl
+    description: |
+      * Wiener Klassiker deiner Wahl
+      * Premium-Porridge
+      * Frisch gepressten Saft deiner Wahl
     allergens:
       - G
       - H
       - L
+    nutrition:
+      calories: "470"
+      protein: "26g"
+      carbs: "63g"
+      fat: "38g"
     price: "16.90"
-    image: ""
-  - tags:
+  - name: Tina's Soul Food Set
+    tags:
       - ausgewogen
       - proteinreich
       - sättigend
-    special: false
-    name: tina's soul food set
-    description: |-
-      * einen chaga tee mit adaptogene
-      * avocado bread  +pilze (1.50€) +speck (1.90€) +ei (1.40€)
-      * hafer dich lieb
+    description: |
+      * Chaga Tee mit Adaptogenen
+      * Avocado Bread mit Ei, Speck und Pilzmix
+      * Hafer dich lieb
     allergens:
       - A
       - C
-    price: "18.90"
-    image: ""
-  - tags:
+    nutrition:
+      calories: "640"
+      protein: "26g"
+      carbs: "63g"
+      fat: "38g"
+    price: "23.30"
+  - name: Charlotte's Healthy Treat Set
+    tags:
       - ausgewogen
       - proteinreich
       - genussvoll
-    special: false
-    name: charlotte's healthy treat set
-    description: |-
-      * ein reishi cappuccino mit collagen
-      * ein eggcitement deiner wahl (aufpreis zweites ei 1.40€)
-      * berry good choice
+    description: |
+      * Reishi Cappuccino mit Kollagen
+      * Eggcitement deiner Wahl (Aufpreis zweites Ei: € 1,40)
+      * Berry Good Choice
     allergens:
       - A
       - C
       - G
       - H
       - D
-    price: "19.50"
-    image: ""
----
+    nutrition:
+      calories: "480"
+      protein: "14g"
+      carbs: "78g"
+      fat: "9g"
+    price: "26.90"
