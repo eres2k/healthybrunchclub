@@ -1,21 +1,23 @@
 ---
 title: Sip Happens - Make it Healthy
-description: Prickelnde Sodas mit natürlichen Aromen – erfrischend, zuckerarm und antioxidativ.
-order: 6
+order: 5
 image: /content/images/dsc00362_ergebnis.jpg
+description: Prickelnde Sodas mit natürlichen Aromen – erfrischend, zuckerarm
+  und antioxidativ.
 items:
   - name: Himbeer Soda
     tags:
       - erfrischend
       - zuckerarm
       - antioxidativ
-    description: Prickelndes Himbeersoda von Sonnentor, sanft gesüßt mit Apfelsaftkonzentrat.
+    description: Prickelndes Himbeersoda von Sonnentor, sanft gesüßt mit
+      Apfelsaftkonzentrat.
     allergens: []
     nutrition:
       calories: "45"
-      protein: "0g"
-      carbs: "11g"
-      fat: "0g"
+      protein: 0g
+      carbs: 11g
+      fat: 0g
     price: "4.10"
   - name: Hollunder Soda
     tags:
@@ -26,9 +28,9 @@ items:
     allergens: []
     nutrition:
       calories: "42"
-      protein: "0g"
-      carbs: "10g"
-      fat: "0g"
+      protein: 0g
+      carbs: 10g
+      fat: 0g
     price: "4.10"
   - name: Minty
     tags:
@@ -38,9 +40,9 @@ items:
     allergens: []
     nutrition:
       calories: "25"
-      protein: "0g"
-      carbs: "6g"
-      fat: "0g"
+      protein: 0g
+      carbs: 6g
+      fat: 0g
     price: "4.10"
   - name: Berry Minty
     tags:
@@ -50,9 +52,9 @@ items:
     allergens: []
     nutrition:
       calories: "38"
-      protein: "0g"
-      carbs: "9g"
-      fat: "0g"
+      protein: 0g
+      carbs: 9g
+      fat: 0g
     price: "4.10"
   - name: Golden Kurkuma
     tags:
@@ -62,7 +64,8 @@ items:
     allergens: []
     nutrition:
       calories: "55"
-      protein: "0g"
-      carbs: "13g"
-      fat: "0g"
+      protein: 0g
+      carbs: 13g
+      fat: 0g
     price: "4.10"
+---
