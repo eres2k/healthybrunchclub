@@ -1,8 +1,8 @@
 ---
 title: Freshly Squeezed Juices and Shots
-description: Frisch gepresste Säfte und Shots für einen natürlichen Energieschub.
-order: 2
+order: 5
 image: /content/images/dsc00348_ergebnis.jpg
+description: Frisch gepresste Säfte und Shots für einen natürlichen Energieschub.
 items:
   - name: Immunity
     tags:
@@ -13,9 +13,9 @@ items:
     allergens: []
     nutrition:
       calories: "95"
-      protein: "1g"
-      carbs: "22g"
-      fat: "0g"
+      protein: 1g
+      carbs: 22g
+      fat: 0g
     price: "6.90"
   - name: Beet Boost
     tags:
@@ -25,9 +25,9 @@ items:
     allergens: []
     nutrition:
       calories: "85"
-      protein: "1g"
-      carbs: "20g"
-      fat: "0g"
+      protein: 1g
+      carbs: 20g
+      fat: 0g
     price: "6.90"
   - name: Clean Green Kick
     tags:
@@ -38,9 +38,9 @@ items:
       - L
     nutrition:
       calories: "65"
-      protein: "2g"
-      carbs: "14g"
-      fat: "0g"
+      protein: 2g
+      carbs: 14g
+      fat: 0g
     price: "6.90"
   - name: Pure Sellerie
     tags:
@@ -76,3 +76,4 @@ items:
     description: Konzentrierter Vitamin-C-Shot für den Extra-Kick.
     allergens: []
     price: "2.40"
+---
