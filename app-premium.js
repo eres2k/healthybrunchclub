@@ -1,12 +1,232 @@
-// Premium App JavaScript - Fixed Mobile Menu
+// Premium App JavaScript - Fixed Mobile Menu with Enhanced Dark Mode
 // Enhanced functionality for upper-class restaurant experience
+
+// ===============================================
+// DARK MODE MANAGEMENT SYSTEM
+// ===============================================
+
+const DarkModeManager = {
+    // Configuration
+    config: {
+        storageKey: 'healthy-brunch-theme',
+        defaultTheme: 'light',
+        transitionDuration: 300
+    },
+
+    // Initialize dark mode
+    init() {
+        // Prevent flash of incorrect theme
+        this.preventFlash();
+        
+        // Get saved theme or system preference
+        const savedTheme = this.getSavedTheme();
+        const systemTheme = this.getSystemTheme();
+        const theme = savedTheme || systemTheme || this.config.defaultTheme;
+        
+        // Apply theme immediately
+        this.applyTheme(theme, false);
+        
+        // Set up event listeners
+        this.setupEventListeners();
+        
+        // Watch for system theme changes
+        this.watchSystemTheme();
+        
+        // Initialize mobile toggle if needed
+        if (window.innerWidth <= 768) {
+            this.initializeMobileToggle();
+        }
+        
+        // Remove no-transition class after initialization
+        setTimeout(() => {
+            document.body.classList.remove('no-transition');
+        }, 100);
+    },
+
+    // Prevent flash of incorrect theme
+    preventFlash() {
+        // Add no-transition class to prevent animations on load
+        document.body.classList.add('no-transition');
+        
+        // Apply saved theme immediately if available
+        const savedTheme = localStorage.getItem(this.config.storageKey);
+        if (savedTheme === 'dark') {
+            document.body.classList.add('dark-mode');
+        }
+    },
+
+    // Get saved theme from localStorage
+    getSavedTheme() {
+        return localStorage.getItem(this.config.storageKey);
+    },
+
+    // Get system theme preference
+    getSystemTheme() {
+        if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
+            return 'dark';
+        }
+        return 'light';
+    },
+
+    // Apply theme
+    applyTheme(theme, animate = true) {
+        const isDark = theme === 'dark';
+        
+        if (!animate) {
+            document.body.classList.add('no-transition');
+        }
+        
+        // Apply theme class
+        document.body.classList.toggle('dark-mode', isDark);
+        
+        // Update all icons
+        this.updateIcons(isDark);
+        
+        // Update meta theme color
+        this.updateMetaThemeColor(isDark);
+        
+        // Save preference
+        localStorage.setItem(this.config.storageKey, theme);
+        
+        // Dispatch custom event
+        window.dispatchEvent(new CustomEvent('themeChanged', { 
+            detail: { theme, isDark } 
+        }));
+        
+        if (!animate) {
+            // Force reflow
+            document.body.offsetHeight;
+            
+            setTimeout(() => {
+                document.body.classList.remove('no-transition');
+            }, 50);
+        }
+    },
+
+    // Toggle theme
+    toggle() {
+        const currentTheme = document.body.classList.contains('dark-mode') ? 'dark' : 'light';
+        const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+        this.applyTheme(newTheme);
+    },
+
+    // Update all theme icons
+    updateIcons(isDark) {
+        // Desktop icon
+        const desktopIcon = document.getElementById('darkModeIcon');
+        if (desktopIcon) {
+            desktopIcon.className = isDark ? 'fas fa-sun' : 'fas fa-moon';
+        }
+        
+        // Mobile icon
+        const mobileIcon = document.querySelector('.mobile-dark-mode-toggle i');
+        if (mobileIcon) {
+            mobileIcon.className = isDark ? 'fas fa-sun' : 'fas fa-moon';
+        }
+        
+        // Mobile label
+        const mobileLabel = document.querySelector('.mobile-dark-mode-toggle span');
+        if (mobileLabel) {
+            mobileLabel.textContent = isDark ? 'Light Mode' : 'Dark Mode';
+        }
+    },
+
+    // Update meta theme color
+    updateMetaThemeColor(isDark) {
+        const metaThemeColor = document.querySelector('meta[name="theme-color"]');
+        if (metaThemeColor) {
+            metaThemeColor.content = isDark ? '#0A0A0A' : '#1A1A1A';
+        }
+    },
+
+    // Set up event listeners
+    setupEventListeners() {
+        // Desktop toggle button
+        const desktopToggle = document.getElementById('darkModeToggle');
+        if (desktopToggle) {
+            desktopToggle.addEventListener('click', (e) => {
+                e.preventDefault();
+                this.toggle();
+            });
+        }
+        
+        // Handle resize events
+        let resizeTimer;
+        window.addEventListener('resize', () => {
+            clearTimeout(resizeTimer);
+            resizeTimer = setTimeout(() => {
+                if (window.innerWidth <= 768 && !document.querySelector('.mobile-dark-mode-toggle')) {
+                    this.initializeMobileToggle();
+                }
+            }, 250);
+        });
+    },
+
+    // Watch for system theme changes
+    watchSystemTheme() {
+        if (window.matchMedia) {
+            const darkModeQuery = window.matchMedia('(prefers-color-scheme: dark)');
+            
+            darkModeQuery.addEventListener('change', (e) => {
+                // Only apply system theme if user hasn't set a preference
+                if (!this.getSavedTheme()) {
+                    this.applyTheme(e.matches ? 'dark' : 'light');
+                }
+            });
+        }
+    },
+
+    // Initialize mobile toggle
+    initializeMobileToggle() {
+        const navMenu = document.querySelector('.nav-menu');
+        if (!navMenu) return;
+        
+        // Remove existing toggle if present
+        const existingToggle = navMenu.querySelector('.mobile-dark-mode-item');
+        if (existingToggle) {
+            existingToggle.remove();
+        }
+        
+        // Create new toggle
+        const mobileToggleItem = document.createElement('li');
+        mobileToggleItem.className = 'mobile-dark-mode-item';
+        
+        const mobileToggle = document.createElement('button');
+        mobileToggle.className = 'mobile-dark-mode-toggle';
+        mobileToggle.setAttribute('aria-label', 'Toggle dark mode');
+        mobileToggle.type = 'button';
+        
+        const isDark = document.body.classList.contains('dark-mode');
+        
+        mobileToggle.innerHTML = `
+            <span>${isDark ? 'Light Mode' : 'Dark Mode'}</span>
+            <i class="${isDark ? 'fas fa-sun' : 'fas fa-moon'}"></i>
+        `;
+        
+        mobileToggle.addEventListener('click', (e) => {
+            e.preventDefault();
+            e.stopPropagation();
+            this.toggle();
+        });
+        
+        mobileToggleItem.appendChild(mobileToggle);
+        navMenu.appendChild(mobileToggleItem);
+    }
+};
+
+// ===============================================
+// MAIN APP INITIALIZATION
+// ===============================================
 
 document.addEventListener('DOMContentLoaded', function() {
     initializeApp();
 });
 
 function initializeApp() {
-    // Initialize all components
+    // Initialize dark mode first
+    DarkModeManager.init();
+    
+    // Initialize all other components
     initLoadingScreen();
     initNavigation();
     initMobileMenu();
@@ -14,6 +234,7 @@ function initializeApp() {
     initSmoothScrolling();
     initAnimations();
     initVideoOptimization();
+    initParallax();
     fillAvailableDates();
     
     // Initialize event window
@@ -128,6 +349,11 @@ function openMobileMenu() {
     
     // Prevent body scroll when menu is open
     document.body.style.overflow = 'hidden';
+    
+    // Ensure mobile dark mode toggle exists
+    if (window.innerWidth <= 768 && !navMenu.querySelector('.mobile-dark-mode-toggle')) {
+        DarkModeManager.initializeMobileToggle();
+    }
 }
 
 // Close Mobile Menu
@@ -285,6 +511,24 @@ function initVideoOptimization() {
     }
 }
 
+// Parallax effect for hero (desktop only)
+function initParallax() {
+    if (window.innerWidth <= 768) return;
+    
+    const heroContent = document.querySelector('.hero-content');
+    
+    if (heroContent) {
+        window.addEventListener('scroll', debounce(() => {
+            const scrolled = window.pageYOffset;
+            const rate = scrolled * -0.5;
+            
+            if (scrolled < window.innerHeight) {
+                heroContent.style.transform = `translateY(${rate}px)`;
+            }
+        }, 10));
+    }
+}
+
 // Handle window resize
 let resizeTimer;
 window.addEventListener('resize', function() {
@@ -383,26 +627,52 @@ function debounce(func, wait) {
     };
 }
 
-// Parallax effect for hero (desktop only)
-function initParallax() {
-    if (window.innerWidth <= 768) return;
-    
-    const heroContent = document.querySelector('.hero-content');
-    
-    if (heroContent) {
-        window.addEventListener('scroll', debounce(() => {
-            const scrolled = window.pageYOffset;
-            const rate = scrolled * -0.5;
-            
-            if (scrolled < window.innerHeight) {
-                heroContent.style.transform = `translateY(${rate}px)`;
-            }
-        }, 10));
+// Toggle Event Window
+window.toggleEventWindow = function() {
+    const eventWindow = document.getElementById('eventWindow');
+    if (eventWindow) {
+        eventWindow.classList.toggle('collapsed');
     }
+};
+
+// PDF Download tracking
+function trackPDFDownload() {
+    // Track PDF download event if analytics is set up
+    if (typeof gtag !== 'undefined') {
+        gtag('event', 'download', {
+            'event_category': 'Menu',
+            'event_label': 'PDF Menu Download'
+        });
+    }
+    
+    // Or custom tracking
+    console.log('Menu PDF downloaded');
 }
 
-// Initialize parallax
-initParallax();
+// Initialize mobile PDF button
+document.addEventListener('DOMContentLoaded', function() {
+    const pdfButton = document.querySelector('.mobile-pdf-download');
+    if (pdfButton && window.innerWidth <= 768) {
+        pdfButton.style.display = 'flex';
+        
+        // Ensure onclick works
+        if (!pdfButton.hasAttribute('data-initialized')) {
+            pdfButton.setAttribute('data-initialized', 'true');
+            pdfButton.removeAttribute('onclick'); // Remove inline onclick
+            pdfButton.addEventListener('click', function(e) {
+                e.preventDefault();
+                window.open('/content/menu.pdf', '_blank');
+                trackPDFDownload();
+            });
+        }
+    }
+    
+    // Desktop PDF button
+    const desktopPdfBtn = document.querySelector('.btn-icon[onclick*="pdf"]');
+    if (desktopPdfBtn) {
+        desktopPdfBtn.addEventListener('click', trackPDFDownload);
+    }
+});
 
 // Add fade-in-up class styles dynamically
 const style = document.createElement('style');
@@ -446,439 +716,56 @@ if ('serviceWorker' in navigator) {
     });
 }
 
-// HAMBURGER MENU FIX
-// Wait for DOM to be ready
-document.addEventListener('DOMContentLoaded', function() {
-    // Debug: Check what elements exist
-    console.log('Checking for menu elements...');
-    const menuBtn = document.querySelector('.mobile-menu-btn');
-    const navMenu = document.querySelector('.nav-menu');
+// Handle theme changes for dynamic content
+window.addEventListener('themeChanged', function(e) {
+    console.log('Theme changed to:', e.detail.theme);
     
-    console.log('Menu button found:', !!menuBtn);
-    console.log('Nav menu found:', !!navMenu);
-    
-    if (menuBtn && navMenu) {
-        // Remove any existing event listeners
-        const newBtn = menuBtn.cloneNode(true);
-        menuBtn.parentNode.replaceChild(newBtn, menuBtn);
-        
-        // Add click event to hamburger menu
-        newBtn.addEventListener('click', function(e) {
-            e.preventDefault();
-            e.stopPropagation();
-            
-            console.log('Menu button clicked!');
-            
-            // Toggle active class
-            navMenu.classList.toggle('active');
-            newBtn.classList.toggle('active');
-            
-            // Toggle body scroll
-            if (navMenu.classList.contains('active')) {
-                document.body.style.overflow = 'hidden';
-            } else {
-                document.body.style.overflow = '';
-            }
-        });
-        
-        // Close menu when clicking outside
-        document.addEventListener('click', function(e) {
-            if (!navMenu.contains(e.target) && !newBtn.contains(e.target)) {
-                navMenu.classList.remove('active');
-                newBtn.classList.remove('active');
-                document.body.style.overflow = '';
-            }
-        });
-        
-        // Close menu when clicking on a link
-        const navLinks = navMenu.querySelectorAll('.nav-link');
-        navLinks.forEach(link => {
-            link.addEventListener('click', function() {
-                navMenu.classList.remove('active');
-                newBtn.classList.remove('active');
-                document.body.style.overflow = '';
-            });
-        });
-        
-        console.log('✓ Hamburger menu initialized successfully!');
-    } else {
-        console.error('❌ Could not find menu button or nav menu!');
-    }
+    // Update any dynamically loaded content
+    const dynamicElements = document.querySelectorAll('[data-theme-aware]');
+    dynamicElements.forEach(element => {
+        // Update element based on theme
+        if (e.detail.isDark) {
+            element.classList.add('dark-theme');
+        } else {
+            element.classList.remove('dark-theme');
+        }
+    });
 });
 
-// Alternative fix if the above doesn't work
-window.fixHamburgerMenu = function() {
-    const style = document.createElement('style');
-    style.textContent = `
-        @media (max-width: 768px) {
-            .mobile-menu-btn {
-                display: block !important;
-                opacity: 1 !important;
-                visibility: visible !important;
-                position: relative !important;
-                z-index: 1001 !important;
-                width: 30px !important;
-                height: 30px !important;
-                background: none !important;
-                border: none !important;
-                cursor: pointer !important;
-            }
-            
-            .mobile-menu-btn span {
-                display: block !important;
-                width: 25px !important;
-                height: 2px !important;
-                background: #1A1A1A !important;
-                margin: 6px 0 !important;
-                opacity: 1 !important;
-                visibility: visible !important;
-            }
-            
-            .nav-menu {
-                display: none !important;
-            }
-            
-            .nav-menu.active {
-                display: flex !important;
-                position: absolute !important;
-                top: 100% !important;
-                left: 0 !important;
-                right: 0 !important;
-                background: white !important;
-                flex-direction: column !important;
-                padding: 20px !important;
-                box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1) !important;
-                z-index: 1000 !important;
-            }
-        }
-    `;
-    document.head.appendChild(style);
-    console.log('✓ CSS fixes applied!');
-};
-
-// Run the CSS fix automatically
-if (window.innerWidth <= 768) {
-    fixHamburgerMenu();
-}
-
-// ===============================================
-// DARK MODE FUNCTIONALITY - FIXED VERSION
-// ===============================================
-
-// Dark Mode Management
-function initDarkMode() {
-    const darkModeToggle = document.getElementById('darkModeToggle');
-    const darkModeIcon = document.getElementById('darkModeIcon');
-    const body = document.body;
-    
-    // Check for saved dark mode preference or default to light mode
-    const currentTheme = localStorage.getItem('theme') || 'light';
-    
-    // Apply saved theme
-    if (currentTheme === 'dark') {
-        body.classList.add('dark-mode');
-        updateDarkModeIcon(true);
-    }
-    
-    // Toggle dark mode on button click
-    if (darkModeToggle) {
-        darkModeToggle.addEventListener('click', function() {
-            const isDarkMode = body.classList.toggle('dark-mode');
-            
-            // Save preference
-            localStorage.setItem('theme', isDarkMode ? 'dark' : 'light');
-            
-            // Update icon
-            updateDarkModeIcon(isDarkMode);
-            
-            // Update meta theme-color for mobile browsers
-            updateThemeColor(isDarkMode);
-            
-            // Trigger event for other components that might need to update
-            window.dispatchEvent(new CustomEvent('darkModeToggled', { detail: { isDarkMode } }));
-        });
-    }
-    
-    // Update icon based on mode
-    function updateDarkModeIcon(isDarkMode) {
-        if (darkModeIcon) {
-            darkModeIcon.className = isDarkMode ? 'fas fa-sun' : 'fas fa-moon';
-        }
-    }
-    
-    // Update theme color for mobile address bar
-    function updateThemeColor(isDarkMode) {
-        const themeColorMeta = document.querySelector('meta[name="theme-color"]');
-        if (themeColorMeta) {
-            themeColorMeta.content = isDarkMode ? '#0A0A0A' : '#1A1A1A';
-        }
-    }
-    
-    // Handle system theme changes
-    if (window.matchMedia) {
-        const darkModeQuery = window.matchMedia('(prefers-color-scheme: dark)');
-        
-        // Check if user has no saved preference and system prefers dark
-        if (!localStorage.getItem('theme') && darkModeQuery.matches) {
-            body.classList.add('dark-mode');
-            updateDarkModeIcon(true);
-            updateThemeColor(true);
-        }
-        
-        // Listen for system theme changes
-        darkModeQuery.addEventListener('change', function(e) {
-            // Only apply system theme if user hasn't set a preference
-            if (!localStorage.getItem('theme')) {
-                const isDarkMode = e.matches;
-                body.classList.toggle('dark-mode', isDarkMode);
-                updateDarkModeIcon(isDarkMode);
-                updateThemeColor(isDarkMode);
-            }
-        });
-    }
-}
-
-// Create mobile dark mode toggle - FIXED VERSION
-function createMobileDarkModeToggle() {
-    const navMenu = document.querySelector('.nav-menu');
-    
-    if (!navMenu) return;
-    
-    // Remove any existing mobile toggle first
-    const existingToggle = navMenu.querySelector('.mobile-dark-mode-item');
-    if (existingToggle) {
-        existingToggle.remove();
-    }
-    
-    // Create the structure
-    const mobileDarkModeItem = document.createElement('li');
-    mobileDarkModeItem.className = 'mobile-dark-mode-item';
-    mobileDarkModeItem.style.cssText = 'display: block; width: 100%; margin-top: 1rem; padding-top: 1rem; border-top: 1px solid rgba(30, 74, 60, 0.1);';
-    
-    const mobileToggle = document.createElement('button');
-    mobileToggle.className = 'mobile-dark-mode-toggle';
-    mobileToggle.setAttribute('aria-label', 'Dark Mode umschalten');
-    
-    // Inline styles for mobile toggle button
-    mobileToggle.style.cssText = `
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        gap: 0.5rem;
-        width: 100%;
-        padding: 1rem;
-        background: transparent;
-        border: 1px solid #E8E8E8;
-        color: #1E4A3C;
-        font-family: 'Montserrat', sans-serif;
-        font-size: 0.875rem;
-        font-weight: 500;
-        text-transform: uppercase;
-        letter-spacing: 0.05em;
-        cursor: pointer;
-        transition: all 0.3s ease;
-        -webkit-appearance: none;
-        -moz-appearance: none;
-        appearance: none;
-    `;
-    
-    // Create label and icon
-    const label = document.createElement('span');
-    label.textContent = document.body.classList.contains('dark-mode') ? 'Light Mode' : 'Dark Mode';
-    
-    const icon = document.createElement('i');
-    icon.className = document.body.classList.contains('dark-mode') ? 'fas fa-sun' : 'fas fa-moon';
-    
-    mobileToggle.appendChild(label);
-    mobileToggle.appendChild(icon);
-    mobileDarkModeItem.appendChild(mobileToggle);
-    navMenu.appendChild(mobileDarkModeItem);
-    
-    // Add click handler
-    mobileToggle.addEventListener('click', function(e) {
+// Keyboard shortcut for dark mode toggle (Ctrl/Cmd + Shift + D)
+document.addEventListener('keydown', function(e) {
+    if ((e.ctrlKey || e.metaKey) && e.shiftKey && e.key === 'D') {
         e.preventDefault();
-        e.stopPropagation();
-        
-        const body = document.body;
-        const isDarkMode = body.classList.toggle('dark-mode');
-        
-        // Save preference
-        localStorage.setItem('theme', isDarkMode ? 'dark' : 'light');
-        
-        // Update label and icon
-        label.textContent = isDarkMode ? 'Light Mode' : 'Dark Mode';
-        icon.className = isDarkMode ? 'fas fa-sun' : 'fas fa-moon';
-        
-        // Update desktop icon if exists
-        const desktopIcon = document.getElementById('darkModeIcon');
-        if (desktopIcon) {
-            desktopIcon.className = isDarkMode ? 'fas fa-sun' : 'fas fa-moon';
-        }
-        
-        // Update theme color
-        const themeColorMeta = document.querySelector('meta[name="theme-color"]');
-        if (themeColorMeta) {
-            themeColorMeta.content = isDarkMode ? '#0A0A0A' : '#1A1A1A';
-        }
-        
-        // Update button styles for dark mode
-        if (isDarkMode) {
-            mobileToggle.style.backgroundColor = '#1A1A1A';
-            mobileToggle.style.color = '#FFFFFF';
-            mobileToggle.style.borderColor = '#1A1A1A';
-        } else {
-            mobileToggle.style.backgroundColor = 'transparent';
-            mobileToggle.style.color = '#1E4A3C';
-            mobileToggle.style.borderColor = '#E8E8E8';
-        }
-    });
-    
-    // Add hover effect
-    mobileToggle.addEventListener('mouseover', function() {
-        if (!document.body.classList.contains('dark-mode')) {
-            this.style.backgroundColor = '#1E4A3C';
-            this.style.color = '#FFFFFF';
-            this.style.borderColor = '#1E4A3C';
-        }
-    });
-    
-    mobileToggle.addEventListener('mouseout', function() {
-        if (!document.body.classList.contains('dark-mode')) {
-            this.style.backgroundColor = 'transparent';
-            this.style.color = '#1E4A3C';
-            this.style.borderColor = '#E8E8E8';
-        } else {
-            this.style.backgroundColor = '#1A1A1A';
-            this.style.color = '#FFFFFF';
-            this.style.borderColor = '#1A1A1A';
-        }
-    });
-    
-    // Apply initial dark mode styles if active
-    if (document.body.classList.contains('dark-mode')) {
-        mobileToggle.style.backgroundColor = '#1A1A1A';
-        mobileToggle.style.color = '#FFFFFF';
-        mobileToggle.style.borderColor = '#1A1A1A';
+        DarkModeManager.toggle();
     }
-}
+});
 
-// Robustere Initialisierung für Mobile
-function initializeMobileFeatures() {
-    // Create mobile dark mode toggle
-    if (window.innerWidth <= 768) {
-        createMobileDarkModeToggle();
-    }
-    
-    // Ensure PDF button is visible and working
-    const pdfButton = document.querySelector('.mobile-pdf-download');
-    if (pdfButton && window.innerWidth <= 768) {
-        pdfButton.style.display = 'flex';
-        
-        // Ensure onclick works
-        if (!pdfButton.hasAttribute('data-initialized')) {
-            pdfButton.setAttribute('data-initialized', 'true');
-            pdfButton.removeAttribute('onclick'); // Remove inline onclick
-            pdfButton.addEventListener('click', function(e) {
-                e.preventDefault();
-                window.open('/content/menu.pdf', '_blank');
-                trackPDFDownload();
-            });
-        }
-    }
-}
-
-// Multiple initialization points for reliability
+// Ensure mobile dark mode toggle is created after menu loads
 document.addEventListener('DOMContentLoaded', function() {
-    initDarkMode();
-    setTimeout(initializeMobileFeatures, 100);
-});
-
-// Also try after window load
-window.addEventListener('load', function() {
-    setTimeout(initializeMobileFeatures, 200);
-});
-
-// And after a delay for slow devices
-setTimeout(function() {
-    if (window.innerWidth <= 768) {
-        initializeMobileFeatures();
-    }
-}, 1000);
-
-// Re-initialize on orientation change
-window.addEventListener('orientationchange', function() {
-    setTimeout(initializeMobileFeatures, 300);
-});
-
-// Update initialization
-document.addEventListener('DOMContentLoaded', function() {
-    // Re-create mobile toggle on resize
-    window.addEventListener('resize', debounce(function() {
-        if (window.innerWidth <= 768) {
-            createMobileDarkModeToggle();
-        } else {
-            // Remove mobile toggle on desktop
-            const mobileToggle = document.querySelector('.mobile-dark-mode-item');
-            if (mobileToggle) {
-                mobileToggle.remove();
+    const observer = new MutationObserver((mutations) => {
+        mutations.forEach((mutation) => {
+            if (mutation.type === 'childList') {
+                const navMenu = document.querySelector('.nav-menu');
+                if (navMenu && !navMenu.querySelector('.mobile-dark-mode-item')) {
+                    if (window.innerWidth <= 768) {
+                        DarkModeManager.initializeMobileToggle();
+                    }
+                }
             }
-        }
-    }, 250));
-});
-
-// Listen for dark mode changes to update mobile menu if open
-window.addEventListener('darkModeToggled', function(e) {
-    // Update any UI elements that need to reflect the theme change
-    const mobileToggle = document.querySelector('.mobile-dark-mode-toggle');
-    if (mobileToggle) {
-        const label = mobileToggle.querySelector('span');
-        const icon = mobileToggle.querySelector('i');
-        
-        if (label) {
-            label.textContent = e.detail.isDarkMode ? 'Light Mode' : 'Dark Mode';
-        }
-        if (icon) {
-            icon.className = e.detail.isDarkMode ? 'fas fa-sun' : 'fas fa-moon';
-        }
-    }
-});
-
-// Add smooth transition for theme changes
-document.addEventListener('DOMContentLoaded', function() {
-    // Add transition class to body after initial load to prevent flash
-    setTimeout(() => {
-        document.body.style.transition = 'background-color 0.3s ease, color 0.3s ease';
-    }, 100);
-});
-
-// PDF Download tracking (optional)
-function trackPDFDownload() {
-    // Track PDF download event if analytics is set up
-    if (typeof gtag !== 'undefined') {
-        gtag('event', 'download', {
-            'event_category': 'Menu',
-            'event_label': 'PDF Menu Download'
+        });
+    });
+    
+    const navContainer = document.querySelector('.nav-container');
+    if (navContainer) {
+        observer.observe(navContainer, {
+            childList: true,
+            subtree: true
         });
     }
-    
-    // Or custom tracking
-    console.log('Menu PDF downloaded');
-}
-
-// Add tracking to PDF buttons
-document.addEventListener('DOMContentLoaded', function() {
-    // Desktop PDF button
-    const desktopPdfBtn = document.querySelector('.btn-icon[onclick*="pdf"]');
-    if (desktopPdfBtn) {
-        desktopPdfBtn.addEventListener('click', trackPDFDownload);
-    }
-    
-    // Mobile PDF button
-    const mobilePdfBtn = document.querySelector('.mobile-pdf-download');
-    if (mobilePdfBtn) {
-        mobilePdfBtn.addEventListener('click', trackPDFDownload);
-    }
 });
+
+// Export DarkModeManager for global access
+window.DarkModeManager = DarkModeManager;
 
 // Log initialization
-console.log('Premium restaurant app initialized with enhanced features.');
+console.log('Premium restaurant app initialized with enhanced dark mode features.');
