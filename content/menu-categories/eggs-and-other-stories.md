@@ -21,18 +21,15 @@ items:
       carbs: 27g
       fat: 15g
     price: "12.90"
-    image: /content/images/img-20250806-wa0005.jpg
+    image: /content/images/dsc00153_ergebnis.jpg
   - name: omelette creation
     tags:
       - vegetarisch
       - proteinreich
       - sättigend
-    description: >-
-      ein fluffiges omelette aus zwei eiern auf knusprigem sauerteigbrot vom
-      öfferl, gefüllt mit zwiebeln, shiitake-pilzen und frischem spinat. gekrönt
-      mit rucula, sprossen und kresse.
-
-      **your style:** tomaten / speckwürfeln / käse / avocado
+    description: luftig-lockeres omelette bestehend aus zwei eiern, gefüllt mit
+      zwiebeln, shiitake-pilzen und frischem spinat. gekrönt mit rucula,
+      sprossen und kresse. wahlweise auch mit paradeiser und käse.
     allergens:
       - A
       - C
