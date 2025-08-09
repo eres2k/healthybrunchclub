@@ -1,7 +1,7 @@
 ---
 title: eggcitements
-description: Frisch, fluffig, voller Protein – unsere Eiergerichte tanzen auf deinem
-  Teller. Perfekt für einen energiegeladenen Start in den Tag.
+description: frisch, fluffig, voller protein – unsere eiergerichte tanzen auf deinem
+  teller. perfekt für einen energiegeladenen start in den tag.
 order: 1
 image: /content/images/dsc00153_ergebnis.jpg
 items:
@@ -14,9 +14,9 @@ items:
     kunstvoll serviert auf scheiben von süßkartoffel und avocado. dazu sautierte champignons
     und shiitake-pilze, garniert mit rucula, sprossen und kresse.
   allergens:
-  - C
-  - G
-  - H
+  - c
+  - g
+  - h
   nutrition:
     calories: '320'
     protein: 38g
@@ -35,8 +35,8 @@ items:
 
     **your style:** tomaten / speckwürfeln / käse / avocado'
   allergens:
-  - C
-  - G
+  - c
+  - g
   nutrition:
     calories: '250'
     protein: 13g
@@ -55,9 +55,9 @@ items:
 
     **your style:** schinken / speck / lachs'
   allergens:
-  - C
-  - G
-  - H
+  - c
+  - g
+  - h
   nutrition:
     calories: '250'
     protein: 13g
@@ -71,7 +71,7 @@ items:
   - optional
   - zusatz
   - proteinreich
-  description: 'Personalisieren Sie Ihr Gericht mit diesen Extras:
+  description: 'personalisieren sie ihr gericht mit diesen extras:
 
     - ei nach wunsch: 1.40
 
@@ -87,10 +87,10 @@ items:
 
     - zwei scheiben sauerteigbrot vom öferl: 2.40'
   allergens:
-  - C
-  - G
-  - D
-  - A
+  - c
+  - g
+  - d
+  - a
   nutrition:
     calories: '320'
     protein: 20g

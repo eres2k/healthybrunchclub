@@ -2,8 +2,8 @@
 title: berry good choice
 order: 4
 image: /content/images/dsc00302_ergebnis.jpg
-description: 'Süß, aber gesund: Vollkorn, Topfen und Beeren für den genussvollen Brunchmoment
-  ohne Reue.'
+description: 'süß, aber gesund: vollkorn, topfen und beeren für den genussvollen brunchmoment
+  ohne reue.'
 items:
 - name: vollkorn pfannkuchen mit topfenhimbeer-leinöl
   tags:
@@ -14,9 +14,9 @@ items:
     verfeinert durch saftige blaubeeren und einem hauch ahornsirup für natürliche
     süße.
   allergens:
-  - A
-  - C
-  - G
+  - a
+  - c
+  - g
   nutrition:
     calories: '340'
     protein: 14g

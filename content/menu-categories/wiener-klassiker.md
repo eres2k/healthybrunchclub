@@ -1,15 +1,15 @@
 ---
-title: Wiener Klassiker
+title: wiener klassiker
 order: 8
 image: /content/images/dsc00407_ergebnis.jpg
-description: Die klassischen Kaffeevariationen Wiens – zeitlos und köstlich.
+description: die klassischen kaffeevariationen wiens – zeitlos und köstlich.
 items:
-- name: Großer Espresso
+- name: großer espresso
   tags:
   - vegan
   - glutenfrei
   - belebend
-  description: Doppelter Espresso mit kräftigem, ausgewogenem Aroma.
+  description: doppelter espresso mit kräftigem, ausgewogenem aroma.
   allergens: []
   price: '3.90'
   nutrition:
@@ -17,12 +17,12 @@ items:
     protein: 0g
     carbs: 1g
     fat: 0g
-- name: Kleiner Espresso
+- name: kleiner espresso
   tags:
   - vegan
   - glutenfrei
   - belebend
-  description: Vollmundiger, intensiv aromatischer Espresso in seiner reinsten Form.
+  description: vollmundiger, intensiv aromatischer espresso in seiner reinsten form.
   allergens: []
   price: '2.60'
   nutrition:
@@ -30,57 +30,57 @@ items:
     protein: 0g
     carbs: 1g
     fat: 0g
-- name: Kleiner Brauner
+- name: kleiner brauner
   tags:
   - vegetarisch
   - glutenfrei
   - vegan
-  description: Espresso mit einem Schuss Milch – harmonisch und ausgewogen.
+  description: espresso mit einem schuss milch – harmonisch und ausgewogen.
   allergens:
-  - G
+  - g
   price: '2.60'
   nutrition:
     calories: '5'
     protein: 0g
     carbs: 1g
     fat: 0g
-- name: Großer Brauner
+- name: großer brauner
   tags:
   - vegetarisch
   - glutenfrei
   - vegan
-  description: Doppelter Espresso mit Milch – vollmundig und samtig.
+  description: doppelter espresso mit milch – vollmundig und samtig.
   allergens:
-  - G
+  - g
   price: '3.90'
   nutrition:
     calories: '5'
     protein: 0g
     carbs: 1g
     fat: 0g
-- name: Melange
+- name: melange
   tags:
   - vegetarisch
   - glutenfrei
   - vegan
-  description: Die berühmte Wiener Mischung aus mildem Kaffee, heißer Milch und cremigem
-    Milchschaum.
+  description: die berühmte wiener mischung aus mildem kaffee, heißer milch und cremigem
+    milchschaum.
   allergens:
-  - G
+  - g
   price: '3.90'
   nutrition:
     calories: '120'
     protein: 6g
     carbs: 10g
     fat: 5g
-- name: Caffè Latte
+- name: caffè latte
   tags:
   - vegetarisch
   - glutenfrei
   - vegan
-  description: Sanfter Kaffee mit reichlich heißer Milch und feinem Milchschaum.
+  description: sanfter kaffee mit reichlich heißer milch und feinem milchschaum.
   allergens:
-  - G
+  - g
   price: '4.20'
   nutrition:
     calories: '120'

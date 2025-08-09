@@ -1,71 +1,71 @@
 ---
-title: Sets
+title: sets
 order: 9
 image: /content/images/dsc00394_ergebnis.jpg
-description: 'Perfekt kombiniert: Unsere Sets bringen dir ausgewogene Vielfalt und
-  Genuss in einem cleveren Paket.'
+description: 'perfekt kombiniert: unsere sets bringen dir ausgewogene vielfalt und
+  genuss in einem cleveren paket.'
 items:
-- name: Tessa's Feel Good Combi
+- name: tessa's feel good combi
   tags:
   - ausgewogen
   - belebend
   - sättigend
-  description: '- Wiener Klassiker deiner Wahl
+  description: '- wiener klassiker deiner wahl
 
-    - Premium-Porridge
+    - premium-porridge
 
-    - Frisch gepresster Saft deiner Wahl
+    - frisch gepresster saft deiner wahl
 
     '
   allergens:
-  - G
-  - H
-  - L
+  - g
+  - h
+  - l
   nutrition:
     calories: 470
     protein: 26g
     carbs: 63g
     fat: 38g
   price: 16.9
-- name: Tina's Soul Food Set
+- name: tina's soul food set
   tags:
   - ausgewogen
   - proteinreich
   - sättigend
-  description: '- Chaga Tee mit Adaptogenen
+  description: '- chaga tee mit adaptogenen
 
-    - Avocado Bread mit Ei, Speck und Pilzmix
+    - avocado bread mit ei, speck und pilzmix
 
-    - Hafer dich lieb
+    - hafer dich lieb
 
     '
   allergens:
-  - A
-  - C
+  - a
+  - c
   nutrition:
     calories: 640
     protein: 26g
     carbs: 63g
     fat: 38g
   price: 23.3
-- name: Charlotte's Healthy Treat Set
+- name: charlotte's healthy treat set
   tags:
   - ausgewogen
   - proteinreich
   - genussvoll
-  description: '- Reishi Cappuccino mit Kollagen
+  description: '- reishi cappuccino mit kollagen
 
-    - Eggcitement deiner Wahl (Aufpreis zweites Ei: € 1,40)
+    - eggcitement deiner wahl (aufpreis zweites ei: € 1,40)
 
-    - Berry Good Choice
+    - berry good choice
 
     '
   allergens:
-  - A
-  - C
-  - G
-  - H
-  - D
+  - a
+  - c
+  - g
+  - h
+  - d
   nutrition:
     calories: 480
     protein: 14g

@@ -1,15 +1,15 @@
 ---
-title: Freshly Squeezed Juices and Shots
+title: freshly squeezed juices and shots
 order: 5
 image: /content/images/dsc00362_ergebnis.jpg
-description: Frisch gepresste Säfte und Shots für einen natürlichen Energieschub.
+description: frisch gepresste säfte und shots für einen natürlichen energieschub.
 items:
-- name: Immunity
+- name: immunity
   tags:
   - immunstärkend
   - antioxidativ
   - belebend
-  description: Frische Karotten, Orangen, Ingwer und Kurkuma.
+  description: frische karotten, orangen, ingwer und kurkuma.
   allergens: []
   price: '6.90'
   nutrition:
@@ -17,12 +17,12 @@ items:
     protein: 2g
     carbs: 30g
     fat: 0g
-- name: Beet Boost
+- name: beet boost
   tags:
   - belebend
   - vitaminreich
   - immunstärkend
-  description: Karotten, Äpfel, Zitrone, Rote Beete und Ingwer.
+  description: karotten, äpfel, zitrone, rote beete und ingwer.
   allergens: []
   price: '6.90'
   nutrition:
@@ -30,12 +30,12 @@ items:
     protein: 2g
     carbs: 30g
     fat: 0g
-- name: Clean Green Kick
+- name: clean green kick
   tags:
   - detox
   - belebend
   - immunstärkend
-  description: Gurke, Sellerie, Zitrone und Ingwer.
+  description: gurke, sellerie, zitrone und ingwer.
   allergens: []
   price: '6.90'
   nutrition:
@@ -43,12 +43,12 @@ items:
     protein: 2g
     carbs: 30g
     fat: 0g
-- name: Pure Sellerie
+- name: pure sellerie
   tags:
   - detox
   - zuckerfrei
   - immunstärkend
-  description: Selleriesaft mit Apfel und Zitrone – pur und unverfälscht.
+  description: selleriesaft mit apfel und zitrone – pur und unverfälscht.
   allergens: []
   price: '6.90'
   nutrition:
@@ -56,12 +56,12 @@ items:
     protein: 2g
     carbs: 30g
     fat: 0g
-- name: Ingwer Shot
+- name: ingwer shot
   tags:
   - immunstärkend
   - belebend
   - antioxidativ
-  description: Wärmender Shot mit frischem Ingwer.
+  description: wärmender shot mit frischem ingwer.
   allergens: []
   price: '2.40'
   nutrition:
@@ -69,12 +69,12 @@ items:
     protein: 0g
     carbs: 4g
     fat: 0g
-- name: Ingwer–Kurkuma Shot
+- name: ingwer–kurkuma shot
   tags:
   - entzündungshemmend
   - antioxidativ
   - immunstärkend
-  description: Kraftvoller Shot mit Ingwer und Kurkuma.
+  description: kraftvoller shot mit ingwer und kurkuma.
   allergens: []
   price: '2.40'
   nutrition:
@@ -82,12 +82,12 @@ items:
     protein: 0g
     carbs: 4g
     fat: 0g
-- name: Sellerie–Zitrone Shot
+- name: sellerie–zitrone shot
   tags:
   - detox
   - immunstärkend
   - antioxidativ
-  description: Frischer Shot aus Sellerie und Zitrone.
+  description: frischer shot aus sellerie und zitrone.
   allergens: []
   price: '2.40'
   nutrition:
@@ -95,12 +95,12 @@ items:
     protein: 0g
     carbs: 4g
     fat: 0g
-- name: Vitamin-C Shot
+- name: vitamin-c shot
   tags:
   - immunstärkend
   - antioxidativ
   - belebend
-  description: Konzentrierter Vitamin-C-Boost.
+  description: konzentrierter vitamin-c-boost.
   allergens: []
   price: '2.40'
   nutrition:

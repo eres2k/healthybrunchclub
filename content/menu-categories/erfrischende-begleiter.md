@@ -1,16 +1,16 @@
 ---
-title: Sip Happens - Make it Healthy
-description: Prickelnde Sodas mit natürlichen Aromen – erfrischend, zuckerarm und
+title: sip happens - make it healthy
+description: prickelnde sodas mit natürlichen aromen – erfrischend, zuckerarm und
   antioxidativ.
 order: 6
 image: /content/images/dsc00362_ergebnis.jpg
 items:
-- name: Himbeer Soda
+- name: himbeer soda
   tags:
   - erfrischend
   - zuckerarm
   - antioxidativ
-  description: Prickelndes Himbeersoda von Sonnentor, sanft gesüßt mit Apfelsaftkonzentrat.
+  description: prickelndes himbeersoda von sonnentor, sanft gesüßt mit apfelsaftkonzentrat.
   allergens: []
   price: '4.10'
   nutrition:
@@ -18,12 +18,12 @@ items:
     protein: 8g
     carbs: 30g
     fat: 10g
-- name: Holunder Soda
+- name: holunder soda
   tags:
   - erfrischend
   - zuckerarm
   - antioxidativ
-  description: Spritziges Holundersoda von Sonnentor, verfeinert mit Apfelsaftkonzentrat.
+  description: spritziges holundersoda von sonnentor, verfeinert mit apfelsaftkonzentrat.
   allergens: []
   price: '4.10'
   nutrition:
@@ -31,12 +31,12 @@ items:
     protein: 8g
     carbs: 30g
     fat: 10g
-- name: Minty
+- name: minty
   tags:
   - erfrischend
   - belebend
   - vegetarisch
-  description: Kühler Mix aus frischer Pfefferminze und spritziger Zitrone.
+  description: kühler mix aus frischer pfefferminze und spritziger zitrone.
   allergens: []
   price: '4.10'
   nutrition:
@@ -44,12 +44,12 @@ items:
     protein: 8g
     carbs: 30g
     fat: 10g
-- name: Berry Minty
+- name: berry minty
   tags:
   - erfrischend
   - belebend
   - vegetarisch
-  description: Fruchtige Kombination aus Minze und Beeren.
+  description: fruchtige kombination aus minze und beeren.
   allergens: []
   price: '4.10'
   nutrition:
@@ -57,12 +57,12 @@ items:
     protein: 8g
     carbs: 30g
     fat: 10g
-- name: Golden Kurkuma
+- name: golden kurkuma
   tags:
   - antioxidativ
   - immunstärkend
   - belebend
-  description: Goldener Mix aus Ingwer-Zitrone-Sirup und frischer Kurkuma.
+  description: goldener mix aus ingwer-zitrone-sirup und frischer kurkuma.
   allergens: []
   price: '4.10'
   nutrition:

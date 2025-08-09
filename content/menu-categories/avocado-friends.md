@@ -2,8 +2,8 @@
 title: avo-lution
 order: 2
 image: /content/images/dsc00338_ergebnis.jpg
-description: Avocado in ihrer besten Form – auf Brot oder in der Bowl. Frisch, cremig
-  und voll guter Fette für Körper und Geist.
+description: avocado in ihrer besten form – auf brot oder in der bowl. frisch, cremig
+  und voll guter fette für körper und geist.
 items:
 - name: avocado bowl
   tags:
@@ -15,7 +15,7 @@ items:
     die einen knackigen akzent setzen. ein belebendes, nahrhaftes vergnügen für jeden
     moment.
   allergens:
-  - H
+  - h
   nutrition:
     calories: '300'
     protein: 6g
@@ -36,7 +36,7 @@ items:
 
     ei (nach wunsch zubereitet)/biospeck/biolachs/shiitake und champignons pilze'
   allergens:
-  - A
+  - a
   nutrition:
     calories: '320'
     protein: 8g
@@ -49,7 +49,7 @@ items:
   - optional
   - zusatz
   - proteinreich
-  description: 'Personalisieren Sie Ihr Gericht mit diesen Extras:
+  description: 'personalisieren sie ihr gericht mit diesen extras:
 
     - ei nach wunsch: 1.40
 
@@ -65,10 +65,10 @@ items:
 
     - zwei scheiben sauerteigbrot vom öferl: 2.40'
   allergens:
-  - C
-  - G
-  - D
-  - A
+  - c
+  - g
+  - d
+  - a
   nutrition:
     calories: '330'
     protein: 8g

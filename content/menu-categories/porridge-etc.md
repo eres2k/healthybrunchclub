@@ -1,7 +1,7 @@
 ---
 title: hafer dich lieb
-description: Haferflocken neu gedacht – warm, proteinreich und mit Superfoods verfeinert.
-  Ideal für den gesunden Start in den Tag.
+description: haferflocken neu gedacht – warm, proteinreich und mit superfoods verfeinert.
+  ideal für den gesunden start in den tag.
 order: 3
 image: /content/images/dsc00344_ergebnis.jpg
 items:
@@ -10,11 +10,11 @@ items:
   - glutenfrei
   - proteinreich
   - sättigend
-  description: Ein wärmender Genuss aus zarten Haferflocken, verfeinert mit Hanf-
-    und Chiasamen, Kokosflocken und geriebenem Apfel. Ein Hauch Zimt rundet ab, getoppt
-    mit gehobelten Mandeln sowie Heidel- und Himbeeren.
+  description: ein wärmender genuss aus zarten haferflocken, verfeinert mit hanf-
+    und chiasamen, kokosflocken und geriebenem apfel. ein hauch zimt rundet ab, getoppt
+    mit gehobelten mandeln sowie heidel- und himbeeren.
   allergens:
-  - A
+  - a
   price: '8.90'
   nutrition:
     calories: '420'
@@ -26,10 +26,10 @@ items:
   - glutenfrei
   - proteinreich
   - sättigend
-  description: Kräftige Oats in cremiger Kokosbasis mit Hanf- und Chiasamen, garniert
-    mit Kokosflocken sowie frischen Heidel- und Himbeeren.
+  description: kräftige oats in cremiger kokosbasis mit hanf- und chiasamen, garniert
+    mit kokosflocken sowie frischen heidel- und himbeeren.
   allergens:
-  - A
+  - a
   price: '8.50'
   nutrition:
     calories: '420'

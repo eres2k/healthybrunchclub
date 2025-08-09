@@ -1,16 +1,16 @@
 ---
-title: Coffee Health Tea and Me
+title: coffee health tea and me
 order: 7
 image: /content/images/dsc00414_ergebnis.jpg
-description: Adaptogene Lattes, Kaffees und Kräutertees – beruhigend, immunstärkend
+description: adaptogene lattes, kaffees und kräutertees – beruhigend, immunstärkend
   und belebend.
 items:
-- name: Ashwagandha Latte
+- name: ashwagandha latte
   tags:
   - vegetarisch
   - glutenfrei
   - beruhigend
-  description: Ein geschmeidiger Latte mit adaptogenem Ashwagandha, der sanft beruhigt.
+  description: ein geschmeidiger latte mit adaptogenem ashwagandha, der sanft beruhigt.
   allergens: []
   price: '5.50'
   nutrition:
@@ -18,12 +18,12 @@ items:
     protein: 7g
     carbs: 14g
     fat: 6g
-- name: Reishi Cappuccino
+- name: reishi cappuccino
   tags:
   - vegetarisch
   - glutenfrei
   - beruhigend
-  description: Samtiger Cappuccino mit Reishi – unterstützt das Immunsystem.
+  description: samtiger cappuccino mit reishi – unterstützt das immunsystem.
   allergens: []
   price: '4.60'
   nutrition:
@@ -31,12 +31,12 @@ items:
     protein: 7g
     carbs: 14g
     fat: 6g
-- name: Chaga Cold Brew
+- name: chaga cold brew
   tags:
   - vegan
   - glutenfrei
   - beruhigend
-  description: Kühler Cold Brew mit Chaga – klar, antioxidativ, belebend.
+  description: kühler cold brew mit chaga – klar, antioxidativ, belebend.
   allergens: []
   price: '4.90'
   nutrition:
@@ -44,12 +44,12 @@ items:
     protein: 0g
     carbs: 1g
     fat: 0g
-- name: Kurkuma Espresso Latte
+- name: kurkuma espresso latte
   tags:
   - vegetarisch
   - glutenfrei
   - vegan
-  description: Kräftiger Espresso-Latte mit Kurkuma – wärmend und antioxidativ.
+  description: kräftiger espresso-latte mit kurkuma – wärmend und antioxidativ.
   allergens: []
   price: '4.90'
   nutrition:
@@ -57,12 +57,12 @@ items:
     protein: 7g
     carbs: 14g
     fat: 6g
-- name: Fenchel–Anis–Kümmel
+- name: fenchel–anis–kümmel
   tags:
   - erfrischend
   - verdauungsfördernd
   - beruhigend
-  description: Harmonische Mischung, die die Verdauung sanft anregt und wohlig wärmt.
+  description: harmonische mischung, die die verdauung sanft anregt und wohlig wärmt.
   allergens: []
   price: '4.50'
   nutrition:
@@ -70,12 +70,12 @@ items:
     protein: 0g
     carbs: 0g
     fat: 0g
-- name: Melisse–Verbene–Lavendel
+- name: melisse–verbene–lavendel
   tags:
   - beruhigend
   - entspannend
   - erfrischend
-  description: Duftender Kräutertee, der Stress abbaut und für ruhige Momente sorgt.
+  description: duftender kräutertee, der stress abbaut und für ruhige momente sorgt.
   allergens: []
   price: '4.50'
   nutrition:
@@ -83,12 +83,12 @@ items:
     protein: 0g
     carbs: 0g
     fat: 0g
-- name: Chaga Tee
+- name: chaga tee
   tags:
   - immunstärkend
   - antioxidativ
   - beruhigend
-  description: Kräfiger Tee mit Chaga.
+  description: kräfiger tee mit chaga.
   allergens: []
   price: '4.10'
   nutrition:
@@ -96,12 +96,12 @@ items:
     protein: 0g
     carbs: 0g
     fat: 0g
-- name: Moringa–Minz–Tee
+- name: moringa–minz–tee
   tags:
   - belebend
   - revitalisierend
   - beruhigend
-  description: Belebender Kräutertee aus Moringa-Blättern mit frischer Minze.
+  description: belebender kräutertee aus moringa-blättern mit frischer minze.
   allergens: []
   price: '4.50'
   nutrition:
@@ -110,13 +110,13 @@ items:
     carbs: 0g
     fat: 0g
 extras:
-- name: Whey Protein (ESN, geschmacksneutral)
+- name: whey protein (esn, geschmacksneutral)
   price: '1.90'
-- name: Vegane Milchalternative (Hafer, Soja, Kokos)
+- name: vegane milchalternative (hafer, soja, kokos)
   price: '2.50'
-- name: Shot warmes Wasser mit Bio-Zitrone oder fermentiertem Apfelessig
+- name: shot warmes wasser mit bio-zitrone oder fermentiertem apfelessig
   price: kostenlos
 facts:
-  adaptogene: Natürliche Pflanzenstoffe, die helfen, sich besser an Stresssituationen
-    anzupassen und das innere Gleichgewicht zu fördern.
+  adaptogene: natürliche pflanzenstoffe, die helfen, sich besser an stresssituationen
+    anzupassen und das innere gleichgewicht zu fördern.
 ---
