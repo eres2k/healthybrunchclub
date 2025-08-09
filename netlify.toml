@@ -11,22 +11,23 @@
   included_files = ["content/**/*.md", "content/**/*.yml", "content/**/*.json"]
   node_bundler = "esbuild"
 
+# Legal pages redirects
 [[redirects]]
-  from = "/menu-pdf"
-  to = "/.netlify/functions/generate-menu-pdf"
+  from = "/impressum"
+  to = "/impressum.html"
   status = 200
 
 [[redirects]]
-  from = "/speisekarte.pdf"
-  to = "/.netlify/functions/generate-menu-pdf"
+  from = "/datenschutz"
+  to = "/datenschutz.html"
   status = 200
 
-# Test path endpoint
 [[redirects]]
-  from = "/test-paths"
-  to = "/.netlify/functions/test-paths"
+  from = "/agb"
+  to = "/agb.html"
   status = 200
 
+# PDF redirects
 [[redirects]]
   from = "/menu-pdf"
   to = "/.netlify/functions/generate-menu-pdf"
@@ -40,4 +41,10 @@
 [[redirects]]
   from = "/content/menu.pdf"
   to = "/.netlify/functions/generate-menu-pdf"
+  status = 200
+
+# Test path endpoint
+[[redirects]]
+  from = "/test-paths"
+  to = "/.netlify/functions/test-paths"
   status = 200
