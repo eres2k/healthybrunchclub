@@ -1,96 +1,49 @@
 ---
 title: Coffee Health Tea and Me
-description: Adaptogene Lattes und Kaffees für dein Wohlbefinden – sanft beruhigend, immunstärkend und belebend.
+description: Adaptogene Lattes, Kaffees und Kräutertees – beruhigend, immunstärkend und belebend.
 order: 0
 image: /content/images/dsc00340_ergebnis.jpg
 items:
-  - name: Ashwaganda Latte
-    tags:
-      - vegetarisch
-      - glutenfrei
-    description: Ein geschmeidiger Latte, durchzogen von adaptogenem Ashwagandha, der sanft beruhigt und Stress schmelzen lässt.
+  - name: Ashwagandha Latte
+    tags: [vegetarisch, glutenfrei]
+    description: Ein geschmeidiger Latte mit adaptogenem Ashwagandha, der sanft beruhigt.
     allergens: []
-    nutrition:
-      calories: "415"
-      protein: "45g"
-      carbs: "22g"
-      fat: "22g"
     price: "5.50"
   - name: Reishi Cappuccino
-    tags:
-      - vegetarisch
-      - glutenfrei
-    description: Samtiger Cappuccino mit adaptogenem Reishi, der das Immunsystem unterstützt und harmonischen, starken Kaffeegenuss verspricht.
+    tags: [vegetarisch, glutenfrei]
+    description: Samtiger Cappuccino mit Reishi – unterstützt das Immunsystem.
     allergens: []
-    nutrition:
-      calories: "415"
-      protein: "45g"
-      carbs: "22g"
-      fat: "22g"
     price: "4.60"
   - name: Chaga Cold Brew
-    tags:
-      - vegan
-      - glutenfrei
-    description: Kühler Cold Brew mit adaptogenem Chaga, antioxidativ und reinigend. Ein klarer, belebender Schluck für den Tag.
+    tags: [vegan, glutenfrei]
+    description: Kühler Cold Brew mit Chaga – klar, antioxidativ, belebend.
     allergens: []
-    nutrition:
-      calories: "415"
-      protein: "45g"
-      carbs: "22g"
-      fat: "12g"
     price: "4.90"
   - name: Kurkuma Espresso Latte
-    tags:
-      - vegetarisch
-      - glutenfrei
-    description: Feuriger Espresso Latte mit adaptogenem Kurkuma, entzündungshemmend und antioxidativ. Ein kraftvoller Energieschub.
+    tags: [vegetarisch, glutenfrei]
+    description: Kräftiger Espresso-Latte mit Kurkuma – wärmend und antioxidativ.
     allergens: []
-    nutrition:
-      calories: "415"
-      protein: "45g"
-      carbs: "22g"
-      fat: "12g"
-    price: "1.90"
- - name: Fenchel-Anis-Kümmel
-    tags:
-      - erfrischend
-      - verdauungsfördernd
+    price: "4.90"
+  - name: Fenchel–Anis–Kümmel
+    tags: [erfrischend, verdauungsfördernd]
     description: Harmonische Mischung, die die Verdauung sanft anregt und wohlig wärmt.
     allergens: []
-    nutrition:  
-      calories: ""  
     price: "4.50"
-   price: "4.50"
-
-  - name: Melisse-Verbene-Lavendel
-    tags:
-      - beruhigend
-      - entspannend
-    description: Duftender Kräutertee, der Stress abbaut und für entspannte Momente sorgt.
+  - name: Melisse–Verbene–Lavendel
+    tags: [beruhigend, entspannend]
+    description: Duftender Kräutertee, der Stress abbaut und für ruhige Momente sorgt.
     allergens: []
-    nutrition:
-      calories: ""
     price: "4.50"
   - name: Chaga Tee
-    tags:
-      - immunstärkend
-      - antioxidativ
-    description: Kräftiger Tee mit Chaga, der das Immunsystem stärkt und entzündungshemmend wirkt.
+    tags: [immunstärkend, antioxidativ]
+    description: Kräfiger Tee mit Chaga.
     allergens: []
-    nutrition:
-      calories: ""
     price: "4.10"
-  - name: Moringa-Minz-Tee
-    tags:
-      - belebend
-      - revitalisierend
-    description: Belebender Kräutertee aus Moringa-Blättern und erfrischender Minze.
+  - name: Moringa–Minz–Tee
+    tags: [belebend, revitalisierend]
+    description: Belebender Kräutertee aus Moringa-Blättern mit frischer Minze.
     allergens: []
-    nutrition:
-      calories: ""
     price: "4.50"
-
 extras:
   - name: Whey Protein (ESN, geschmacksneutral)
     price: "1.90"
@@ -99,4 +52,4 @@ extras:
   - name: Shot warmes Wasser mit Bio-Zitrone oder fermentiertem Apfelessig
     price: "kostenlos"
 facts:
-  adaptogene: Natürliche Pflanzenstoffe, die helfen, sich besser an Stresssituationen anzupassen und das innere Gleichgewicht zu fördern.
+  adaptogene: "Natürliche Pflanzenstoffe, die helfen, sich besser an Stresssituationen anzupassen und das innere Gleichgewicht zu fördern."
