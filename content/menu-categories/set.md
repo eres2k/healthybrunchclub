@@ -17,11 +17,6 @@ items:
       - G
       - H
       - L
-    nutrition:
-      calories: "470"
-      protein: "26g"
-      carbs: "63g"
-      fat: "38g"
     price: "16.90"
   - name: Tina's Soul Food Set
     tags:
@@ -35,12 +30,7 @@ items:
     allergens:
       - A
       - C
-    nutrition:
-      calories: "640"
-      protein: "26g"
-      carbs: "63g"
-      fat: "38g"
-    price: "23.30"
+    price: "16.90"
   - name: Charlotte's Healthy Treat Set
     tags:
       - ausgewogen
@@ -56,9 +46,5 @@ items:
       - G
       - H
       - D
-    nutrition:
-      calories: "480"
-      protein: "14g"
-      carbs: "78g"
-      fat: "9g"
-    price: "26.90"
+    price: "16.90"
+---
