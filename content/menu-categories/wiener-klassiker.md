@@ -1,8 +1,8 @@
 ---
 title: Wiener Klassiker
+order: 8
+image: /content/images/dsc00407_ergebnis.jpg
 description: Die klassischen Kaffeevariationen Wiens – zeitlos und köstlich.
-order: 1
-image: /content/images/dsc00342_ergebnis.jpg
 items:
   - name: Großer Espresso
     tags:
@@ -38,7 +38,8 @@ items:
     tags:
       - vegetarisch
       - glutenfrei
-    description: Die berühmte Wiener Mischung aus mildem Kaffee, heißer Milch und cremigem Milchschaum.
+    description: Die berühmte Wiener Mischung aus mildem Kaffee, heißer Milch und
+      cremigem Milchschaum.
     allergens:
       - G
     price: "3.90"
@@ -50,3 +51,4 @@ items:
     allergens:
       - G
     price: "4.20"
+---
