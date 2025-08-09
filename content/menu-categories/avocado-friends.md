@@ -1,9 +1,8 @@
 ---
 title: avo-lution
+description: "Avocado in ihrer besten Form – auf Brot oder in der Bowl. Frisch, cremig und voll guter Fette für Körper und Geist."
 order: 2
 image: /content/images/dsc00338_ergebnis.jpg
-description: Avocado in ihrer besten Form – auf Brot oder in der Bowl. Frisch,
-  cremig und voll guter Fette für Körper und Geist.
 items:
   - name: avocado bowl
     tags:
@@ -22,7 +21,7 @@ items:
       carbs: 18g
       fat: 24g
     price: "8.90"
-    image: /content/images/img-20250806-wa0004.jpg
+    image: /content/images/dsc00161.jpg
   - name: avocado bread
     tags:
       - vegetarisch
@@ -44,5 +43,25 @@ items:
       carbs: 38g
       fat: 16g
     price: "12.90"
-    image: /content/images/img-20250806-wa0002.jpg
+extras_allergens:
+  - C
+  - G
+  - D
+  - A
+extras:
+  - name: ei nach wunsch
+    price: "1.40"
+  - name: käse
+    price: "1.20"
+  - name: halbe avocado
+    price: "1.90"
+  - name: biospeck
+    price: "2.50"
+  - name: biolachs
+    price: "2.10"
+  - name: pilzmix
+    price: "1.50"
+  - name: zwei scheiben sauerteigbrot vom öferl
+    price: "2.40"
+
 ---

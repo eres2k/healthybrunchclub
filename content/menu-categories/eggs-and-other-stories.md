@@ -16,6 +16,8 @@ items:
       und kresse.
     allergens:
       - C
+      - G
+      - H
     nutrition:
       calories: "324"
       protein: 13g
@@ -36,11 +38,12 @@ items:
 
       **your style:** tomaten / speckwürfeln / käse / avocado
     allergens:
-      - A
+      - C
+      - G
       - C
       - G
     nutrition:
-      calories: "300"
+      calories: "250"
       protein: 22g
       carbs: 13g
       fat: 9g
@@ -59,7 +62,9 @@ items:
 
       **your style:** schinken / speck / lachs
     allergens:
-      - A
+      - C
+      - G
+      - H
       - C
       - H
     nutrition:
@@ -70,4 +75,25 @@ items:
     price: "15.90"
     special: true
     image: /content/images/image-36-.jpg
+extras_allergens:
+  - C
+  - G
+  - D
+  - A
+extras:
+  - name: ei nach wunsch
+    price: "1.40"
+  - name: käse
+    price: "1.20"
+  - name: halbe avocado
+    price: "1.90"
+  - name: biospeck
+    price: "2.50"
+  - name: biolachs
+    price: "2.10"
+  - name: pilzmix
+    price: "1.50"
+  - name: zwei scheiben sauerteigbrot vom öferl
+    price: "2.40"
+
 ---
