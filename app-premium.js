@@ -864,7 +864,7 @@ window.DarkModeManager = DarkModeManager;
 
   // optional: allow manual re-run
   window.forceLowercase = { process };
-})();
+
 
 // Log initialization
 console.log('Premium restaurant app initialized with enhanced dark mode features.');
