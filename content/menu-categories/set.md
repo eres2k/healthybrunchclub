@@ -1,6 +1,6 @@
 ---
 title: Sets
-order: 10
+order: 9
 image: /content/images/dsc00394_ergebnis.jpg
 description: "Perfekt kombiniert: Unsere Sets bringen dir ausgewogene Vielfalt
   und Genuss in einem cleveren Paket."
