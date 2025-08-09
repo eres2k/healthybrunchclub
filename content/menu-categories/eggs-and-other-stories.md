@@ -52,7 +52,7 @@ items:
     description: >-
       ein oder zwei pochierte eier auf knusprigem sauerteigbrot vom öfferl, mit
       cremiger avocadosauce und sautierten pilzen, verfeinert mit rucula,
-      sprossen, kresse und knusprigen pinienkernen.
+      sprossen, kresse und gerösteten pinienkernen.
 
       **your style:** schinken / speck / lachs
     allergens:
