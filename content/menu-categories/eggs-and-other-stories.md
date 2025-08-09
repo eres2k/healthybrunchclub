@@ -21,7 +21,7 @@ items:
       carbs: 27g
       fat: 15g
     price: "12.90"
-    image: /content/images/image-1-.jpg
+    image: /content/images/img-20250806-wa0005.jpg
   - name: omelette creation
     tags:
       - vegetarisch
