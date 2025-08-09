@@ -1,68 +1,50 @@
 ---
-title: avo-lution
-description: Avocado in ihrer besten Form – auf Brot oder in der Bowl. Frisch, cremig und voll guter Fette für Körper und Geist.
-order: 2
-image: /content/images/dsc00338_ergebnis.jpg
+title: Sets
+description: Perfekt kombiniert: Unsere Sets bringen dir ausgewogene Vielfalt und Genuss in einem cleveren Paket.
+order: 8
+image: /content/images/dsc00394_ergebnis.jpg
 items:
-  - name: avocado bowl
+  - name: Tessa's Feel Good Combi
     tags:
-      - vegetarisch
-      - glutenfrei
+      - ausgewogen
+      - belebend
       - sättigend
-    description: eine samtige kreation aus frisch zerdrückter avocado, veredelt mit fein geriebenem apfel für eine süß-frische note, gekrönt von zart gerösteten mandeln, die einen knackigen akzent setzen. ein belebendes, nahrhaftes vergnügen für jeden moment.
+    description: |
+      * Wiener Klassiker deiner Wahl
+      * Premium-Porridge
+      * Frisch gepressten Saft deiner Wahl
     allergens:
+      - G
       - H
-    nutrition:
-      calories: "320"
-      protein: "38g"
-      carbs: "16g"
-      fat: "26g"
-    price: "12.90"
-    image: /content/images/dsc00161.jpg
-  - name: avocado bread
+      - L
+    price: "16.90"
+  - name: Tina's Soul Food Set
     tags:
-      - vegetarisch
-      - sättigend
+      - ausgewogen
       - proteinreich
-    description: >-
-      knuspriges sauerteigbrot vom öfferl, handwerklich gebacken, großzügig bestrichen mit cremiger, zerdrückter avocado, verfeinert mit frischen sprossen und kresse für eine lebendige, grüne frische.
-
-      **your style:**
-
-      ei (nach wunsch zubereitet)/biospeck/biolachs/shiitake und champignons pilze
+      - sättigend
+    description: |
+      * Chaga Tee mit Adaptogenen
+      * Avocado Bread mit Ei, Speck und Pilzmix
+      * Hafer dich lieb
     allergens:
-      - C
-      - G
-    nutrition:
-      calories: "320"
-      protein: 38g
-      carbs: 16g
-      fat: 26g
-    price: "14.90"
-  - name: extras
-    tags:
-      - optional
-      - zusatz
-    description: >-
-      Personalisieren Sie Ihr Gericht mit diesen Extras:
-
-      - ei nach wunsch: 1.40
-
-      - käse: 1.20
-
-      - halbe avocado: 1.90
-
-      - biospeck: 2.50
-
-      - biolachs: 2.10
-
-      - pilzmix: 1.50
-
-      - zwei scheiben sauerteigbrot vom öferl: 2.40
-    allergens:
-      - C
-      - G
-      - D
       - A
-
+      - C
+    price: "16.90"
+  - name: Charlotte's Healthy Treat Set
+    tags:
+      - ausgewogen
+      - proteinreich
+      - genussvoll
+    description: |
+      * Reishi Cappuccino mit Kollagen
+      * Eggcitement deiner Wahl (Aufpreis zweites Ei: € 1,40)
+      * Berry Good Choice
+    allergens:
+      - A
+      - C
+      - G
+      - H
+      - D
+    price: "16.90"
 ---
