@@ -10,8 +10,8 @@ items:
       - vegetarisch
       - glutenfrei
       - proteinreich
-    description: meisterhaft zubereitete eier nach deiner wahl, kunstvoll serviert
-      auf süßerdäpfelscheiben und avocado. dazu sautierte champignons und
+    description: meisterhaft zubereitete eier deiner wahl, kunstvoll serviert auf
+      süßerdäpfelscheiben und avocado. dazu sautierte champignons und
       shiitake-pilze, garniert mit rucula, sprossen und kresse.
     allergens:
       - C
