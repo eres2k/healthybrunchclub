@@ -1,6 +1,6 @@
 ---
 title: Sets
-description: Perfekt kombiniert: Unsere Sets bringen dir ausgewogene Vielfalt und Genuss in einem cleveren Paket.
+description: Perfekt kombiniert, Unsere Sets bringen dir ausgewogene Vielfalt und Genuss in einem cleveren Paket.
 order: 8
 image: /content/images/dsc00394_ergebnis.jpg
 items:
