@@ -1,8 +1,8 @@
 ---
 title: Freshly Squeezed Juices and Shots
-order: 6
-image: /content/images/dsc00318_ergebnis.jpg
 description: Frisch gepresste Säfte und Shots für einen natürlichen Energieschub.
+order: 2
+image: /content/images/dsc00348_ergebnis.jpg
 items:
   - name: Immunity
     tags:
@@ -13,9 +13,9 @@ items:
     allergens: []
     nutrition:
       calories: "95"
-      protein: 1g
-      carbs: 22g
-      fat: 0g
+      protein: "22g"
+      carbs: "0g"
+      fat: "0g"
     price: "6.90"
   - name: Beet Boost
     tags:
@@ -24,10 +24,10 @@ items:
     description: Fruchtig-belebend mit Karotten, Äpfeln, Zitrone, Roter Beete und Ingwer.
     allergens: []
     nutrition:
-      calories: "85"
-      protein: 1g
-      carbs: 20g
-      fat: 0g
+      calories: "95"
+      protein: "22g"
+      carbs: "0g"
+      fat: "0g"
     price: "6.90"
   - name: Clean Green Kick
     tags:
@@ -37,11 +37,15 @@ items:
     allergens:
       - L
     nutrition:
-      calories: "65"
-      protein: 2g
-      carbs: 14g
-      fat: 0g
+      calories: "95"
+      protein: "22g"
+      carbs: "0g"
+      fat: "0g"
     price: "6.90"
+    nutrition:
+      calories: "95"
+      protein: "22g"
+      carbs: "0g"
   - name: Pure Sellerie
     tags:
       - detox
@@ -49,6 +53,10 @@ items:
     description: Selleriesaft mit Apfel und Zitrone – pur und unverfälscht.
     allergens: []
     price: "6.90"
+    nutrition:
+      calories: "95"
+      protein: "22g"
+      carbs: "0g"
   - name: Ingwer Shot
     tags:
       - immunstärkend
@@ -56,6 +64,10 @@ items:
     description: Wärmender Shot mit frischem Ingwer.
     allergens: []
     price: "2.40"
+    nutrition:
+      calories: "95"
+      protein: "22g"
+      carbs: "0g"
   - name: Ingwer-Kurkuma Shot
     tags:
       - entzündungshemmend
@@ -76,4 +88,3 @@ items:
     description: Konzentrierter Vitamin-C-Shot für den Extra-Kick.
     allergens: []
     price: "2.40"
----
