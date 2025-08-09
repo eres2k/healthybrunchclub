@@ -67,4 +67,20 @@ items:
     price: "15.90"
     special: true
     image: /content/images/image-36-.jpg
+  - special: false
+    name: extras
+    description: |-
+      e﻿i nach wunsch - 1.40
+
+      k﻿äse - 1.20
+
+      h﻿albe avocado - 1.90
+
+      b﻿io speck - 2.50
+
+      b﻿iolachs 2.10
+
+      p﻿ilzmix - 1.50
+
+      z﻿wei scheiben sauerteig vom öferl - 2.40
 ---
