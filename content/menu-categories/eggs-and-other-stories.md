@@ -10,10 +10,9 @@ items:
       - vegetarisch
       - glutenfrei
       - proteinreich
-    description: eins oder zwei eier nach wahl (spiegelei, pochiert oder
-      eierspeise), kunstvoll serviert auf scheiben von süßkartoffel und avocado.
-      dazu sautierte champignons und shiitake-pilze, garniert mit rucula,
-      sprossen und kresse.
+    description: meisterhaft zubereitete eier nach deiner wahl, kunstvoll serviert
+      auf süßerdäpfelscheiben und avocado. dazu sautierte champignons und
+      shiitake-pilze, garniert mit rucula, sprossen und kresse.
     allergens:
       - C
     nutrition:
@@ -53,7 +52,7 @@ items:
     description: >-
       ein oder zwei pochierte eier auf knusprigem sauerteigbrot vom öfferl, mit
       cremiger avocadosauce und sautierten pilzen, verfeinert mit rucula,
-      sprossen, kresse und knusprigen pinienkernen.
+      sprossen, kresse und gerösteten pinienkernen.
 
       **your style:** schinken / speck / lachs
     allergens:
@@ -68,4 +67,20 @@ items:
     price: "15.90"
     special: true
     image: /content/images/image-36-.jpg
+  - special: false
+    name: extras
+    description: |-
+      e﻿i nach wunsch - 1.40
+
+      k﻿äse - 1.20
+
+      h﻿albe avocado - 1.90
+
+      b﻿io speck - 2.50
+
+      b﻿iolachs 2.10
+
+      p﻿ilzmix - 1.50
+
+      z﻿wei scheiben sauerteig vom öferl - 2.40
 ---
