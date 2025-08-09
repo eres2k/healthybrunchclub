@@ -44,6 +44,7 @@ items:
       carbs: 38g
       fat: 16g
     price: "12.90"
+    image: /content/images/img-20250806-wa0002.jpg
   - name: extras
     tags:
       - optional
