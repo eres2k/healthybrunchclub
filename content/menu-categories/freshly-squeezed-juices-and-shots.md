@@ -1,7 +1,7 @@
 ---
 title: Freshly Squeezed Juices and Shots
 order: 5
-image: /content/images/dsc00362_ergebnis.jpg
+image: /content/images/dsc00318_ergebnis.jpg
 description: Frisch gepresste Säfte und Shots für einen natürlichen Energieschub.
 items:
   - name: Immunity
