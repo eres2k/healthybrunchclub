@@ -12,17 +12,6 @@
     <!-- Theme Color for Mobile Browsers -->
     <meta name="theme-color" content="#1A1A1A">
     
-    <!-- Prevent Flash of Unstyled Content -->
-    <script>
-        // Apply saved theme immediately to prevent flash
-        (function() {
-            const savedTheme = localStorage.getItem('healthy-brunch-theme');
-            if (savedTheme === 'dark' || (!savedTheme && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
-                document.documentElement.classList.add('dark-mode-loading');
-            }
-        })();
-    </script>
-    
     <!-- Refined Typography -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -36,12 +25,6 @@
     
     <!-- Mobile Specific Inline Styles -->
     <style>
-        /* Dark mode loading state */
-        .dark-mode-loading {
-            background: #0A0A0A !important;
-        }
-        
-        /* Mobile PDF Button Fallback Styles */
         .mobile-pdf-download {
             display: none;
             background: #1A1A1A !important;
@@ -64,63 +47,33 @@
             -moz-appearance: none !important;
             appearance: none !important;
         }
-        
+
         @media (max-width: 768px) {
             .mobile-pdf-download {
                 display: flex !important;
             }
         }
-        
+
         .mobile-pdf-download:active {
             transform: scale(0.95) !important;
             background: #C9A961 !important;
         }
-        
-        body.dark-mode .mobile-pdf-download {
-            background: #C9A961 !important;
-            color: #0A0A0A !important;
-        }
-        
-        /* Mobile Dark Mode Toggle Fallback */
-        .mobile-dark-mode-toggle {
-            -webkit-appearance: none !important;
-            -moz-appearance: none !important;
-            appearance: none !important;
-        }
-        
+
         /* iOS Safari Specific Fixes */
         @supports (-webkit-touch-callout: none) {
             .mobile-pdf-download {
                 -webkit-tap-highlight-color: transparent;
                 touch-action: manipulation;
             }
-            
-            .mobile-dark-mode-toggle {
-                -webkit-tap-highlight-color: transparent;
-                touch-action: manipulation;
-            }
         }
-        
+
         /* Fix für iOS Zoom */
         @media (max-width: 768px) {
             input, select, textarea, button {
                 font-size: 16px !important;
             }
         }
-        
-        /* Mobile Dark Mode Item Styles */
-        .mobile-dark-mode-item {
-            display: block !important;
-            width: 100% !important;
-            margin-top: 1rem !important;
-            padding-top: 1rem !important;
-            border-top: 1px solid rgba(30, 74, 60, 0.1) !important;
-        }
-        
-        body.dark-mode .mobile-dark-mode-item {
-            border-top-color: rgba(255, 255, 255, 0.1) !important;
-        }
-        
+
         /* No transition class for initial load */
         body.no-transition,
         body.no-transition * {
@@ -167,12 +120,6 @@
                 <li><a href="#menu" class="nav-link">speisekarte</a></li>
                 <li><a href="#about" class="nav-link">über uns</a></li>
                 <li><a href="#reservierung" class="nav-link nav-cta">reservierung</a></li>
-                <li class="nav-divider desktop-only"></li>
-                <li class="desktop-only">
-                    <button class="dark-mode-toggle" id="darkModeToggle" aria-label="Dark Mode umschalten" type="button">
-                        <i class="fas fa-moon" id="darkModeIcon"></i>
-                    </button>
-                </li>
             </ul>
             
             <button class="mobile-menu-btn" aria-label="Menu" type="button">
@@ -452,9 +399,5 @@
     <script src="cms-loader-premium.js"></script>
     <script src="app-premium.js"></script>
     
-    <!-- Remove dark mode loading class after scripts load -->
-    <script>
-        document.documentElement.classList.remove('dark-mode-loading');
-    </script>
 </body>
 </html>
