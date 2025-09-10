@@ -38,7 +38,7 @@ const allergenMap = {
     'R': 'Weichtiere'
 };
 
-// Category Icons with dark mode consideration
+// Category Icons
 const categoryIcons = {
     'sets': '🍽️',
     'eggcitements': '🥚',
@@ -60,19 +60,7 @@ document.addEventListener('DOMContentLoaded', function() {
     });
     loadEventsFromCMS();
     
-    // Listen for theme changes to update any dynamic content
-    window.addEventListener('themeChanged', handleThemeChange);
 });
-
-// Handle theme changes for dynamically loaded content
-function handleThemeChange(e) {
-    console.log('CMS Loader: Theme changed to', e.detail.theme);
-    // Re-render allergen legend if visible to update colors
-    const allergenLegend = document.getElementById('allergenLegend');
-    if (allergenLegend && allergenLegend.style.display !== 'none') {
-        displayAllergenLegend();
-    }
-}
 
 // Load Menu from CMS
 async function loadMenuFromCMS() {
@@ -539,7 +527,7 @@ function formatPrice(price) {
     return `€\u00A0${formatted}`;
 }
 
-// Get Item Icon - Consider dark mode
+// Get Item Icon
 function getItemIcon(item) {
     const name = item.name.toLowerCase();
     if (name.includes('kaffee') || name.includes('coffee')) return '☕';
@@ -646,7 +634,7 @@ function displayEvents(eventsData) {
         month: 'long'
     });
     
-    // Use CSS variables for colors that adapt to dark mode
+    // Use CSS variables for consistent colors
     eventContent.innerHTML = `
         ${nextEvent.featuredImage ? `
             <div class="event-image" style="margin-bottom: 1rem;">
@@ -1194,4 +1182,4 @@ window.cmsLoader = {
     
 })();
 
-console.log('CMS Loader Premium: Initialized with 6 fixed tags system and dark mode support');
+console.log('CMS Loader Premium: Initialized with 6 fixed tags system.');

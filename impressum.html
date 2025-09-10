@@ -17,16 +17,6 @@
     <!-- Styles -->
     <link rel="stylesheet" href="mystyle-premium.css">
     
-    <!-- Prevent Flash of Unstyled Content -->
-    <script>
-        (function() {
-            const savedTheme = localStorage.getItem('healthy-brunch-theme');
-            if (savedTheme === 'dark' || (!savedTheme && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
-                document.documentElement.classList.add('dark-mode-loading');
-            }
-        })();
-    </script>
-    
     <style>
         .legal-page {
             min-height: 100vh;
@@ -181,15 +171,6 @@
             }
         }
         
-        /* Dark mode support */
-        body.dark-mode .legal-container {
-            background: #1a1a1a;
-            box-shadow: 0 5px 30px rgba(255, 255, 255, 0.05);
-        }
-        
-        body.dark-mode .legal-header {
-            border-bottom-color: var(--light-gray);
-        }
         
         @keyframes spin {
             from { transform: rotate(0deg); }
@@ -211,12 +192,6 @@
                 <li><a href="/#menu" class="nav-link">speisekarte</a></li>
                 <li><a href="/#about" class="nav-link">über uns</a></li>
                 <li><a href="/#reservierung" class="nav-link nav-cta">reservierung</a></li>
-                <li class="nav-divider desktop-only"></li>
-                <li class="desktop-only">
-                    <button class="dark-mode-toggle" id="darkModeToggle" aria-label="Dark Mode umschalten" type="button">
-                        <i class="fas fa-moon" id="darkModeIcon"></i>
-                    </button>
-                </li>
             </ul>
             
             <button class="mobile-menu-btn" aria-label="Menu" type="button">
@@ -338,7 +313,6 @@
         document.addEventListener('DOMContentLoaded', loadLegalContent);
         
         // Remove dark mode loading class
-        document.documentElement.classList.remove('dark-mode-loading');
     </script>
 </body>
 </html>
