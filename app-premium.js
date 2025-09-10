@@ -423,29 +423,29 @@ function initReservationForm() {
 function fillAvailableDates() {
     const dateSelect = document.getElementById('date');
     if (!dateSelect) return;
-    
+
     // Reset dropdown
     dateSelect.innerHTML = '<option value="">Datum wählen</option>';
-    
-    // Compute next Sunday
-    const today = new Date();
-    // Calculate days until next Sunday (0): if today is Sunday, move 7 days ahead
-    const daysUntilSunday = ((0 - today.getDay() + 7) % 7) || 7;
-    const nextSunday = new Date(today);
-    nextSunday.setDate(today.getDate() + daysUntilSunday);
-    
-    // Create option for next Sunday
-    const option = document.createElement('option');
-    option.value = nextSunday.toISOString().split('T')[0];
-    const dayName = nextSunday.toLocaleDateString('de-AT', { weekday: 'long' });
-    const formattedDate = nextSunday.toLocaleDateString('de-AT', {
-        day: 'numeric',
-        month: 'long',
-        year: 'numeric'
+
+    // Fixed available dates: 21.9 and 22.9 of the current year
+    const currentYear = new Date().getFullYear();
+    const availableDates = [
+        new Date(currentYear, 8, 21), // 21 September
+        new Date(currentYear, 8, 22)  // 22 September
+    ];
+
+    availableDates.forEach(date => {
+        const option = document.createElement('option');
+        option.value = date.toISOString().split('T')[0];
+        const dayName = date.toLocaleDateString('de-AT', { weekday: 'long' });
+        const formattedDate = date.toLocaleDateString('de-AT', {
+            day: 'numeric',
+            month: 'long',
+            year: 'numeric'
+        });
+        option.textContent = `${dayName}, ${formattedDate}`;
+        dateSelect.appendChild(option);
     });
-    option.textContent = `${dayName}, ${formattedDate}`;
-    
-    dateSelect.appendChild(option);
 }
 
 // Animations
