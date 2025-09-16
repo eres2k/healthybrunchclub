@@ -180,24 +180,86 @@ function initSmoothScrolling() {
 // Reservation Form
 function initReservationForm() {
     const form = document.querySelector('.reservation-form');
-    
+
     if (form) {
-        form.addEventListener('submit', function(e) {
-            // Form is handled by Netlify
-            // Add loading state
+        form.addEventListener('submit', async function(e) {
+            e.preventDefault();
+
             const submitBtn = form.querySelector('.btn-submit');
-            const originalText = submitBtn.innerHTML;
-            
-            submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Wird gesendet...';
-            submitBtn.disabled = true;
-            
-            // Reset after submission
-            setTimeout(() => {
-                submitBtn.innerHTML = originalText;
-                submitBtn.disabled = false;
-            }, 3000);
+            const statusBox = form.querySelector('.form-status');
+            const originalText = submitBtn ? submitBtn.innerHTML : '';
+
+            if (statusBox) {
+                statusBox.innerHTML = '';
+                statusBox.classList.add('hidden');
+                statusBox.classList.remove('success', 'error');
+            }
+
+            if (submitBtn) {
+                submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> wird gesendet...';
+                submitBtn.disabled = true;
+            }
+
+            const formData = new FormData(form);
+            const plainData = Object.fromEntries(formData.entries());
+
+            try {
+                const emailResponse = await fetch('/.netlify/functions/reservation-email', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(plainData)
+                });
+
+                if (!emailResponse.ok) {
+                    throw new Error('Email dispatch failed');
+                }
+
+                const netlifyResponse = await fetch('/', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/x-www-form-urlencoded'
+                    },
+                    body: encodeFormData(formData)
+                });
+
+                if (!netlifyResponse.ok) {
+                    throw new Error('Form submission failed');
+                }
+
+                form.reset();
+                fillAvailableDates();
+
+                if (statusBox) {
+                    statusBox.innerHTML = '<span class="status-icon">🎉</span><div><strong>vielen dank!</strong> ihre reservierungsanfrage wurde erfolgreich übermittelt. wir melden uns in kürze mit einer persönlichen bestätigung.</div>';
+                    statusBox.classList.remove('hidden');
+                    statusBox.classList.add('success');
+                }
+            } catch (error) {
+                console.error('Reservation submission failed:', error);
+
+                if (statusBox) {
+                    statusBox.innerHTML = '<span class="status-icon">⚠️</span><div><strong>ups!</strong> leider konnte ihre reservierungsanfrage gerade nicht gesendet werden. bitte versuchen sie es erneut oder schreiben sie an <a href="mailto:hello@healthybrunchclub.at">hello@healthybrunchclub.at</a>.</div>';
+                    statusBox.classList.remove('hidden');
+                    statusBox.classList.add('error');
+                }
+            } finally {
+                if (submitBtn) {
+                    submitBtn.innerHTML = originalText;
+                    submitBtn.disabled = false;
+                }
+            }
         });
     }
+}
+
+function encodeFormData(formData) {
+    const pairs = [];
+    for (const [key, value] of formData.entries()) {
+        pairs.push(encodeURIComponent(key) + '=' + encodeURIComponent(value));
+    }
+    return pairs.join('&');
 }
 
 function fillAvailableDates() {
