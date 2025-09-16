@@ -1313,6 +1313,46 @@ h1, h2, h3, h4, h5, h6 {
     background: var(--gold);
     transform: translatey(-2px);
 }
+.reservation-form .form-status {
+    margin-top: var(--spacing-lg);
+    padding: 1.5rem 1.75rem;
+    border-radius: 1.25rem;
+    background: linear-gradient(135deg, rgba(248, 240, 232, 0.95), rgba(255, 255, 255, 0.9));
+    border: 1px solid rgba(201, 173, 149, 0.45);
+    box-shadow: 0 24px 55px rgba(63, 42, 31, 0.16);
+    display: flex;
+    gap: 1rem;
+    align-items: flex-start;
+    font-family: var(--font-body);
+    font-size: 1rem;
+    line-height: 1.7;
+    color: var(--charcoal);
+    transition: opacity var(--transition-normal), transform var(--transition-normal);
+}
+.reservation-form .form-status.hidden {
+    display: none;
+}
+.reservation-form .form-status .status-icon {
+    font-size: 1.5rem;
+    line-height: 1;
+    margin-top: 0.15rem;
+}
+.reservation-form .form-status.success {
+    background: linear-gradient(135deg, rgba(247, 229, 211, 0.9), rgba(255, 255, 255, 0.92));
+    border-color: rgba(236, 191, 164, 0.65);
+    color: #3b2b21;
+}
+.reservation-form .form-status.error {
+    background: linear-gradient(135deg, rgba(255, 235, 233, 0.95), rgba(255, 255, 255, 0.9));
+    border-color: rgba(235, 154, 154, 0.55);
+    color: #7b2f2f;
+}
+.reservation-form .form-status a {
+    color: inherit;
+    font-weight: 600;
+    text-decoration: underline;
+    text-decoration-color: rgba(0, 0, 0, 0.25);
+}
 /* premium footer */
 .footer-premium {
     background: var(--black);
@@ -2838,6 +2878,23 @@ body.dark-mode .btn-submit {
 }
 body.dark-mode .btn-submit:hover {
     background: var(--sage);
+}
+body.dark-mode .reservation-form .form-status {
+    background: rgba(24, 24, 24, 0.85);
+    border-color: rgba(255, 255, 255, 0.1);
+    box-shadow: 0 24px 55px rgba(0, 0, 0, 0.45);
+    color: var(--pure-white);
+}
+body.dark-mode .reservation-form .form-status.success {
+    background: rgba(46, 35, 28, 0.9);
+    border-color: rgba(255, 214, 188, 0.35);
+}
+body.dark-mode .reservation-form .form-status.error {
+    background: rgba(68, 30, 30, 0.92);
+    border-color: rgba(255, 152, 152, 0.45);
+}
+body.dark-mode .reservation-form .form-status a {
+    color: var(--gold);
 }
 /* footer dark mode */
 body.dark-mode .footer-premium {
