@@ -52,13 +52,14 @@ items:
       - proteinreich
     description: |-
       personalisieren sie ihr gericht mit diesen extras:
-      - ei nach wunsch: 1.40
-      - käse: 1.20
-      - halbe avocado: 1.90
-      - biospeck: 2.50
-      - biolachs: 2.10
-      - pilzmix: 1.50
-      - zwei scheiben sauerteigbrot vom öferl: 2.40
+
+      * ei nach wunsch: 1.90
+      * käse: 1.50
+      * halbe avocado: 2.90
+      * biospeck: 2.50
+      * biolachs: 2.30
+      * pilzmix: 1.90
+      * zwei scheiben sauerteigbrot vom öferl: 2.40
     allergens:
       - c
       - g
