@@ -11,8 +11,8 @@ items:
       - proteinreich
       - sättigend
     description: fluffige vollkorn-pfannkuchen, serviert mit cremigem
-      topfenhimbeer-leinöl, verfeinert durch saftige blaubeeren und einem hauch
-      ahornsirup für natürliche süße.
+      topfenhimbeer-leinöl, verfeinert mit saftigen heidelbeeren, kräftigem
+      ahornsirup, einem hauch zimt und gerösteten mandeln.
     allergens:
       - a
       - c
