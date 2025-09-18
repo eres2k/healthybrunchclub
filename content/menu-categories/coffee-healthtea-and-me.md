@@ -44,6 +44,15 @@ items:
       protein: 7g
       carbs: 14g
       fat: 6g
+  - special: false
+    name: extras
+    price: ""
+    description: |-
+      trinke deinen Kaffee mit 30g protein geschmacksneutral +2,50
+
+      vegane milchalternativen:
+
+      hafer, soja, kokos  kostenlos
   - name: fenchel–anis–kümmel
     tags:
       - erfrischend
@@ -96,15 +105,6 @@ items:
       protein: 0g
       carbs: 0g
       fat: 0g
-  - special: false
-    name: extras
-    price: ""
-    description: |-
-      trinke deinen Kaffee mit 30g protein geschmacksneutral +2,50
-
-      vegane milchalternativen:
-
-      hafer, soja, kokos  kostenlos
 extras:
   - name: whey protein (esn, geschmacksneutral)
     price: "1.90"
