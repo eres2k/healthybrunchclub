@@ -51,7 +51,7 @@ items:
       - zusatz
       - proteinreich
     description: |-
-      personalisieren sie ihr gericht mit diesen extras:
+      personalisiere dein gericht mit diesen extras:
 
       * ei nach wunsch: 1.90
       * käse: 1.50
