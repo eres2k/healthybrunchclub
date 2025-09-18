@@ -29,7 +29,7 @@ items:
     price: "9.50"
     description: zarte chiasamen, sanft in kokosdrink gequollen, treffen auf frische
       und samtige mangocreme, getoppt mit fruchtigen heidelbeeren - natürlich,
-      leicht und voller energie
+      leicht und voller energie.
     nutrition:
       calories: "418"
       protein: "10"
