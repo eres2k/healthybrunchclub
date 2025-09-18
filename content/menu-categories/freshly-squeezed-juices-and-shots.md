@@ -1,60 +1,63 @@
 ---
-title: Freshly Squeezed Juices and Shots
+title: freshly squeezed juices and shots
 order: 5
 image: /content/images/whatsapp-image-2025-09-18-at-11.27.03.jpeg
-description: Frisch gepresste Säfte und Shots für einen natürlichen Energieschub.
+description: frisch gepresste säfte und shots für einen natürlichen energieschub.
 items:
-  - name: Immunity
+  - name: immunity
     tags:
       - immunstärkend
       - antioxidativ
       - belebend
-    description: Frische Karotten, Orangen, Ingwer und Kurkuma.
+    description: frische karotten, orangen, ingwer und kurkuma.
     allergens: []
     price: "6.90"
-  - name: Beet Boost
+  - name: beet boost
     tags:
       - belebend
       - vitaminreich
-    description: Karotten, Äpfel, Zitrone, Rote Beete und Ingwer.
+    description: karotten, äpfel, zitrone, rote beete und ingwer.
     allergens: []
     price: "6.90"
-  - name: Clean Green Kick
+    image: /content/images/dsc00362_ergebnis.jpg
+  - name: clean green kick
     tags:
       - detox
       - belebend
-    description: Gurke, Sellerie, Zitrone und Ingwer.
+    description: gurke, sellerie, zitrone und ingwer.
     allergens: []
     price: "6.90"
-  - name: Pure Sellerie
+    image: /content/images/whatsapp-image-2025-09-17-at-14.17.35.jpeg
+  - name: pure celery
     tags:
       - detox
       - zuckerfrei
-    description: Selleriesaft mit Apfel und Zitrone – pur und unverfälscht.
+    description: selleriesaft mit apfel und zitrone – pur und unverfälscht.
     allergens: []
     price: "6.90"
-  - name: Ingwer Shot
+    image: /content/images/whatsapp-image-2025-09-17-at-14.18.11.jpeg
+  - name: ingwer shot
     tags:
       - immunstärkend
       - belebend
-    description: Wärmender Shot mit frischem Ingwer.
+    description: wärmender shot mit frischem ingwer.
     allergens: []
     price: "2.40"
-  - name: Ingwer–Kurkuma Shot
+  - name: ingwer–kurkuma shot
     tags:
       - entzündungshemmend
       - antioxidativ
-    description: Kraftvoller Shot mit Ingwer und Kurkuma.
+    description: kraftvoller shot mit ingwer und kurkuma.
     allergens: []
     price: "2.40"
-  - name: Sellerie–Zitrone Shot
+  - name: sellerie–zitrone shot
     tags:
       - detox
       - immunstärkend
-    description: Frischer Shot aus Sellerie und Zitrone.
+    description: frischer shot aus sellerie und zitrone.
     allergens: []
     price: "2.40"
-  - name: Vitamin-C Shot
+  - name: vitamin-c shot
     tags:
       - immunstärkend
     description: Konzentrierter Vitamin-C-Boost.
