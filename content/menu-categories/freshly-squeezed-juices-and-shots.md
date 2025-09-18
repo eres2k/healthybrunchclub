@@ -12,6 +12,7 @@ items:
     description: frische karotten, orangen, ingwer und kurkuma.
     allergens: []
     price: "6.90"
+    image: /content/images/whatsapp-image-2025-09-17-at-14.16.58.jpeg
   - name: beet boost
     tags:
       - belebend
