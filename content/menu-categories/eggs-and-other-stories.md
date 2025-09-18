@@ -67,7 +67,7 @@ items:
       carbs: 9g
       fat: 34g
     price: "17.90"
-    special: true
+    special: false
     image: /content/images/whatsapp-image-2025-09-17-at-09.51.42.jpeg
   - name: extras
     tags:
@@ -75,7 +75,7 @@ items:
       - zusatz
       - proteinreich
     description: |-
-      personalisieren sie ihr gericht mit diesen extras:
+      personalisiere dein gericht mit diesen extras:
 
       * ei nach wunsch: 1.90
       * käse: 1.50
