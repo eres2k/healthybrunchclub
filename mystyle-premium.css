@@ -153,7 +153,7 @@ h1, h2, h3, h4, h5, h6 {
     align-items: center;
 }
 .logo-img {
-    height: 45px;
+    height: 60px;
     transition: transform var(--transition-normal);
 }
 .logo-premium:hover .logo-img {
