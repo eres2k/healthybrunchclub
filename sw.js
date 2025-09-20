@@ -113,28 +113,28 @@ self.addEventListener('fetch', event => {
     return;
   }
 
-  // Handle image requests with cache-first strategy
+  // Handle image requests with network-first strategy
   if (request.destination === 'image') {
     event.respondWith(
-      caches.match(request)
-        .then(response => {
-          if (response) {
-            return response;
+      fetch(request)
+        .then(networkResponse => {
+          // Cache successful image responses
+          if (networkResponse.status === 200) {
+            const responseClone = networkResponse.clone();
+            caches.open(CACHE_NAME)
+              .then(cache => {
+                cache.put(request, responseClone);
+              });
           }
-          
-          return fetch(request)
-            .then(networkResponse => {
-              // Cache successful image responses
-              if (networkResponse.status === 200) {
-                const responseClone = networkResponse.clone();
-                caches.open(CACHE_NAME)
-                  .then(cache => {
-                    cache.put(request, responseClone);
-                  });
+          return networkResponse;
+        })
+        .catch(() => {
+          // Try to serve the last cached version if available
+          return caches.match(request)
+            .then(response => {
+              if (response) {
+                return response;
               }
-              return networkResponse;
-            })
-            .catch(() => {
               // Return a fallback image for offline scenarios
               return new Response(
                 '<svg xmlns="http://www.w3.org/2000/svg" width="200" height="150" viewBox="0 0 200 150"><rect fill="#F3E8DA" width="200" height="150"/><text x="50%" y="50%" text-anchor="middle" dominant-baseline="middle" fill="#A9AB88" font-family="Inter, sans-serif" font-size="14">Image offline</text></svg>',
