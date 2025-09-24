@@ -269,11 +269,15 @@ function fillAvailableDates() {
     // Reset dropdown
     dateSelect.innerHTML = '<option value="">Datum wählen</option>';
 
-    // Fixed available dates: 21.9 and 22.9 of the current year
+    // Fixed available dates: 5., 6., 7., 24., 25. and 26. October of the current year
     const currentYear = new Date().getFullYear();
     const availableDates = [
-        new Date(currentYear, 8, 21), // 21 September
-        new Date(currentYear, 8, 22)  // 22 September
+        new Date(currentYear, 9, 5),  // 5 October
+        new Date(currentYear, 9, 6),  // 6 October
+        new Date(currentYear, 9, 7),  // 7 October
+        new Date(currentYear, 9, 24), // 24 October
+        new Date(currentYear, 9, 25), // 25 October
+        new Date(currentYear, 9, 26)  // 26 October
     ];
 
     availableDates.forEach(date => {
