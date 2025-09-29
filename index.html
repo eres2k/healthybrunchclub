@@ -251,77 +251,245 @@
     </section>
 
     <!-- Reservation Section -->
-    <section class="reservation-premium" id="reservierung">
+    <section id="reservierung" class="reservation-section">
         <div class="reservation-container">
-            <h2 class="section-title">tischreservierung</h2>
-            <p class="section-subtitle">sichern sie sich ihren platz für ein unvergessliches erlebnis</p>
+            <h2 class="reservation-title">Tisch Reservieren</h2>
+            <p class="reservation-subtitle">Reservieren Sie Ihren Tisch für ein unvergessliches Bio-Brunch-Erlebnis</p>
             
-            <form name="reservierung" method="POST" data-netlify="true" class="reservation-form">
-                <input type="hidden" name="form-name" value="reservierung">
-                
-                <div class="form-grid">
-                    <div class="form-group">
-                        <label for="name">name *</label>
-                        <input type="text" id="name" name="name" required>
-                    </div>
-                    
-                    <div class="form-group">
-                        <label for="email">e-mail *</label>
-                        <input type="email" id="email" name="email" required>
-                    </div>
-                    
-                    <div class="form-group">
-                        <label for="phone">telefon</label>
-                        <input type="tel" id="phone" name="phone">
-                    </div>
-                    
-                    <div class="form-group">
-                        <label for="date">datum *</label>
-                        <select id="date" name="date" required>
-                            <option value="">datum wählen</option>
-                        </select>
-                    </div>
-                    
-                    <div class="form-group">
-                        <label for="time">uhrzeit *</label>
-                        <select id="time" name="time" required>
-                            <option value="09:00-11:00">09:00–11:00 uhr</option>
-                            <option value="09:30-11:30">09:30–11:30 uhr</option>
-                            <option value="10:00-12:00">10:00–12:00 uhr</option>
-                            <option value="10:30-12:30">10:30–12:30 uhr</option>
-                            <option value="11:00-13:00">11:00–13:00 uhr</option>
-                            <option value="11:30-13:30">11:30–13:30 uhr</option>
-                            <option value="12:00-14:00">12:00–14:00 uhr</option>
-                        </select>
-                    </div>
-                    
-                    <div class="form-group">
-                        <label for="guests">personen *</label>
-                        <select id="guests" name="guests" required>
-                            <option value="">anzahl wählen</option>
-                            <option value="1">1 person</option>
-                            <option value="2">2 personen</option>
-                            <option value="3">3 personen</option>
-                            <option value="4">4 personen</option>
-                            <option value="5">5 personen</option>
-                            <option value="6">6 personen</option>
-                            <option value="7+">7+ personen</option>
-                        </select>
-                    </div>
+            <!-- Progress Indicator -->
+            <div class="reservation-progress">
+                <div class="progress-step active" data-step="1">
+                    <span class="step-number">1</span>
+                    <span class="step-label">Datum</span>
                 </div>
-                
-                <div class="form-group form-full">
-                    <label for="message">besondere wünsche</label>
-                    <textarea id="message" name="message" rows="3" placeholder="allergien, unverträglichkeiten oder besondere anlässe..."></textarea>
+                <div class="progress-line"></div>
+                <div class="progress-step" data-step="2">
+                    <span class="step-number">2</span>
+                    <span class="step-label">Zeit</span>
                 </div>
-                
-                <button type="submit" class="btn-luxury btn-submit">
-                    <i class="fas fa-calendar-check"></i>
-                    reservierung absenden
-                </button>
+                <div class="progress-line"></div>
+                <div class="progress-step" data-step="3">
+                    <span class="step-number">3</span>
+                    <span class="step-label">Details</span>
+                </div>
+                <div class="progress-line"></div>
+                <div class="progress-step" data-step="4">
+                    <span class="step-number">4</span>
+                    <span class="step-label">Bestätigung</span>
+                </div>
+            </div>
 
-                <div class="form-status hidden" role="status" aria-live="polite"></div>
-            </form>
+            <!-- Step 1: Date Selection -->
+            <div class="reservation-step active" id="step-date">
+                <h3>Wählen Sie Ihr Datum</h3>
+                <div class="date-selector">
+                    <input type="date" 
+                           id="reservation-date" 
+                           class="date-input"
+                           min="" 
+                           max="">
+                    <div id="date-availability-info" class="availability-info"></div>
+                </div>
+                <button class="btn-next" id="btn-next-date" disabled>
+                    Weiter zur Zeitauswahl
+                    <svg class="arrow-icon" width="20" height="20" viewBox="0 0 20 20">
+                        <path d="M7 2l8 8-8 8" stroke="currentColor" stroke-width="2" fill="none"/>
+                    </svg>
+                </button>
+            </div>
+
+            <!-- Step 2: Time Selection -->
+            <div class="reservation-step" id="step-time">
+                <h3>Wählen Sie Ihre Zeit</h3>
+                <p class="selected-date-display" id="selected-date-display"></p>
+                <div id="time-slots" class="time-slots-grid">
+                    <!-- Time slots will be dynamically generated here -->
+                </div>
+                <div class="step-navigation">
+                    <button class="btn-back" id="btn-back-time">
+                        <svg class="arrow-icon" width="20" height="20" viewBox="0 0 20 20">
+                            <path d="M13 2l-8 8 8 8" stroke="currentColor" stroke-width="2" fill="none"/>
+                        </svg>
+                        Zurück
+                    </button>
+                    <button class="btn-next" id="btn-next-time" disabled>
+                        Weiter zu Details
+                        <svg class="arrow-icon" width="20" height="20" viewBox="0 0 20 20">
+                            <path d="M7 2l8 8-8 8" stroke="currentColor" stroke-width="2" fill="none"/>
+                        </svg>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Step 3: Guest Details -->
+            <div class="reservation-step" id="step-details">
+                <h3>Ihre Details</h3>
+                <div class="reservation-summary">
+                    <p><strong>Datum:</strong> <span id="summary-date"></span></p>
+                    <p><strong>Zeit:</strong> <span id="summary-time"></span></p>
+                </div>
+                
+                <form id="reservation-form" class="reservation-form">
+                    <div class="form-group">
+                        <label for="guest-count">Anzahl Personen *</label>
+                        <select id="guest-count" name="guests" required>
+                            <option value="">Bitte wählen</option>
+                            <option value="1">1 Person</option>
+                            <option value="2">2 Personen</option>
+                            <option value="3">3 Personen</option>
+                            <option value="4">4 Personen</option>
+                            <option value="5">5 Personen</option>
+                            <option value="6">6 Personen</option>
+                            <option value="7">7 Personen</option>
+                            <option value="8">8 Personen</option>
+                            <option value="9">9 Personen</option>
+                            <option value="10">10+ Personen (bitte anrufen)</option>
+                        </select>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="guest-name">Name *</label>
+                        <input type="text" 
+                               id="guest-name" 
+                               name="name" 
+                               placeholder="Max Mustermann" 
+                               required>
+                    </div>
+                    
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="guest-email">E-Mail *</label>
+                            <input type="email" 
+                                   id="guest-email" 
+                                   name="email" 
+                                   placeholder="max@example.com" 
+                                   required>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="guest-phone">Telefon *</label>
+                            <input type="tel" 
+                                   id="guest-phone" 
+                                   name="phone" 
+                                   placeholder="+43 123 456789" 
+                                   required>
+                        </div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="special-requests">Besondere Wünsche (optional)</label>
+                        <textarea id="special-requests" 
+                                  name="specialRequests" 
+                                  rows="3" 
+                                  placeholder="z.B. Allergien, Hochstuhl benötigt, Fensterplatz gewünscht..."></textarea>
+                    </div>
+                    
+                    <div class="form-group checkbox-group">
+                        <label>
+                            <input type="checkbox" id="privacy-consent" required>
+                            <span>Ich stimme der Verarbeitung meiner Daten gemäß der 
+                                <a href="/datenschutz" target="_blank">Datenschutzerklärung</a> zu *
+                            </span>
+                        </label>
+                    </div>
+                    
+                    <div class="form-group checkbox-group">
+                        <label>
+                            <input type="checkbox" id="newsletter-consent">
+                            <span>Ich möchte über Neuigkeiten und Angebote informiert werden</span>
+                        </label>
+                    </div>
+                </form>
+                
+                <div class="step-navigation">
+                    <button class="btn-back" id="btn-back-details">
+                        <svg class="arrow-icon" width="20" height="20" viewBox="0 0 20 20">
+                            <path d="M13 2l-8 8 8 8" stroke="currentColor" stroke-width="2" fill="none"/>
+                        </svg>
+                        Zurück
+                    </button>
+                    <button class="btn-submit" id="btn-submit-reservation">
+                        Reservierung abschließen
+                        <svg class="loading-spinner" width="20" height="20" viewBox="0 0 20 20">
+                            <circle cx="10" cy="10" r="8" stroke="currentColor" stroke-width="2" fill="none" stroke-dasharray="25 15"/>
+                        </svg>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Step 4: Confirmation -->
+            <div class="reservation-step" id="step-confirmation">
+                <div class="confirmation-success">
+                    <svg class="success-icon" width="80" height="80" viewBox="0 0 80 80">
+                        <circle cx="40" cy="40" r="35" stroke="#B8D4B2" stroke-width="3" fill="none"/>
+                        <path d="M25 40l10 10 20-25" stroke="#1E4A3C" stroke-width="3" fill="none"/>
+                    </svg>
+                    
+                    <h3>Reservierung erfolgreich!</h3>
+                    
+                    <div class="confirmation-details">
+                        <div class="confirmation-code">
+                            <p>Ihr Bestätigungscode:</p>
+                            <h2 id="confirmation-code"></h2>
+                        </div>
+                        
+                        <div class="reservation-info">
+                            <h4>Ihre Reservierungsdetails:</h4>
+                            <div class="info-grid">
+                                <div class="info-item">
+                                    <span class="info-label">Name:</span>
+                                    <span id="confirm-name"></span>
+                                </div>
+                                <div class="info-item">
+                                    <span class="info-label">Datum:</span>
+                                    <span id="confirm-date"></span>
+                                </div>
+                                <div class="info-item">
+                                    <span class="info-label">Zeit:</span>
+                                    <span id="confirm-time"></span>
+                                </div>
+                                <div class="info-item">
+                                    <span class="info-label">Personen:</span>
+                                    <span id="confirm-guests"></span>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="confirmation-message">
+                            <p>Eine Bestätigungs-E-Mail wurde an <strong id="confirm-email"></strong> gesendet.</p>
+                            <p>Wir freuen uns auf Ihren Besuch!</p>
+                        </div>
+                        
+                        <div class="confirmation-actions">
+                            <button class="btn-download" onclick="downloadICS()">
+                                <svg width="20" height="20" viewBox="0 0 20 20">
+                                    <path d="M10 2v10m0 0l-3-3m3 3l3-3M4 16h12" stroke="currentColor" stroke-width="2" fill="none"/>
+                                </svg>
+                                Kalendereintrag herunterladen
+                            </button>
+                            <button class="btn-new-reservation" onclick="startNewReservation()">
+                                Neue Reservierung
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Error Message -->
+            <div id="reservation-error" class="reservation-error" style="display: none;">
+                <svg width="24" height="24" viewBox="0 0 24 24">
+                    <path d="M12 2L2 22h20L12 2zm0 4l7.5 14h-15L12 6zm-1 6v4h2v-4h-2zm0 6v2h2v-2h-2z" fill="currentColor"/>
+                </svg>
+                <span id="error-message"></span>
+            </div>
+
+            <!-- Loading Overlay -->
+            <div id="loading-overlay" class="loading-overlay" style="display: none;">
+                <div class="loading-content">
+                    <div class="spinner"></div>
+                    <p>Bitte warten...</p>
+                </div>
+            </div>
         </div>
     </section>
 
@@ -400,6 +568,7 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
     <script src="cms-loader-premium.js"></script>
     <script src="app-premium.js"></script>
+    <script src="reservation-handler.js"></script>
     
 </body>
 </html>
