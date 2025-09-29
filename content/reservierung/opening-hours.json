@@ -1,0 +1,76 @@
+{
+  "weekdays": {
+    "monday": {
+      "open": false,
+      "from": "09:00",
+      "to": "15:00",
+      "slots": []
+    },
+    "tuesday": {
+      "open": true,
+      "from": "09:00",
+      "to": "15:00",
+      "slots": [
+        {"time": "09:00", "max_guests": 20},
+        {"time": "10:30", "max_guests": 20},
+        {"time": "12:00", "max_guests": 20},
+        {"time": "13:30", "max_guests": 20}
+      ]
+    },
+    "wednesday": {
+      "open": true,
+      "from": "09:00",
+      "to": "15:00",
+      "slots": [
+        {"time": "09:00", "max_guests": 20},
+        {"time": "10:30", "max_guests": 20},
+        {"time": "12:00", "max_guests": 20},
+        {"time": "13:30", "max_guests": 20}
+      ]
+    },
+    "thursday": {
+      "open": true,
+      "from": "09:00",
+      "to": "15:00",
+      "slots": [
+        {"time": "09:00", "max_guests": 20},
+        {"time": "10:30", "max_guests": 20},
+        {"time": "12:00", "max_guests": 20},
+        {"time": "13:30", "max_guests": 20}
+      ]
+    },
+    "friday": {
+      "open": true,
+      "from": "09:00",
+      "to": "15:00",
+      "slots": [
+        {"time": "09:00", "max_guests": 20},
+        {"time": "10:30", "max_guests": 20},
+        {"time": "12:00", "max_guests": 20},
+        {"time": "13:30", "max_guests": 20}
+      ]
+    },
+    "saturday": {
+      "open": true,
+      "from": "10:00",
+      "to": "16:00",
+      "slots": [
+        {"time": "10:00", "max_guests": 25},
+        {"time": "11:30", "max_guests": 25},
+        {"time": "13:00", "max_guests": 25},
+        {"time": "14:30", "max_guests": 25}
+      ]
+    },
+    "sunday": {
+      "open": true,
+      "from": "10:00",
+      "to": "16:00",
+      "slots": [
+        {"time": "10:00", "max_guests": 25},
+        {"time": "11:30", "max_guests": 25},
+        {"time": "13:00", "max_guests": 25},
+        {"time": "14:30", "max_guests": 25}
+      ]
+    }
+  }
+}
