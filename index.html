@@ -251,77 +251,94 @@
     </section>
 
     <!-- Reservation Section -->
-    <section class="reservation-premium" id="reservierung">
+    <section class="reservation-section" id="reservierung">
         <div class="reservation-container">
-            <h2 class="section-title">tischreservierung</h2>
-            <p class="section-subtitle">sichern sie sich ihren platz für ein unvergessliches erlebnis</p>
-            
-            <form name="reservierung" method="POST" data-netlify="true" class="reservation-form">
-                <input type="hidden" name="form-name" value="reservierung">
-                
-                <div class="form-grid">
-                    <div class="form-group">
-                        <label for="name">name *</label>
-                        <input type="text" id="name" name="name" required>
-                    </div>
-                    
-                    <div class="form-group">
-                        <label for="email">e-mail *</label>
-                        <input type="email" id="email" name="email" required>
-                    </div>
-                    
-                    <div class="form-group">
-                        <label for="phone">telefon</label>
-                        <input type="tel" id="phone" name="phone">
-                    </div>
-                    
-                    <div class="form-group">
-                        <label for="date">datum *</label>
-                        <select id="date" name="date" required>
-                            <option value="">datum wählen</option>
-                        </select>
-                    </div>
-                    
-                    <div class="form-group">
-                        <label for="time">uhrzeit *</label>
-                        <select id="time" name="time" required>
-                            <option value="09:00-11:00">09:00–11:00 uhr</option>
-                            <option value="09:30-11:30">09:30–11:30 uhr</option>
-                            <option value="10:00-12:00">10:00–12:00 uhr</option>
-                            <option value="10:30-12:30">10:30–12:30 uhr</option>
-                            <option value="11:00-13:00">11:00–13:00 uhr</option>
-                            <option value="11:30-13:30">11:30–13:30 uhr</option>
-                            <option value="12:00-14:00">12:00–14:00 uhr</option>
-                        </select>
-                    </div>
-                    
-                    <div class="form-group">
-                        <label for="guests">personen *</label>
-                        <select id="guests" name="guests" required>
-                            <option value="">anzahl wählen</option>
-                            <option value="1">1 person</option>
-                            <option value="2">2 personen</option>
-                            <option value="3">3 personen</option>
-                            <option value="4">4 personen</option>
-                            <option value="5">5 personen</option>
-                            <option value="6">6 personen</option>
-                            <option value="7+">7+ personen</option>
-                        </select>
-                    </div>
-                </div>
-                
-                <div class="form-group form-full">
-                    <label for="message">besondere wünsche</label>
-                    <textarea id="message" name="message" rows="3" placeholder="allergien, unverträglichkeiten oder besondere anlässe..."></textarea>
-                </div>
-                
-                <button type="submit" class="btn-luxury btn-submit">
-                    <i class="fas fa-calendar-check"></i>
-                    reservierung absenden
-                </button>
+            <div class="reservation-headline">
+                <h2 class="section-title">tisch reservieren</h2>
+                <p class="section-subtitle">wählen sie ihr datum, die passende zeit und senden sie uns ihre details – wir bestätigen innerhalb weniger minuten.</p>
+                <div class="reservation-hint" id="reservation-hint" aria-live="polite"></div>
+            </div>
 
-                <div class="form-status hidden" role="status" aria-live="polite"></div>
-            </form>
+            <div class="reservation-wizard" aria-live="polite">
+                <div class="step" id="step-date">
+                    <div class="step-header">
+                        <span class="step-number">1</span>
+                        <div>
+                            <h3>datum wählen</h3>
+                            <p>wählen sie ihren wunschtag. nicht verfügbare tage sind deaktiviert.</p>
+                        </div>
+                    </div>
+                    <div class="step-content">
+                        <label for="reservation-date" class="sr-only">Datum auswählen</label>
+                        <input type="date" id="reservation-date" min="" max="" aria-describedby="date-availability-info">
+                        <div id="date-availability-info" class="step-info" role="status"></div>
+                    </div>
+                </div>
+
+                <div class="step" id="step-time" hidden>
+                    <div class="step-header">
+                        <span class="step-number">2</span>
+                        <div>
+                            <h3>verfügbare zeiten</h3>
+                            <p>wählen sie einen slot, um zur detailangabe zu gelangen.</p>
+                        </div>
+                    </div>
+                    <div class="step-content">
+                        <div id="time-slots" class="time-slots-grid" role="radiogroup" aria-label="Verfügbare Reservierungszeiten"></div>
+                        <button type="button" class="btn-link" id="change-date">anderes datum wählen</button>
+                    </div>
+                </div>
+
+                <div class="step" id="step-details" hidden>
+                    <div class="step-header">
+                        <span class="step-number">3</span>
+                        <div>
+                            <h3>ihre details</h3>
+                            <p>geben sie die wichtigsten informationen für ihre reservierung an.</p>
+                        </div>
+                    </div>
+                    <div class="step-content">
+                        <form id="reservation-form" novalidate>
+                            <div class="form-grid">
+                                <div class="form-group">
+                                    <label for="reservation-guests">anzahl personen *</label>
+                                    <input type="number" id="reservation-guests" name="guests" min="1" max="10" required>
+                                </div>
+                                <div class="form-group">
+                                    <label for="reservation-name">name *</label>
+                                    <input type="text" id="reservation-name" name="name" autocomplete="name" required>
+                                </div>
+                                <div class="form-group">
+                                    <label for="reservation-email">e-mail *</label>
+                                    <input type="email" id="reservation-email" name="email" autocomplete="email" required>
+                                </div>
+                                <div class="form-group">
+                                    <label for="reservation-phone">telefon *</label>
+                                    <input type="tel" id="reservation-phone" name="phone" autocomplete="tel" required>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label for="reservation-notes">besondere wünsche (optional)</label>
+                                <textarea id="reservation-notes" name="notes" rows="3" placeholder="allergien, anmerkungen oder feierliche anlässe"></textarea>
+                            </div>
+                            <label class="consent-checkbox">
+                                <input type="checkbox" id="reservation-privacy" required>
+                                <span>ich akzeptiere die <a href="/datenschutz.html" target="_blank" rel="noopener">datenschutzbestimmungen</a>.</span>
+                            </label>
+                            <div class="form-actions">
+                                <button type="button" class="btn-secondary" id="back-to-time">zurück</button>
+                                <button type="submit" class="btn-primary">reservierung abschließen</button>
+                            </div>
+                            <div class="form-status" id="form-status" role="status" aria-live="polite"></div>
+                        </form>
+                    </div>
+                </div>
+
+                <div class="step" id="step-confirmation" hidden>
+                    <div class="confirmation-message" role="status" aria-live="polite"></div>
+                    <button type="button" class="btn-primary" id="book-another">weitere reservierung</button>
+                </div>
+            </div>
         </div>
     </section>
 
@@ -400,6 +417,7 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
     <script src="cms-loader-premium.js"></script>
     <script src="app-premium.js"></script>
+    <script src="reservation-handler.js"></script>
     
 </body>
 </html>

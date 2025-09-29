@@ -169,3 +169,158 @@ collections:
               - {label: "Instagram", name: "instagram", widget: "string", required: false}
               - {label: "Facebook", name: "facebook", widget: "string", required: false}
               - {label: "Pinterest", name: "pinterest", widget: "string", required: false}
+
+  - name: "reservierung-settings"
+    label: "Reservierungs-Einstellungen"
+    label_singular: "Reservierungs-Einstellung"
+    description: "Steuern Sie Zeitslots, Kapazitäten und Regeln für die Tischreservierung"
+    folder: "content/reservierung"
+    create: true
+    format: "json"
+    slug: "{{slug}}"
+    preview_path: "/#reservierung"
+    fields:
+      - label: "Titel"
+        name: "title"
+        widget: "string"
+        default: "Standard Einstellungen"
+      - label: "Maximale Vorausbuchung (Tage)"
+        name: "max_days_in_advance"
+        widget: "number"
+        default: 60
+        hint: "Wie viele Tage im Voraus Reservierungen möglich sind"
+      - label: "Minimale Vorlaufzeit (Stunden)"
+        name: "min_notice_hours"
+        widget: "number"
+        default: 2
+        hint: "Reservierungen müssen mindestens so viele Stunden im Voraus erfolgen"
+      - label: "Max. Gäste pro Reservierung"
+        name: "max_guests_per_reservation"
+        widget: "number"
+        default: 8
+      - label: "Warteliste aktivieren"
+        name: "waitlist_enabled"
+        widget: "boolean"
+        default: true
+      - label: "Standard Kontakt E-Mail"
+        name: "default_notification_email"
+        widget: "string"
+        required: false
+        hint: "Falls gesetzt, erhalten Gäste Bestätigungen von dieser Adresse"
+      - label: "Öffnungszeiten"
+        name: "opening_hours"
+        widget: "object"
+        fields:
+          - label: "Montag"
+            name: "monday"
+            widget: "object"
+            fields:
+              - {label: "Geöffnet", name: "open", widget: "boolean", default: false}
+              - {label: "Von", name: "from", widget: "datetime", format: "HH:mm", dateFormat: false, timeFormat: "HH:mm", required: false}
+              - {label: "Bis", name: "to", widget: "datetime", format: "HH:mm", dateFormat: false, timeFormat: "HH:mm", required: false}
+              - label: "Zeitslots"
+                name: "slots"
+                widget: "list"
+                field: {label: "Zeit", name: "time", widget: "string", pattern: ["^([0-1]?[0-9]|2[0-3]):[0-5][0-9]$", "Format: HH:MM"]}
+              - {label: "Max. Gäste pro Slot", name: "max_guests", widget: "number", default: 20}
+          - label: "Dienstag"
+            name: "tuesday"
+            widget: "object"
+            fields:
+              - {label: "Geöffnet", name: "open", widget: "boolean", default: true}
+              - {label: "Von", name: "from", widget: "datetime", format: "HH:mm", dateFormat: false, timeFormat: "HH:mm"}
+              - {label: "Bis", name: "to", widget: "datetime", format: "HH:mm", dateFormat: false, timeFormat: "HH:mm"}
+              - label: "Zeitslots"
+                name: "slots"
+                widget: "list"
+                field: {label: "Zeit", name: "time", widget: "string", pattern: ["^([0-1]?[0-9]|2[0-3]):[0-5][0-9]$", "Format: HH:MM"]}
+              - {label: "Max. Gäste pro Slot", name: "max_guests", widget: "number", default: 20}
+          - label: "Mittwoch"
+            name: "wednesday"
+            widget: "object"
+            fields:
+              - {label: "Geöffnet", name: "open", widget: "boolean", default: true}
+              - {label: "Von", name: "from", widget: "datetime", format: "HH:mm", dateFormat: false, timeFormat: "HH:mm"}
+              - {label: "Bis", name: "to", widget: "datetime", format: "HH:mm", dateFormat: false, timeFormat: "HH:mm"}
+              - label: "Zeitslots"
+                name: "slots"
+                widget: "list"
+                field: {label: "Zeit", name: "time", widget: "string", pattern: ["^([0-1]?[0-9]|2[0-3]):[0-5][0-9]$", "Format: HH:MM"]}
+              - {label: "Max. Gäste pro Slot", name: "max_guests", widget: "number", default: 20}
+          - label: "Donnerstag"
+            name: "thursday"
+            widget: "object"
+            fields:
+              - {label: "Geöffnet", name: "open", widget: "boolean", default: true}
+              - {label: "Von", name: "from", widget: "datetime", format: "HH:mm", dateFormat: false, timeFormat: "HH:mm"}
+              - {label: "Bis", name: "to", widget: "datetime", format: "HH:mm", dateFormat: false, timeFormat: "HH:mm"}
+              - label: "Zeitslots"
+                name: "slots"
+                widget: "list"
+                field: {label: "Zeit", name: "time", widget: "string", pattern: ["^([0-1]?[0-9]|2[0-3]):[0-5][0-9]$", "Format: HH:MM"]}
+              - {label: "Max. Gäste pro Slot", name: "max_guests", widget: "number", default: 20}
+          - label: "Freitag"
+            name: "friday"
+            widget: "object"
+            fields:
+              - {label: "Geöffnet", name: "open", widget: "boolean", default: true}
+              - {label: "Von", name: "from", widget: "datetime", format: "HH:mm", dateFormat: false, timeFormat: "HH:mm"}
+              - {label: "Bis", name: "to", widget: "datetime", format: "HH:mm", dateFormat: false, timeFormat: "HH:mm"}
+              - label: "Zeitslots"
+                name: "slots"
+                widget: "list"
+                field: {label: "Zeit", name: "time", widget: "string", pattern: ["^([0-1]?[0-9]|2[0-3]):[0-5][0-9]$", "Format: HH:MM"]}
+              - {label: "Max. Gäste pro Slot", name: "max_guests", widget: "number", default: 20}
+          - label: "Samstag"
+            name: "saturday"
+            widget: "object"
+            fields:
+              - {label: "Geöffnet", name: "open", widget: "boolean", default: true}
+              - {label: "Von", name: "from", widget: "datetime", format: "HH:mm", dateFormat: false, timeFormat: "HH:mm"}
+              - {label: "Bis", name: "to", widget: "datetime", format: "HH:mm", dateFormat: false, timeFormat: "HH:mm"}
+              - label: "Zeitslots"
+                name: "slots"
+                widget: "list"
+                field: {label: "Zeit", name: "time", widget: "string", pattern: ["^([0-1]?[0-9]|2[0-3]):[0-5][0-9]$", "Format: HH:MM"]}
+              - {label: "Max. Gäste pro Slot", name: "max_guests", widget: "number", default: 24}
+          - label: "Sonntag"
+            name: "sunday"
+            widget: "object"
+            fields:
+              - {label: "Geöffnet", name: "open", widget: "boolean", default: true}
+              - {label: "Von", name: "from", widget: "datetime", format: "HH:mm", dateFormat: false, timeFormat: "HH:mm"}
+              - {label: "Bis", name: "to", widget: "datetime", format: "HH:mm", dateFormat: false, timeFormat: "HH:mm"}
+              - label: "Zeitslots"
+                name: "slots"
+                widget: "list"
+                field: {label: "Zeit", name: "time", widget: "string", pattern: ["^([0-1]?[0-9]|2[0-3]):[0-5][0-9]$", "Format: HH:MM"]}
+              - {label: "Max. Gäste pro Slot", name: "max_guests", widget: "number", default: 24}
+      - label: "Blackout-Daten"
+        name: "blackout_dates"
+        widget: "list"
+        required: false
+        field: {label: "Datum", name: "date", widget: "datetime", format: "YYYY-MM-DD", dateFormat: "YYYY-MM-DD", timeFormat: false}
+      - label: "Hinweise für Gäste"
+        name: "guest_notes"
+        widget: "text"
+        required: false
+
+  - name: "special-dates"
+    label: "Spezielle Daten"
+    label_singular: "Spezialtag"
+    folder: "content/special-dates"
+    create: true
+    format: "json"
+    slug: "{{date}}"
+    fields:
+      - {label: "Datum", name: "date", widget: "datetime", format: "YYYY-MM-DD", dateFormat: "YYYY-MM-DD", timeFormat: false}
+      - {label: "Status", name: "status", widget: "select", options: ["geschlossen", "special_hours"]}
+      - label: "Spezielle Zeitslots"
+        name: "special_slots"
+        widget: "list"
+        required: false
+        summary: "{{fields.time}} ({{fields.max_guests}} Gäste)"
+        fields:
+          - {label: "Zeit", name: "time", widget: "string", pattern: ["^([0-1]?[0-9]|2[0-3]):[0-5][0-9]$", "Format: HH:MM"]}
+          - {label: "Max. Gäste", name: "max_guests", widget: "number", default: 20}
+      - {label: "Notiz", name: "note", widget: "string", required: false}
