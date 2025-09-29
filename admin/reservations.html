@@ -1,0 +1,395 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Healthy Brunch Club – Reservierungsverwaltung</title>
+  <link rel="stylesheet" href="../mystyle-premium.css">
+  <style>
+    body {
+      background: #f6f1eb;
+      font-family: 'Montserrat', sans-serif;
+      color: #3f2a1f;
+      padding: 2rem;
+    }
+
+    .admin-panel {
+      max-width: 960px;
+      margin: 0 auto;
+      background: #fff;
+      border-radius: 24px;
+      padding: 2rem 2.5rem;
+      box-shadow: 0 24px 70px rgba(60, 40, 30, 0.12);
+    }
+
+    .admin-panel h1 {
+      text-transform: uppercase;
+      letter-spacing: 0.22em;
+      font-size: 1.2rem;
+      margin-bottom: 0.5rem;
+    }
+
+    .admin-panel p {
+      margin-top: 0;
+      color: #6c5242;
+    }
+
+    .control-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 1rem;
+      align-items: flex-end;
+      margin-bottom: 1.5rem;
+    }
+
+    .control-row label {
+      display: block;
+      text-transform: uppercase;
+      letter-spacing: 0.14em;
+      font-size: 0.75rem;
+      margin-bottom: 0.5rem;
+    }
+
+    .control-row input,
+    .control-row button {
+      padding: 0.7rem 1rem;
+      border-radius: 12px;
+      border: 1px solid rgba(210, 180, 160, 0.6);
+      font-size: 0.95rem;
+    }
+
+    .control-row button {
+      border: none;
+      background: linear-gradient(120deg, #f7b58d, #e46d8c);
+      color: #fff;
+      cursor: pointer;
+      transition: transform 0.2s ease;
+    }
+
+    .control-row button:hover {
+      transform: translateY(-1px);
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 1.5rem;
+    }
+
+    th, td {
+      padding: 0.85rem 0.75rem;
+      border-bottom: 1px solid rgba(210, 180, 160, 0.35);
+      font-size: 0.9rem;
+    }
+
+    th {
+      text-transform: uppercase;
+      letter-spacing: 0.12em;
+      font-size: 0.75rem;
+      color: #8b6a58;
+    }
+
+    tbody tr:hover {
+      background: rgba(247, 235, 226, 0.6);
+    }
+
+    .status-tag {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4rem;
+      padding: 0.35rem 0.7rem;
+      border-radius: 999px;
+      font-size: 0.75rem;
+      text-transform: uppercase;
+      letter-spacing: 0.12em;
+    }
+
+    .status-confirmed {
+      background: rgba(87, 171, 103, 0.18);
+      color: #2f8f74;
+    }
+
+    .status-waitlist {
+      background: rgba(244, 201, 112, 0.18);
+      color: #c58532;
+    }
+
+    .status-cancelled {
+      background: rgba(226, 108, 140, 0.18);
+      color: #d1495b;
+    }
+
+    .actions {
+      display: flex;
+      gap: 0.5rem;
+    }
+
+    .actions button {
+      border: none;
+      border-radius: 10px;
+      padding: 0.35rem 0.6rem;
+      font-size: 0.8rem;
+      cursor: pointer;
+      background: #f1e5dd;
+      color: #6c5242;
+    }
+
+    .actions button:hover {
+      background: #e7d6cb;
+    }
+
+    .status-bar {
+      margin-top: 1rem;
+      font-size: 0.9rem;
+      color: #6c5242;
+    }
+
+    @media (max-width: 768px) {
+      body {
+        padding: 1.5rem 0.75rem;
+      }
+
+      .control-row {
+        flex-direction: column;
+        align-items: stretch;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="admin-panel">
+    <h1>reservierungen</h1>
+    <p>Überblick über alle Buchungen. Zum Laden benötigen Sie das Admin-Token.</p>
+
+    <div class="control-row">
+      <div>
+        <label for="admin-date">Datum</label>
+        <input type="date" id="admin-date">
+      </div>
+      <div>
+        <label for="admin-token">Admin Token</label>
+        <input type="password" id="admin-token" placeholder="Token eingeben">
+      </div>
+      <div>
+        <button id="load-reservations" type="button">Reservierungen laden</button>
+      </div>
+      <div>
+        <button id="export-reservations" type="button">CSV Export</button>
+      </div>
+    </div>
+
+    <div class="status-bar" id="admin-status" aria-live="polite"></div>
+
+    <table aria-live="polite">
+      <thead>
+        <tr>
+          <th>Zeit</th>
+          <th>Name</th>
+          <th>Personen</th>
+          <th>Kontakt</th>
+          <th>Status</th>
+          <th>Notizen</th>
+          <th>Aktionen</th>
+        </tr>
+      </thead>
+      <tbody id="reservations-body">
+        <tr>
+          <td colspan="7" style="text-align:center; padding:1.5rem;">Bitte Datum auswählen und laden.</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <script>
+    const API_BASE = '/.netlify/functions/manage-reservations';
+    const dateField = document.getElementById('admin-date');
+    const tokenField = document.getElementById('admin-token');
+    const statusBar = document.getElementById('admin-status');
+    const tableBody = document.getElementById('reservations-body');
+    const loadButton = document.getElementById('load-reservations');
+    const exportButton = document.getElementById('export-reservations');
+
+    function setStatus(message, tone = 'info') {
+      statusBar.textContent = message || '';
+      statusBar.style.color = tone === 'error' ? '#c04545' : '#6c5242';
+    }
+
+    function rememberToken(token) {
+      if (token) {
+        localStorage.setItem('hbc-admin-token', token);
+      }
+    }
+
+    function restoreToken() {
+      const stored = localStorage.getItem('hbc-admin-token');
+      if (stored) {
+        tokenField.value = stored;
+      }
+    }
+
+    function formatContact(reservation) {
+      const parts = [];
+      if (reservation.email) {
+        parts.push(`<a href="mailto:${reservation.email}">${reservation.email}</a>`);
+      }
+      if (reservation.phone) {
+        parts.push(`<a href="tel:${reservation.phone}">${reservation.phone}</a>`);
+      }
+      return parts.join('<br>');
+    }
+
+    function statusClass(status) {
+      switch (status) {
+        case 'waitlist':
+          return 'status-tag status-waitlist';
+        case 'cancelled':
+          return 'status-tag status-cancelled';
+        default:
+          return 'status-tag status-confirmed';
+      }
+    }
+
+    function renderRows(reservations) {
+      if (!reservations || reservations.length === 0) {
+        tableBody.innerHTML = '<tr><td colspan="7" style="text-align:center; padding:1.5rem;">Keine Reservierungen gefunden.</td></tr>';
+        return;
+      }
+
+      const rows = reservations
+        .sort((a, b) => a.time.localeCompare(b.time))
+        .map((reservation) => `
+          <tr data-id="${reservation.id}">
+            <td>${reservation.time}</td>
+            <td>${reservation.name}</td>
+            <td>${reservation.guests}</td>
+            <td>${formatContact(reservation)}</td>
+            <td><span class="${statusClass(reservation.status)}">${reservation.status}</span></td>
+            <td>${reservation.notes || ''}</td>
+            <td class="actions">
+              <button data-action="cancel">stornieren</button>
+            </td>
+          </tr>
+        `)
+        .join('');
+
+      tableBody.innerHTML = rows;
+    }
+
+    async function fetchReservations(date, token, options = {}) {
+      const params = new URLSearchParams({ date });
+      if (options.includeAvailability) {
+        params.set('includeAvailability', 'true');
+      }
+
+      const response = await fetch(`${API_BASE}?${params.toString()}`, {
+        headers: { Authorization: `Bearer ${token}` }
+      });
+
+      if (!response.ok) {
+        const message = await response.text();
+        throw new Error(message || 'Fehler beim Laden der Reservierungen');
+      }
+
+      return response.json();
+    }
+
+    async function deleteReservation(date, token, id) {
+      const params = new URLSearchParams({ date, id, action: 'delete' });
+      const response = await fetch(`${API_BASE}?${params.toString()}`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${token}` }
+      });
+
+      if (!response.ok) {
+        const message = await response.text();
+        throw new Error(message || 'Löschen fehlgeschlagen');
+      }
+
+      return response.json();
+    }
+
+    async function exportReservations(date, token) {
+      const params = new URLSearchParams({ date, format: 'csv' });
+      const response = await fetch(`${API_BASE}?${params.toString()}`, {
+        headers: { Authorization: `Bearer ${token}` }
+      });
+      if (!response.ok) {
+        const message = await response.text();
+        throw new Error(message || 'Export fehlgeschlagen');
+      }
+      const blob = await response.blob();
+      const link = document.createElement('a');
+      link.href = URL.createObjectURL(blob);
+      link.download = `reservierungen-${date}.csv`;
+      document.body.appendChild(link);
+      link.click();
+      link.remove();
+    }
+
+    loadButton.addEventListener('click', async () => {
+      const date = dateField.value;
+      const token = tokenField.value;
+      if (!date || !token) {
+        setStatus('Bitte Datum und Token angeben.', 'error');
+        return;
+      }
+      setStatus('Lade Reservierungen …');
+      rememberToken(token);
+      try {
+        const data = await fetchReservations(date, token, { includeAvailability: true });
+        renderRows(data.reservations);
+        setStatus(`Gefundene Reservierungen: ${data.reservations.length}`);
+      } catch (error) {
+        console.error(error);
+        setStatus('Fehler beim Laden: ' + error.message, 'error');
+      }
+    });
+
+    exportButton.addEventListener('click', async () => {
+      const date = dateField.value;
+      const token = tokenField.value;
+      if (!date || !token) {
+        setStatus('Bitte Datum und Token angeben.', 'error');
+        return;
+      }
+      setStatus('Erstelle Export …');
+      try {
+        await exportReservations(date, token);
+        setStatus('CSV Export erstellt.');
+      } catch (error) {
+        console.error(error);
+        setStatus('Export fehlgeschlagen: ' + error.message, 'error');
+      }
+    });
+
+    tableBody.addEventListener('click', async (event) => {
+      const button = event.target.closest('button[data-action="cancel"]');
+      if (!button) return;
+      const row = button.closest('tr');
+      const id = row?.dataset.id;
+      const date = dateField.value;
+      const token = tokenField.value;
+      if (!id || !date || !token) {
+        setStatus('Es fehlen Informationen zum Stornieren.', 'error');
+        return;
+      }
+
+      if (!confirm('Reservierung wirklich stornieren?')) {
+        return;
+      }
+
+      try {
+        await deleteReservation(date, token, id);
+        row.remove();
+        setStatus('Reservierung wurde gelöscht.');
+      } catch (error) {
+        console.error(error);
+        setStatus('Stornierung fehlgeschlagen: ' + error.message, 'error');
+      }
+    });
+
+    restoreToken();
+    dateField.value = new Date().toISOString().split('T')[0];
+  </script>
+</body>
+</html>

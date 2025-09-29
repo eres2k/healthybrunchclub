@@ -1,0 +1,135 @@
+{
+  "title": "Standard Einstellungen",
+  "max_days_in_advance": 60,
+  "min_notice_hours": 2,
+  "max_guests_per_reservation": 8,
+  "waitlist_enabled": true,
+  "default_notification_email": "hello@healthybrunchclub.at",
+  "opening_hours": {
+    "monday": {
+      "open": false,
+      "from": "09:00",
+      "to": "15:00",
+      "slots": [
+        { "time": "09:00" },
+        { "time": "09:30" },
+        { "time": "10:00" },
+        { "time": "10:30" },
+        { "time": "11:00" },
+        { "time": "11:30" },
+        { "time": "12:00" }
+      ],
+      "max_guests": 18
+    },
+    "tuesday": {
+      "open": true,
+      "from": "09:00",
+      "to": "15:00",
+      "slots": [
+        { "time": "09:00" },
+        { "time": "09:30" },
+        { "time": "10:00" },
+        { "time": "10:30" },
+        { "time": "11:00" },
+        { "time": "11:30" },
+        { "time": "12:00" },
+        { "time": "12:30" },
+        { "time": "13:00" }
+      ],
+      "max_guests": 20
+    },
+    "wednesday": {
+      "open": true,
+      "from": "09:00",
+      "to": "15:00",
+      "slots": [
+        { "time": "09:00" },
+        { "time": "09:30" },
+        { "time": "10:00" },
+        { "time": "10:30" },
+        { "time": "11:00" },
+        { "time": "11:30" },
+        { "time": "12:00" },
+        { "time": "12:30" },
+        { "time": "13:00" }
+      ],
+      "max_guests": 20
+    },
+    "thursday": {
+      "open": true,
+      "from": "09:00",
+      "to": "15:00",
+      "slots": [
+        { "time": "09:00" },
+        { "time": "09:30" },
+        { "time": "10:00" },
+        { "time": "10:30" },
+        { "time": "11:00" },
+        { "time": "11:30" },
+        { "time": "12:00" },
+        { "time": "12:30" },
+        { "time": "13:00" }
+      ],
+      "max_guests": 20
+    },
+    "friday": {
+      "open": true,
+      "from": "09:00",
+      "to": "16:00",
+      "slots": [
+        { "time": "09:00" },
+        { "time": "09:30" },
+        { "time": "10:00" },
+        { "time": "10:30" },
+        { "time": "11:00" },
+        { "time": "11:30" },
+        { "time": "12:00" },
+        { "time": "12:30" },
+        { "time": "13:00" },
+        { "time": "13:30" },
+        { "time": "14:00" }
+      ],
+      "max_guests": 24
+    },
+    "saturday": {
+      "open": true,
+      "from": "08:30",
+      "to": "16:00",
+      "slots": [
+        { "time": "08:30" },
+        { "time": "09:00" },
+        { "time": "09:30" },
+        { "time": "10:00" },
+        { "time": "10:30" },
+        { "time": "11:00" },
+        { "time": "11:30" },
+        { "time": "12:00" },
+        { "time": "12:30" },
+        { "time": "13:00" },
+        { "time": "13:30" }
+      ],
+      "max_guests": 26
+    },
+    "sunday": {
+      "open": true,
+      "from": "08:30",
+      "to": "16:00",
+      "slots": [
+        { "time": "08:30" },
+        { "time": "09:00" },
+        { "time": "09:30" },
+        { "time": "10:00" },
+        { "time": "10:30" },
+        { "time": "11:00" },
+        { "time": "11:30" },
+        { "time": "12:00" },
+        { "time": "12:30" },
+        { "time": "13:00" },
+        { "time": "13:30" }
+      ],
+      "max_guests": 26
+    }
+  },
+  "blackout_dates": [],
+  "guest_notes": "Wir bemühen uns, alle Wünsche zu erfüllen. Bitte geben Sie Allergien im Kommentarfeld an."
+}
