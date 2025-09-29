@@ -1,0 +1,366 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Reservierungsverwaltung | Healthy Brunch Club</title>
+  <style>
+    :root {
+      color-scheme: light;
+      font-family: 'Segoe UI', -apple-system, BlinkMacSystemFont, 'Helvetica Neue', Arial, sans-serif;
+      background: #f8f5f1;
+      color: #2f2620;
+    }
+    body {
+      margin: 0;
+      padding: 2rem;
+      background: radial-gradient(circle at top left, rgba(226,108,139,0.12), transparent 45%),
+                  radial-gradient(circle at bottom right, rgba(201,169,97,0.12), transparent 55%),
+                  #f8f5f1;
+    }
+    .admin-container {
+      max-width: 1100px;
+      margin: 0 auto;
+      background: rgba(255,255,255,0.94);
+      border-radius: 24px;
+      padding: 2.5rem;
+      box-shadow: 0 40px 80px rgba(51, 38, 29, 0.14);
+      border: 1px solid rgba(201,169,97,0.25);
+    }
+    h1 {
+      text-transform: uppercase;
+      letter-spacing: 0.35em;
+      font-size: 1.1rem;
+      margin-bottom: 1.25rem;
+    }
+    p.subtitle {
+      margin-top: 0;
+      margin-bottom: 2rem;
+      color: #6d5647;
+    }
+    .controls {
+      display: grid;
+      gap: 1.5rem;
+      grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+      margin-bottom: 2rem;
+    }
+    .control {
+      display: flex;
+      flex-direction: column;
+      gap: 0.5rem;
+    }
+    label {
+      font-size: 0.8rem;
+      letter-spacing: 0.25em;
+      text-transform: uppercase;
+      color: #a47d66;
+      font-weight: 600;
+    }
+    input, button, select {
+      padding: 0.8rem 1rem;
+      border-radius: 12px;
+      border: 1px solid rgba(171,142,120,0.4);
+      font-size: 1rem;
+    }
+    button {
+      cursor: pointer;
+      background: linear-gradient(135deg, #f5c19c, #e26c8b);
+      border: none;
+      color: #fff;
+      font-weight: 600;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      transition: transform 0.2s ease, box-shadow 0.2s ease;
+    }
+    button.secondary {
+      background: #fff;
+      color: #a47d66;
+      border: 1px solid rgba(164,125,102,0.35);
+    }
+    button:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 18px 40px rgba(226,108,139,0.25);
+    }
+    .status {
+      margin-bottom: 1.5rem;
+      color: #6d5647;
+      min-height: 1.2rem;
+    }
+    .status.error {
+      color: #c76b7f;
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      background: rgba(255,255,255,0.92);
+      border-radius: 18px;
+      overflow: hidden;
+      box-shadow: 0 20px 45px rgba(51,38,29,0.1);
+    }
+    th, td {
+      padding: 0.9rem 1.2rem;
+      border-bottom: 1px solid rgba(201,169,97,0.2);
+      text-align: left;
+    }
+    th {
+      text-transform: uppercase;
+      letter-spacing: 0.18em;
+      font-size: 0.8rem;
+      color: #a47d66;
+    }
+    tbody tr:hover {
+      background: rgba(245,225,209,0.35);
+    }
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      padding: 0.25rem 0.65rem;
+      border-radius: 999px;
+      font-size: 0.75rem;
+      text-transform: uppercase;
+      letter-spacing: 0.12em;
+    }
+    .badge.confirmed {
+      background: rgba(52,125,98,0.15);
+      color: #357d62;
+    }
+    .badge.waitlist {
+      background: rgba(226,108,139,0.15);
+      color: #c76b7f;
+    }
+    .badge.cancelled {
+      background: rgba(128, 128, 128, 0.2);
+      color: #555;
+    }
+    .table-empty {
+      text-align: center;
+      padding: 2rem;
+      color: #7a6150;
+    }
+    .actions {
+      display: flex;
+      gap: 0.75rem;
+      flex-wrap: wrap;
+      margin-bottom: 1.5rem;
+    }
+    @media (max-width: 768px) {
+      body {
+        padding: 1rem;
+      }
+      .admin-container {
+        padding: 1.5rem;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="admin-container">
+    <h1>Healthy Brunch Club · Reservations</h1>
+    <p class="subtitle">Verwalten Sie Reservierungen, Wartelisten und Kapazitäten direkt aus dem Netlify Backend.</p>
+
+    <div class="controls">
+      <div class="control">
+        <label for="admin-token">Admin Token</label>
+        <input type="password" id="admin-token" placeholder="RESERVATION_ADMIN_TOKEN">
+      </div>
+      <div class="control">
+        <label for="reservation-date">Datum</label>
+        <input type="date" id="reservation-date">
+      </div>
+      <div class="control">
+        <label for="view-mode">Ansicht</label>
+        <select id="view-mode">
+          <option value="reservations">Reservierungen</option>
+          <option value="availability">Kapazitäten</option>
+        </select>
+      </div>
+    </div>
+
+    <div class="actions">
+      <button id="load-btn">Aktualisieren</button>
+      <button class="secondary" id="export-btn">CSV Export</button>
+      <button class="secondary" id="save-token-btn">Token merken</button>
+      <button class="secondary" id="clear-token-btn">Token löschen</button>
+    </div>
+
+    <div class="status" id="status"></div>
+
+    <div id="table-container"></div>
+  </div>
+
+  <script>
+    const statusEl = document.getElementById('status');
+    const tableContainer = document.getElementById('table-container');
+    const tokenInput = document.getElementById('admin-token');
+    const dateInput = document.getElementById('reservation-date');
+    const viewSelect = document.getElementById('view-mode');
+
+    function setStatus(message, isError = false) {
+      statusEl.textContent = message || '';
+      statusEl.classList.toggle('error', Boolean(isError));
+    }
+
+    function getToken() {
+      return tokenInput.value || localStorage.getItem('hbc-admin-token') || '';
+    }
+
+    function saveToken() {
+      localStorage.setItem('hbc-admin-token', tokenInput.value);
+      setStatus('Token gespeichert.');
+    }
+
+    function clearToken() {
+      localStorage.removeItem('hbc-admin-token');
+      tokenInput.value = '';
+      setStatus('Token entfernt.');
+    }
+
+    async function fetchReservations() {
+      const date = dateInput.value;
+      const token = getToken();
+      const params = new URLSearchParams();
+      if (date) params.append('date', date);
+      if (viewSelect.value === 'availability') params.append('mode', 'availability');
+
+      const response = await fetch(`/.netlify/functions/manage-reservations?${params.toString()}`, {
+        headers: token ? { 'x-admin-token': token } : {}
+      });
+
+      if (!response.ok) {
+        const data = await response.json().catch(() => ({ message: 'Unbekannter Fehler' }));
+        throw new Error(data.message || 'Fehler beim Laden der Reservierungen.');
+      }
+
+      return response.json();
+    }
+
+    function renderReservations(reservations) {
+      if (!reservations || reservations.length === 0) {
+        tableContainer.innerHTML = '<div class="table-empty">Keine Reservierungen gefunden.</div>';
+        return;
+      }
+
+      const rows = reservations.map(reservation => `
+        <tr>
+          <td>${reservation.date || ''}</td>
+          <td>${reservation.time || ''}</td>
+          <td>${reservation.name || ''}</td>
+          <td>${reservation.email || ''}</td>
+          <td>${reservation.phone || ''}</td>
+          <td>${reservation.guests || ''}</td>
+          <td><span class="badge ${reservation.status}">${reservation.status}</span></td>
+          <td>${reservation.confirmationCode || ''}</td>
+          <td>${reservation.message ? reservation.message.replace(/\n/g, '<br>') : ''}</td>
+        </tr>
+      `).join('');
+
+      tableContainer.innerHTML = `
+        <table>
+          <thead>
+            <tr>
+              <th>Datum</th>
+              <th>Zeit</th>
+              <th>Gast</th>
+              <th>E-Mail</th>
+              <th>Telefon</th>
+              <th>Personen</th>
+              <th>Status</th>
+              <th>Code</th>
+              <th>Notiz</th>
+            </tr>
+          </thead>
+          <tbody>${rows}</tbody>
+        </table>
+      `;
+    }
+
+    function renderAvailability(data) {
+      const availability = data.availability || [];
+      if (availability.length === 0) {
+        tableContainer.innerHTML = '<div class="table-empty">Keine Slots vorhanden.</div>';
+        return;
+      }
+
+      const rows = availability.map(slot => `
+        <tr>
+          <td>${slot.time}</td>
+          <td>${slot.maxGuests}</td>
+          <td>${slot.reservedGuests}</td>
+          <td>${slot.availableGuests}</td>
+          <td>${slot.isFull ? 'Ja' : 'Nein'}</td>
+        </tr>
+      `).join('');
+
+      tableContainer.innerHTML = `
+        <table>
+          <thead>
+            <tr>
+              <th>Slot</th>
+              <th>Kapazität</th>
+              <th>Gebucht</th>
+              <th>Verfügbar</th>
+              <th>Ausgebucht</th>
+            </tr>
+          </thead>
+          <tbody>${rows}</tbody>
+        </table>
+      `;
+    }
+
+    async function loadData() {
+      try {
+        setStatus('Lade Daten…');
+        const data = await fetchReservations();
+        if (viewSelect.value === 'availability') {
+          renderAvailability(data);
+        } else {
+          renderReservations(data.reservations);
+        }
+        setStatus('');
+      } catch (error) {
+        console.error(error);
+        setStatus(error.message, true);
+        tableContainer.innerHTML = '';
+      }
+    }
+
+    async function exportCsv() {
+      const date = dateInput.value;
+      const token = getToken();
+      const params = new URLSearchParams({ format: 'csv' });
+      if (date) params.append('date', date);
+
+      const response = await fetch(`/.netlify/functions/manage-reservations?${params.toString()}`, {
+        headers: token ? { 'x-admin-token': token } : {}
+      });
+
+      if (!response.ok) {
+        const data = await response.json().catch(() => ({ message: 'Export fehlgeschlagen.' }));
+        throw new Error(data.message || 'Export fehlgeschlagen.');
+      }
+
+      const blob = await response.blob();
+      const url = URL.createObjectURL(blob);
+      const link = document.createElement('a');
+      link.href = url;
+      link.download = `reservations-${date || 'all'}.csv`;
+      document.body.appendChild(link);
+      link.click();
+      link.remove();
+      URL.revokeObjectURL(url);
+      setStatus('CSV exportiert.');
+    }
+
+    document.getElementById('load-btn').addEventListener('click', loadData);
+    document.getElementById('export-btn').addEventListener('click', () => exportCsv().catch(error => setStatus(error.message, true)));
+    document.getElementById('save-token-btn').addEventListener('click', saveToken);
+    document.getElementById('clear-token-btn').addEventListener('click', clearToken);
+
+    // preload token from storage
+    const stored = localStorage.getItem('hbc-admin-token');
+    if (stored) {
+      tokenInput.value = stored;
+    }
+  </script>
+</body>
+</html>

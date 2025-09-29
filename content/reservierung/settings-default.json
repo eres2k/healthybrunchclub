@@ -1,0 +1,18 @@
+{
+  "title": "Standard Einstellungen",
+  "lead_time_days": 0,
+  "booking_window_days": 60,
+  "max_guests_per_reservation": 8,
+  "waitlist_enabled": true,
+  "default_note": "Bitte gib uns Bescheid, wenn du Allergien hast.",
+  "blackout_dates": [],
+  "opening_hours": {
+    "monday": {"open": false, "from": "09:00", "to": "13:00", "slots": ["09:00", "09:30", "10:00", "10:30", "11:00"], "max_guests": 20},
+    "tuesday": {"open": false, "from": "09:00", "to": "13:00", "slots": ["09:00", "09:30", "10:00", "10:30", "11:00"], "max_guests": 20},
+    "wednesday": {"open": false, "from": "09:00", "to": "13:00", "slots": ["09:00", "09:30", "10:00", "10:30", "11:00"], "max_guests": 20},
+    "thursday": {"open": false, "from": "09:00", "to": "13:00", "slots": ["09:00", "09:30", "10:00", "10:30", "11:00"], "max_guests": 20},
+    "friday": {"open": false, "from": "09:00", "to": "13:00", "slots": ["09:00", "09:30", "10:00", "10:30", "11:00"], "max_guests": 20},
+    "saturday": {"open": true, "from": "09:00", "to": "14:00", "slots": ["09:00", "09:30", "10:00", "10:30", "11:00", "11:30", "12:00", "12:30"], "max_guests": 24},
+    "sunday": {"open": true, "from": "09:00", "to": "14:00", "slots": ["09:00", "09:30", "10:00", "10:30", "11:00", "11:30", "12:00", "12:30"], "max_guests": 24}
+  }
+}

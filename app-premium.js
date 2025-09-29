@@ -14,12 +14,10 @@ function initializeApp() {
     initLoadingScreen();
     initNavigation();
     initMobileMenu();
-    initReservationForm();
     initSmoothScrolling();
     initAnimations();
     initVideoOptimization();
     initParallax();
-    fillAvailableDates();
     
     // Initialize event window
     const eventWindow = document.getElementById('eventWindow');
@@ -174,128 +172,6 @@ function initSmoothScrolling() {
                 history.pushState(null, null, targetId);
             }
         });
-    });
-}
-
-// Reservation Form
-function initReservationForm() {
-    const form = document.querySelector('.reservation-form');
-
-    if (form) {
-        form.addEventListener('submit', async function(e) {
-            e.preventDefault();
-
-            const submitBtn = form.querySelector('.btn-submit');
-            const statusBox = form.querySelector('.form-status');
-            const originalText = submitBtn ? submitBtn.innerHTML : '';
-
-            if (statusBox) {
-                statusBox.innerHTML = '';
-                statusBox.classList.add('hidden');
-                statusBox.classList.remove('success', 'error');
-            }
-
-            if (submitBtn) {
-                submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> wird gesendet...';
-                submitBtn.disabled = true;
-            }
-
-            const formData = new FormData(form);
-            const plainData = Object.fromEntries(formData.entries());
-
-            try {
-                const emailResponse = await fetch('/.netlify/functions/reservation-email', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json'
-                    },
-                    body: JSON.stringify(plainData)
-                });
-
-                if (!emailResponse.ok) {
-                    throw new Error('Email dispatch failed');
-                }
-
-                const netlifyResponse = await fetch('/', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/x-www-form-urlencoded'
-                    },
-                    body: encodeFormData(formData)
-                });
-
-                if (!netlifyResponse.ok) {
-                    throw new Error('Form submission failed');
-                }
-
-                form.reset();
-                fillAvailableDates();
-
-                if (statusBox) {
-                    statusBox.innerHTML = '<span class="status-icon">🎉</span><div><strong>vielen dank!</strong> ihre reservierungsanfrage wurde erfolgreich übermittelt. wir melden uns in kürze mit einer persönlichen bestätigung.</div>';
-                    statusBox.classList.remove('hidden');
-                    statusBox.classList.add('success');
-                }
-            } catch (error) {
-                console.error('Reservation submission failed:', error);
-
-                if (statusBox) {
-                    statusBox.innerHTML = '<span class="status-icon">⚠️</span><div><strong>ups!</strong> leider konnte ihre reservierungsanfrage gerade nicht gesendet werden. bitte versuchen sie es erneut oder schreiben sie an <a href="mailto:hello@healthybrunchclub.at">hello@healthybrunchclub.at</a>.</div>';
-                    statusBox.classList.remove('hidden');
-                    statusBox.classList.add('error');
-                }
-            } finally {
-                if (submitBtn) {
-                    submitBtn.innerHTML = originalText;
-                    submitBtn.disabled = false;
-                }
-            }
-        });
-    }
-}
-
-function encodeFormData(formData) {
-    const pairs = [];
-    for (const [key, value] of formData.entries()) {
-        pairs.push(encodeURIComponent(key) + '=' + encodeURIComponent(value));
-    }
-    return pairs.join('&');
-}
-
-function fillAvailableDates() {
-    const dateSelect = document.getElementById('date');
-    if (!dateSelect) return;
-
-    // Reset dropdown
-    dateSelect.innerHTML = '<option value="">Datum wählen</option>';
-
-    // Fixed available dates: 5., 6., 7., 24., 25. and 26. October of the current year
-    const currentYear = new Date().getFullYear();
-    const availableDates = [
-        new Date(currentYear, 9, 5),  // 5 October
-        new Date(currentYear, 9, 6),  // 6 October
-        new Date(currentYear, 9, 7),  // 7 October
-        new Date(currentYear, 9, 24), // 24 October
-        new Date(currentYear, 9, 25), // 25 October
-        new Date(currentYear, 9, 26)  // 26 October
-    ];
-
-    availableDates.forEach(date => {
-        const option = document.createElement('option');
-
-        // Format value manually to avoid timezone-related date shifts
-        const year = date.getFullYear();
-        const month = String(date.getMonth() + 1).padStart(2, '0');
-        const day = String(date.getDate()).padStart(2, '0');
-        option.value = `${year}-${month}-${day}`;
-        const dayName = date.toLocaleDateString('de-AT', { weekday: 'long' });
-        const formattedDate = date.toLocaleDateString('de-AT', {
-            day: 'numeric',
-            month: 'long',
-            year: 'numeric'
-        });
-        option.textContent = `${dayName}, ${formattedDate}`;
-        dateSelect.appendChild(option);
     });
 }
 
