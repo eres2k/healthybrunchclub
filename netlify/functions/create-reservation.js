@@ -28,7 +28,7 @@ exports.handler = async (event) => {
       };
     }
 
-    const required = ['name', 'email', 'phone', 'date', 'time', 'guests'];
+    const required = ['name', 'email', 'date', 'time', 'guests'];
     for (const field of required) {
       if (!data[field]) {
         return {
@@ -43,6 +43,7 @@ exports.handler = async (event) => {
 
     const normalized = {
       ...data,
+      phone: data.phone || '',
       message: data.message || data.specialRequests || '',
     };
 

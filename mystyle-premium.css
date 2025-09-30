@@ -4139,6 +4139,13 @@ body.dark-mode video:hover {
   font-weight: 500;
 }
 
+.optional-label {
+  font-size: 0.85rem;
+  color: var(--sage-green);
+  font-style: italic;
+  margin-left: 0.25rem;
+}
+
 .form-group input,
 .form-group select,
 .form-group textarea {

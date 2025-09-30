@@ -279,7 +279,18 @@
             <h3 class="step-title">Ihre Angaben</h3>
             <button class="back-button" onclick="goBackToTimeSelection()">← Zurück zur Zeitauswahl</button>
 
-            <form id="reservation-form" class="elegant-form">
+            <form
+              id="reservation-form"
+              class="elegant-form"
+              name="reservierung"
+              method="POST"
+              data-netlify="true"
+              data-netlify-honeypot="bot-field"
+            >
+              <input type="hidden" name="form-name" value="reservations">
+              <div style="display:none">
+                <label>Bitte freilassen: <input name="bot-field" type="text"></label>
+              </div>
               <div class="form-group">
                 <label for="guest-name">Name *</label>
                 <input type="text" id="guest-name" required>
@@ -291,8 +302,13 @@
               </div>
 
               <div class="form-group">
-                <label for="guest-phone">Telefon *</label>
-                <input type="tel" id="guest-phone" required>
+                <label for="guest-phone">Telefon <span class="optional-label">(optional)</span></label>
+                <input
+                  type="tel"
+                  id="guest-phone"
+                  pattern="[0-9+\-\s]+"
+                  placeholder="+43 123 456 7890"
+                >
               </div>
 
               <div class="form-group">
@@ -321,10 +337,11 @@
 
           <!-- Success Message -->
           <div id="reservation-success" class="reservation-step" style="display: none;">
-            <div class="success-message">
+            <div class="success-message" aria-live="polite">
               <h3>✓ Reservierung erfolgreich!</h3>
-              <p>Vielen Dank! Ihre Reservierung wurde bestätigt.</p>
+              <p id="success-message">Vielen Dank! Ihre Reservierung wurde bestätigt.</p>
               <p>Eine Bestätigung wurde an Ihre E-Mail-Adresse gesendet.</p>
+              <p id="confirmation-code" class="confirmation-code" style="display: none;"></p>
               <button onclick="resetReservation()" class="reset-button">Neue Reservierung</button>
             </div>
           </div>
@@ -561,19 +578,32 @@
         return;
       }
 
+      const reservationForm = event.currentTarget;
+      const submitButton = reservationForm.querySelector('button[type="submit"]');
+      const originalButtonText = submitButton ? submitButton.textContent : '';
+
+      if (submitButton) {
+        submitButton.disabled = true;
+        submitButton.textContent = 'Wird gesendet...';
+      }
+
       const formData = {
         date: selectedDate.date,
         time: selectedTime,
-        name: document.getElementById('guest-name').value,
-        email: document.getElementById('guest-email').value,
-        phone: document.getElementById('guest-phone').value,
+        name: document.getElementById('guest-name').value.trim(),
+        email: document.getElementById('guest-email').value.trim(),
+        phone: document.getElementById('guest-phone').value.trim(),
         guests: parseInt(document.getElementById('guest-count').value, 10),
-        specialRequests: document.getElementById('guest-notes').value,
+        specialRequests: document.getElementById('guest-notes').value.trim(),
         honeypot: ''
       };
 
-      if (!formData.name || !formData.email || !formData.phone || !formData.guests) {
+      if (!formData.name || !formData.email || Number.isNaN(formData.guests) || formData.guests <= 0) {
         alert('Bitte füllen Sie alle Pflichtfelder aus.');
+        if (submitButton) {
+          submitButton.disabled = false;
+          submitButton.textContent = originalButtonText;
+        }
         return;
       }
 
@@ -584,29 +614,52 @@
           body: JSON.stringify(formData)
         });
 
-        const result = await response.json();
+        let result;
+        const contentType = response.headers.get('content-type') || '';
+        if (contentType.includes('application/json')) {
+          result = await response.json();
+        } else {
+          const text = await response.text();
+          result = text ? { message: text } : {};
+        }
 
         if (response.ok) {
           document.getElementById('guest-details').style.display = 'none';
           document.getElementById('reservation-success').style.display = 'block';
+          reservationForm.reset();
 
-          if (result.reservation && result.reservation.confirmationCode) {
-            document.getElementById('confirmation-code').textContent = result.reservation.confirmationCode;
+          const successMessageEl = document.getElementById('success-message');
+          if (successMessageEl) {
+            successMessageEl.textContent = result.message || 'Ihre Reservierung wurde erfolgreich übermittelt!';
           }
 
-          document.getElementById('success-message').textContent = result.message;
+          const confirmationCodeEl = document.getElementById('confirmation-code');
+          if (confirmationCodeEl) {
+            if (result.reservation && result.reservation.confirmationCode) {
+              confirmationCodeEl.textContent = `Bestätigungscode: ${result.reservation.confirmationCode}`;
+              confirmationCodeEl.style.display = 'block';
+            } else {
+              confirmationCodeEl.textContent = '';
+              confirmationCodeEl.style.display = 'none';
+            }
+          }
         } else {
           console.error('Reservation error:', result);
-          if (result.errors) {
-            const errorMessages = Object.values(result.errors).join('\n');
-            alert(`Fehler bei der Reservierung:\n${errorMessages}`);
-          } else {
-            alert(result.message || 'Es gab einen Fehler bei Ihrer Reservierung. Bitte versuchen Sie es erneut.');
-          }
+          const errorMessage =
+            (result && (result.error || result.message)) ||
+            'Es gab einen Fehler bei Ihrer Reservierung. Bitte versuchen Sie es erneut.';
+          alert(errorMessage);
         }
       } catch (error) {
         console.error('Network error:', error);
-        alert('Netzwerkfehler. Bitte überprüfen Sie Ihre Internetverbindung oder kontaktieren Sie uns telefonisch.');
+        const offlineMessage = 'Netzwerkfehler: Bitte überprüfen Sie Ihre Internetverbindung und versuchen Sie es erneut.';
+        const fallbackMessage = 'Es gab ein Problem bei der Übermittlung. Bitte versuchen Sie es erneut oder kontaktieren Sie uns telefonisch.';
+        alert(!navigator.onLine ? offlineMessage : fallbackMessage);
+      } finally {
+        if (submitButton) {
+          submitButton.disabled = false;
+          submitButton.textContent = originalButtonText || 'Reservierung abschicken';
+        }
       }
     }
 
@@ -617,6 +670,17 @@
       const reservationForm = document.getElementById('reservation-form');
       if (reservationForm) {
         reservationForm.reset();
+      }
+
+      const confirmationCodeEl = document.getElementById('confirmation-code');
+      if (confirmationCodeEl) {
+        confirmationCodeEl.textContent = '';
+        confirmationCodeEl.style.display = 'none';
+      }
+
+      const successMessageEl = document.getElementById('success-message');
+      if (successMessageEl) {
+        successMessageEl.textContent = 'Vielen Dank! Ihre Reservierung wurde bestätigt.';
       }
 
       document.getElementById('reservation-success').style.display = 'none';
