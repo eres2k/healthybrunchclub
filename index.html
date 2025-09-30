@@ -557,7 +557,7 @@
       event.preventDefault();
 
       if (!selectedDate || !selectedTime) {
-        alert('Bitte wählen Sie zunächst Datum und Uhrzeit.');
+        alert('Bitte wählen Sie Datum und Uhrzeit aus.');
         return;
       }
 
@@ -568,8 +568,14 @@
         email: document.getElementById('guest-email').value,
         phone: document.getElementById('guest-phone').value,
         guests: parseInt(document.getElementById('guest-count').value, 10),
-        notes: document.getElementById('guest-notes').value
+        specialRequests: document.getElementById('guest-notes').value,
+        honeypot: ''
       };
+
+      if (!formData.name || !formData.email || !formData.phone || !formData.guests) {
+        alert('Bitte füllen Sie alle Pflichtfelder aus.');
+        return;
+      }
 
       try {
         const response = await fetch('/.netlify/functions/create-reservation', {
@@ -578,15 +584,29 @@
           body: JSON.stringify(formData)
         });
 
+        const result = await response.json();
+
         if (response.ok) {
           document.getElementById('guest-details').style.display = 'none';
           document.getElementById('reservation-success').style.display = 'block';
+
+          if (result.reservation && result.reservation.confirmationCode) {
+            document.getElementById('confirmation-code').textContent = result.reservation.confirmationCode;
+          }
+
+          document.getElementById('success-message').textContent = result.message;
         } else {
-          alert('Es gab einen Fehler bei Ihrer Reservierung. Bitte versuchen Sie es erneut.');
+          console.error('Reservation error:', result);
+          if (result.errors) {
+            const errorMessages = Object.values(result.errors).join('\n');
+            alert(`Fehler bei der Reservierung:\n${errorMessages}`);
+          } else {
+            alert(result.message || 'Es gab einen Fehler bei Ihrer Reservierung. Bitte versuchen Sie es erneut.');
+          }
         }
       } catch (error) {
-        console.error('Reservation error:', error);
-        alert('Es gab einen Fehler. Bitte kontaktieren Sie uns telefonisch.');
+        console.error('Network error:', error);
+        alert('Netzwerkfehler. Bitte überprüfen Sie Ihre Internetverbindung oder kontaktieren Sie uns telefonisch.');
       }
     }
 
