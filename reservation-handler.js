@@ -1,31 +1,16 @@
-/**
- * Healthy Brunch Club - Reservation System Handler
- * Complete reservation logic with CMS integration
- */
-
 class ReservationSystem {
     constructor() {
         this.currentStep = 1;
-        this.reservationData = {
-            date: null,
-            time: null,
-            guests: null,
-            name: null,
-            email: null,
-            phone: null,
-            specialRequests: null
-        };
+        this.totalSteps = 4;
+        this.reservationData = {};
         this.availableSlots = [];
-        
         this.init();
     }
 
     init() {
         this.setupDatePicker();
         this.setupEventListeners();
-        this.updateProgressIndicator();
-        this.hideLoading();
-        this.validateForm();
+        this.loadInitialData();
     }
 
     setupDatePicker() {
@@ -33,203 +18,330 @@ class ReservationSystem {
         if (!dateInput) return;
 
         // Set min date to today
-        const today = new Date();
-        dateInput.min = this.formatDate(today);
+        const today = new Date().toISOString().split('T')[0];
+        dateInput.min = today;
 
-        // Set max date to 30 days from now
+        // Set max date to 3 months from now
         const maxDate = new Date();
-        maxDate.setDate(maxDate.getDate() + 30);
-        dateInput.max = this.formatDate(maxDate);
-
-        // Add change listener
-        dateInput.addEventListener('change', () => this.handleDateSelection());
+        maxDate.setMonth(maxDate.getMonth() + 3);
+        dateInput.max = maxDate.toISOString().split('T')[0];
     }
 
     setupEventListeners() {
+        // Date selection
+        document.getElementById('reservation-date')?.addEventListener('change', (e) => {
+            this.handleDateSelection(e.target.value);
+        });
+
+        // Time slot selection
+        document.addEventListener('click', (e) => {
+            if (e.target.classList.contains('time-slot-btn')) {
+                this.handleTimeSelection(e.target);
+            }
+        });
+
         // Navigation buttons
         document.getElementById('btn-next-date')?.addEventListener('click', () => this.nextStep());
-        document.getElementById('btn-next-time')?.addEventListener('click', () => this.nextStep());
         document.getElementById('btn-back-time')?.addEventListener('click', () => this.previousStep());
+        document.getElementById('btn-next-time')?.addEventListener('click', () => this.nextStep());
         document.getElementById('btn-back-details')?.addEventListener('click', () => this.previousStep());
-        document.getElementById('btn-submit-reservation')?.addEventListener('click', (e) => this.submitReservation(e));
+        document.getElementById('btn-submit-reservation')?.addEventListener('click', () => this.submitReservation());
 
         // Form validation
         const form = document.getElementById('reservation-form');
         if (form) {
-            form.addEventListener('input', () => this.validateForm());
-        }
-    }
-
-    formatDate(date) {
-        const year = date.getFullYear();
-        const month = String(date.getMonth() + 1).padStart(2, '0');
-        const day = String(date.getDate()).padStart(2, '0');
-        return `${year}-${month}-${day}`;
-    }
-
-    formatDateDisplay(dateString) {
-        const date = new Date(dateString + 'T00:00:00');
-        const options = { 
-            weekday: 'long', 
-            year: 'numeric', 
-            month: 'long', 
-            day: 'numeric' 
-        };
-        return date.toLocaleDateString('de-AT', options);
-    }
-
-    async handleDateSelection() {
-        const dateInput = document.getElementById('reservation-date');
-        const dateValue = dateInput.value;
-        
-        if (!dateValue) {
-            document.getElementById('btn-next-date').disabled = true;
-            return;
-        }
-
-        this.reservationData.date = dateValue;
-        
-        // Show loading
-        this.showLoading();
-        
-        try {
-            // Fetch available slots from API
-            const response = await fetch('/.netlify/functions/get-availability', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({ date: dateValue })
+            form.addEventListener('input', (e) => {
+                this.validateField(e.target);
             });
+        }
 
-            const data = await response.json();
-            
-            if (!data.available) {
-                this.showDateInfo(data.reason || 'Keine Verfügbarkeit an diesem Tag');
-                document.getElementById('btn-next-date').disabled = true;
-            } else {
-                this.availableSlots = data.slots;
-                this.showDateInfo(`${data.slots.length} Zeitslots verfügbar`);
-                document.getElementById('btn-next-date').disabled = false;
+        // Phone number formatting
+        const phoneInput = document.getElementById('phone');
+        if (phoneInput) {
+            phoneInput.addEventListener('input', (e) => {
+                this.formatPhoneNumber(e.target);
+            });
+        }
+    }
+
+    async handleDateSelection(date) {
+        if (!date) return;
+
+        this.reservationData.date = date;
+        this.showLoading();
+
+        try {
+            const response = await fetch(`/.netlify/functions/get-availability?date=${date}`);
+            const availability = await response.json();
+
+            if (!response.ok) {
+                throw new Error(availability.error || 'Fehler beim Laden der Verfügbarkeit');
             }
+
+            this.displayAvailability(availability);
+        const nextDateBtn = document.getElementById('btn-next-date');
+        if (nextDateBtn) {
+            nextDateBtn.disabled = false;
+        }
+
         } catch (error) {
-            console.error('Error fetching availability:', error);
-            this.showError('Fehler beim Abrufen der Verfügbarkeit. Bitte versuchen Sie es erneut.');
-            document.getElementById('btn-next-date').disabled = true;
+            this.showError(error.message);
         } finally {
             this.hideLoading();
         }
     }
 
-    showDateInfo(message) {
-        const infoEl = document.getElementById('date-availability-info');
-        if (infoEl) {
-            infoEl.textContent = message;
-            infoEl.classList.add('show');
-        }
-    }
-
-    renderTimeSlots() {
-        const container = document.getElementById('time-slots');
-        const selectedDateDisplay = document.getElementById('selected-date-display');
-        
+    displayAvailability(availability) {
+        const container = document.getElementById('time-slots-container');
         if (!container) return;
-        
-        // Update selected date display
-        if (selectedDateDisplay && this.reservationData.date) {
-            selectedDateDisplay.textContent = this.formatDateDisplay(this.reservationData.date);
-        }
-        
-        // Clear existing slots
-        container.innerHTML = '';
-        
-        // Render slots
-        this.availableSlots.forEach(slot => {
-            const slotEl = document.createElement('div');
-            slotEl.className = `time-slot ${slot.available ? 'available' : 'unavailable'}`;
-            slotEl.dataset.time = slot.time;
-            
-            slotEl.innerHTML = `
-                <div class="time-slot-time">${slot.time}</div>
-                <div class="time-slot-availability">
-                    ${slot.available ? `${slot.availableSeats} Plätze frei` : 'Ausgebucht'}
+
+        if (!availability.available) {
+            container.innerHTML = `
+                <div class="alert alert-warning">
+                    <p>Leider sind für diesen Tag keine Reservierungen möglich.</p>
+                    <p>${availability.reason || 'Bitte wählen Sie einen anderen Tag.'}</p>
                 </div>
             `;
-            
-            if (slot.available) {
-                slotEl.addEventListener('click', () => this.selectTimeSlot(slot.time));
-            }
-            
-            container.appendChild(slotEl);
-        });
-    }
-
-    selectTimeSlot(time) {
-        // Remove previous selection
-        document.querySelectorAll('.time-slot').forEach(el => {
-            el.classList.remove('selected');
-        });
-        
-        // Add selection to clicked slot
-        const selectedSlot = document.querySelector(`.time-slot[data-time="${time}"]`);
-        if (selectedSlot) {
-            selectedSlot.classList.add('selected');
-        }
-        
-        this.reservationData.time = time;
-        document.getElementById('btn-next-time').disabled = false;
-    }
-
-    updateSummary() {
-        const summaryDate = document.getElementById('summary-date');
-        const summaryTime = document.getElementById('summary-time');
-        
-        if (summaryDate && this.reservationData.date) {
-            summaryDate.textContent = this.formatDateDisplay(this.reservationData.date);
-        }
-        
-        if (summaryTime && this.reservationData.time) {
-            summaryTime.textContent = `${this.reservationData.time} Uhr`;
-        }
-    }
-
-    validateForm() {
-        const form = document.getElementById('reservation-form');
-        if (!form) return false;
-
-        const isValid = form.checkValidity();
-        const submitBtn = document.getElementById('btn-submit-reservation');
-        
-        if (submitBtn) {
-            submitBtn.disabled = !isValid;
-        }
-        
-        return isValid;
-    }
-
-    async submitReservation(e) {
-        e.preventDefault();
-        
-        if (!this.validateForm()) {
-            this.showError('Bitte füllen Sie alle Pflichtfelder aus.');
             return;
         }
 
-        const form = document.getElementById('reservation-form');
-        const formData = new FormData(form);
+        // Group slots by hour
+        const slotsByHour = {};
+        availability.slots.forEach(slot => {
+            const hour = slot.time.split(':')[0];
+            if (!slotsByHour[hour]) {
+                slotsByHour[hour] = [];
+            }
+            slotsByHour[hour].push(slot);
+        });
+
+        let html = '<div class="time-slots-grid">';
         
-        // Update reservation data
-        this.reservationData.guests = parseInt(formData.get('guests'));
-        this.reservationData.name = formData.get('name');
-        this.reservationData.email = formData.get('email');
-        this.reservationData.phone = formData.get('phone');
-        this.reservationData.specialRequests = formData.get('specialRequests');
+        Object.entries(slotsByHour).forEach(([hour, slots]) => {
+            html += `<div class="hour-group">`;
+            html += `<h4>${hour}:00 Uhr</h4>`;
+            html += `<div class="slots">`;
+            
+            slots.forEach(slot => {
+                const disabled = !slot.available ? 'disabled' : '';
+                const statusClass = slot.available ? 'available' : (slot.waitlist ? 'waitlist' : 'full');
+                const statusText = slot.available 
+                    ? `${slot.remainingCapacity} Plätze` 
+                    : (slot.waitlist ? 'Warteliste' : 'Ausgebucht');
+                
+                html += `
+                    <button 
+                        class="time-slot-btn ${statusClass}" 
+                        data-time="${slot.time}"
+                        data-available="${slot.available}"
+                        data-capacity="${slot.remainingCapacity}"
+                        ${disabled}>
+                        <span class="time">${slot.time}</span>
+                        <span class="status">${statusText}</span>
+                    </button>
+                `;
+            });
+            
+            html += `</div></div>`;
+        });
+        
+        html += '</div>';
+        container.innerHTML = html;
+    }
+
+    handleTimeSelection(button) {
+        // Remove previous selection
+        document.querySelectorAll('.time-slot-btn').forEach(btn => {
+            btn.classList.remove('selected');
+        });
+
+        // Add selection
+        button.classList.add('selected');
+        this.reservationData.time = button.dataset.time;
+        this.reservationData.availableCapacity = parseInt(button.dataset.capacity);
+
+        // Enable next button
+        const nextTimeBtn = document.getElementById('btn-next-time');
+        if (nextTimeBtn) {
+            nextTimeBtn.disabled = false;
+        }
+    }
+
+    validateField(field) {
+        const value = field.value.trim();
+        let isValid = true;
+        let errorMessage = '';
+
+        switch (field.id) {
+            case 'name':
+                isValid = value.length >= 2;
+                errorMessage = 'Bitte geben Sie Ihren Namen ein';
+                break;
+            
+            case 'email':
+                const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+                isValid = emailRegex.test(value);
+                errorMessage = 'Bitte geben Sie eine gültige E-Mail-Adresse ein';
+                break;
+            
+            case 'phone':
+                const phoneRegex = /^(\+43|0)[1-9]\d{2,14}$/;
+                const cleaned = value.replace(/[\s\-\(\)]/g, '');
+                isValid = phoneRegex.test(cleaned);
+                errorMessage = 'Bitte geben Sie eine gültige österreichische Telefonnummer ein';
+                break;
+            
+            case 'guests':
+                const guests = parseInt(value);
+                isValid = guests >= 1 && guests <= 20;
+                
+                if (guests > this.reservationData.availableCapacity) {
+                    isValid = false;
+                    errorMessage = `Nur ${this.reservationData.availableCapacity} Plätze verfügbar`;
+                } else {
+                    errorMessage = 'Bitte wählen Sie 1-20 Personen';
+                }
+                break;
+        }
+
+        // Show/hide error
+        const errorEl = field.parentElement.querySelector('.field-error');
+        if (errorEl) {
+            if (!isValid && value) {
+                errorEl.textContent = errorMessage;
+                errorEl.style.display = 'block';
+                field.classList.add('error');
+            } else {
+                errorEl.style.display = 'none';
+                field.classList.remove('error');
+            }
+        }
+
+        return isValid;
+    }
+
+    formatPhoneNumber(input) {
+        let value = input.value.replace(/\D/g, '');
+        
+        // Austrian formatting
+        if (value.startsWith('43')) {
+            // +43 format
+            if (value.length > 2) value = '+43 ' + value.slice(2);
+            if (value.length > 6) value = value.slice(0, 6) + ' ' + value.slice(6);
+            if (value.length > 10) value = value.slice(0, 10) + ' ' + value.slice(10);
+        } else if (value.startsWith('0')) {
+            // 0 format
+            if (value.length > 4) value = value.slice(0, 4) + ' ' + value.slice(4);
+            if (value.length > 8) value = value.slice(0, 8) + ' ' + value.slice(8);
+        }
+        
+        input.value = value;
+    }
+
+    nextStep() {
+        if (this.currentStep < this.totalSteps) {
+            this.showStep(this.currentStep + 1);
+        }
+    }
+
+    previousStep() {
+        if (this.currentStep > 1) {
+            this.showStep(this.currentStep - 1);
+        }
+    }
+
+    showStep(step) {
+        // Hide all steps
+        document.querySelectorAll('.reservation-step').forEach(s => {
+            s.classList.remove('active');
+        });
+
+        // Show current step
+        document.getElementById(`step-${step}`)?.classList.add('active');
+
+        // Update progress
+        this.updateProgress(step);
+        this.currentStep = step;
+
+        // Update step display based on data
+        if (step === 3) {
+            this.displaySummary();
+        }
+    }
+
+    displaySummary() {
+        const summary = document.getElementById('reservation-summary');
+        if (!summary) return;
+
+        const dateFormatted = this.formatDateGerman(this.reservationData.date);
+        
+        summary.innerHTML = `
+            <div class="summary-card">
+                <h3>Ihre Reservierung</h3>
+                <div class="summary-details">
+                    <div class="summary-item">
+                        <span class="label">📅 Datum:</span>
+                        <span class="value">${dateFormatted}</span>
+                    </div>
+                    <div class="summary-item">
+                        <span class="label">🕐 Uhrzeit:</span>
+                        <span class="value">${this.reservationData.time} Uhr</span>
+                    </div>
+                    <div class="summary-item">
+                        <span class="label">👥 Personen:</span>
+                        <span class="value">${document.getElementById('guests')?.value || '?'}</span>
+                    </div>
+                </div>
+            </div>
+        `;
+    }
+
+    formatDateGerman(dateStr) {
+        const [year, month, day] = dateStr.split('-');
+        const date = new Date(year, month - 1, day);
+        
+        const options = { 
+            weekday: 'long', 
+            day: 'numeric', 
+            month: 'long', 
+            year: 'numeric' 
+        };
+        
+        return date.toLocaleDateString('de-AT', options);
+    }
+
+    async submitReservation() {
+        const form = document.getElementById('reservation-form');
+        if (!form) return;
+
+        // Validate all fields
+        let isValid = true;
+        form.querySelectorAll('input[required], textarea[required]').forEach(field => {
+            if (!this.validateField(field)) {
+                isValid = false;
+            }
+        });
+
+        if (!isValid) {
+            this.showError('Bitte füllen Sie alle Pflichtfelder korrekt aus.');
+            return;
+        }
+
+        // Collect form data
+        const formData = new FormData(form);
+        this.reservationData = {
+            ...this.reservationData,
+            name: formData.get('name'),
+            email: formData.get('email'),
+            phone: formData.get('phone'),
+            guests: parseInt(formData.get('guests')),
+            specialRequests: formData.get('specialRequests')
+        };
 
         // Show loading
         const submitBtn = document.getElementById('btn-submit-reservation');
-        submitBtn.classList.add('loading');
         submitBtn.disabled = true;
-        this.showLoading();
+        submitBtn.innerHTML = '<span class="spinner"></span> Wird verarbeitet...';
 
         try {
             const response = await fetch('/.netlify/functions/create-reservation', {
@@ -242,263 +354,132 @@ class ReservationSystem {
 
             const result = await response.json();
 
-            if (response.ok && result.success) {
-                this.showConfirmation(result);
-            } else {
+            if (!response.ok) {
                 throw new Error(result.error || 'Reservierung fehlgeschlagen');
             }
+
+            if (result.success) {
+                this.showConfirmation(result);
+            }
+
         } catch (error) {
-            console.error('Error submitting reservation:', error);
-            this.showError(error.message || 'Ein Fehler ist aufgetreten. Bitte versuchen Sie es erneut.');
-            submitBtn.classList.remove('loading');
+            this.showError(error.message);
             submitBtn.disabled = false;
-        } finally {
-            this.hideLoading();
+            submitBtn.innerHTML = 'Reservierung abschließen';
         }
     }
 
     showConfirmation(result) {
-        // Update confirmation details
-        document.getElementById('confirmation-code').textContent = result.confirmationCode;
-        document.getElementById('confirm-name').textContent = this.reservationData.name;
-        document.getElementById('confirm-date').textContent = this.formatDateDisplay(this.reservationData.date);
-        document.getElementById('confirm-time').textContent = `${this.reservationData.time} Uhr`;
-        document.getElementById('confirm-guests').textContent = `${this.reservationData.guests} ${this.reservationData.guests === 1 ? 'Person' : 'Personen'}`;
-        document.getElementById('confirm-email').textContent = this.reservationData.email;
-
-        // Move to confirmation step
-        this.currentStep = 4;
         this.showStep(4);
-        this.updateProgressIndicator();
-    }
-
-    nextStep() {
-        if (this.currentStep < 4) {
-            this.currentStep++;
-            this.showStep(this.currentStep);
-            this.updateProgressIndicator();
-            
-            // Additional actions for specific steps
-            if (this.currentStep === 2) {
-                this.renderTimeSlots();
-            } else if (this.currentStep === 3) {
-                this.updateSummary();
-            }
-        }
-    }
-
-    previousStep() {
-        if (this.currentStep > 1) {
-            this.currentStep--;
-            this.showStep(this.currentStep);
-            this.updateProgressIndicator();
-        }
-    }
-
-    showStep(stepNumber) {
-        // Hide all steps
-        document.querySelectorAll('.reservation-step').forEach(step => {
-            step.classList.remove('active');
-        });
-
-        // Show current step
-        const stepMap = {
-            1: 'step-date',
-            2: 'step-time',
-            3: 'step-details',
-            4: 'step-confirmation'
-        };
-
-        const currentStepEl = document.getElementById(stepMap[stepNumber]);
-        if (currentStepEl) {
-            currentStepEl.classList.add('active');
-        }
-    }
-
-    updateProgressIndicator() {
-        document.querySelectorAll('.progress-step').forEach((step, index) => {
-            const stepNum = index + 1;
-            
-            if (stepNum < this.currentStep) {
-                step.classList.add('completed');
-                step.classList.remove('active');
-            } else if (stepNum === this.currentStep) {
-                step.classList.add('active');
-                step.classList.remove('completed');
-            } else {
-                step.classList.remove('active', 'completed');
-            }
-        });
-    }
-
-    showError(message) {
-        const errorEl = document.getElementById('reservation-error');
-        const errorMessage = document.getElementById('error-message');
         
-        if (errorEl && errorMessage) {
-            errorMessage.textContent = message;
-            errorEl.style.display = 'flex';
-            
-            // Auto hide after 5 seconds
-            setTimeout(() => {
-                errorEl.style.display = 'none';
-            }, 5000);
-        }
+        const confirmationEl = document.getElementById('confirmation-details');
+        if (!confirmationEl) return;
+
+        const statusBadge = result.reservation.status === 'waitlist' 
+            ? '<span class="badge badge-warning">Warteliste</span>'
+            : '<span class="badge badge-success">Bestätigt</span>';
+
+        confirmationEl.innerHTML = `
+            <div class="confirmation-success">
+                <div class="success-icon">✅</div>
+                <h2>${result.message}</h2>
+                ${statusBadge}
+                
+                <div class="confirmation-code">
+                    <p>Ihr Bestätigungscode:</p>
+                    <h3>${result.confirmationCode}</h3>
+                </div>
+                
+                <div class="confirmation-details">
+                    <p><strong>Name:</strong> ${result.reservation.name}</p>
+                    <p><strong>Datum:</strong> ${this.formatDateGerman(result.reservation.date)}</p>
+                    <p><strong>Uhrzeit:</strong> ${result.reservation.time} Uhr</p>
+                    <p><strong>Personen:</strong> ${result.reservation.guests}</p>
+                </div>
+                
+                <div class="confirmation-info">
+                    <p>✉️ Eine Bestätigung wurde an Ihre E-Mail-Adresse gesendet.</p>
+                    <p>📱 Bitte zeigen Sie den Bestätigungscode bei Ihrer Ankunft vor.</p>
+                </div>
+                
+                <div class="confirmation-actions">
+                    <button onclick="window.print()" class="btn btn-outline">
+                        🖨️ Drucken
+                    </button>
+                    <button onclick="location.reload()" class="btn btn-primary">
+                        Neue Reservierung
+                    </button>
+                </div>
+            </div>
+        `;
+    }
+
+    updateProgress(step) {
+        const progress = document.getElementById('reservation-progress');
+        if (!progress) return;
+
+        const percentage = (step / this.totalSteps) * 100;
+        progress.style.width = percentage + '%';
+
+        // Update step indicators
+        document.querySelectorAll('.step-indicator').forEach((indicator, index) => {
+            if (index < step) {
+                indicator.classList.add('completed');
+                indicator.classList.remove('active');
+            } else if (index === step - 1) {
+                indicator.classList.add('active');
+                indicator.classList.remove('completed');
+            } else {
+                indicator.classList.remove('active', 'completed');
+            }
+        });
     }
 
     showLoading() {
-        const overlay = document.getElementById('loading-overlay');
-        if (overlay) {
-            overlay.style.display = 'flex';
-        }
+        const overlay = document.createElement('div');
+        overlay.className = 'loading-overlay';
+        overlay.innerHTML = '<div class="spinner"></div>';
+        document.body.appendChild(overlay);
     }
 
     hideLoading() {
-        const overlay = document.getElementById('loading-overlay');
-        if (overlay) {
-            overlay.style.display = 'none';
-        }
+        document.querySelector('.loading-overlay')?.remove();
     }
 
-    resetReservation() {
-        this.currentStep = 1;
-        this.reservationData = {
-            date: null,
-            time: null,
-            guests: null,
-            name: null,
-            email: null,
-            phone: null,
-            specialRequests: null
-        };
-        this.availableSlots = [];
+    showError(message) {
+        const toast = document.createElement('div');
+        toast.className = 'toast toast-error';
+        toast.innerHTML = `
+            <div class="toast-content">
+                <span class="toast-icon">⚠️</span>
+                <span class="toast-message">${message}</span>
+            </div>
+        `;
+        document.body.appendChild(toast);
 
-        const dateInput = document.getElementById('reservation-date');
-        if (dateInput) {
-            dateInput.value = '';
+        setTimeout(() => {
+            toast.classList.add('show');
+        }, 100);
+
+        setTimeout(() => {
+            toast.classList.remove('show');
+            setTimeout(() => toast.remove(), 300);
+        }, 5000);
+    }
+
+    loadInitialData() {
+        // Check for URL parameters (e.g., from QR codes or links)
+        const urlParams = new URLSearchParams(window.location.search);
+        const preselectedDate = urlParams.get('date');
+        
+        if (preselectedDate) {
+            document.getElementById('reservation-date').value = preselectedDate;
+            this.handleDateSelection(preselectedDate);
         }
-
-        const nextDateBtn = document.getElementById('btn-next-date');
-        if (nextDateBtn) {
-            nextDateBtn.disabled = true;
-        }
-
-        const selectedDateDisplay = document.getElementById('selected-date-display');
-        if (selectedDateDisplay) {
-            selectedDateDisplay.textContent = '';
-        }
-
-        const dateInfo = document.getElementById('date-availability-info');
-        if (dateInfo) {
-            dateInfo.textContent = '';
-            dateInfo.classList.remove('show');
-        }
-
-        const timeSlots = document.getElementById('time-slots');
-        if (timeSlots) {
-            timeSlots.innerHTML = '';
-        }
-
-        const nextTimeBtn = document.getElementById('btn-next-time');
-        if (nextTimeBtn) {
-            nextTimeBtn.disabled = true;
-        }
-
-        const form = document.getElementById('reservation-form');
-        if (form) {
-            form.reset();
-        }
-
-        const submitBtn = document.getElementById('btn-submit-reservation');
-        if (submitBtn) {
-            submitBtn.disabled = true;
-            submitBtn.classList.remove('loading');
-        }
-
-        const summaryDate = document.getElementById('summary-date');
-        const summaryTime = document.getElementById('summary-time');
-        if (summaryDate) summaryDate.textContent = '';
-        if (summaryTime) summaryTime.textContent = '';
-
-        const errorEl = document.getElementById('reservation-error');
-        if (errorEl) {
-            errorEl.style.display = 'none';
-        }
-
-        const confirmCode = document.getElementById('confirmation-code');
-        const confirmName = document.getElementById('confirm-name');
-        const confirmDate = document.getElementById('confirm-date');
-        const confirmTime = document.getElementById('confirm-time');
-        const confirmGuests = document.getElementById('confirm-guests');
-        const confirmEmail = document.getElementById('confirm-email');
-        if (confirmCode) confirmCode.textContent = '';
-        if (confirmName) confirmName.textContent = '';
-        if (confirmDate) confirmDate.textContent = '';
-        if (confirmTime) confirmTime.textContent = '';
-        if (confirmGuests) confirmGuests.textContent = '';
-        if (confirmEmail) confirmEmail.textContent = '';
-
-        this.showStep(1);
-        this.updateProgressIndicator();
-        this.hideLoading();
     }
 }
 
-// Global functions for buttons
-function downloadICS() {
-    const reservation = window.reservationSystem.reservationData;
-    if (!reservation.date || !reservation.time) return;
-
-    const startDate = new Date(`${reservation.date}T${reservation.time}:00`);
-    const endDate = new Date(startDate.getTime() + 90 * 60000); // Add 90 minutes
-
-    const icsContent = `BEGIN:VCALENDAR
-VERSION:2.0
-PRODID:-//Healthy Brunch Club Wien//NONSGML v1.0//EN
-BEGIN:VEVENT
-UID:${Date.now()}@healthybrunchclub.at
-DTSTAMP:${formatICSDate(new Date())}
-DTSTART:${formatICSDate(startDate)}
-DTEND:${formatICSDate(endDate)}
-SUMMARY:Reservierung - Healthy Brunch Club Wien
-DESCRIPTION:Reservierung für ${reservation.guests} Personen
-LOCATION:Healthy Brunch Club Wien, Adresse hier
-END:VEVENT
-END:VCALENDAR`;
-
-    const blob = new Blob([icsContent], { type: 'text/calendar' });
-    const url = URL.createObjectURL(blob);
-    const a = document.createElement('a');
-    a.href = url;
-    a.download = 'healthy-brunch-club-reservierung.ics';
-    a.click();
-    URL.revokeObjectURL(url);
-}
-
-function formatICSDate(date) {
-    const year = date.getFullYear();
-    const month = String(date.getMonth() + 1).padStart(2, '0');
-    const day = String(date.getDate()).padStart(2, '0');
-    const hours = String(date.getHours()).padStart(2, '0');
-    const minutes = String(date.getMinutes()).padStart(2, '0');
-    const seconds = String(date.getSeconds()).padStart(2, '0');
-    return `${year}${month}${day}T${hours}${minutes}${seconds}`;
-}
-
-function startNewReservation() {
-    if (window.reservationSystem) {
-        window.reservationSystem.resetReservation();
-    } else {
-        window.reservationSystem = new ReservationSystem();
-    }
-}
-
-// Initialize on page load
+// Initialize when DOM is ready
 document.addEventListener('DOMContentLoaded', () => {
-    window.reservationSystem = new ReservationSystem();
+    new ReservationSystem();
 });
-
-// Expose helper functions globally for inline handlers
-window.downloadICS = downloadICS;
-window.startNewReservation = startNewReservation;
-
