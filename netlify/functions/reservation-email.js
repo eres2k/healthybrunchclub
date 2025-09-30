@@ -1,4 +1,4 @@
-const { Resend } = require('resend');
+const sendEmail = require('./utils/send-email');
 
 function formatDate(value) {
     if (!value) return '—';
@@ -150,33 +150,12 @@ exports.handler = async function(event) {
         };
     }
 
-    const resendApiKey = process.env.RESEND_API_KEY;
-    const toRecipients = process.env.BOOKING_NOTIFICATION_TO;
-    const fromAddress = process.env.BOOKING_NOTIFICATION_FROM;
-
-    if (!resendApiKey) {
-        console.error('Missing RESEND_API_KEY environment variable');
-        return {
-            statusCode: 500,
-            body: JSON.stringify({ message: 'E-Mail Versand nicht konfiguriert (API Key fehlt).' })
-        };
-    }
-
-    if (!toRecipients) {
-        console.error('Missing BOOKING_NOTIFICATION_TO environment variable');
-        return {
-            statusCode: 500,
-            body: JSON.stringify({ message: 'E-Mail Versand nicht konfiguriert (Empfänger fehlt).' })
-        };
-    }
-
-    if (!fromAddress) {
-        console.error('Missing BOOKING_NOTIFICATION_FROM environment variable');
-        return {
-            statusCode: 500,
-            body: JSON.stringify({ message: 'E-Mail Versand nicht konfiguriert (Absender fehlt).' })
-        };
-    }
+    const toRecipients = process.env.BOOKING_NOTIFICATION_TO
+        || process.env.RESTAURANT_EMAIL
+        || '';
+    const fromAddress = process.env.BOOKING_NOTIFICATION_FROM
+        || process.env.SENDER_EMAIL
+        || 'Healthy Brunch Club <noreply@healthybrunchclub.at>';
 
     let payload;
     try {
@@ -202,29 +181,31 @@ exports.handler = async function(event) {
         };
     }
 
-    const resend = new Resend(resendApiKey);
-
     try {
         const html = buildHtmlEmail(payload);
         const text = buildTextEmail(payload);
         const recipients = toRecipients.split(',').map(address => address.trim()).filter(Boolean);
 
         if (recipients.length === 0) {
-            throw new Error('No valid recipients configured');
+            console.error('No valid recipients configured for reservation notifications');
+            return {
+                statusCode: 500,
+                body: JSON.stringify({ message: 'E-Mail Versand nicht konfiguriert (Empfänger fehlt).' })
+            };
         }
 
-        await resend.emails.send({
-            from: fromAddress,
-            to: recipients,
-            reply_to: payload.email,
-            subject: `Neue Reservierung • ${formatDate(payload.date)} • ${payload.time}`,
-            html,
-            text,
-            tags: [
-                { name: 'form', value: 'reservierung' },
-                { name: 'environment', value: process.env.CONTEXT || 'unknown' }
-            ]
-        });
+        await Promise.all(
+            recipients.map((recipient) =>
+                sendEmail({
+                    to: recipient,
+                    from: fromAddress,
+                    subject: `Neue Reservierung • ${formatDate(payload.date)} • ${payload.time}`,
+                    html,
+                    text,
+                    replyTo: payload.email || undefined
+                })
+            )
+        );
 
         return {
             statusCode: 200,

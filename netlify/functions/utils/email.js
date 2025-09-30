@@ -1,4 +1,4 @@
-const { Resend } = require('resend');
+const sendEmail = require('./send-email');
 
 function escapeHtml(value = '') {
   return String(value)
@@ -148,15 +148,16 @@ function buildIcsAttachment(reservation) {
 }
 
 async function sendReservationEmails(reservation, options = {}) {
-  const resendApiKey = process.env.RESEND_API_KEY;
-  if (!resendApiKey) {
-    console.warn('RESEND_API_KEY nicht gesetzt – E-Mails werden nicht versendet.');
-    return { skipped: true };
-  }
-
-  const resend = new Resend(resendApiKey);
-  const fromAddress = process.env.BOOKING_NOTIFICATION_FROM || options.defaultFrom || 'Healthy Brunch Club <hello@healthybrunchclub.at>';
-  const adminRecipients = (process.env.BOOKING_NOTIFICATION_TO || options.adminRecipients || '')
+  const fromAddress = options.defaultFrom
+    || process.env.BOOKING_NOTIFICATION_FROM
+    || process.env.SENDER_EMAIL
+    || 'Healthy Brunch Club <hello@healthybrunchclub.at>';
+  const adminRecipients = (
+    process.env.BOOKING_NOTIFICATION_TO
+      || options.adminRecipients
+      || process.env.RESTAURANT_EMAIL
+      || ''
+  )
     .split(',')
     .map((entry) => entry.trim())
     .filter(Boolean);
@@ -167,32 +168,36 @@ async function sendReservationEmails(reservation, options = {}) {
     attachments.push(ics);
   }
 
-  const adminPayload = {
-    from: fromAddress,
-    to: adminRecipients,
-    subject: `Neue Reservierung · ${formatDateLabel(reservation.date)} ${reservation.time}`,
-    html: buildHtmlBody(reservation, { isAdmin: true, guestNotes: options.guestNotes }),
-    text: buildTextBody(reservation, true),
-    attachments,
-    tags: [
-      { name: 'environment', value: process.env.CONTEXT || 'unknown' },
-      { name: 'type', value: 'reservation' }
-    ]
-  };
-
   const sends = [];
   if (adminRecipients.length > 0) {
-    sends.push(resend.emails.send(adminPayload));
+    const adminSubject = `Neue Reservierung · ${formatDateLabel(reservation.date)} ${reservation.time}`;
+    const adminHtml = buildHtmlBody(reservation, { isAdmin: true, guestNotes: options.guestNotes });
+    const adminText = buildTextBody(reservation, true);
+
+    adminRecipients.forEach((recipient) => {
+      sends.push(
+        sendEmail({
+          to: recipient,
+          from: fromAddress,
+          subject: adminSubject,
+          html: adminHtml,
+          text: adminText,
+          replyTo: reservation.email || undefined,
+          attachments
+        })
+      );
+    });
   }
 
   if (reservation.email) {
     sends.push(
-      resend.emails.send({
-        from: fromAddress,
+      sendEmail({
         to: reservation.email,
-        subject: reservation.status === 'waitlist'
-          ? 'Healthy Brunch Club – Warteliste'
-          : 'Healthy Brunch Club – Reservierungsbestätigung',
+        from: fromAddress,
+        subject:
+          reservation.status === 'waitlist'
+            ? 'Healthy Brunch Club – Warteliste'
+            : 'Healthy Brunch Club – Reservierungsbestätigung',
         html: buildHtmlBody(reservation, { guestNotes: options.guestNotes }),
         text: buildTextBody(reservation, false),
         attachments
