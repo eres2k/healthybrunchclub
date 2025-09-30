@@ -7,9 +7,16 @@
   NODE_VERSION = "18"
 
 [functions]
+  directory = "netlify/functions"
   # Include content files in the function bundle
   included_files = ["content/**/*.md", "content/**/*.yml", "content/**/*.json"]
   node_bundler = "esbuild"
+
+[[headers]]
+  for = "/netlify/functions/*"
+  [headers.values]
+    Access-Control-Allow-Origin = "*"
+    Access-Control-Allow-Methods = "GET, POST, OPTIONS"
 
 # Legal pages redirects
 [[redirects]]
