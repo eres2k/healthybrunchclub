@@ -2,7 +2,4 @@
   "settings": {
     "max_days_advance": 30,
     "min_hours_advance": 2,
-    "slot_duration": 60,
-    "default_max_guests": 10
-  }
-}
+

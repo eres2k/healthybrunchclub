@@ -3555,6 +3555,7 @@ body.dark-mode video:hover {
     margin-bottom: 30px;
 }
 
+
 .date-input {
     width: 100%;
     padding: 15px;
@@ -3583,6 +3584,7 @@ body.dark-mode video:hover {
 .availability-info.show {
     display: block;
 }
+
 
 /* Time Slots Grid */
 .selected-date-display {
@@ -3941,6 +3943,7 @@ body.dark-mode video:hover {
         padding: 20px;
         margin: 20px;
     }
+
     
     .reservation-title {
         font-size: 2rem;

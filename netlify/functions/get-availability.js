@@ -9,6 +9,7 @@ exports.handler = async (event, context) => {
     'Content-Type': 'application/json'
   };
 
+
   if (event.httpMethod !== 'POST') {
     return {
       statusCode: 405,
@@ -27,18 +28,6 @@ exports.handler = async (event, context) => {
         body: JSON.stringify({ error: 'Date is required' })
       };
     }
-
-    // Load data from CMS
-    const settings = await loadSettings();
-    const availableDates = await loadAvailableDates();
-    const existingReservations = await loadReservations(date);
-    const blockedReservations = await loadBlockedReservations(date);
-    
-    // Check advance limits
-    const now = new Date();
-    const dateObj = new Date(date);
-    const hoursAdvance = (dateObj - now) / (1000 * 60 * 60);
-    const daysAdvance = Math.floor((dateObj - now) / (1000 * 60 * 60 * 24));
 
     if (hoursAdvance < settings.settings.min_hours_advance) {
       return {
