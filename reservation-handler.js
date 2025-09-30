@@ -24,8 +24,6 @@ class ReservationSystem {
         this.setupDatePicker();
         this.setupEventListeners();
         this.updateProgressIndicator();
-        this.hideLoading();
-        this.validateForm();
     }
 
     setupDatePicker() {
@@ -359,89 +357,6 @@ class ReservationSystem {
             overlay.style.display = 'none';
         }
     }
-
-    resetReservation() {
-        this.currentStep = 1;
-        this.reservationData = {
-            date: null,
-            time: null,
-            guests: null,
-            name: null,
-            email: null,
-            phone: null,
-            specialRequests: null
-        };
-        this.availableSlots = [];
-
-        const dateInput = document.getElementById('reservation-date');
-        if (dateInput) {
-            dateInput.value = '';
-        }
-
-        const nextDateBtn = document.getElementById('btn-next-date');
-        if (nextDateBtn) {
-            nextDateBtn.disabled = true;
-        }
-
-        const selectedDateDisplay = document.getElementById('selected-date-display');
-        if (selectedDateDisplay) {
-            selectedDateDisplay.textContent = '';
-        }
-
-        const dateInfo = document.getElementById('date-availability-info');
-        if (dateInfo) {
-            dateInfo.textContent = '';
-            dateInfo.classList.remove('show');
-        }
-
-        const timeSlots = document.getElementById('time-slots');
-        if (timeSlots) {
-            timeSlots.innerHTML = '';
-        }
-
-        const nextTimeBtn = document.getElementById('btn-next-time');
-        if (nextTimeBtn) {
-            nextTimeBtn.disabled = true;
-        }
-
-        const form = document.getElementById('reservation-form');
-        if (form) {
-            form.reset();
-        }
-
-        const submitBtn = document.getElementById('btn-submit-reservation');
-        if (submitBtn) {
-            submitBtn.disabled = true;
-            submitBtn.classList.remove('loading');
-        }
-
-        const summaryDate = document.getElementById('summary-date');
-        const summaryTime = document.getElementById('summary-time');
-        if (summaryDate) summaryDate.textContent = '';
-        if (summaryTime) summaryTime.textContent = '';
-
-        const errorEl = document.getElementById('reservation-error');
-        if (errorEl) {
-            errorEl.style.display = 'none';
-        }
-
-        const confirmCode = document.getElementById('confirmation-code');
-        const confirmName = document.getElementById('confirm-name');
-        const confirmDate = document.getElementById('confirm-date');
-        const confirmTime = document.getElementById('confirm-time');
-        const confirmGuests = document.getElementById('confirm-guests');
-        const confirmEmail = document.getElementById('confirm-email');
-        if (confirmCode) confirmCode.textContent = '';
-        if (confirmName) confirmName.textContent = '';
-        if (confirmDate) confirmDate.textContent = '';
-        if (confirmTime) confirmTime.textContent = '';
-        if (confirmGuests) confirmGuests.textContent = '';
-        if (confirmEmail) confirmEmail.textContent = '';
-
-        this.showStep(1);
-        this.updateProgressIndicator();
-        this.hideLoading();
-    }
 }
 
 // Global functions for buttons
@@ -486,19 +401,11 @@ function formatICSDate(date) {
 }
 
 function startNewReservation() {
-    if (window.reservationSystem) {
-        window.reservationSystem.resetReservation();
-    } else {
-        window.reservationSystem = new ReservationSystem();
-    }
+    // Reset the system
+    window.reservationSystem = new ReservationSystem();
 }
 
 // Initialize on page load
 document.addEventListener('DOMContentLoaded', () => {
     window.reservationSystem = new ReservationSystem();
 });
-
-// Expose helper functions globally for inline handlers
-window.downloadICS = downloadICS;
-window.startNewReservation = startNewReservation;
-

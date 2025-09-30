@@ -112,13 +112,7 @@ function generateConfirmationCode() {
 }
 
 async function checkAvailability(date, time, guests) {
-  const guestsNumber = parseInt(guests, 10);
-  if (Number.isNaN(guestsNumber) || guestsNumber <= 0) {
-    return { available: false, reason: 'Ungültige Gästeanzahl' };
-  }
-
   const existingReservations = await loadReservations(date);
-  const blockedReservations = await loadBlockedReservations(date);
   const slot = await getSlotConfig(date, time);
   
   if (!slot) {
@@ -128,17 +122,13 @@ async function checkAvailability(date, time, guests) {
   const bookedGuests = existingReservations
     .filter(r => r.time === time)
     .reduce((sum, r) => sum + r.guests, 0);
-  const blockedSeats = blockedReservations
-    .filter(b => b.time === time)
-    .reduce((sum, b) => sum + b.blocked_seats, 0);
   
-  const availableSeats = slot.max_guests - bookedGuests - blockedSeats;
-  const remainingSeats = Math.max(availableSeats, 0);
+  const availableSeats = slot.max_guests - bookedGuests;
   
-  if (remainingSeats < guestsNumber) {
+  if (availableSeats < guests) {
     return { 
       available: false, 
-      reason: `Nur noch ${remainingSeats} Plätze verfügbar` 
+      reason: `Nur noch ${availableSeats} Plätze verfügbar` 
     };
   }
   
@@ -185,28 +175,6 @@ async function loadReservations(date) {
     );
     const allReservations = JSON.parse(data);
     return allReservations.filter(r => r.date === date && r.status === 'confirmed');
-  } catch (error) {
-    return [];
-  }
-}
-
-async function loadBlockedReservations(date) {
-  try {
-    const blockedDir = path.join(__dirname, '../../content/blocked-reservations');
-    const files = await fs.readdir(blockedDir);
-    const blocked = [];
-
-    for (const file of files) {
-      if (file.endsWith('.json')) {
-        const data = await fs.readFile(path.join(blockedDir, file), 'utf8');
-        const blockData = JSON.parse(data);
-        if (blockData.date === date) {
-          blocked.push(blockData);
-        }
-      }
-    }
-
-    return blocked;
   } catch (error) {
     return [];
   }
