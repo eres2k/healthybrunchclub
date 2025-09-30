@@ -291,8 +291,8 @@
               </div>
 
               <div class="form-group">
-                <label for="guest-phone">Telefon *</label>
-                <input type="tel" id="guest-phone" required>
+                <label for="guest-phone">Telefonnummer</label>
+                <input type="tel" id="guest-phone" placeholder="Telefonnummer (optional)">
               </div>
 
               <div class="form-group">
@@ -572,8 +572,8 @@
         honeypot: ''
       };
 
-      if (!formData.name || !formData.email || !formData.phone || !formData.guests) {
-        alert('Bitte füllen Sie alle Pflichtfelder aus.');
+      if (!formData.name || !formData.email || !formData.guests) {
+        alert('Bitte füllen Sie alle Pflichtfelder aus (Name, E-Mail, Anzahl Personen).');
         return;
       }
 
@@ -636,6 +636,96 @@
     window.goBackToTimeSelection = goBackToTimeSelection;
     window.resetReservation = resetReservation;
     </script>
+
+    <script>
+    // FIX 1: Zeitformat-Korrektur für verfügbare Uhrzeiten
+    document.addEventListener('DOMContentLoaded', function() {
+        function formatMinutesToTime(minutes) {
+            const hours = Math.floor(minutes / 60);
+            const mins = minutes % 60;
+            return `${hours.toString().padStart(2, '0')}:${mins.toString().padStart(2, '0')}`;
+        }
+
+        const timeSlots = document.querySelectorAll('[data-date="2025-10-06"] .time-slot, [data-date="06-10-2025"] .time-slot, .monday-slots .time-slot');
+
+        timeSlots.forEach((slot) => {
+            const timeText = slot.textContent.trim();
+
+            if (!isNaN(timeText) && timeText !== '') {
+                const minutes = parseInt(timeText, 10);
+                if (minutes >= 0 && minutes <= 1440) {
+                    slot.textContent = formatMinutesToTime(minutes);
+                }
+            }
+        });
+
+        const timeSelect = document.querySelector('#reservation-time, select[name="time"], .time-select');
+        if (timeSelect) {
+            Array.from(timeSelect.options).forEach((option) => {
+                const value = option.value || option.textContent;
+                if (!isNaN(value) && value !== '') {
+                    const minutes = parseInt(value, 10);
+                    if (minutes >= 0 && minutes <= 1440) {
+                        const formattedTime = formatMinutesToTime(minutes);
+                        option.textContent = formattedTime;
+                        option.value = formattedTime;
+                    }
+                }
+            });
+        }
+    });
+
+    // FIX 2: Telefonnummer optional machen
+    document.addEventListener('DOMContentLoaded', function() {
+        const phoneInputs = document.querySelectorAll('input[type="tel"], input[name="phone"], input[name="telefon"], #phone, #telefon, .phone-input, #guest-phone');
+
+        phoneInputs.forEach((input) => {
+            input.removeAttribute('required');
+
+            if (input.placeholder && input.placeholder.includes('*')) {
+                input.placeholder = input.placeholder.replace('*', '').trim();
+            }
+            if (!input.placeholder) {
+                input.placeholder = 'Telefonnummer (optional)';
+            }
+
+            const label = input.id ? document.querySelector(`label[for="${input.id}"]`) : null;
+            if (label && label.innerHTML.includes('*')) {
+                label.innerHTML = label.innerHTML.replace('*', '').trim();
+            }
+        });
+
+        const reservationForm = document.querySelector('#reservation-form, .reservation-form, form[name="reservation"]');
+
+        if (reservationForm) {
+            reservationForm.addEventListener('submit', function() {
+                const phoneField = this.querySelector('input[type="tel"]');
+                if (phoneField) {
+                    phoneField.setCustomValidity('');
+                }
+            });
+        }
+    });
+    </script>
+
+    <style>
+    input[type="tel"]:not([required])::placeholder {
+        font-style: italic;
+        opacity: 0.7;
+    }
+
+    label:has(+ input[type="tel"]:not([required]))::after {
+        content: " (optional)";
+        font-size: 0.9em;
+        color: var(--sage-green, #8B9474);
+        font-style: italic;
+    }
+
+    .time-slot {
+        font-family: 'Lato', sans-serif;
+        font-weight: 500;
+    }
+    </style>
 
 </body>
 </html>
