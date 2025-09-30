@@ -108,7 +108,7 @@ function renderAdminEmail(reservation) {
         <li>Zeit: ${reservation.time} Uhr</li>
         <li>Gäste: ${reservation.guests}</li>
         <li>Status: ${translateStatus(reservation.status)}</li>
-        <li>Telefon: ${reservation.phone}</li>
+        <li>Telefon: ${reservation.phone || '—'}</li>
         <li>E-Mail: ${reservation.email}</li>
         ${reservation.specialRequests ? `<li>Besondere Wünsche: ${reservation.specialRequests}</li>` : ''}
       </ul>

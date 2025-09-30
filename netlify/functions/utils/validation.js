@@ -48,7 +48,7 @@ function validateReservationPayload(payload) {
 
   data.name = sanitizeText(payload.name);
   data.email = sanitizeText(payload.email).toLowerCase();
-  data.phone = sanitizeText(payload.phone);
+  data.phone = sanitizeText(payload.phone || '');
   data.specialRequests = sanitizeText(payload.specialRequests || '');
   data.honeypot = sanitizeText(payload.honeypot || '');
 
@@ -60,8 +60,8 @@ function validateReservationPayload(payload) {
     errors.email = 'Bitte geben Sie eine gültige E-Mail-Adresse ein.';
   }
 
-  if (!data.phone || !isValidPhone(data.phone)) {
-    errors.phone = 'Bitte geben Sie eine gültige österreichische Telefonnummer ein.';
+  if (data.phone && !isValidPhone(data.phone)) {
+    errors.phone = 'Bitte geben Sie eine gültige österreichische Telefonnummer ein oder lassen Sie das Feld leer.';
   }
 
   const guests = Number(payload.guests);
