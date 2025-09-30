@@ -272,6 +272,12 @@ h1, h2, h3, h4, h5, h6 {
     line-height: 1.1;
     margin-bottom: var(--spacing-lg);
 }
+.hero-title .main-logo {
+    display: block;
+    width: clamp(110px, 18vw, 220px);
+    margin: var(--spacing-sm) auto;
+    height: auto;
+}
 .hero-subtitle {
     display: block;
     font-family: var(--font-light);
@@ -1218,6 +1224,12 @@ h1, h2, h3, h4, h5, h6 {
 }
 .about-content {
     padding-right: var(--spacing-lg);
+    text-align: left;
+}
+.about-content .section-title {
+    text-align: center;
+    margin-left: auto;
+    margin-right: auto;
 }
 .about-lead {
     font-family: var(--font-heading);
