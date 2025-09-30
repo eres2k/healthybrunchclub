@@ -1,10 +1,15 @@
-exports.handler = async (event) => {
-  const headers = {
-    'Access-Control-Allow-Origin': '*',
-    'Access-Control-Allow-Headers': 'Content-Type',
-    'Access-Control-Allow-Methods': 'POST, OPTIONS'
-  };
+const fetch = require('node-fetch');
 
+const headers = {
+  'Access-Control-Allow-Origin': '*',
+  'Access-Control-Allow-Headers': 'Content-Type',
+  'Access-Control-Allow-Methods': 'POST, OPTIONS'
+};
+
+// Import E-Mail Service
+const { sendReservationEmails } = require('./utils/email-service');
+
+exports.handler = async (event, context) => {
   if (event.httpMethod === 'OPTIONS') {
     return { statusCode: 200, headers, body: '' };
   }
@@ -18,51 +23,57 @@ exports.handler = async (event) => {
   }
 
   try {
-    const data = JSON.parse(event.body || '{}');
+    const data = JSON.parse(event.body);
+    const siteUrl = process.env.URL || 'https://healthybrunchclub.at';
 
-    if (data.honeypot) {
+    // Normalize data
+    const normalized = {
+      name: data.name?.trim() || '',
+      email: data.email?.trim() || '',
+      phone: data.phone?.trim() || '',
+      date: data.date || '',
+      time: data.time || '',
+      guests: parseInt(data.guests, 10) || 1,
+      message: data.specialRequests?.trim() || data.message?.trim() || '',
+      honeypot: data.honeypot || ''
+    };
+
+    // Honeypot check
+    if (normalized.honeypot) {
       return {
-        statusCode: 200,
+        statusCode: 400,
         headers,
-        body: JSON.stringify({ success: true, message: 'Danke!' })
+        body: JSON.stringify({ error: 'Invalid submission' })
       };
     }
 
-    const required = ['name', 'email', 'phone', 'date', 'time', 'guests'];
-    for (const field of required) {
-      if (!data[field]) {
-        return {
-          statusCode: 400,
-          headers,
-          body: JSON.stringify({
-            error: `Bitte füllen Sie das Feld "${field}" aus.`
-          })
-        };
-      }
+    // Validation
+    if (!normalized.name || !normalized.email || !normalized.date || !normalized.time) {
+      return {
+        statusCode: 400,
+        headers,
+        body: JSON.stringify({ error: 'Bitte füllen Sie alle Pflichtfelder aus.' })
+      };
     }
 
-    const normalized = {
-      ...data,
-      message: data.message || data.specialRequests || '',
+    // Generate confirmation code
+    const confirmationCode = 'HBC' + Date.now().toString(36).toUpperCase().slice(-6);
+
+    // Create reservation object for email
+    const reservation = {
+      ...normalized,
+      confirmationCode,
+      status: 'confirmed',
+      createdAt: new Date().toISOString()
     };
 
-    const siteUrl =
-      process.env.URL ||
-      process.env.DEPLOY_PRIME_URL ||
-      process.env.DEPLOY_URL ||
-      process.env.SITE_URL;
-
-    if (!siteUrl) {
-      throw new Error('Site URL is not configured.');
-    }
-
+    // Submit to Netlify Forms
     const formData = new URLSearchParams({
       'form-name': 'reservations',
       ...Object.entries(normalized).reduce((acc, [key, value]) => {
-        if (value === undefined) {
-          return acc;
+        if (value !== undefined) {
+          acc[key] = value == null ? '' : String(value);
         }
-        acc[key] = value == null ? '' : String(value);
         return acc;
       }, {})
     });
@@ -74,52 +85,40 @@ exports.handler = async (event) => {
     });
 
     if (!response.ok) {
-      const text = await response.text();
-      throw new Error(`Netlify Forms request failed: ${response.status} ${response.statusText} - ${text}`);
+      throw new Error(`Netlify Forms request failed: ${response.status}`);
     }
 
-    /*
-    if (process.env.SENDGRID_API_KEY) {
-      const sgMail = require('@sendgrid/mail');
-      sgMail.setApiKey(process.env.SENDGRID_API_KEY);
-
-      const msg = {
-        to: process.env.RESTAURANT_EMAIL || 'info@healthybrunchclub.at',
-        from: process.env.SENDER_EMAIL || 'noreply@healthybrunchclub.at',
-        subject: `Neue Reservierung: ${normalized.name} - ${normalized.date} um ${normalized.time}`,
-        html: `
-          <h2>Neue Reservierung</h2>
-          <p><strong>Name:</strong> ${normalized.name}</p>
-          <p><strong>Email:</strong> ${normalized.email}</p>
-          <p><strong>Telefon:</strong> ${normalized.phone}</p>
-          <p><strong>Datum:</strong> ${normalized.date}</p>
-          <p><strong>Uhrzeit:</strong> ${normalized.time}</p>
-          <p><strong>Personen:</strong> ${normalized.guests}</p>
-          <p><strong>Nachricht:</strong> ${normalized.message || 'Keine'}</p>
-        `,
-      };
-
-      await sgMail.send(msg);
+    // WICHTIG: E-Mail-Versand aktivieren
+    try {
+      await sendReservationEmails(reservation);
+      console.log('E-Mail-Bestätigung wurde versendet an:', reservation.email);
+    } catch (emailError) {
+      console.error('E-Mail konnte nicht versendet werden:', emailError);
+      // Fortsetzung auch wenn E-Mail fehlschlägt
     }
-    */
 
     return {
       statusCode: 200,
       headers,
       body: JSON.stringify({
         success: true,
-        message: 'Ihre Reservierung wurde erfolgreich übermittelt!'
+        message:
+          'Ihre Reservierung wurde erfolgreich übermittelt! Sie erhalten in Kürze eine Bestätigung per E-Mail.',
+        reservation: {
+          confirmationCode,
+          date: normalized.date,
+          time: normalized.time,
+          guests: normalized.guests
+        }
       })
     };
   } catch (error) {
     console.error('Reservation error:', error);
-
     return {
       statusCode: 500,
       headers,
       body: JSON.stringify({
-        error: 'Es ist ein Fehler aufgetreten. Bitte versuchen Sie es später erneut.',
-        details: process.env.NODE_ENV === 'development' ? error.message : undefined
+        error: 'Es ist ein Fehler aufgetreten. Bitte versuchen Sie es später erneut.'
       })
     };
   }

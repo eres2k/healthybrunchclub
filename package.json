@@ -15,11 +15,11 @@
     "jspdf": "^2.5.1",
     "jsonwebtoken": "^9.0.2",
     "luxon": "^3.4.4",
+    "node-fetch": "^2.6.7",
     "qrcode": "^1.5.3",
     "uuid": "^9.0.0"
   },
   "devDependencies": {
-    "netlify-cli": "^17.0.0",
-    "node-fetch": "^3.3.2"
+    "netlify-cli": "^17.0.0"
   }
 }
