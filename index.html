@@ -291,8 +291,8 @@
               </div>
 
               <div class="form-group">
-                <label for="guest-phone">Telefon *</label>
-                <input type="tel" id="guest-phone" required>
+                <label for="guest-phone">Telefon (optional)</label>
+                <input type="tel" id="guest-phone">
               </div>
 
               <div class="form-group">
@@ -572,7 +572,7 @@
         honeypot: ''
       };
 
-      if (!formData.name || !formData.email || !formData.phone || !formData.guests) {
+      if (!formData.name || !formData.email || !formData.guests) {
         alert('Bitte füllen Sie alle Pflichtfelder aus.');
         return;
       }
