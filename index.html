@@ -660,12 +660,14 @@
 
       const successMessageEl = document.getElementById('success-message');
       if (successMessageEl) {
-        successMessageEl.textContent = result.message || 'Vielen Dank! Wir werden uns in Kürze bei Ihnen melden.';
+        successMessageEl.textContent =
+          result.message || 'Vielen Dank für Ihre Reservierung! Sie erhalten in Kürze eine Bestätigungs-E-Mail.';
       }
 
       const confirmationCodeEl = document.getElementById('confirmation-code');
       if (confirmationCodeEl && result.reservation && result.reservation.confirmationCode) {
         confirmationCodeEl.textContent = result.reservation.confirmationCode;
+        confirmationCodeEl.style.display = 'block';
       }
 
       const formElement = document.getElementById('reservation-form');
