@@ -1282,6 +1282,19 @@ h1, h2, h3, h4, h5, h6 {
     margin-bottom: var(--spacing-xs);
     color: var(--charcoal);
 }
+
+.optional-label::after {
+    content: " (optional)";
+    font-size: 0.85em;
+    color: var(--sage-green);
+    font-style: italic;
+    margin-left: 4px;
+}
+
+#guest-phone,
+[data-reservation-form] input[name="phone"] {
+    background-color: var(--warm-white);
+}
 .form-group input,
 .form-group select,
 .form-group textarea {

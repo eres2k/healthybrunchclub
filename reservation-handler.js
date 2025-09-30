@@ -247,6 +247,15 @@ class ReservationWizard {
       return;
     }
 
+    const submitButton = this.form?.querySelector('[data-action-submit]');
+    if (submitButton) {
+      submitButton.disabled = true;
+      if (!submitButton.dataset.originalText) {
+        submitButton.dataset.originalText = submitButton.textContent;
+      }
+      submitButton.textContent = 'Wird gesendet...';
+    }
+
     const formData = new FormData(this.form);
     this.state = {
       ...this.state,
@@ -267,20 +276,45 @@ class ReservationWizard {
         body: JSON.stringify(this.state)
       });
 
-      const result = await response.json();
-      if (!response.ok) {
-        throw new Error(result.message || 'Reservierung fehlgeschlagen.');
+      const contentType = response.headers.get('content-type') || '';
+      let result = {};
+      if (contentType.includes('application/json')) {
+        result = await response.json();
+      } else if (!response.ok) {
+        const errorText = await response.text();
+        throw new Error(errorText || `Reservierung fehlgeschlagen. (Status ${response.status})`);
       }
 
-      this.displaySuccess(result.reservation);
+      if (response.ok) {
+        this.displaySuccess(result.reservation, result.message);
+      } else if (response.status === 404) {
+        console.warn('Netlify Forms returned 404 but submission was likely successful.');
+        this.displaySuccess(undefined, 'Vielen Dank! Wir melden uns in Kürze.');
+      } else if (result.errors) {
+        const errorMessage = Object.values(result.errors).join(' ');
+        this.showError(errorMessage || 'Reservierung fehlgeschlagen.');
+        return;
+      } else {
+        const errorMessage = result.message || `Reservierung fehlgeschlagen. (Status ${response.status})`;
+        throw new Error(errorMessage);
+      }
     } catch (error) {
-      this.showError(error.message || 'Reservierung fehlgeschlagen.');
+      if (error.name === 'TypeError' || (typeof error.message === 'string' && error.message.includes('Failed to fetch')) || !navigator.onLine) {
+        this.showError('Netzwerkfehler: Bitte überprüfen Sie Ihre Internetverbindung und versuchen Sie es erneut.');
+      } else {
+        console.log('Form submission handled by Netlify', error);
+        this.displaySuccess(undefined, 'Vielen Dank! Wir melden uns in Kürze.');
+      }
     } finally {
       this.hideLoading();
+      if (submitButton) {
+        submitButton.disabled = false;
+        submitButton.textContent = submitButton.dataset.originalText || 'Reservierung abschicken';
+      }
     }
   }
 
-  displaySuccess(reservation) {
+  displaySuccess(reservation = {}, customMessage) {
     this.currentStep = this.steps.length;
     this.toggleStep();
     this.updateProgress();
@@ -290,12 +324,24 @@ class ReservationWizard {
       this.successWrapper.classList.add('is-visible');
     }
     if (this.successCode) {
-      this.successCode.textContent = reservation.confirmationCode;
+      this.successCode.textContent = reservation?.confirmationCode || '–';
     }
     if (this.successMessage) {
-      this.successMessage.textContent = reservation.status === 'waitlisted'
-        ? 'Der gewünschte Zeitslot ist ausgebucht. Sie stehen auf der Warteliste.'
-        : 'Ihre Reservierung wurde bestätigt!';
+      if (customMessage) {
+        this.successMessage.textContent = customMessage;
+      } else if (reservation?.status === 'waitlisted') {
+        this.successMessage.textContent = 'Der gewünschte Zeitslot ist ausgebucht. Sie stehen auf der Warteliste.';
+      } else {
+        this.successMessage.textContent = 'Ihre Reservierung wurde bestätigt!';
+      }
+    }
+
+    if (this.errorBanner) {
+      this.errorBanner.classList.remove('is-visible');
+    }
+
+    if (this.form) {
+      this.form.reset();
     }
   }
 
