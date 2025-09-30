@@ -1,104 +1,194 @@
-const {
-  loadReservationSettings,
-  loadSpecialDates,
-  loadReservationsForDate,
-  calculateAvailability
-} = require('./utils/reservation-utils');
+const fs = require('fs').promises;
+const path = require('path');
 
-const DEFAULT_HEADERS = {
-  'Access-Control-Allow-Origin': '*',
-  'Access-Control-Allow-Headers': 'Content-Type, Authorization',
-  'Access-Control-Allow-Methods': 'GET, OPTIONS',
-  'Content-Type': 'application/json',
-  'Cache-Control': 'max-age=60'
-};
+exports.handler = async (event, context) => {
+  // CORS Headers
+  const headers = {
+    'Access-Control-Allow-Origin': '*',
+    'Access-Control-Allow-Headers': 'Content-Type',
+    'Content-Type': 'application/json'
+  };
 
-exports.handler = async (event) => {
-  if (event.httpMethod === 'OPTIONS') {
-    return {
-      statusCode: 200,
-      headers: DEFAULT_HEADERS,
-      body: ''
-    };
-  }
-
-  if (event.httpMethod !== 'GET') {
+  if (event.httpMethod !== 'POST') {
     return {
       statusCode: 405,
-      headers: DEFAULT_HEADERS,
-      body: JSON.stringify({ message: 'Method not allowed' })
+      headers,
+      body: JSON.stringify({ error: 'Method not allowed' })
     };
   }
 
   try {
-    const settings = await loadReservationSettings();
-    const specialDates = await loadSpecialDates();
-    const params = event.queryStringParameters || {};
-    const date = params.date ? params.date.slice(0, 10) : null;
-
+    const { date } = JSON.parse(event.body);
+    
     if (!date) {
-      const normalizedOpeningHours = Object.entries(settings.opening_hours || {}).reduce((acc, [day, config]) => {
-        acc[day] = {
-          open: Boolean(config?.open),
-          from: config?.from ? String(config.from).slice(0, 5) : null,
-          to: config?.to ? String(config.to).slice(0, 5) : null,
-          slots: Array.isArray(config?.slots)
-            ? config.slots.map((slot) => (slot.time ? slot.time : slot)).map((time) => String(time).slice(0, 5))
-            : [],
-          maxGuests: config?.max_guests || null
-        };
-        return acc;
-      }, {});
+      return {
+        statusCode: 400,
+        headers,
+        body: JSON.stringify({ error: 'Date is required' })
+      };
+    }
 
+    // Load data from CMS
+    const settings = await loadSettings();
+    const availableDates = await loadAvailableDates();
+    const existingReservations = await loadReservations(date);
+    const blockedReservations = await loadBlockedReservations(date);
+    
+    // Check advance limits
+    const now = new Date();
+    const dateObj = new Date(date);
+    const hoursAdvance = (dateObj - now) / (1000 * 60 * 60);
+    const daysAdvance = Math.floor((dateObj - now) / (1000 * 60 * 60 * 24));
+
+    if (hoursAdvance < settings.settings.min_hours_advance) {
       return {
         statusCode: 200,
-        headers: DEFAULT_HEADERS,
+        headers,
         body: JSON.stringify({
-          type: 'metadata',
-          openingHours: normalizedOpeningHours,
-          blackoutDates: Array.isArray(settings.blackout_dates)
-            ? settings.blackout_dates
-                .map((entry) => (typeof entry === 'string' ? entry.slice(0, 10) : entry.date?.slice(0, 10)))
-                .filter(Boolean)
-            : [],
-          specialDates,
-          guestNotes: settings.guest_notes || '',
-          waitlistEnabled: Boolean(settings.waitlist_enabled),
-          maxGuestsPerReservation: settings.max_guests_per_reservation || null,
-          maxDaysInAdvance: settings.max_days_in_advance || null,
-          minNoticeHours: settings.min_notice_hours || 0,
-          timezone: 'Europe/Vienna'
+          available: false,
+          reason: 'Zu kurzfristig',
+          slots: []
         })
       };
     }
 
-    const guests = params.guests ? parseInt(params.guests, 10) : null;
-    const existingReservations = await loadReservationsForDate(date);
-    const availability = calculateAvailability({
-      date,
-      guests,
-      settings,
-      specialDates,
-      existingReservations
-    });
+    if (daysAdvance > settings.settings.max_days_advance) {
+      return {
+        statusCode: 200,
+        headers,
+        body: JSON.stringify({
+          available: false,
+          reason: 'Zu weit im Voraus',
+          slots: []
+        })
+      };
+    }
 
+    // Check if available date
+    const availableDate = availableDates.find(sd => sd.date === date);
+    
+    if (!availableDate) {
+      return {
+        statusCode: 200,
+        headers,
+        body: JSON.stringify({
+          available: false,
+          reason: 'Restaurant geschlossen',
+          slots: []
+        })
+      };
+    }
+    
+    // Get slots for the day
+    const daySlots = availableDate.slots;
+    
+    // Calculate availability for each slot
+    const availableSlots = daySlots.map(slot => {
+      const bookedCount = existingReservations.filter(r => r.time === slot.time)
+        .reduce((sum, r) => sum + r.guests, 0);
+      const blockedCount = blockedReservations.filter(b => b.time === slot.time)
+        .reduce((sum, b) => sum + b.blocked_seats, 0);
+      
+      const availableSeats = slot.max_guests - bookedCount - blockedCount;
+      
+      return {
+        time: slot.time,
+        maxGuests: slot.max_guests,
+        availableSeats: Math.max(0, availableSeats),
+        available: availableSeats > 0
+      };
+    });
+    
     return {
       statusCode: 200,
-      headers: DEFAULT_HEADERS,
+      headers,
       body: JSON.stringify({
-        type: 'availability',
-        ...availability
+        available: true,
+        date,
+        slots: availableSlots
       })
     };
+    
   } catch (error) {
-    console.error('Fehler beim Ermitteln der Verfügbarkeit', error);
+    console.error('Error in get-availability:', error);
     return {
       statusCode: 500,
-      headers: DEFAULT_HEADERS,
-      body: JSON.stringify({
-        message: 'Die Verfügbarkeiten konnten nicht geladen werden.',
-        details: error.message
-      })
+      headers,
+      body: JSON.stringify({ error: 'Internal server error' })
     };
   }
 };
+
+async function loadSettings() {
+  try {
+    const data = await fs.readFile(
+      path.join(__dirname, '../../content/reservierung/settings.json'),
+      'utf8'
+    );
+    return JSON.parse(data);
+  } catch (error) {
+    // Return default if file doesn't exist yet
+    return {
+      settings: {
+        max_days_advance: 30,
+        min_hours_advance: 2,
+        slot_duration: 90,
+        default_max_guests: 20
+      }
+    };
+  }
+}
+
+async function loadAvailableDates() {
+  try {
+    const availableDatesDir = path.join(__dirname, '../../content/available-dates');
+    const files = await fs.readdir(availableDatesDir);
+    const availableDates = [];
+    
+    for (const file of files) {
+      if (file.endsWith('.json')) {
+        const data = await fs.readFile(path.join(availableDatesDir, file), 'utf8');
+        availableDates.push(JSON.parse(data));
+      }
+    }
+    
+    return availableDates;
+  } catch (error) {
+    return [];
+  }
+}
+
+async function loadReservations(date) {
+  try {
+    const data = await fs.readFile(
+      path.join(__dirname, '../../.netlify/blobs/reservations.json'),
+      'utf8'
+    );
+    const allReservations = JSON.parse(data);
+    return allReservations.filter(r => r.date === date && r.status === 'confirmed');
+  } catch (error) {
+    return [];
+  }
+}
+
+async function loadBlockedReservations(date) {
+  try {
+    const blockedDir = path.join(__dirname, '../../content/blocked-reservations');
+    const files = await fs.readdir(blockedDir);
+    const blocked = [];
+    
+    for (const file of files) {
+      if (file.endsWith('.json')) {
+        const data = await fs.readFile(path.join(blockedDir, file), 'utf8');
+        const blockData = JSON.parse(data);
+        if (blockData.date === date) {
+          blocked.push(blockData);
+        }
+      }
+    }
+    
+    return blocked;
+  } catch (error) {
+    return [];
+  }
+}
