@@ -8,11 +8,8 @@
     "serve": "netlify dev"
   },
   "dependencies": {
-    "@netlify/blobs": "^10.0.11",
     "@netlify/functions": "^2.0.0",
     "@sendgrid/mail": "^7.7.0",
-    "gray-matter": "^4.0.3",
-    "jspdf": "^2.5.1",
     "uuid": "^9.0.0"
   },
   "devDependencies": {
