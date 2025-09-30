@@ -3989,3 +3989,238 @@ body.dark-mode video:hover {
     }
 }
 
+
+/* Reservation System Styles */
+.reservation-step {
+  min-height: 400px;
+  animation: fadeIn 0.3s ease-in;
+}
+
+.step-title {
+  font-family: 'Playfair Display', serif;
+  color: var(--forest-green);
+  margin-bottom: 2rem;
+  font-size: 1.8rem;
+}
+
+.dates-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  gap: 1.5rem;
+  margin: 2rem 0;
+}
+
+.date-card {
+  background: var(--warm-white);
+  border: 2px solid var(--sage-green);
+  border-radius: 12px;
+  padding: 1.5rem;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  text-align: center;
+  color: inherit;
+}
+
+.date-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 8px 20px rgba(30, 74, 60, 0.15);
+  border-color: var(--forest-green);
+}
+
+.date-card.selected {
+  background: var(--sage-green);
+  color: #fff;
+}
+
+.date-card h4 {
+  font-family: 'Lora', serif;
+  font-size: 1.3rem;
+  margin-bottom: 0.5rem;
+  color: var(--forest-green);
+}
+
+.date-card.selected h4 {
+  color: #fff;
+}
+
+.date-card .date-day {
+  font-size: 2rem;
+  font-weight: bold;
+  color: var(--forest-green);
+  display: block;
+}
+
+.date-card.selected .date-day {
+  color: #fff;
+}
+
+.date-card .date-month {
+  font-size: 1rem;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  opacity: 0.8;
+}
+
+.date-card .date-note {
+  font-size: 0.9rem;
+  margin-top: 0.5rem;
+  font-style: italic;
+  opacity: 0.7;
+}
+
+.time-slots-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+  gap: 1rem;
+  margin: 2rem 0;
+}
+
+.time-slot {
+  padding: 1rem;
+  border: 2px solid var(--taupe);
+  border-radius: 8px;
+  text-align: center;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  background: var(--cream);
+  font-family: 'Lato', sans-serif;
+  font-size: 1.1rem;
+  color: var(--forest-green);
+}
+
+.time-slot:hover {
+  background: var(--sage-green);
+  color: #fff;
+  border-color: var(--forest-green);
+}
+
+.time-slot.selected {
+  background: var(--forest-green);
+  color: #fff;
+  border-color: var(--forest-green);
+}
+
+.time-slot.disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  background: #f0f0f0;
+}
+
+.back-button {
+  background: transparent;
+  border: 2px solid var(--sage-green);
+  color: var(--forest-green);
+  padding: 0.8rem 1.5rem;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 1rem;
+  margin-bottom: 1.5rem;
+  transition: all 0.3s ease;
+}
+
+.back-button:hover {
+  background: var(--sage-green);
+  color: #fff;
+}
+
+.elegant-form {
+  max-width: 500px;
+  margin: 0 auto;
+}
+
+.form-group {
+  margin-bottom: 1.5rem;
+}
+
+.form-group label {
+  display: block;
+  margin-bottom: 0.5rem;
+  color: var(--forest-green);
+  font-weight: 500;
+}
+
+.form-group input,
+.form-group select,
+.form-group textarea {
+  width: 100%;
+  padding: 0.8rem;
+  border: 2px solid var(--taupe);
+  border-radius: 8px;
+  font-size: 1rem;
+  transition: border-color 0.3s ease;
+  background: var(--warm-white);
+}
+
+.form-group input:focus,
+.form-group select:focus,
+.form-group textarea:focus {
+  outline: none;
+  border-color: var(--forest-green);
+}
+
+.submit-button {
+  background: var(--forest-green);
+  color: #fff;
+  border: none;
+  padding: 1rem 2rem;
+  border-radius: 8px;
+  font-size: 1.1rem;
+  cursor: pointer;
+  width: 100%;
+  transition: background 0.3s ease;
+}
+
+.submit-button:hover {
+  background: var(--sage-green);
+}
+
+.success-message {
+  text-align: center;
+  padding: 3rem;
+  background: var(--mint-green);
+  border-radius: 12px;
+}
+
+.success-message h3 {
+  color: var(--forest-green);
+  font-size: 2rem;
+  margin-bottom: 1rem;
+}
+
+.reset-button {
+  background: var(--forest-green);
+  color: #fff;
+  border: none;
+  padding: 0.8rem 1.5rem;
+  border-radius: 8px;
+  margin-top: 1.5rem;
+  cursor: pointer;
+}
+
+.loading-spinner {
+  text-align: center;
+  padding: 2rem;
+  color: var(--forest-green);
+  font-style: italic;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@media (max-width: 768px) {
+  .dates-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .time-slots-grid {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}

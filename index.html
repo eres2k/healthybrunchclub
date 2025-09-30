@@ -251,246 +251,85 @@
     </section>
 
     <!-- Reservation Section -->
-    <section id="reservierung" class="reservation-section">
-        <div class="reservation-container">
-            <h2 class="reservation-title">Tisch Reservieren</h2>
-            <p class="reservation-subtitle">Reservieren Sie Ihren Tisch für ein unvergessliches Bio-Brunch-Erlebnis</p>
-            
-            <!-- Progress Indicator -->
-            <div class="reservation-progress">
-                <div class="progress-step active" data-step="1">
-                    <span class="step-number">1</span>
-                    <span class="step-label">Datum</span>
-                </div>
-                <div class="progress-line"></div>
-                <div class="progress-step" data-step="2">
-                    <span class="step-number">2</span>
-                    <span class="step-label">Zeit</span>
-                </div>
-                <div class="progress-line"></div>
-                <div class="progress-step" data-step="3">
-                    <span class="step-number">3</span>
-                    <span class="step-label">Details</span>
-                </div>
-                <div class="progress-line"></div>
-                <div class="progress-step" data-step="4">
-                    <span class="step-number">4</span>
-                    <span class="step-label">Bestätigung</span>
-                </div>
-            </div>
+    <section id="reservierung" class="section-padding elegant-section">
+      <div class="container">
+        <h2 class="section-title">Reservierung</h2>
+        <p class="section-subtitle">Wählen Sie Ihr gewünschtes Datum</p>
 
-            <!-- Step 1: Date Selection -->
-            <div class="reservation-step active" id="step-date">
-                <h3>Wählen Sie Ihr Datum</h3>
-                <div class="date-selector">
-                    <input type="date" 
-                           id="reservation-date" 
-                           class="date-input"
-                           min="" 
-                           max="">
-                    <div id="date-availability-info" class="availability-info"></div>
-                </div>
-                <button class="btn-next" id="btn-next-date" disabled>
-                    Weiter zur Zeitauswahl
-                    <svg class="arrow-icon" width="20" height="20" viewBox="0 0 20 20">
-                        <path d="M7 2l8 8-8 8" stroke="currentColor" stroke-width="2" fill="none"/>
-                    </svg>
-                </button>
+        <div id="reservation-container">
+          <!-- Step 1: Date Selection -->
+          <div id="date-selection" class="reservation-step active">
+            <h3 class="step-title">Verfügbare Termine</h3>
+            <div id="available-dates-container" class="dates-grid">
+              <div class="loading-spinner">Lade verfügbare Termine...</div>
             </div>
+          </div>
 
-            <!-- Step 2: Time Selection -->
-            <div class="reservation-step" id="step-time">
-                <h3>Wählen Sie Ihre Zeit</h3>
-                <p class="selected-date-display" id="selected-date-display"></p>
-                <div id="time-slots" class="time-slots-grid">
-                    <!-- Time slots will be dynamically generated here -->
-                </div>
-                <div class="step-navigation">
-                    <button class="btn-back" id="btn-back-time">
-                        <svg class="arrow-icon" width="20" height="20" viewBox="0 0 20 20">
-                            <path d="M13 2l-8 8 8 8" stroke="currentColor" stroke-width="2" fill="none"/>
-                        </svg>
-                        Zurück
-                    </button>
-                    <button class="btn-next" id="btn-next-time" disabled>
-                        Weiter zu Details
-                        <svg class="arrow-icon" width="20" height="20" viewBox="0 0 20 20">
-                            <path d="M7 2l8 8-8 8" stroke="currentColor" stroke-width="2" fill="none"/>
-                        </svg>
-                    </button>
-                </div>
+          <!-- Step 2: Time Selection -->
+          <div id="time-selection" class="reservation-step" style="display: none;">
+            <h3 class="step-title">Wählen Sie eine Uhrzeit</h3>
+            <button class="back-button" onclick="goBackToDateSelection()">← Zurück zur Datumsauswahl</button>
+            <div id="time-slots-container" class="time-slots-grid">
+              <!-- Time slots will be populated here -->
             </div>
+          </div>
 
-            <!-- Step 3: Guest Details -->
-            <div class="reservation-step" id="step-details">
-                <h3>Ihre Details</h3>
-                <div class="reservation-summary">
-                    <p><strong>Datum:</strong> <span id="summary-date"></span></p>
-                    <p><strong>Zeit:</strong> <span id="summary-time"></span></p>
-                </div>
-                
-                <form id="reservation-form" class="reservation-form">
-                    <div class="form-group">
-                        <label for="guest-count">Anzahl Personen *</label>
-                        <select id="guest-count" name="guests" required>
-                            <option value="">Bitte wählen</option>
-                            <option value="1">1 Person</option>
-                            <option value="2">2 Personen</option>
-                            <option value="3">3 Personen</option>
-                            <option value="4">4 Personen</option>
-                            <option value="5">5 Personen</option>
-                            <option value="6">6 Personen</option>
-                            <option value="7">7 Personen</option>
-                            <option value="8">8 Personen</option>
-                            <option value="9">9 Personen</option>
-                            <option value="10">10+ Personen (bitte anrufen)</option>
-                        </select>
-                    </div>
-                    
-                    <div class="form-group">
-                        <label for="guest-name">Name *</label>
-                        <input type="text" 
-                               id="guest-name" 
-                               name="name" 
-                               placeholder="Max Mustermann" 
-                               required>
-                    </div>
-                    
-                    <div class="form-row">
-                        <div class="form-group">
-                            <label for="guest-email">E-Mail *</label>
-                            <input type="email" 
-                                   id="guest-email" 
-                                   name="email" 
-                                   placeholder="max@example.com" 
-                                   required>
-                        </div>
-                        
-                        <div class="form-group">
-                            <label for="guest-phone">Telefon *</label>
-                            <input type="tel" 
-                                   id="guest-phone" 
-                                   name="phone" 
-                                   placeholder="+43 123 456789" 
-                                   required>
-                        </div>
-                    </div>
-                    
-                    <div class="form-group">
-                        <label for="special-requests">Besondere Wünsche (optional)</label>
-                        <textarea id="special-requests" 
-                                  name="specialRequests" 
-                                  rows="3" 
-                                  placeholder="z.B. Allergien, Hochstuhl benötigt, Fensterplatz gewünscht..."></textarea>
-                    </div>
-                    
-                    <div class="form-group checkbox-group">
-                        <label>
-                            <input type="checkbox" id="privacy-consent" required>
-                            <span>Ich stimme der Verarbeitung meiner Daten gemäß der 
-                                <a href="/datenschutz" target="_blank">Datenschutzerklärung</a> zu *
-                            </span>
-                        </label>
-                    </div>
-                    
-                    <div class="form-group checkbox-group">
-                        <label>
-                            <input type="checkbox" id="newsletter-consent">
-                            <span>Ich möchte über Neuigkeiten und Angebote informiert werden</span>
-                        </label>
-                    </div>
-                </form>
-                
-                <div class="step-navigation">
-                    <button class="btn-back" id="btn-back-details">
-                        <svg class="arrow-icon" width="20" height="20" viewBox="0 0 20 20">
-                            <path d="M13 2l-8 8 8 8" stroke="currentColor" stroke-width="2" fill="none"/>
-                        </svg>
-                        Zurück
-                    </button>
-                    <button class="btn-submit" id="btn-submit-reservation">
-                        Reservierung abschließen
-                        <svg class="loading-spinner" width="20" height="20" viewBox="0 0 20 20">
-                            <circle cx="10" cy="10" r="8" stroke="currentColor" stroke-width="2" fill="none" stroke-dasharray="25 15"/>
-                        </svg>
-                    </button>
-                </div>
-            </div>
+          <!-- Step 3: Guest Details Form -->
+          <div id="guest-details" class="reservation-step" style="display: none;">
+            <h3 class="step-title">Ihre Angaben</h3>
+            <button class="back-button" onclick="goBackToTimeSelection()">← Zurück zur Zeitauswahl</button>
 
-            <!-- Step 4: Confirmation -->
-            <div class="reservation-step" id="step-confirmation">
-                <div class="confirmation-success">
-                    <svg class="success-icon" width="80" height="80" viewBox="0 0 80 80">
-                        <circle cx="40" cy="40" r="35" stroke="#B8D4B2" stroke-width="3" fill="none"/>
-                        <path d="M25 40l10 10 20-25" stroke="#1E4A3C" stroke-width="3" fill="none"/>
-                    </svg>
-                    
-                    <h3>Reservierung erfolgreich!</h3>
-                    
-                    <div class="confirmation-details">
-                        <div class="confirmation-code">
-                            <p>Ihr Bestätigungscode:</p>
-                            <h2 id="confirmation-code"></h2>
-                        </div>
-                        
-                        <div class="reservation-info">
-                            <h4>Ihre Reservierungsdetails:</h4>
-                            <div class="info-grid">
-                                <div class="info-item">
-                                    <span class="info-label">Name:</span>
-                                    <span id="confirm-name"></span>
-                                </div>
-                                <div class="info-item">
-                                    <span class="info-label">Datum:</span>
-                                    <span id="confirm-date"></span>
-                                </div>
-                                <div class="info-item">
-                                    <span class="info-label">Zeit:</span>
-                                    <span id="confirm-time"></span>
-                                </div>
-                                <div class="info-item">
-                                    <span class="info-label">Personen:</span>
-                                    <span id="confirm-guests"></span>
-                                </div>
-                            </div>
-                        </div>
-                        
-                        <div class="confirmation-message">
-                            <p>Eine Bestätigungs-E-Mail wurde an <strong id="confirm-email"></strong> gesendet.</p>
-                            <p>Wir freuen uns auf Ihren Besuch!</p>
-                        </div>
-                        
-                        <div class="confirmation-actions">
-                            <button class="btn-download" onclick="downloadICS()">
-                                <svg width="20" height="20" viewBox="0 0 20 20">
-                                    <path d="M10 2v10m0 0l-3-3m3 3l3-3M4 16h12" stroke="currentColor" stroke-width="2" fill="none"/>
-                                </svg>
-                                Kalendereintrag herunterladen
-                            </button>
-                            <button class="btn-new-reservation" onclick="startNewReservation()">
-                                Neue Reservierung
-                            </button>
-                        </div>
-                    </div>
-                </div>
-            </div>
+            <form id="reservation-form" class="elegant-form">
+              <div class="form-group">
+                <label for="guest-name">Name *</label>
+                <input type="text" id="guest-name" required>
+              </div>
 
-            <!-- Error Message -->
-            <div id="reservation-error" class="reservation-error" style="display: none;">
-                <svg width="24" height="24" viewBox="0 0 24 24">
-                    <path d="M12 2L2 22h20L12 2zm0 4l7.5 14h-15L12 6zm-1 6v4h2v-4h-2zm0 6v2h2v-2h-2z" fill="currentColor"/>
-                </svg>
-                <span id="error-message"></span>
-            </div>
+              <div class="form-group">
+                <label for="guest-email">E-Mail *</label>
+                <input type="email" id="guest-email" required>
+              </div>
 
-            <!-- Loading Overlay -->
-            <div id="loading-overlay" class="loading-overlay" style="display: none;">
-                <div class="loading-content">
-                    <div class="spinner"></div>
-                    <p>Bitte warten...</p>
-                </div>
+              <div class="form-group">
+                <label for="guest-phone">Telefon *</label>
+                <input type="tel" id="guest-phone" required>
+              </div>
+
+              <div class="form-group">
+                <label for="guest-count">Anzahl Personen *</label>
+                <select id="guest-count" required>
+                  <option value="">Bitte wählen</option>
+                  <option value="1">1 Person</option>
+                  <option value="2">2 Personen</option>
+                  <option value="3">3 Personen</option>
+                  <option value="4">4 Personen</option>
+                  <option value="5">5 Personen</option>
+                  <option value="6">6 Personen</option>
+                  <option value="7">7 Personen</option>
+                  <option value="8">8+ Personen</option>
+                </select>
+              </div>
+
+              <div class="form-group">
+                <label for="guest-notes">Besondere Wünsche</label>
+                <textarea id="guest-notes" rows="3"></textarea>
+              </div>
+
+              <button type="submit" class="submit-button">Reservierung abschicken</button>
+            </form>
+          </div>
+
+          <!-- Success Message -->
+          <div id="reservation-success" class="reservation-step" style="display: none;">
+            <div class="success-message">
+              <h3>✓ Reservierung erfolgreich!</h3>
+              <p>Vielen Dank! Ihre Reservierung wurde bestätigt.</p>
+              <p>Eine Bestätigung wurde an Ihre E-Mail-Adresse gesendet.</p>
+              <button onclick="resetReservation()" class="reset-button">Neue Reservierung</button>
             </div>
+          </div>
         </div>
+      </div>
     </section>
 
     <!-- Premium Footer -->
@@ -568,7 +407,215 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
     <script src="cms-loader-premium.js"></script>
     <script src="app-premium.js"></script>
-    <script src="reservation-handler.js"></script>
-    
+    <script>
+    // Reservation System
+    let selectedDate = null;
+    let selectedTime = null;
+
+    document.addEventListener('DOMContentLoaded', () => {
+      if (document.getElementById('available-dates-container')) {
+        loadAvailableDates();
+      }
+
+      const reservationForm = document.getElementById('reservation-form');
+      if (reservationForm) {
+        reservationForm.addEventListener('submit', handleReservationSubmit);
+      }
+    });
+
+    async function loadAvailableDates() {
+      const container = document.getElementById('available-dates-container');
+
+      try {
+        const response = await fetch('/.netlify/functions/get-available-dates');
+        if (!response.ok) {
+          throw new Error('Netzwerkantwort war nicht ok');
+        }
+        const data = await response.json();
+
+        if (data.availableDates && data.availableDates.length > 0) {
+          displayAvailableDates(data.availableDates);
+        } else {
+          container.innerHTML = '<p class="no-dates">Derzeit sind keine Termine verfügbar. Bitte kontaktieren Sie uns telefonisch.</p>';
+        }
+      } catch (error) {
+        console.error('Error loading dates:', error);
+        container.innerHTML = '<p class="error-message">Fehler beim Laden der Termine. Bitte versuchen Sie es später erneut.</p>';
+      }
+    }
+
+    function displayAvailableDates(dates) {
+      const container = document.getElementById('available-dates-container');
+      container.innerHTML = '';
+
+      dates.forEach((dateData) => {
+        const date = new Date(dateData.date);
+        const dayNum = date.getDate();
+        const month = date.toLocaleDateString('de-DE', { month: 'long' });
+        const weekday = date.toLocaleDateString('de-DE', { weekday: 'long' });
+
+        const card = document.createElement('button');
+        card.type = 'button';
+        card.className = 'date-card';
+        card.innerHTML = `
+          <h4>${weekday}</h4>
+          <span class="date-day">${dayNum}</span>
+          <span class="date-month">${month}</span>
+          ${dateData.note ? `<div class="date-note">${dateData.note}</div>` : ''}
+        `;
+        card.addEventListener('click', () => selectDate(dateData, card));
+
+        container.appendChild(card);
+      });
+    }
+
+    function selectDate(dateData, card) {
+      selectedDate = dateData;
+      selectedTime = null;
+
+      document.querySelectorAll('.date-card').forEach((el) => el.classList.remove('selected'));
+      card.classList.add('selected');
+
+      document.getElementById('date-selection').style.display = 'none';
+      document.getElementById('time-selection').style.display = 'block';
+
+      displayTimeSlots(dateData.slots);
+    }
+
+    function displayTimeSlots(slots) {
+      const container = document.getElementById('time-slots-container');
+      container.innerHTML = '';
+
+      const activeSlots = Array.isArray(slots) && slots.length ? slots : [
+        { time: '09:00', max_guests: 20 },
+        { time: '09:30', max_guests: 20 },
+        { time: '10:00', max_guests: 20 },
+        { time: '10:30', max_guests: 20 },
+        { time: '11:00', max_guests: 20 },
+        { time: '11:30', max_guests: 20 },
+        { time: '12:00', max_guests: 20 }
+      ];
+
+      activeSlots.forEach((slot) => {
+        const slotButton = document.createElement('button');
+        slotButton.type = 'button';
+        slotButton.className = 'time-slot';
+        slotButton.textContent = slot.time;
+        slotButton.addEventListener('click', (event) => selectTime(slot.time, event.currentTarget));
+        container.appendChild(slotButton);
+      });
+    }
+
+    function selectTime(time, element) {
+      selectedTime = time;
+
+      document.querySelectorAll('.time-slot').forEach((el) => el.classList.remove('selected'));
+      element.classList.add('selected');
+
+      setTimeout(() => {
+        document.getElementById('time-selection').style.display = 'none';
+        document.getElementById('guest-details').style.display = 'block';
+        updateFormSummary();
+      }, 200);
+    }
+
+    function updateFormSummary() {
+      if (!selectedDate || !selectedTime) return;
+
+      const date = new Date(selectedDate.date);
+      const dateStr = date.toLocaleDateString('de-DE', {
+        weekday: 'long',
+        year: 'numeric',
+        month: 'long',
+        day: 'numeric'
+      });
+
+      const formTitle = document.querySelector('#guest-details .step-title');
+      if (formTitle) {
+        formTitle.innerHTML = `
+          Ihre Angaben<br>
+          <small style="font-size: 0.8em; opacity: 0.8;">
+            ${dateStr} um ${selectedTime} Uhr
+          </small>
+        `;
+      }
+    }
+
+    function goBackToDateSelection() {
+      document.getElementById('time-selection').style.display = 'none';
+      document.getElementById('date-selection').style.display = 'block';
+      selectedTime = null;
+      document.querySelectorAll('.time-slot').forEach((el) => el.classList.remove('selected'));
+    }
+
+    function goBackToTimeSelection() {
+      document.getElementById('guest-details').style.display = 'none';
+      document.getElementById('time-selection').style.display = 'block';
+    }
+
+    async function handleReservationSubmit(event) {
+      event.preventDefault();
+
+      if (!selectedDate || !selectedTime) {
+        alert('Bitte wählen Sie zunächst Datum und Uhrzeit.');
+        return;
+      }
+
+      const formData = {
+        date: selectedDate.date,
+        time: selectedTime,
+        name: document.getElementById('guest-name').value,
+        email: document.getElementById('guest-email').value,
+        phone: document.getElementById('guest-phone').value,
+        guests: parseInt(document.getElementById('guest-count').value, 10),
+        notes: document.getElementById('guest-notes').value
+      };
+
+      try {
+        const response = await fetch('/.netlify/functions/create-reservation', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(formData)
+        });
+
+        if (response.ok) {
+          document.getElementById('guest-details').style.display = 'none';
+          document.getElementById('reservation-success').style.display = 'block';
+        } else {
+          alert('Es gab einen Fehler bei Ihrer Reservierung. Bitte versuchen Sie es erneut.');
+        }
+      } catch (error) {
+        console.error('Reservation error:', error);
+        alert('Es gab einen Fehler. Bitte kontaktieren Sie uns telefonisch.');
+      }
+    }
+
+    function resetReservation() {
+      selectedDate = null;
+      selectedTime = null;
+
+      const reservationForm = document.getElementById('reservation-form');
+      if (reservationForm) {
+        reservationForm.reset();
+      }
+
+      document.getElementById('reservation-success').style.display = 'none';
+      document.getElementById('guest-details').style.display = 'none';
+      document.getElementById('time-selection').style.display = 'none';
+      document.getElementById('date-selection').style.display = 'block';
+
+      document.querySelectorAll('.date-card').forEach((el) => el.classList.remove('selected'));
+      const stepTitle = document.querySelector('#guest-details .step-title');
+      if (stepTitle) {
+        stepTitle.textContent = 'Ihre Angaben';
+      }
+
+      loadAvailableDates();
+    }
+    window.goBackToDateSelection = goBackToDateSelection;
+    window.goBackToTimeSelection = goBackToTimeSelection;
+    window.resetReservation = resetReservation;
+    </script>
+
 </body>
 </html>
