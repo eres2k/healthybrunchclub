@@ -1,76 +1,70 @@
 const {
-  loadReservationSettings,
   loadReservationsForDate,
   saveReservationsForDate,
-  calculateAvailability,
-  loadSpecialDates
+  calculateAvailability
 } = require('./utils/reservation-utils');
+const BlobStorage = require('./utils/blob-storage');
 
 const DEFAULT_HEADERS = {
   'Access-Control-Allow-Origin': '*',
   'Access-Control-Allow-Headers': 'Content-Type, Authorization',
-  'Access-Control-Allow-Methods': 'GET, POST, DELETE, OPTIONS',
+  'Access-Control-Allow-Methods': 'GET, POST, PUT, DELETE, OPTIONS',
   'Content-Type': 'application/json'
 };
 
-function ensureAdmin(event) {
-  const token = process.env.RESERVATION_ADMIN_TOKEN;
+/**
+ * Verify admin authentication
+ */
+function verifyAdmin(event) {
+  const token = event.headers.authorization?.replace('Bearer ', '');
+  
   if (!token) {
-    throw new Error('Administratorentoken nicht gesetzt.');
+    throw new Error('No token provided');
   }
-
-  const header = event.headers.authorization || event.headers.Authorization;
-  if (!header || !header.startsWith('Bearer ')) {
-    const error = new Error('Unauthorised');
-    error.statusCode = 401;
-    throw error;
+  
+  const adminToken = process.env.RESERVATION_ADMIN_TOKEN;
+  if (!adminToken) {
+    throw new Error('Admin token not configured');
   }
-
-  const provided = header.replace('Bearer ', '').trim();
-  if (provided !== token) {
-    const error = new Error('Forbidden');
-    error.statusCode = 403;
-    throw error;
+  
+  if (token !== adminToken) {
+    // Could also use JWT verification here for more security
+    throw new Error('Invalid token');
   }
+  
+  return true;
 }
 
-async function listReservations(date, options = {}) {
-  const reservations = await loadReservationsForDate(date);
-  if (options.includeAvailability) {
-    const settings = await loadReservationSettings();
-    const specialDates = await loadSpecialDates();
-    const availability = calculateAvailability({
-      date,
-      settings,
-      specialDates,
-      existingReservations: reservations
-    });
-    return { reservations, availability };
-  }
-
-  return { reservations };
-}
-
-function toCsv(reservations) {
-  const header = ['ID', 'Datum', 'Zeit', 'Name', 'Personen', 'E-Mail', 'Telefon', 'Status', 'Notizen', 'Erstellt am'];
-  const rows = reservations.map((entry) => [
-    entry.id,
-    entry.date,
-    entry.time,
-    entry.name,
-    entry.guests,
-    entry.email,
-    entry.phone,
-    entry.status,
-    entry.notes?.replace(/\n/g, ' '),
-    entry.createdAt
+/**
+ * Export reservations as CSV
+ */
+function exportAsCSV(reservations) {
+  const headers = ['ID', 'Bestätigungscode', 'Datum', 'Zeit', 'Name', 'Personen', 'E-Mail', 'Telefon', 'Status', 'Besondere Wünsche', 'Erstellt am'];
+  
+  const rows = reservations.map(r => [
+    r.id,
+    r.confirmationCode,
+    r.date,
+    r.time,
+    r.name,
+    r.guests,
+    r.email,
+    r.phone,
+    r.status,
+    r.specialRequests?.replace(/[\n,]/g, ' ') || '',
+    r.createdAt
   ]);
-  return [header, ...rows]
-    .map((columns) => columns.map((value) => `"${(value ?? '').toString().replace(/"/g, '""')}"`).join(','))
-    .join('\n');
+  
+  const csvContent = [
+    headers.join(','),
+    ...rows.map(row => row.map(cell => `"${String(cell).replace(/"/g, '""')}"`).join(','))
+  ].join('\n');
+  
+  return csvContent;
 }
 
-exports.handler = async (event) => {
+exports.handler = async (event, context) => {
+  // Handle OPTIONS
   if (event.httpMethod === 'OPTIONS') {
     return {
       statusCode: 200,
@@ -78,129 +72,203 @@ exports.handler = async (event) => {
       body: ''
     };
   }
-
+  
   try {
-    ensureAdmin(event);
-  } catch (error) {
-    return {
-      statusCode: error.statusCode || 500,
-      headers: DEFAULT_HEADERS,
-      body: JSON.stringify({ message: error.message })
-    };
-  }
-
-  try {
-    const params = event.queryStringParameters || {};
-
-    if (event.httpMethod === 'GET') {
-      const date = params.date ? params.date.slice(0, 10) : null;
-      if (!date) {
-        return {
-          statusCode: 400,
-          headers: DEFAULT_HEADERS,
-          body: JSON.stringify({ message: 'Bitte geben Sie ein Datum an.' })
-        };
-      }
-
-      const { reservations, availability } = await listReservations(date, {
-        includeAvailability: params.includeAvailability === 'true'
-      });
-
-      if (params.format === 'csv') {
+    // Verify admin access
+    verifyAdmin(event);
+    
+    const { date, id, action } = event.queryStringParameters || {};
+    
+    switch (event.httpMethod) {
+      case 'GET': {
+        if (!date) {
+          return {
+            statusCode: 400,
+            headers: DEFAULT_HEADERS,
+            body: JSON.stringify({ error: 'Date parameter is required' })
+          };
+        }
+        
+        const reservations = await loadReservationsForDate(date);
+        const availability = await calculateAvailability(date, reservations);
+        
+        // Check if CSV export is requested
+        if (action === 'export') {
+          const csv = exportAsCSV(reservations);
+          return {
+            statusCode: 200,
+            headers: {
+              ...DEFAULT_HEADERS,
+              'Content-Type': 'text/csv',
+              'Content-Disposition': `attachment; filename="reservations-${date}.csv"`
+            },
+            body: csv
+          };
+        }
+        
         return {
           statusCode: 200,
-          headers: {
-            ...DEFAULT_HEADERS,
-            'Content-Type': 'text/csv; charset=utf-8',
-            'Content-Disposition': `attachment; filename="reservierungen-${date}.csv"`
-          },
-          body: toCsv(reservations)
+          headers: DEFAULT_HEADERS,
+          body: JSON.stringify({
+            date,
+            reservations,
+            availability,
+            summary: {
+              total: reservations.length,
+              confirmed: reservations.filter(r => r.status === 'confirmed').length,
+              waitlist: reservations.filter(r => r.status === 'waitlist').length,
+              cancelled: reservations.filter(r => r.status === 'cancelled').length,
+              totalGuests: reservations.filter(r => r.status !== 'cancelled')
+                .reduce((sum, r) => sum + r.guests, 0)
+            }
+          })
         };
       }
-
-      return {
-        statusCode: 200,
-        headers: DEFAULT_HEADERS,
-        body: JSON.stringify({ reservations, availability })
-      };
-    }
-
-    if (event.httpMethod === 'DELETE' || (event.httpMethod === 'POST' && params.action === 'delete')) {
-      const payload = event.httpMethod === 'DELETE' ? params : JSON.parse(event.body || '{}');
-      const date = payload.date ? payload.date.slice(0, 10) : null;
-      const id = payload.id;
-
-      if (!date || !id) {
+      
+      case 'PUT': {
+        if (!date || !id) {
+          return {
+            statusCode: 400,
+            headers: DEFAULT_HEADERS,
+            body: JSON.stringify({ error: 'Date and ID parameters are required' })
+          };
+        }
+        
+        const updates = JSON.parse(event.body || '{}');
+        const reservations = await loadReservationsForDate(date);
+        const index = reservations.findIndex(r => r.id === id);
+        
+        if (index === -1) {
+          return {
+            statusCode: 404,
+            headers: DEFAULT_HEADERS,
+            body: JSON.stringify({ error: 'Reservation not found' })
+          };
+        }
+        
+        // Update reservation
+        reservations[index] = {
+          ...reservations[index],
+          ...updates,
+          updatedAt: new Date().toISOString(),
+          updatedBy: 'admin'
+        };
+        
+        await saveReservationsForDate(date, reservations);
+        
+        return {
+          statusCode: 200,
+          headers: DEFAULT_HEADERS,
+          body: JSON.stringify({
+            success: true,
+            reservation: reservations[index]
+          })
+        };
+      }
+      
+      case 'DELETE': {
+        if (!date || !id) {
+          return {
+            statusCode: 400,
+            headers: DEFAULT_HEADERS,
+            body: JSON.stringify({ error: 'Date and ID parameters are required' })
+          };
+        }
+        
+        const reservations = await loadReservationsForDate(date);
+        const index = reservations.findIndex(r => r.id === id);
+        
+        if (index === -1) {
+          return {
+            statusCode: 404,
+            headers: DEFAULT_HEADERS,
+            body: JSON.stringify({ error: 'Reservation not found' })
+          };
+        }
+        
+        // Soft delete - just change status
+        reservations[index].status = 'cancelled';
+        reservations[index].cancelledAt = new Date().toISOString();
+        reservations[index].cancelledBy = 'admin';
+        
+        await saveReservationsForDate(date, reservations);
+        
+        return {
+          statusCode: 200,
+          headers: DEFAULT_HEADERS,
+          body: JSON.stringify({
+            success: true,
+            message: 'Reservation cancelled'
+          })
+        };
+      }
+      
+      case 'POST': {
+        // Block/unblock dates
+        if (action === 'block-date') {
+          const { dates, blocked } = JSON.parse(event.body || '{}');
+          const storage = new BlobStorage('settings');
+          const blockedDates = await storage.get('blocked-dates') || [];
+          
+          if (blocked) {
+            // Add dates to blocked list
+            dates.forEach(date => {
+              if (!blockedDates.includes(date)) {
+                blockedDates.push(date);
+              }
+            });
+          } else {
+            // Remove dates from blocked list
+            dates.forEach(date => {
+              const index = blockedDates.indexOf(date);
+              if (index > -1) {
+                blockedDates.splice(index, 1);
+              }
+            });
+          }
+          
+          await storage.set('blocked-dates', blockedDates);
+          
+          return {
+            statusCode: 200,
+            headers: DEFAULT_HEADERS,
+            body: JSON.stringify({
+              success: true,
+              blockedDates
+            })
+          };
+        }
+        
         return {
           statusCode: 400,
           headers: DEFAULT_HEADERS,
-          body: JSON.stringify({ message: 'ID und Datum sind erforderlich.' })
+          body: JSON.stringify({ error: 'Invalid action' })
         };
       }
-
-      const reservations = await loadReservationsForDate(date);
-      const filtered = reservations.filter((entry) => entry.id !== id);
-      await saveReservationsForDate(date, filtered);
-
-      return {
-        statusCode: 200,
-        headers: DEFAULT_HEADERS,
-        body: JSON.stringify({ message: 'Reservierung gelöscht.' })
-      };
-    }
-
-    if (event.httpMethod === 'POST') {
-      const payload = JSON.parse(event.body || '{}');
-      const date = payload.date ? payload.date.slice(0, 10) : null;
-      if (!date) {
+      
+      default:
         return {
-          statusCode: 400,
+          statusCode: 405,
           headers: DEFAULT_HEADERS,
-          body: JSON.stringify({ message: 'Datum fehlt.' })
+          body: JSON.stringify({ error: 'Method not allowed' })
         };
-      }
-
-      const reservations = await loadReservationsForDate(date);
-      const index = reservations.findIndex((entry) => entry.id === payload.id);
-      if (index === -1) {
-        return {
-          statusCode: 404,
-          headers: DEFAULT_HEADERS,
-          body: JSON.stringify({ message: 'Reservierung nicht gefunden.' })
-        };
-      }
-
-      const current = reservations[index];
-      const updated = {
-        ...current,
-        guests: payload.guests ? Number(payload.guests) : current.guests,
-        time: payload.time || current.time,
-        notes: payload.notes !== undefined ? payload.notes : current.notes,
-        status: payload.status || current.status,
-        updatedAt: new Date().toISOString()
-      };
-
-      reservations[index] = updated;
-      await saveReservationsForDate(date, reservations);
-
-      return {
-        statusCode: 200,
-        headers: DEFAULT_HEADERS,
-        body: JSON.stringify({ message: 'Reservierung aktualisiert.', reservation: updated })
-      };
     }
-
-    return {
-      statusCode: 405,
-      headers: DEFAULT_HEADERS,
-      body: JSON.stringify({ message: 'Nicht unterstützte Methode.' })
-    };
+    
   } catch (error) {
-    console.error('Fehler in manage-reservations', error);
+    console.error('Admin operation error:', error);
+    
+    if (error.message === 'No token provided' || error.message === 'Invalid token') {
+      return {
+        statusCode: 401,
+        headers: DEFAULT_HEADERS,
+        body: JSON.stringify({ error: 'Unauthorized' })
+      };
+    }
+    
     return {
       statusCode: 500,
       headers: DEFAULT_HEADERS,
-      body: JSON.stringify({ message: 'Verwaltung fehlgeschlagen.', details: error.message })
+      body: JSON.stringify({ error: 'Internal server error' })
     };
   }
 };
