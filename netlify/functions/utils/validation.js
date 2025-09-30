@@ -60,8 +60,12 @@ function validateReservationPayload(payload) {
     errors.email = 'Bitte geben Sie eine gültige E-Mail-Adresse ein.';
   }
 
-  if (!data.phone || !isValidPhone(data.phone)) {
-    errors.phone = 'Bitte geben Sie eine gültige österreichische Telefonnummer ein.';
+  if (data.phone) {
+    if (!isValidPhone(data.phone)) {
+      errors.phone = 'Bitte geben Sie eine gültige österreichische Telefonnummer ein.';
+    }
+  } else {
+    data.phone = '';
   }
 
   const guests = Number(payload.guests);
