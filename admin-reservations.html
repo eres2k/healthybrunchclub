@@ -1,0 +1,266 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <title>Reservierungs-Management - Healthy Brunch Club</title>
+    <link rel="stylesheet" href="mystyle-premium.css">
+    <style>
+        .admin-panel {
+            max-width: 1200px;
+            margin: 50px auto;
+            padding: 20px;
+        }
+        
+        .block-form {
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            margin-bottom: 30px;
+        }
+        
+        .form-row {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            margin-bottom: 15px;
+        }
+        
+        .reservations-table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        
+        .reservations-table th,
+        .reservations-table td {
+            padding: 10px;
+            border: 1px solid #ddd;
+            text-align: left;
+        }
+        
+        .reservations-table th {
+            background: var(--forest-green);
+            color: white;
+        }
+        
+        .status-badge {
+            padding: 3px 8px;
+            border-radius: 3px;
+            font-size: 0.85em;
+        }
+        
+        .status-badge.confirmed {
+            background: var(--mint-green);
+        }
+
+        .status-badge.warning {
+            background: var(--peach);
+            color: #8b4513;
+        }
+
+        .status-badge.blocked {
+            background: #ffcccc;
+        }
+    </style>
+</head>
+<body>
+    <div class="admin-panel">
+        <h1>Reservierungs-Management</h1>
+        
+        <div class="block-form">
+            <h2>Plätze Blockieren</h2>
+            <form id="blockSlotsForm">
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>Datum:</label>
+                        <input type="date" id="blockDate" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Zeit:</label>
+                        <select id="blockTime" required>
+                            <option value="">Zeit wählen...</option>
+                            <option value="09:00">09:00</option>
+                            <option value="09:30">09:30</option>
+                            <option value="10:00">10:00</option>
+                            <option value="10:30">10:30</option>
+                            <option value="11:00">11:00</option>
+                            <option value="11:30">11:30</option>
+                            <option value="12:00">12:00</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>Anzahl Plätze:</label>
+                        <input type="number" id="blockSeats" min="1" max="40" required>
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>Grund (optional):</label>
+                        <input type="text" id="blockReason" placeholder="z.B. Gruppenreservierung Erwin">
+                    </div>
+                </div>
+                <button type="submit" class="btn-primary">Plätze Blockieren</button>
+            </form>
+        </div>
+        
+        <div class="reservations-overview">
+            <h2>Aktuelle Reservierungen</h2>
+            <div class="form-row">
+                <input type="date" id="viewDate" onchange="loadDayOverview(this.value)">
+            </div>
+            <div id="dayOverview"></div>
+        </div>
+    </div>
+    
+    <script>
+        const ADMIN_TOKEN = localStorage.getItem('adminToken');
+        if (!ADMIN_TOKEN) {
+            showNotification('Kein Admin-Token gefunden. Bitte Token hinterlegen.', 'warning');
+        }
+        
+        document.getElementById('blockSlotsForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            
+            const date = document.getElementById('blockDate').value;
+            const time = document.getElementById('blockTime').value;
+            const seats = parseInt(document.getElementById('blockSeats').value);
+            const reason = document.getElementById('blockReason').value;
+            
+            try {
+                const response = await fetch('/.netlify/functions/manage-reservations', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${ADMIN_TOKEN}`
+                    },
+                    body: JSON.stringify({
+                        action: 'block-slot',
+                        date: date,
+                        time: time,
+                        capacity: 40 - seats,
+                        reason: reason
+                    })
+                });
+                
+                if (response.ok) {
+                    showNotification('Plätze erfolgreich blockiert', 'success');
+                    loadDayOverview(date);
+                } else {
+                    throw new Error('Blockierung fehlgeschlagen');
+                }
+            } catch (error) {
+                showNotification('Fehler: ' + error.message, 'error');
+            }
+        });
+        
+        async function loadDayOverview(date) {
+            if (!date) return;
+            
+            try {
+                const response = await fetch(`/.netlify/functions/manage-reservations?date=${date}`, {
+                    headers: {
+                        'Authorization': `Bearer ${ADMIN_TOKEN}`
+                    }
+                });
+                
+                const data = await response.json();
+                renderDayOverview(data);
+            } catch (error) {
+                console.error('Fehler beim Laden der Übersicht:', error);
+            }
+        }
+        
+        function renderDayOverview(data) {
+            const container = document.getElementById('dayOverview');
+            
+            const html = `
+                <h3>Übersicht für ${data.availability.date}</h3>
+                <table class="reservations-table">
+                    <thead>
+                        <tr>
+                            <th>Zeit</th>
+                            <th>Kapazität</th>
+                            <th>Reserviert</th>
+                            <th>Verfügbar</th>
+                            <th>Status</th>
+                            <th>Details</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        ${data.availability.slots.map(slot => `
+                            <tr class="${slot.remaining === 0 ? 'blocked-row' : ''}">
+                                <td><strong>${slot.time}</strong></td>
+                                <td>${slot.capacity}</td>
+                                <td>${slot.reserved}</td>
+                                <td>${slot.remaining}</td>
+                                <td>
+                                    ${slot.remaining === 0 
+                                        ? '<span class="status-badge blocked">Ausgebucht</span>'
+                                        : slot.remaining < 5 
+                                            ? '<span class="status-badge warning">Fast voll</span>'
+                                            : '<span class="status-badge confirmed">Verfügbar</span>'
+                                    }
+                                </td>
+                                <td>
+                                    ${data.reservations
+                                        .filter(r => r.time === slot.time && r.status === 'confirmed')
+                                        .map(r => `${r.name} (${r.guests}P)`)
+                                        .join(', ') || '-'
+                                    }
+                                </td>
+                            </tr>
+                        `).join('')}
+                    </tbody>
+                </table>
+                
+                <h4>Reservierungen Details:</h4>
+                <table class="reservations-table">
+                    <thead>
+                        <tr>
+                            <th>Zeit</th>
+                            <th>Name</th>
+                            <th>Gäste</th>
+                            <th>Email</th>
+                            <th>Telefon</th>
+                            <th>Status</th>
+                            <th>Code</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        ${data.reservations.map(r => `
+                            <tr>
+                                <td>${r.time}</td>
+                                <td>${r.name}</td>
+                                <td>${r.guests}</td>
+                                <td>${r.email}</td>
+                                <td>${r.phone || '-'}</td>
+                                <td><span class="status-badge ${r.status}">${r.status}</span></td>
+                                <td>${r.confirmationCode}</td>
+                            </tr>
+                        `).join('') || '<tr><td colspan="7">Keine Reservierungen</td></tr>'}
+                    </tbody>
+                </table>
+            `;
+            
+            container.innerHTML = html;
+        }
+        
+        function showNotification(message, type) {
+            const notification = document.createElement('div');
+            notification.className = `notification ${type}`;
+            notification.textContent = message;
+            document.body.appendChild(notification);
+            
+            setTimeout(() => {
+                notification.remove();
+            }, 3000);
+        }
+        
+        const today = new Date().toISOString().split('T')[0];
+        document.getElementById('viewDate').value = today;
+        if (ADMIN_TOKEN) {
+            loadDayOverview(today);
+        }
+    </script>
+</body>
+</html>
