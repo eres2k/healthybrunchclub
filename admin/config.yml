@@ -199,7 +199,12 @@ collections:
         name: "slots"
         widget: "list"
         fields:
-          - {label: "Zeit", name: "time", widget: "string", pattern: ["^([0-1]?[0-9]|2[0-3]):[0-5][0-9]$", "Format: HH:MM"]}
+          - label: "Zeit"
+            name: "time"
+            widget: "text"
+            hint: "Format: HH:MM (z.B. 09:00, 14:30)"
+            default: "09:00"
+            pattern: ["^([0-1]?[0-9]|2[0-3]):[0-5][0-9]$", "Bitte Format HH:MM verwenden"]
           - {label: "Max. Gäste", name: "max_guests", widget: "number", default: 20}
       - {label: "Notiz", name: "note", widget: "text", required: false, hint: "Wird Kunden angezeigt"}
 
