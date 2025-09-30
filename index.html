@@ -269,7 +269,7 @@
           <div id="time-selection" class="reservation-step" style="display: none;">
             <h3 class="step-title">Wählen Sie eine Uhrzeit</h3>
             <button class="back-button" onclick="goBackToDateSelection()">← Zurück zur Datumsauswahl</button>
-            <div id="time-slots-container" class="time-slots-grid">
+            <div id="timeSlots" class="time-slots-grid">
               <!-- Time slots will be populated here -->
             </div>
           </div>
@@ -301,8 +301,8 @@
               </div>
 
               <div class="form-group">
-                <label for="guest-count">Anzahl Personen *</label>
-                <select id="guest-count" required>
+                <label for="guestCount">Anzahl Personen *</label>
+                <select id="guestCount" required>
                   <option value="">Bitte wählen</option>
                   <option value="1">1 Person</option>
                   <option value="2">2 Personen</option>
@@ -319,6 +319,9 @@
                 <label for="guest-notes">Besondere Wünsche</label>
                 <textarea id="guest-notes" rows="3"></textarea>
               </div>
+
+              <input type="hidden" id="reservationDate">
+              <input type="hidden" id="selectedTime">
 
               <button type="submit" class="submit-button">Reservierung abschicken</button>
             </form>
@@ -413,6 +416,16 @@
       if (reservationForm) {
         reservationForm.addEventListener('submit', handleReservationSubmit);
       }
+
+      const guestCountInput = document.getElementById('guestCount');
+      if (guestCountInput) {
+        guestCountInput.addEventListener('change', () => {
+          const guests = parseInt(guestCountInput.value, 10);
+          if (selectedDate?.date && selectedTime && !Number.isNaN(guests)) {
+            checkSlotCapacity(selectedTime, guests);
+          }
+        });
+      }
     });
 
     async function loadAvailableDates() {
@@ -465,50 +478,165 @@
       selectedDate = dateData;
       selectedTime = null;
 
+      const dateInput = document.getElementById('reservationDate');
+      if (dateInput) {
+        dateInput.value = dateData.date;
+      }
+
+      const timeInput = document.getElementById('selectedTime');
+      if (timeInput) {
+        timeInput.value = '';
+      }
+
       document.querySelectorAll('.date-card').forEach((el) => el.classList.remove('selected'));
       card.classList.add('selected');
 
-      document.getElementById('date-selection').style.display = 'none';
-      document.getElementById('time-selection').style.display = 'block';
+      const dateSelection = document.getElementById('date-selection');
+      const timeSelection = document.getElementById('time-selection');
+      const guestDetails = document.getElementById('guest-details');
 
-      displayTimeSlots(dateData.slots);
+      if (dateSelection) {
+        dateSelection.style.display = 'none';
+      }
+      if (timeSelection) {
+        timeSelection.style.display = 'block';
+      }
+      if (guestDetails) {
+        guestDetails.style.display = 'none';
+      }
+
+      loadAvailableSlots(dateData.date);
     }
 
-    function displayTimeSlots(slots) {
-      const container = document.getElementById('time-slots-container');
-      container.innerHTML = '';
+    async function loadAvailableSlots(selectedDateValue) {
+      const slotsContainer = document.getElementById('timeSlots');
+      if (!slotsContainer) {
+        return;
+      }
 
-      const activeSlots = Array.isArray(slots) && slots.length ? slots : [
-        { time: '09:00', max_guests: 20 },
-        { time: '09:30', max_guests: 20 },
-        { time: '10:00', max_guests: 20 },
-        { time: '10:30', max_guests: 20 },
-        { time: '11:00', max_guests: 20 },
-        { time: '11:30', max_guests: 20 },
-        { time: '12:00', max_guests: 20 }
-      ];
+      slotsContainer.innerHTML = '<div class="loading">Lade verfügbare Zeiten...</div>';
 
-      activeSlots.forEach((slot) => {
-        const slotButton = document.createElement('button');
-        slotButton.type = 'button';
-        slotButton.className = 'time-slot';
-        slotButton.textContent = slot.time;
-        slotButton.addEventListener('click', (event) => selectTime(slot.time, event.currentTarget));
-        container.appendChild(slotButton);
+      try {
+        const response = await fetch(`/.netlify/functions/get-availability?date=${selectedDateValue}`);
+        const data = await response.json();
+
+        if (!data.slots || data.slots.length === 0) {
+          slotsContainer.innerHTML = '<div class="no-slots">Keine Zeiten verfügbar für diesen Tag.</div>';
+          return;
+        }
+
+        slotsContainer.innerHTML = data.slots
+          .map((slot) => {
+            const isBlocked = slot.remaining === 0;
+            const isNearlyFull = slot.remaining > 0 && slot.remaining < 5;
+            const percentageUsed = slot.capacity > 0 ? ((slot.reserved / slot.capacity) * 100).toFixed(0) : 0;
+
+            return `
+                <div class="time-slot ${isBlocked ? 'blocked' : ''} ${isNearlyFull ? 'nearly-full' : ''}" 
+                     data-time="${slot.time}" 
+                     data-available="${!isBlocked}">
+                    <div class="slot-time">${slot.time}</div>
+                    <div class="slot-availability">
+                        ${isBlocked 
+                          ? '<span class="badge blocked">Ausgebucht</span>' 
+                          : isNearlyFull 
+                            ? `<span class="badge warning">Nur noch ${slot.remaining} Plätze</span>`
+                            : `<span class="badge available">${slot.remaining} Plätze frei</span>`
+                        }
+                    </div>
+                    <div class="slot-capacity-bar">
+                        <div class="capacity-fill" style="width: ${percentageUsed}%"></div>
+                    </div>
+                    <div class="slot-details">
+                        ${slot.reserved}/${slot.capacity} belegt
+                    </div>
+                </div>
+            `;
+          })
+          .join('');
+
+        document.querySelectorAll('.time-slot[data-available="true"]').forEach((slot) => {
+          slot.addEventListener('click', () => {
+            selectTimeSlot(slot);
+          });
+        });
+      } catch (error) {
+        console.error('Fehler beim Laden der Slots:', error);
+        slotsContainer.innerHTML = '<div class="error">Fehler beim Laden der verfügbaren Zeiten.</div>';
+      }
+    }
+
+    async function selectTimeSlot(slotElement) {
+      if (slotElement.dataset.available === 'false') {
+        showNotification('Dieser Zeitslot ist bereits ausgebucht.', 'error');
+        return;
+      }
+
+      document.querySelectorAll('.time-slot.selected').forEach((el) => {
+        el.classList.remove('selected');
       });
+
+      slotElement.classList.add('selected');
+
+      selectedTime = slotElement.dataset.time;
+
+      const timeInput = document.getElementById('selectedTime');
+      if (timeInput) {
+        timeInput.value = selectedTime;
+      }
+
+      const guestCountInput = document.getElementById('guestCount');
+      const guestCount = parseInt(guestCountInput?.value, 10) || 1;
+
+      await checkSlotCapacity(selectedTime, guestCount);
+
+      const timeSelection = document.getElementById('time-selection');
+      const guestDetails = document.getElementById('guest-details');
+
+      if (timeSelection && guestDetails) {
+        timeSelection.style.display = 'none';
+        guestDetails.style.display = 'block';
+      }
+
+      updateFormSummary();
     }
 
-    function selectTime(time, element) {
-      selectedTime = time;
+    async function checkSlotCapacity(time, guests) {
+      const dateInput = document.getElementById('reservationDate');
+      const date = dateInput?.value;
+      if (!date) {
+        return;
+      }
 
-      document.querySelectorAll('.time-slot').forEach((el) => el.classList.remove('selected'));
-      element.classList.add('selected');
+      try {
+        const response = await fetch(`/.netlify/functions/get-availability?date=${date}&guests=${guests}`);
+        const data = await response.json();
+
+        const slot = data.slots?.find((entry) => entry.time === time);
+        const submitButton = document.querySelector('.submit-button');
+
+        if (slot && !slot.fits) {
+          showNotification(`Nicht genug Plätze für ${guests} Gäste um ${time}. Nur ${slot.remaining} Plätze verfügbar.`, 'warning');
+          if (submitButton) {
+            submitButton.disabled = true;
+          }
+        } else if (submitButton) {
+          submitButton.disabled = false;
+        }
+      } catch (error) {
+        console.error('Kapazitätsprüfung fehlgeschlagen:', error);
+      }
+    }
+
+    function showNotification(message, type = 'success') {
+      const notification = document.createElement('div');
+      notification.className = `notification ${type}`;
+      notification.textContent = message;
+      document.body.appendChild(notification);
 
       setTimeout(() => {
-        document.getElementById('time-selection').style.display = 'none';
-        document.getElementById('guest-details').style.display = 'block';
-        updateFormSummary();
-      }, 200);
+        notification.remove();
+      }, 3000);
     }
 
     function updateFormSummary() {
@@ -534,21 +662,71 @@
     }
 
     function goBackToDateSelection() {
-      document.getElementById('time-selection').style.display = 'none';
-      document.getElementById('date-selection').style.display = 'block';
+      const dateSelection = document.getElementById('date-selection');
+      const timeSelection = document.getElementById('time-selection');
+      const guestDetails = document.getElementById('guest-details');
+      const submitButton = document.querySelector('.submit-button');
+      const timeInput = document.getElementById('selectedTime');
+
+      if (timeSelection) {
+        timeSelection.style.display = 'none';
+      }
+      if (guestDetails) {
+        guestDetails.style.display = 'none';
+      }
+      if (dateSelection) {
+        dateSelection.style.display = 'block';
+      }
+
       selectedTime = null;
+
+      if (timeInput) {
+        timeInput.value = '';
+      }
+
+      if (submitButton) {
+        submitButton.disabled = false;
+      }
+
       document.querySelectorAll('.time-slot').forEach((el) => el.classList.remove('selected'));
     }
 
     function goBackToTimeSelection() {
-      document.getElementById('guest-details').style.display = 'none';
-      document.getElementById('time-selection').style.display = 'block';
+      const guestDetails = document.getElementById('guest-details');
+      const timeSelection = document.getElementById('time-selection');
+      const submitButton = document.querySelector('.submit-button');
+      const timeInput = document.getElementById('selectedTime');
+
+      if (guestDetails) {
+        guestDetails.style.display = 'none';
+      }
+      if (timeSelection) {
+        timeSelection.style.display = 'block';
+      }
+
+      selectedTime = null;
+
+      if (timeInput) {
+        timeInput.value = '';
+      }
+      if (submitButton) {
+        submitButton.disabled = false;
+      }
+
+      if (selectedDate?.date) {
+        loadAvailableSlots(selectedDate.date);
+      }
     }
 
     async function handleReservationSubmit(event) {
       event.preventDefault();
 
-      if (!selectedDate || !selectedTime) {
+      const reservationDateInput = document.getElementById('reservationDate');
+      const selectedTimeInput = document.getElementById('selectedTime');
+      const reservationDate = reservationDateInput?.value || selectedDate?.date;
+      const reservationTime = selectedTimeInput?.value || selectedTime;
+
+      if (!reservationDate || !reservationTime) {
         alert('Bitte wählen Sie Datum und Uhrzeit aus.');
         return;
       }
@@ -561,12 +739,12 @@
       }
 
       const formData = {
-        date: selectedDate.date,
-        time: selectedTime,
+        date: reservationDate,
+        time: reservationTime,
         name: document.getElementById('guest-name').value.trim(),
         email: document.getElementById('guest-email').value.trim(),
         phone: document.getElementById('guest-phone').value.trim(),
-        guests: parseInt(document.getElementById('guest-count').value, 10),
+        guests: parseInt(document.getElementById('guestCount').value, 10),
         specialRequests: document.getElementById('guest-notes').value.trim(),
         honeypot: ''
       };
@@ -673,6 +851,20 @@
       const reservationForm = document.getElementById('reservation-form');
       if (reservationForm) {
         reservationForm.reset();
+      }
+
+      const dateInput = document.getElementById('reservationDate');
+      const timeInput = document.getElementById('selectedTime');
+      const submitButton = document.querySelector('.submit-button');
+
+      if (dateInput) {
+        dateInput.value = '';
+      }
+      if (timeInput) {
+        timeInput.value = '';
+      }
+      if (submitButton) {
+        submitButton.disabled = false;
       }
 
       document.getElementById('reservation-success').style.display = 'none';
