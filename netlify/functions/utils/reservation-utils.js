@@ -1,351 +1,232 @@
-const fs = require('fs').promises;
-const path = require('path');
-const crypto = require('crypto');
-const { getStore } = require('@netlify/blobs');
+'use strict';
 
-const RESERVATION_CONTENT_DIR = path.join(process.cwd(), 'content', 'reservierung');
-const SPECIAL_DATES_DIR = path.join(process.cwd(), 'content', 'special-dates');
-const FALLBACK_RESERVATION_DIR = path.join(process.cwd(), 'netlify', 'data', 'reservations');
-const RESERVATION_STORE_NAME = 'reservations';
+const { randomUUID } = require('crypto');
+const { DateTime } = require('luxon');
+const { readJSON, writeJSON, withLock } = require('./blob-storage');
+const { sanitizeText } = require('./validation');
 
-let blobStoreInstance = null;
+const MAX_CAPACITY_PER_SLOT = Number(process.env.MAX_CAPACITY_PER_SLOT || 40);
+const DEFAULT_OPENING = { start: '09:00', end: '21:00' };
+const SLOT_INTERVAL_MINUTES = 15;
+const TIMEZONE = process.env.BOOKING_TIME_ZONE || 'Europe/Vienna';
 
-function normalizeTime(value) {
-  if (!value) {
-    return null;
-  }
-
-  if (typeof value === 'string') {
-    const match = value.match(/^(\d{1,2}):(\d{2})/);
-    if (match) {
-      const hours = match[1].padStart(2, '0');
-      const minutes = match[2].padStart(2, '0');
-      return `${hours}:${minutes}`;
-    }
-  }
-
-  if (typeof value === 'object' && value.time) {
-    return normalizeTime(value.time);
-  }
-
-  return null;
+function generateConfirmationCode() {
+  return `HBC-${Math.random().toString(36).slice(2, 6).toUpperCase()}-${Date.now().toString(36).toUpperCase()}`;
 }
 
-async function readJsonFile(filePath) {
-  const raw = await fs.readFile(filePath, 'utf8');
-  return JSON.parse(raw);
+function normalizeTime(timeString) {
+  const [hour, minute] = timeString.split(':').map((value) => value.padStart(2, '0'));
+  return `${hour}:${minute}`;
 }
 
-async function loadReservationSettings() {
-  const files = await fs.readdir(RESERVATION_CONTENT_DIR);
-  const jsonFiles = files.filter((file) => file.endsWith('.json'));
+function createTimeSlots(openingHours = DEFAULT_OPENING) {
+  const slots = [];
+  const start = DateTime.fromFormat(openingHours.start, 'HH:mm', { zone: TIMEZONE });
+  const end = DateTime.fromFormat(openingHours.end, 'HH:mm', { zone: TIMEZONE });
 
-  if (jsonFiles.length === 0) {
-    throw new Error('Keine Reservierungseinstellungen gefunden. Bitte legen Sie einen Eintrag im CMS an.');
+  let cursor = start;
+  while (cursor < end) {
+    slots.push(cursor.toFormat('HH:mm'));
+    cursor = cursor.plus({ minutes: SLOT_INTERVAL_MINUTES });
   }
+  return slots;
+}
 
-  const filesWithStats = await Promise.all(
-    jsonFiles.map(async (file) => {
-      const filePath = path.join(RESERVATION_CONTENT_DIR, file);
-      const stats = await fs.stat(filePath);
-      return { file, filePath, mtimeMs: stats.mtimeMs };
+async function loadSettings() {
+  const settings = await readJSON('settings', 'reservation-settings.json', {});
+  return {
+    timezone: TIMEZONE,
+    maxCapacity: MAX_CAPACITY_PER_SLOT,
+    waitlist: true,
+    ...settings
+  };
+}
+
+async function loadBlocked(date) {
+  const key = `blocked/${date}.json`;
+  return readJSON('blockedDates', key, []);
+}
+
+async function saveBlocked(date, blocked) {
+  const key = `blocked/${date}.json`;
+  await writeJSON('blockedDates', key, blocked);
+}
+
+async function loadReservations(date) {
+  const key = `reservations/${date}.json`;
+  const reservations = await readJSON('reservations', key, []);
+  return Array.isArray(reservations) ? reservations : [];
+}
+
+async function saveReservations(date, reservations) {
+  const key = `reservations/${date}.json`;
+  await writeJSON('reservations', key, reservations, { updatedAt: new Date().toISOString() });
+}
+
+function calculateSlotAvailability({ reservations, blockedSlots, time, guests, maxCapacity }) {
+  const blocked = blockedSlots.find((entry) => entry.time === time);
+  const capacity = blocked?.capacity ?? maxCapacity;
+
+  const confirmedGuests = reservations
+    .filter((reservation) => reservation.time === time && reservation.status === 'confirmed')
+    .reduce((sum, reservation) => sum + Number(reservation.guests || 0), 0);
+
+  const remaining = Math.max(capacity - confirmedGuests, 0);
+  const fits = guests ? remaining >= guests : remaining > 0;
+
+  return {
+    time,
+    capacity,
+    reserved: confirmedGuests,
+    remaining,
+    waitlist: remaining === 0,
+    fits
+  };
+}
+
+async function getAvailability({ date, guests }) {
+  const settings = await loadSettings();
+  const blockedSlots = await loadBlocked(date);
+  const reservations = await loadReservations(date);
+
+  const slots = createTimeSlots(settings.openingHours || DEFAULT_OPENING).map((time) =>
+    calculateSlotAvailability({
+      reservations,
+      blockedSlots,
+      time,
+      guests,
+      maxCapacity: settings.maxCapacity || MAX_CAPACITY_PER_SLOT
     })
   );
 
-  filesWithStats.sort((a, b) => b.mtimeMs - a.mtimeMs);
-  const latest = filesWithStats[0];
-  const data = await readJsonFile(latest.filePath);
+  return {
+    date,
+    timezone: settings.timezone || TIMEZONE,
+    slots
+  };
+}
+
+async function createReservation(payload) {
+  const settings = await loadSettings();
+  const normalizedTime = normalizeTime(payload.time);
+  const availability = await getAvailability({ date: payload.date, guests: payload.guests });
+  const slot = availability.slots.find((entry) => entry.time === normalizedTime);
+
+  if (!slot) {
+    return {
+      success: false,
+      message: 'Dieser Zeitslot ist nicht verfügbar.'
+    };
+  }
+
+  const reservation = {
+    id: randomUUID(),
+    confirmationCode: generateConfirmationCode(),
+    date: payload.date,
+    time: normalizedTime,
+    guests: payload.guests,
+    name: sanitizeText(payload.name),
+    email: payload.email,
+    phone: payload.phone,
+    specialRequests: payload.specialRequests,
+    status: slot.remaining >= payload.guests ? 'confirmed' : 'waitlisted',
+    timezone: settings.timezone || TIMEZONE,
+    createdAt: new Date().toISOString(),
+    updatedAt: new Date().toISOString()
+  };
+
+  await withLock(`reservation:${payload.date}`, async () => {
+    const reservations = await loadReservations(payload.date);
+    const blockedSlots = await loadBlocked(payload.date);
+
+    const freshSlot = calculateSlotAvailability({
+      reservations,
+      blockedSlots,
+      time: normalizedTime,
+      guests: payload.guests,
+      maxCapacity: settings.maxCapacity || MAX_CAPACITY_PER_SLOT
+    });
+
+    if (freshSlot.remaining >= payload.guests) {
+      reservation.status = 'confirmed';
+    } else if (!settings.waitlist) {
+      throw new Error('Keine Plätze mehr verfügbar.');
+    }
+
+    reservations.push(reservation);
+    await saveReservations(payload.date, reservations);
+  });
+
+  await indexReservation(reservation);
 
   return {
-    ...data,
-    __filePath: latest.filePath
+    success: true,
+    reservation
   };
 }
 
-async function loadSpecialDates() {
-  try {
-    const files = await fs.readdir(SPECIAL_DATES_DIR);
-    const jsonFiles = files.filter((file) => file.endsWith('.json'));
-
-    const dates = await Promise.all(
-      jsonFiles.map(async (file) => {
-        const data = await readJsonFile(path.join(SPECIAL_DATES_DIR, file));
-        return {
-          ...data,
-          date: data.date ? data.date.slice(0, 10) : null
-        };
-      })
-    );
-
-    return dates.filter((entry) => entry.date);
-  } catch (error) {
-    if (error.code === 'ENOENT') {
-      return [];
+async function updateReservationStatus({ date, confirmationCode, status }) {
+  return withLock(`reservation:${date}`, async () => {
+    const reservations = await loadReservations(date);
+    const index = reservations.findIndex((entry) => entry.confirmationCode === confirmationCode);
+    if (index === -1) {
+      throw new Error('Reservierung nicht gefunden.');
     }
 
-    throw error;
+    reservations[index].status = status;
+    reservations[index].updatedAt = new Date().toISOString();
+    await saveReservations(date, reservations);
+    return reservations[index];
+  });
+}
+
+async function cancelReservation({ confirmationCode, email }) {
+  const date = await findReservationDateByCode(confirmationCode);
+  if (!date) {
+    throw new Error('Reservierung wurde nicht gefunden.');
   }
-}
 
-function getStoreInstance() {
-  if (blobStoreInstance) {
-    return blobStoreInstance;
-  }
-
-  try {
-    blobStoreInstance = getStore({ name: RESERVATION_STORE_NAME });
-    return blobStoreInstance;
-  } catch (error) {
-    console.warn('Netlify Blobs nicht verfügbar, verwende Dateisystem als Fallback', error.message);
-    blobStoreInstance = null;
-    return null;
-  }
-}
-
-async function ensureFallbackDir() {
-  await fs.mkdir(FALLBACK_RESERVATION_DIR, { recursive: true });
-}
-
-function getReservationKey(date) {
-  return `${date}.json`;
-}
-
-async function loadReservationsForDate(date) {
-  const store = getStoreInstance();
-  const key = getReservationKey(date);
-
-  if (store) {
-    try {
-      const entry = await store.get(key, { type: 'json' });
-      return Array.isArray(entry) ? entry : [];
-    } catch (error) {
-      if (error.status === 404) {
-        return [];
-      }
-      console.error('Fehler beim Laden der Reservierungen aus dem Blob Store', error);
-      throw error;
+  return withLock(`reservation:${date}`, async () => {
+    const reservations = await loadReservations(date);
+    const index = reservations.findIndex((entry) => entry.confirmationCode === confirmationCode);
+    if (index === -1) {
+      throw new Error('Reservierung wurde nicht gefunden.');
     }
-  }
 
-  await ensureFallbackDir();
-  try {
-    const file = path.join(FALLBACK_RESERVATION_DIR, key);
-    const raw = await fs.readFile(file, 'utf8');
-    const parsed = JSON.parse(raw);
-    return Array.isArray(parsed) ? parsed : [];
-  } catch (error) {
-    if (error.code === 'ENOENT') {
-      return [];
+    const reservation = reservations[index];
+    if (reservation.email !== email) {
+      throw new Error('E-Mail-Adresse stimmt nicht mit der Reservierung überein.');
     }
-    throw error;
-  }
+
+    reservations[index].status = 'cancelled';
+    reservations[index].updatedAt = new Date().toISOString();
+    await saveReservations(date, reservations);
+
+    return reservations[index];
+  });
 }
 
-async function saveReservationsForDate(date, reservations) {
-  const store = getStoreInstance();
-  const key = getReservationKey(date);
-
-  if (store) {
-    await store.set(key, JSON.stringify(reservations), {
-      metadata: { contentType: 'application/json' }
-    });
-    return;
-  }
-
-  await ensureFallbackDir();
-  const file = path.join(FALLBACK_RESERVATION_DIR, key);
-  await fs.writeFile(file, JSON.stringify(reservations, null, 2), 'utf8');
+async function findReservationDateByCode(confirmationCode) {
+  const list = await readJSON('reservations', 'reservation-index.json', {});
+  return list[confirmationCode] || null;
 }
 
-function getWeekdayKey(dateString) {
-  const [year, month, day] = dateString.split('-').map(Number);
-  const utcDate = new Date(Date.UTC(year, month - 1, day));
-  const dayIndex = utcDate.getUTCDay();
-  const keys = ['sunday', 'monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday'];
-  return keys[dayIndex];
-}
-
-function isDateInPast(date) {
-  const now = new Date();
-  const [year, month, day] = date.split('-').map(Number);
-  const compareDate = new Date(Date.UTC(year, month - 1, day, 23, 59, 59));
-  return compareDate.getTime() < now.getTime();
-}
-
-function hoursUntilSlot(date, time) {
-  const [year, month, day] = date.split('-').map(Number);
-  const [hour, minute] = time.split(':').map(Number);
-  const slotDate = new Date(Date.UTC(year, month - 1, day, hour, minute));
-  const now = new Date();
-  const diffMs = slotDate.getTime() - now.getTime();
-  return diffMs / (1000 * 60 * 60);
-}
-
-function calculateAvailability({ date, guests = null, settings, specialDates = [], existingReservations = [] }) {
-  const result = {
-    date,
-    status: 'open',
-    slots: [],
-    guestNotes: settings.guest_notes || '',
-    waitlistEnabled: Boolean(settings.waitlist_enabled),
-    maxGuestsPerReservation: settings.max_guests_per_reservation || null,
-    maxDaysInAdvance: settings.max_days_in_advance || null,
-    minNoticeHours: settings.min_notice_hours || 0
-  };
-
-  if (!settings.opening_hours) {
-    result.status = 'closed';
-    result.reason = 'no-opening-hours';
-    result.message = 'Keine Öffnungszeiten konfiguriert.';
-    return result;
-  }
-
-  const blackoutDates = Array.isArray(settings.blackout_dates)
-    ? settings.blackout_dates
-        .map((entry) => (typeof entry === 'string' ? entry.slice(0, 10) : entry.date?.slice(0, 10)))
-        .filter(Boolean)
-    : [];
-
-  if (blackoutDates.includes(date)) {
-    result.status = 'closed';
-    result.reason = 'blackout';
-    result.message = 'Für dieses Datum können keine Reservierungen vorgenommen werden.';
-    return result;
-  }
-
-  const today = new Date();
-  const selectedDate = new Date(date);
-  if (Number.isFinite(settings.max_days_in_advance)) {
-    const diffMs = selectedDate.getTime() - today.getTime();
-    const diffDays = Math.floor(diffMs / (1000 * 60 * 60 * 24));
-    if (diffDays > settings.max_days_in_advance) {
-      result.status = 'closed';
-      result.reason = 'too-far';
-      result.message = `Reservierungen sind nur ${settings.max_days_in_advance} Tage im Voraus möglich.`;
-      return result;
-    }
-  }
-
-  if (isDateInPast(date)) {
-    result.status = 'closed';
-    result.reason = 'past-date';
-    result.message = 'Das gewählte Datum liegt in der Vergangenheit.';
-    return result;
-  }
-
-  const weekdayKey = getWeekdayKey(date);
-  const dayConfig = settings.opening_hours[weekdayKey];
-
-  if (!dayConfig || !dayConfig.open) {
-    result.status = 'closed';
-    result.reason = 'weekly-closed';
-    result.message = 'Der Healthy Brunch Club hat an diesem Tag geschlossen.';
-    return result;
-  }
-
-  const specialDay = specialDates.find((entry) => entry.date === date);
-
-  if (specialDay && specialDay.status === 'geschlossen') {
-    result.status = 'closed';
-    result.reason = 'special-closed';
-    result.message = specialDay.note || 'Für dieses Datum besteht eine Sonderregelung.';
-    return result;
-  }
-
-  const baseSlots = Array.isArray(dayConfig.slots) ? dayConfig.slots : [];
-  let slotsToUse = baseSlots;
-  let slotMaxGuests = dayConfig.max_guests || settings.max_guests_per_reservation || 0;
-  let note = '';
-
-  if (specialDay && specialDay.status === 'special_hours') {
-    const specialSlots = Array.isArray(specialDay.special_slots) ? specialDay.special_slots : [];
-    if (specialSlots.length > 0) {
-      slotsToUse = specialSlots;
-      note = specialDay.note || '';
-    }
-  }
-
-  const reservationsByTime = existingReservations.reduce((acc, reservation) => {
-    if (reservation.status && reservation.status === 'cancelled') {
-      return acc;
-    }
-    const timeKey = normalizeTime(reservation.time);
-    if (!timeKey) {
-      return acc;
-    }
-    const partySize = Number(reservation.guests) || 0;
-    acc[timeKey] = (acc[timeKey] || 0) + partySize;
-    return acc;
-  }, {});
-
-  result.slots = slotsToUse
-    .map((slot) => {
-      const time = normalizeTime(slot);
-      if (!time) {
-        return null;
-      }
-
-      const capacityOverride = slot.max_guests || slot.maxGuests;
-      const capacity = Number(capacityOverride || slotMaxGuests || settings.max_guests_per_reservation || 0);
-      const reserved = reservationsByTime[time] || 0;
-      const remaining = Math.max(capacity - reserved, 0);
-      const tooSoon = settings.min_notice_hours ? hoursUntilSlot(date, time) < settings.min_notice_hours : false;
-      const fitsParty = guests ? remaining >= guests : remaining > 0;
-      let status = 'available';
-      let disabledReason = null;
-
-      if (remaining <= 0) {
-        status = 'full';
-        disabledReason = 'Keine Plätze mehr verfügbar';
-      }
-
-      if (tooSoon) {
-        status = 'tooSoon';
-        disabledReason = `Reservierungen sind nur bis ${settings.min_notice_hours} Stunden im Voraus möglich.`;
-      }
-
-      if (guests && guests > capacity) {
-        status = 'tooSmall';
-        disabledReason = 'Slot bietet nicht genügend Plätze für diese Gruppengröße.';
-      }
-
-      return {
-        time,
-        capacity,
-        reserved,
-        remaining,
-        status,
-        disabledReason,
-        fitsParty,
-        waitlistAvailable: settings.waitlist_enabled && remaining === 0,
-        tooSoon
-      };
-    })
-    .filter(Boolean)
-    .sort((a, b) => a.time.localeCompare(b.time));
-
-  if (result.slots.length === 0) {
-    result.status = 'closed';
-    result.reason = 'no-slots';
-    result.message = 'Für diesen Tag wurden keine Zeitslots konfiguriert.';
-  } else {
-    result.note = note;
-  }
-
-  return result;
-}
-
-function generateReservationId() {
-  return crypto.randomUUID();
+async function indexReservation(reservation) {
+  const index = await readJSON('reservations', 'reservation-index.json', {});
+  index[reservation.confirmationCode] = reservation.date;
+  await writeJSON('reservations', 'reservation-index.json', index);
 }
 
 module.exports = {
-  normalizeTime,
-  loadReservationSettings,
-  loadSpecialDates,
-  loadReservationsForDate,
-  saveReservationsForDate,
-  calculateAvailability,
-  generateReservationId,
-  RESERVATION_STORE_NAME
+  createReservation,
+  getAvailability,
+  loadReservations,
+  saveReservations,
+  loadBlocked,
+  saveBlocked,
+  loadSettings,
+  updateReservationStatus,
+  cancelReservation,
+  indexReservation,
+  findReservationDateByCode
 };

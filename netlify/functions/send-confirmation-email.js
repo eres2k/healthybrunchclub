@@ -1,4 +1,6 @@
-const { sendReservationEmails } = require('./utils/email');
+'use strict';
+
+const { sendReservationEmails } = require('./utils/email-service');
 
 const DEFAULT_HEADERS = {
   'Access-Control-Allow-Origin': '*',
@@ -16,7 +18,7 @@ exports.handler = async (event) => {
     return {
       statusCode: 405,
       headers: DEFAULT_HEADERS,
-      body: JSON.stringify({ message: 'Method not allowed' })
+      body: JSON.stringify({ message: 'Methode nicht erlaubt.' })
     };
   }
 
@@ -26,27 +28,23 @@ exports.handler = async (event) => {
       return {
         statusCode: 400,
         headers: DEFAULT_HEADERS,
-        body: JSON.stringify({ message: 'Reservation payload missing.' })
+        body: JSON.stringify({ message: 'Reservierungsdaten fehlen.' })
       };
     }
 
-    await sendReservationEmails(payload.reservation, {
-      guestNotes: payload.guestNotes,
-      defaultFrom: payload.defaultFrom,
-      adminRecipients: payload.adminRecipients
-    });
+    await sendReservationEmails(payload.reservation);
 
     return {
       statusCode: 200,
       headers: DEFAULT_HEADERS,
-      body: JSON.stringify({ message: 'Emails dispatched.' })
+      body: JSON.stringify({ message: 'E-Mails wurden versendet.' })
     };
   } catch (error) {
-    console.error('Fehler beim Senden der Reservierungs-E-Mail', error);
+    console.error('Fehler beim Versand der Reservierungs-E-Mails:', error);
     return {
       statusCode: 500,
       headers: DEFAULT_HEADERS,
-      body: JSON.stringify({ message: 'E-Mail Versand fehlgeschlagen.', details: error.message })
+      body: JSON.stringify({ message: 'E-Mails konnten nicht versendet werden.' })
     };
   }
 };
