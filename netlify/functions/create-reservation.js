@@ -1,73 +1,88 @@
-'use strict';
-
-const { validateReservationPayload } = require('./utils/validation');
-const { checkRateLimit } = require('./utils/rate-limiter');
-const { createReservation } = require('./utils/reservation-utils');
-const { sendReservationEmails } = require('./utils/email-service');
-
-const DEFAULT_HEADERS = {
-  'Access-Control-Allow-Origin': '*',
-  'Access-Control-Allow-Headers': 'Content-Type, Authorization',
-  'Access-Control-Allow-Methods': 'POST, OPTIONS',
-  'Content-Type': 'application/json'
+const ensureFetch = () => {
+  if (typeof fetch === 'function') {
+    return fetch;
+  }
+  return (...args) => import('node-fetch').then(({ default: nodeFetch }) => nodeFetch(...args));
 };
 
-function response(statusCode, body) {
-  return {
-    statusCode,
-    headers: DEFAULT_HEADERS,
-    body: JSON.stringify(body)
-  };
-}
+const fetchFn = ensureFetch();
 
 exports.handler = async (event) => {
+  const headers = {
+    'Access-Control-Allow-Origin': '*',
+    'Access-Control-Allow-Headers': 'Content-Type',
+    'Access-Control-Allow-Methods': 'POST, OPTIONS',
+    'Content-Type': 'application/json'
+  };
+
   if (event.httpMethod === 'OPTIONS') {
-    return response(200, {});
+    return { statusCode: 200, headers, body: '' };
   }
 
   if (event.httpMethod !== 'POST') {
-    return response(405, { message: 'Methode nicht erlaubt.' });
+    return {
+      statusCode: 405,
+      headers,
+      body: JSON.stringify({ error: 'Method not allowed' })
+    };
   }
 
   try {
-    const payload = JSON.parse(event.body || '{}');
-    const { valid, errors, data } = validateReservationPayload(payload);
+    const data = JSON.parse(event.body || '{}');
+    const required = ['name', 'email', 'phone', 'date', 'time', 'guests'];
 
-    if (!valid) {
-      return response(400, {
-        message: 'Bitte prüfen Sie Ihre Eingaben.',
-        errors
-      });
+    for (const field of required) {
+      if (!data[field]) {
+        return {
+          statusCode: 400,
+          headers,
+          body: JSON.stringify({
+            error: `Bitte füllen Sie das Feld "${field}" aus.`
+          })
+        };
+      }
     }
 
-    const rate = await checkRateLimit(event.headers['x-forwarded-for'] || event.ip || 'anonymous');
-    if (!rate.allowed) {
-      return response(429, {
-        message: 'Zu viele Reservierungsversuche. Bitte versuchen Sie es in einer Stunde erneut.'
-      });
+    const siteUrl = process.env.URL || process.env.DEPLOY_PRIME_URL || process.env.DEPLOY_URL;
+    if (!siteUrl) {
+      throw new Error('Site URL environment variable is not defined.');
     }
 
-    const reservationResult = await createReservation(data);
-    if (!reservationResult.success) {
-      return response(400, { message: reservationResult.message || 'Reservierung nicht möglich.' });
-    }
-
-    try {
-      await sendReservationEmails(reservationResult.reservation);
-    } catch (emailError) {
-      console.error('Fehler beim E-Mail-Versand:', emailError);
-    }
-
-    return response(200, {
-      message: reservationResult.reservation.status === 'waitlisted'
-        ? 'Der gewünschte Zeitslot ist ausgebucht. Sie wurden auf die Warteliste gesetzt.'
-        : 'Ihre Reservierung wurde bestätigt!',
-      reservation: reservationResult.reservation
+    const formData = new URLSearchParams({
+      'form-name': 'reservations',
+      ...Object.fromEntries(
+        Object.entries(data).map(([key, value]) => [key, value == null ? '' : String(value)])
+      )
     });
+
+    const response = await fetchFn(`${siteUrl}/`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+      body: formData.toString()
+    });
+
+    if (!response.ok) {
+      const text = await response.text();
+      throw new Error(`Netlify form submission failed: ${response.status} ${response.statusText} ${text}`);
+    }
+
+    return {
+      statusCode: 200,
+      headers,
+      body: JSON.stringify({
+        success: true,
+        message: 'Ihre Reservierung wurde erfolgreich übermittelt!'
+      })
+    };
   } catch (error) {
-    console.error('Fehler bei der Reservierung:', error);
-    return response(500, {
-      message: 'Es ist ein Fehler aufgetreten. Bitte versuchen Sie es später erneut.'
-    });
+    console.error('Reservation error:', error);
+    return {
+      statusCode: 500,
+      headers,
+      body: JSON.stringify({
+        error: 'Es ist ein Fehler aufgetreten. Bitte versuchen Sie es später erneut.',
+        details: process.env.NODE_ENV === 'development' ? error.message : undefined
+      })
+    };
   }
 };

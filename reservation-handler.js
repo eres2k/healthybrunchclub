@@ -257,6 +257,17 @@ class ReservationWizard {
       honeypot: formData.get('website')?.toString().trim() || ''
     };
 
+    const payload = {
+      name: this.state.name,
+      email: this.state.email,
+      phone: this.state.phone,
+      date: this.state.date,
+      time: this.state.time,
+      guests: this.state.guests,
+      message: this.state.specialRequests,
+      'bot-field': this.state.honeypot
+    };
+
     try {
       this.showLoading();
       const response = await fetch('/.netlify/functions/create-reservation', {
@@ -264,15 +275,15 @@ class ReservationWizard {
         headers: {
           'Content-Type': 'application/json'
         },
-        body: JSON.stringify(this.state)
+        body: JSON.stringify(payload)
       });
 
       const result = await response.json();
-      if (!response.ok) {
-        throw new Error(result.message || 'Reservierung fehlgeschlagen.');
+      if (!response.ok || result?.error) {
+        throw new Error(result?.error || result?.message || 'Reservierung fehlgeschlagen.');
       }
 
-      this.displaySuccess(result.reservation);
+      this.displaySuccess(result.reservation, result.message);
     } catch (error) {
       this.showError(error.message || 'Reservierung fehlgeschlagen.');
     } finally {
@@ -280,7 +291,7 @@ class ReservationWizard {
     }
   }
 
-  displaySuccess(reservation) {
+  displaySuccess(reservation, message) {
     this.currentStep = this.steps.length;
     this.toggleStep();
     this.updateProgress();
@@ -290,12 +301,16 @@ class ReservationWizard {
       this.successWrapper.classList.add('is-visible');
     }
     if (this.successCode) {
-      this.successCode.textContent = reservation.confirmationCode;
+      this.successCode.textContent = reservation?.confirmationCode || '–';
     }
     if (this.successMessage) {
-      this.successMessage.textContent = reservation.status === 'waitlisted'
-        ? 'Der gewünschte Zeitslot ist ausgebucht. Sie stehen auf der Warteliste.'
-        : 'Ihre Reservierung wurde bestätigt!';
+      if (reservation?.status === 'waitlisted') {
+        this.successMessage.textContent = 'Der gewünschte Zeitslot ist ausgebucht. Sie stehen auf der Warteliste.';
+      } else if (reservation) {
+        this.successMessage.textContent = 'Ihre Reservierung wurde bestätigt!';
+      } else {
+        this.successMessage.textContent = message || 'Ihre Reservierung wurde erfolgreich übermittelt!';
+      }
     }
   }
 
