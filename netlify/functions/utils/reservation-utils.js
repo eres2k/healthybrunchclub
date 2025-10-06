@@ -10,6 +10,56 @@ const DEFAULT_OPENING = { start: '09:00', end: '21:00' };
 const SLOT_INTERVAL_MINUTES = 15;
 const TIMEZONE = process.env.BOOKING_TIME_ZONE || 'Europe/Vienna';
 
+async function loadCMSTimeSlots(date) {
+  try {
+    const fs = require('fs').promises;
+    const path = require('path');
+    const matter = require('gray-matter');
+
+    // Try multiple file patterns
+    const patterns = [
+      `${date}.md`,
+      `${date}.markdown`,
+      `${date.split('-').join('-')}.md`
+    ];
+
+    for (const pattern of patterns) {
+      const filePath = path.join(process.cwd(), 'content', 'time-slots', pattern);
+
+      try {
+        const fileContent = await fs.readFile(filePath, 'utf-8');
+        const { data } = matter(fileContent);
+
+        if (data.slots && Array.isArray(data.slots)) {
+          console.log(`Loaded CMS slots for ${date}:`, data.slots.length, 'slots');
+
+          // Return normalized slot data
+          return {
+            openingTime: data.opening_time || '09:00',
+            closingTime: data.closing_time || '21:00',
+            slots: data.slots.map((slot) => ({
+              time: normalizeTime(slot.time),
+              capacity: parseInt(slot.capacity) || MAX_CAPACITY_PER_SLOT,
+              blocked: Boolean(slot.blocked),
+              reason: slot.reason || null
+            }))
+          };
+        }
+      } catch (err) {
+        // File doesn't exist, continue to next pattern
+        continue;
+      }
+    }
+
+    // No CMS data found
+    console.log(`No CMS slots found for ${date}, using defaults`);
+    return null;
+  } catch (error) {
+    console.error('Error loading CMS time slots:', error);
+    return null;
+  }
+}
+
 function generateConfirmationCode() {
   return `HBC-${Math.random().toString(36).slice(2, 6).toUpperCase()}-${Date.now().toString(36).toUpperCase()}`;
 }
@@ -89,20 +139,85 @@ async function getAvailability({ date, guests }) {
   const blockedSlots = await loadBlocked(date);
   const reservations = await loadReservations(date);
 
-  const slots = createTimeSlots(settings.openingHours || DEFAULT_OPENING).map((time) =>
-    calculateSlotAvailability({
+  // Try to load CMS-defined slots first
+  const cmsData = await loadCMSTimeSlots(date);
+
+  let timeSlots;
+  const slotConfigs = {};
+
+  if (cmsData && cmsData.slots && cmsData.slots.length > 0) {
+    // Use CMS-defined slots
+    timeSlots = cmsData.slots.map((slot) => slot.time);
+
+    // Store CMS configurations for each slot
+    cmsData.slots.forEach((slot) => {
+      slotConfigs[slot.time] = {
+        capacity: slot.capacity,
+        blocked: slot.blocked,
+        reason: slot.reason
+      };
+    });
+
+    console.log(`Using ${timeSlots.length} CMS-defined slots for ${date}`);
+  } else {
+    // Fall back to generated slots
+    const openingHours = cmsData
+      ? { start: cmsData.openingTime, end: cmsData.closingTime }
+      : settings.openingHours || DEFAULT_OPENING;
+
+    timeSlots = createTimeSlots(openingHours);
+    console.log(`Generated ${timeSlots.length} default slots for ${date}`);
+  }
+
+  // Calculate availability for each slot
+  const slots = timeSlots.map((time) => {
+    const cmsConfig = slotConfigs[time] || {};
+    const blockConfig = blockedSlots.find((b) => b.time === time);
+    const rawBlockCapacity = blockConfig?.capacity;
+    const parsedBlockCapacity = rawBlockCapacity !== undefined ? Number(rawBlockCapacity) : undefined;
+    const blockCapacity = Number.isFinite(parsedBlockCapacity) ? parsedBlockCapacity : undefined;
+
+    // Determine final capacity (CMS config takes precedence)
+    const capacity = cmsConfig.capacity || blockCapacity || settings.maxCapacity || MAX_CAPACITY_PER_SLOT;
+
+    // Check if slot is blocked
+    const isBlocked = cmsConfig.blocked || blockCapacity === 0;
+    const blockReason = cmsConfig.reason || blockConfig?.reason || null;
+
+    // If slot is completely blocked, set capacity to 0
+    const effectiveCapacity = isBlocked ? 0 : capacity;
+
+    const slot = calculateSlotAvailability({
       reservations,
       blockedSlots,
       time,
       guests,
-      maxCapacity: settings.maxCapacity || MAX_CAPACITY_PER_SLOT
-    })
-  );
+      maxCapacity: effectiveCapacity
+    });
+
+    // Add block information if applicable
+    if (isBlocked) {
+      slot.blocked = true;
+      slot.blockReason = blockReason;
+      slot.remaining = 0;
+      slot.fits = false;
+      slot.waitlist = false;
+    }
+
+    if (!isBlocked && blockReason) {
+      slot.blockReason = blockReason;
+    }
+
+    slot.capacity = effectiveCapacity;
+
+    return slot;
+  });
 
   return {
     date,
     timezone: settings.timezone || TIMEZONE,
-    slots
+    slots,
+    source: cmsData ? 'cms' : 'generated'
   };
 }
 
