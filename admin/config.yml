@@ -117,6 +117,26 @@ collections:
       - {label: "Beschreibung", name: "description", widget: "text"}
       - {label: "Audio Preview", name: "audioAnnouncement", widget: "file", required: false, hint: "MP3 oder WAV Format"}
 
+  - name: "time-slots"
+    label: "Reservierungs-Zeitfenster"
+    folder: "content/time-slots"
+    create: true
+    identifier_field: date
+    slug: "{{year}}-{{month}}-{{day}}"
+    fields:
+      - {label: "Datum", name: "date", widget: "date", format: "YYYY-MM-DD"}
+      - {label: "Öffnungszeit", name: "opening_time", widget: "string", default: "09:00", pattern: ["^([01]?[0-9]|2[0-3]):[0-5][0-9]$", "Format: HH:MM"]}
+      - {label: "Schließzeit", name: "closing_time", widget: "string", default: "21:00", pattern: ["^([01]?[0-9]|2[0-3]):[0-5][0-9]$", "Format: HH:MM"]}
+      - label: "Zeitfenster"
+        name: "slots"
+        widget: "list"
+        summary: "{{fields.time}} - Kapazität: {{fields.capacity}}"
+        fields:
+          - {label: "Uhrzeit", name: "time", widget: "string", pattern: ["^([01]?[0-9]|2[0-3]):[0-5][0-9]$", "Format: HH:MM"]}
+          - {label: "Kapazität", name: "capacity", widget: "number", default: 40, min: 0, max: 100}
+          - {label: "Blockiert", name: "blocked", widget: "boolean", default: false, required: false}
+          - {label: "Grund (bei Blockierung)", name: "reason", widget: "string", required: false}
+
   - name: "pages"
     label: "Seiten"
     label_singular: "Seite"
