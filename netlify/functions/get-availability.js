@@ -1,6 +1,7 @@
-'use strict';
-
-const { getAvailability } = require('./utils/reservation-utils');
+const fs = require('fs').promises;
+const path = require('path');
+const matter = require('gray-matter');
+const yaml = require('js-yaml');
 
 const DEFAULT_HEADERS = {
   'Access-Control-Allow-Origin': '*',
@@ -9,32 +10,122 @@ const DEFAULT_HEADERS = {
   'Content-Type': 'application/json'
 };
 
-function createResponse(statusCode, body) {
-  return {
-    statusCode,
-    headers: DEFAULT_HEADERS,
-    body: JSON.stringify(body)
-  };
+// Load settings from YAML file
+async function loadSettings() {
+  try {
+    const settingsPath = path.join(process.cwd(), 'content', 'settings', 'reservation-settings.yml');
+    const settingsContent = await fs.readFile(settingsPath, 'utf-8');
+    const settings = yaml.load(settingsContent);
+    return settings;
+  } catch (error) {
+    console.error('Error loading settings:', error);
+    return {
+      openingHours: { start: '09:00', end: '21:00' },
+      maxCapacityPerSlot: 40,
+      slotInterval: 15,
+      timezone: 'Europe/Vienna'
+    };
+  }
 }
 
-// CMS Blockierungen laden - MUSS VOR handler definiert werden
-async function loadCMSBlockedReservations(date) {
+// Load blocked slots from markdown files
+async function loadBlockedSlots(date) {
   try {
-    const fs = require('fs').promises;
-    const path = require('path');
-    const filePath = path.join(process.cwd(), 'content', 'blocked-reservations', `${date}.json`);
-
+    const blockedDir = path.join(process.cwd(), 'content', 'blocked-reservations');
+    const filename = `${date}.md`;
+    const filePath = path.join(blockedDir, filename);
+    
     try {
-      const data = await fs.readFile(filePath, 'utf-8');
-      return JSON.parse(data);
+      const content = await fs.readFile(filePath, 'utf-8');
+      const { data } = matter(content);
+      return data.blockedSlots || [];
     } catch {
-      // Datei existiert nicht - das ist OK
+      // No blocked slots for this date
       return [];
     }
   } catch (error) {
-    console.error('Fehler beim Laden der CMS-Blockierungen:', error);
+    console.error('Error loading blocked slots:', error);
     return [];
   }
+}
+
+// Load existing reservations from storage
+async function loadReservations(date) {
+  try {
+    const reservationsPath = path.join(process.cwd(), '.netlify', 'blobs', 'deploy', 'reservations', `${date}.json`);
+    const content = await fs.readFile(reservationsPath, 'utf-8');
+    return JSON.parse(content);
+  } catch {
+    return [];
+  }
+}
+
+// Generate time slots based on settings
+function generateTimeSlots(settings) {
+  const slots = [];
+  const { openingHours, slotInterval } = settings;
+  
+  let [startHour, startMin] = openingHours.start.split(':').map(Number);
+  let [endHour, endMin] = openingHours.end.split(':').map(Number);
+  
+  let currentHour = startHour;
+  let currentMin = startMin;
+  
+  while (currentHour * 60 + currentMin < endHour * 60 + endMin) {
+    const time = `${String(currentHour).padStart(2, '0')}:${String(currentMin).padStart(2, '0')}`;
+    slots.push(time);
+    
+    currentMin += slotInterval;
+    if (currentMin >= 60) {
+      currentHour += Math.floor(currentMin / 60);
+      currentMin = currentMin % 60;
+    }
+  }
+  
+  return slots;
+}
+
+// Calculate availability for each slot
+async function calculateAvailability(date, guests = null) {
+  const settings = await loadSettings();
+  const blockedSlots = await loadBlockedSlots(date);
+  const reservations = await loadReservations(date);
+  
+  const timeSlots = settings.defaultSlots || generateTimeSlots(settings).map(time => ({
+    time,
+    capacity: settings.maxCapacityPerSlot
+  }));
+  
+  const availability = timeSlots.map(slot => {
+    // Check if slot is blocked
+    const blocked = blockedSlots.find(b => b.time === slot.time);
+    const blockedSeats = blocked ? (blocked.blocked_seats || 0) : 0;
+    
+    // Calculate reserved seats
+    const reservedSeats = reservations
+      .filter(r => r.time === slot.time && r.status === 'confirmed')
+      .reduce((sum, r) => sum + (r.guests || 0), 0);
+    
+    const totalCapacity = slot.capacity || settings.maxCapacityPerSlot;
+    const availableCapacity = totalCapacity - blockedSeats;
+    const remaining = Math.max(0, availableCapacity - reservedSeats);
+    
+    return {
+      time: slot.time,
+      capacity: availableCapacity,
+      reserved: reservedSeats,
+      remaining: remaining,
+      waitlist: remaining === 0 && settings.waitlistEnabled,
+      fits: guests ? remaining >= guests : remaining > 0,
+      blockedReason: blocked?.reason
+    };
+  });
+  
+  return {
+    date,
+    timezone: settings.timezone,
+    slots: availability
+  };
 }
 
 exports.handler = async (event) => {
@@ -47,51 +138,40 @@ exports.handler = async (event) => {
   }
 
   if (event.httpMethod !== 'GET') {
-    return createResponse(405, { message: 'Methode nicht erlaubt' });
+    return {
+      statusCode: 405,
+      headers: DEFAULT_HEADERS,
+      body: JSON.stringify({ message: 'Method not allowed' })
+    };
   }
 
   const { date, guests } = event.queryStringParameters || {};
 
   if (!date) {
-    return createResponse(400, { message: 'Datum erforderlich' });
+    return {
+      statusCode: 400,
+      headers: DEFAULT_HEADERS,
+      body: JSON.stringify({ message: 'Date parameter is required' })
+    };
   }
 
   try {
-    const availability = await getAvailability({
-      date,
-      guests: guests ? parseInt(guests, 10) : null
-    });
-
-    // CMS Blockierungen laden und anwenden
-    const cmsBlocked = await loadCMSBlockedReservations(date);
-
-    if (Array.isArray(cmsBlocked) && cmsBlocked.length > 0) {
-      availability.slots = (availability.slots || []).map((slot) => {
-        const block = cmsBlocked.find((entry) => entry.time === slot.time);
-        if (block) {
-          const blockedSeats = Number(block.blocked_seats || 0);
-          if (blockedSeats > 0) {
-            const originalCapacity = Number(slot.capacity || 0);
-            const remaining = Number(slot.remaining ?? originalCapacity - Number(slot.reserved || 0));
-            slot.capacity = Math.max(0, originalCapacity - blockedSeats);
-            slot.remaining = Math.max(0, remaining - blockedSeats);
-            slot.cmsBlocked = true;
-            if (block.reason) {
-              slot.blockReason = block.reason;
-            }
-          }
-        }
-        return slot;
-      });
-    }
-
-    return createResponse(200, availability);
+    const availability = await calculateAvailability(date, guests ? parseInt(guests, 10) : null);
+    
+    return {
+      statusCode: 200,
+      headers: DEFAULT_HEADERS,
+      body: JSON.stringify(availability)
+    };
   } catch (error) {
-    console.error('Fehler in get-availability:', error);
-    console.error('Stack trace:', error.stack); // Mehr Debug-Info
-    return createResponse(500, { 
-      message: 'Interner Server Fehler',
-      error: process.env.NODE_ENV === 'development' ? error.message : undefined
-    });
+    console.error('Error in get-availability:', error);
+    return {
+      statusCode: 500,
+      headers: DEFAULT_HEADERS,
+      body: JSON.stringify({ 
+        message: 'Internal server error',
+        error: process.env.NODE_ENV === 'development' ? error.message : undefined
+      })
+    };
   }
 };

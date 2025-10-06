@@ -514,83 +514,87 @@
         submitButton.disabled = true;
       }
 
-      loadAvailableSlots(dateData.date);
+      loadAvailableTimeSlots(dateData.date);
     }
 
-    async function loadAvailableSlots(selectedDateValue) {
+    async function loadAvailableTimeSlots(date) {
       const slotsContainer = document.getElementById('time-slots-container');
       if (!slotsContainer) return;
 
       slotsContainer.innerHTML = '<div class="loading">Lade verfügbare Zeiten...</div>';
 
       try {
-        const params = new URLSearchParams({ date: selectedDateValue });
-        const response = await fetch(`/.netlify/functions/get-availability?${params.toString()}`);
+        const response = await fetch(`/.netlify/functions/get-availability?date=${date}&guests=2`);
+
         if (!response.ok) {
-          throw new Error('Fehler beim Abrufen der verfügbaren Zeiten');
+          throw new Error(`HTTP error! status: ${response.status}`);
         }
 
         const data = await response.json();
-        const slots = Array.isArray(data.slots) ? data.slots : [];
 
-        if (!slots.length) {
-          slotsContainer.innerHTML = '<div class="no-slots">Keine Zeiten verfügbar für diesen Tag.</div>';
+        if (!data.slots || data.slots.length === 0) {
+          slotsContainer.innerHTML = '<div class="no-slots">Keine verfügbaren Zeitslots für dieses Datum.</div>';
           return;
         }
 
-        slotsContainer.innerHTML = slots
-          .map((slot) => {
-            const capacity = Number(slot.capacity) || 0;
-            const reserved = Number(slot.reserved) || 0;
-            const remaining = Math.max(0, Number(slot.remaining ?? capacity - reserved));
-            const isBlocked = remaining === 0;
-            const isNearlyFull = remaining > 0 && remaining < 5;
-            const usage = capacity > 0 ? Math.min(100, Math.round((reserved / capacity) * 100)) : 100;
-            const blockNote = slot.blockReason ? ` – ${slot.blockReason}` : '';
+        slotsContainer.innerHTML = '';
 
-            return `
-              <div class="time-slot ${isBlocked ? 'blocked' : ''} ${isNearlyFull ? 'nearly-full' : ''}" 
-                   data-time="${slot.time}" 
-                   data-available="${!isBlocked}">
-                  <div class="slot-time">${slot.time}</div>
-                  <div class="slot-availability">
-                      ${isBlocked
-                        ? '<span class="badge blocked">Ausgebucht</span>'
-                        : isNearlyFull
-                          ? `<span class="badge warning">Nur noch ${remaining} Plätze</span>`
-                          : `<span class="badge available">${remaining} Plätze frei</span>`
-                      }
-                  </div>
-                  <div class="slot-capacity-bar">
-                      <div class="capacity-fill" style="width: ${usage}%"></div>
-                  </div>
-                  <div class="slot-details">
-                      ${reserved}/${capacity} belegt${blockNote}
-                  </div>
-              </div>
-            `;
-          })
-          .join('');
+        data.slots.forEach((slot) => {
+          const slotDiv = document.createElement('div');
+          slotDiv.className = `time-slot ${slot.remaining > 0 ? 'available' : 'blocked'}`;
+          slotDiv.dataset.time = slot.time;
+          slotDiv.dataset.available = slot.remaining > 0;
+          slotDiv.dataset.waitlist = slot.waitlist ? 'true' : 'false';
 
-        document.querySelectorAll('.time-slot[data-available="true"]').forEach((slotElement) => {
-          slotElement.addEventListener('click', function handleSlotClick() {
-            selectTimeSlot(this);
-          });
-        });
+          let statusText = '';
+          if (slot.remaining > 0) {
+            statusText = `${slot.remaining} Plätze frei`;
+          } else if (slot.waitlist) {
+            statusText = 'Warteliste';
+          } else if (slot.blockedReason) {
+            statusText = slot.blockedReason;
+          } else {
+            statusText = 'Ausgebucht';
+          }
 
-        document.querySelectorAll('.time-slot[data-available="false"]').forEach((slotElement) => {
-          slotElement.addEventListener('click', () => {
-            showNotification('Dieser Zeitslot ist bereits ausgebucht.', 'error');
-          });
+          const capacity = Number(slot.capacity) || 0;
+          const remaining = Math.max(0, Number(slot.remaining) || 0);
+          const usedCapacity = capacity > 0 ? Math.min(100, ((capacity - remaining) / capacity) * 100) : 100;
+
+          slotDiv.innerHTML = `
+            <div class="slot-time">${slot.time} Uhr</div>
+            <div class="slot-availability">
+              <span class="badge ${slot.remaining > 0 ? 'available' : slot.waitlist ? 'warning' : 'blocked'}">
+                ${statusText}
+              </span>
+            </div>
+            <div class="slot-capacity-bar">
+              <div class="capacity-fill" style="width: ${usedCapacity}%"></div>
+            </div>
+          `;
+
+          if (slot.remaining > 0 || slot.waitlist) {
+            slotDiv.addEventListener('click', () => selectTimeSlot(slotDiv));
+          }
+
+          slotsContainer.appendChild(slotDiv);
         });
       } catch (error) {
-        console.error('Fehler beim Laden der Slots:', error);
-        slotsContainer.innerHTML = '<div class="error">Fehler beim Laden der verfügbaren Zeiten.</div>';
+        console.error('Error loading time slots:', error);
+        slotsContainer.innerHTML = `
+          <div class="error">
+            <p>Fehler beim Laden der verfügbaren Zeiten.</p>
+            <p>Bitte versuchen Sie es später erneut oder kontaktieren Sie uns direkt.</p>
+          </div>
+        `;
       }
     }
 
     function selectTimeSlot(slotElement) {
-      if (slotElement.dataset.available === 'false') {
+      const isAvailable = slotElement.dataset.available !== 'false';
+      const isWaitlist = slotElement.dataset.waitlist === 'true';
+
+      if (!isAvailable && !isWaitlist) {
         showNotification('Dieser Zeitslot ist bereits ausgebucht.', 'error');
         return;
       }
