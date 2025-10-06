@@ -17,6 +17,26 @@ function createResponse(statusCode, body) {
   };
 }
 
+// CMS Blockierungen laden - MUSS VOR handler definiert werden
+async function loadCMSBlockedReservations(date) {
+  try {
+    const fs = require('fs').promises;
+    const path = require('path');
+    const filePath = path.join(process.cwd(), 'content', 'blocked-reservations', `${date}.json`);
+
+    try {
+      const data = await fs.readFile(filePath, 'utf-8');
+      return JSON.parse(data);
+    } catch {
+      // Datei existiert nicht - das ist OK
+      return [];
+    }
+  } catch (error) {
+    console.error('Fehler beim Laden der CMS-Blockierungen:', error);
+    return [];
+  }
+}
+
 exports.handler = async (event) => {
   if (event.httpMethod === 'OPTIONS') {
     return {
@@ -42,6 +62,7 @@ exports.handler = async (event) => {
       guests: guests ? parseInt(guests, 10) : null
     });
 
+    // CMS Blockierungen laden und anwenden
     const cmsBlocked = await loadCMSBlockedReservations(date);
 
     if (Array.isArray(cmsBlocked) && cmsBlocked.length > 0) {
@@ -67,24 +88,10 @@ exports.handler = async (event) => {
     return createResponse(200, availability);
   } catch (error) {
     console.error('Fehler in get-availability:', error);
-    return createResponse(500, { message: 'Interner Server Fehler' });
+    console.error('Stack trace:', error.stack); // Mehr Debug-Info
+    return createResponse(500, { 
+      message: 'Interner Server Fehler',
+      error: process.env.NODE_ENV === 'development' ? error.message : undefined
+    });
   }
 };
-
-async function loadCMSBlockedReservations(date) {
-  try {
-    const fs = require('fs').promises;
-    const path = require('path');
-    const filePath = path.join(process.cwd(), 'content', 'blocked-reservations', `${date}.json`);
-
-    try {
-      const data = await fs.readFile(filePath, 'utf-8');
-      return JSON.parse(data);
-    } catch {
-      return [];
-    }
-  } catch (error) {
-    console.error('Fehler beim Laden der CMS-Blockierungen:', error);
-    return [];
-  }
-}
