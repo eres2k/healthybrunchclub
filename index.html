@@ -517,6 +517,64 @@
       loadAvailableTimeSlots(dateData.date);
     }
 
+    function renderTimeSlot(slot) {
+      const slotElement = document.createElement('button');
+      slotElement.className = 'time-slot';
+      slotElement.dataset.time = slot.time;
+      slotElement.dataset.available = (slot.fits || slot.waitlist) ? 'true' : 'false';
+      slotElement.dataset.waitlist = slot.waitlist ? 'true' : 'false';
+      slotElement.type = 'button';
+
+      if (slot.blocked) {
+        slotElement.classList.add('blocked');
+        slotElement.innerHTML = `
+      <div class="slot-time">${slot.time}</div>
+      <div class="slot-availability">
+        <span class="badge blocked">Blockiert</span>
+        ${slot.blockReason ? `<div class="block-reason">${slot.blockReason}</div>` : ''}
+      </div>
+    `;
+      } else if (slot.remaining === 0) {
+        slotElement.classList.add('unavailable');
+        slotElement.innerHTML = `
+      <div class="slot-time">${slot.time}</div>
+      <div class="slot-availability">
+        <span class="badge unavailable">Ausgebucht</span>
+      </div>
+    `;
+      } else if (slot.remaining <= 5) {
+        slotElement.classList.add('nearly-full');
+        const usedPercent = slot.capacity > 0 ? ((slot.capacity - slot.remaining) / slot.capacity) * 100 : 0;
+        slotElement.innerHTML = `
+      <div class="slot-time">${slot.time}</div>
+      <div class="slot-availability">
+        <span class="badge warning">${slot.remaining} Plätze frei</span>
+      </div>
+      <div class="slot-capacity-bar">
+        <div class="capacity-fill" style="width: ${usedPercent}%"></div>
+      </div>
+    `;
+      } else {
+        slotElement.classList.add('available');
+        const usedPercent = slot.capacity > 0 ? ((slot.capacity - slot.remaining) / slot.capacity) * 100 : 0;
+        slotElement.innerHTML = `
+      <div class="slot-time">${slot.time}</div>
+      <div class="slot-availability">
+        <span class="badge available">${slot.remaining} Plätze frei</span>
+      </div>
+      <div class="slot-capacity-bar">
+        <div class="capacity-fill" style="width: ${usedPercent}%"></div>
+      </div>
+    `;
+      }
+
+      if (slot.blocked || (!slot.fits && !slot.waitlist)) {
+        slotElement.disabled = true;
+      }
+
+      return slotElement;
+    }
+
     async function loadAvailableTimeSlots(date) {
       const slotsContainer = document.getElementById('time-slots-container');
       if (!slotsContainer) return;
@@ -540,48 +598,13 @@
         slotsContainer.innerHTML = '';
 
         data.slots.forEach(slot => {
-          const slotDiv = document.createElement('div');
-          const capacity = Number(slot.capacity) || 0;
-          const remaining = Number(slot.remaining) || 0;
-          const usedCapacity = Math.max(0, capacity - remaining);
-          const usagePercent = capacity > 0 ? Math.min(100, (usedCapacity / capacity) * 100) : 0;
-          const slotStateClass = remaining > 0 ? 'available' : slot.waitlist ? 'blocked waitlist' : 'blocked';
+          const slotElement = renderTimeSlot(slot);
 
-          slotDiv.className = `time-slot ${slotStateClass}`.trim();
-          slotDiv.dataset.time = slot.time;
-          slotDiv.dataset.available = (remaining > 0 || slot.waitlist).toString();
-          slotDiv.dataset.waitlist = slot.waitlist ? 'true' : 'false';
-
-          let statusText = '';
-          if (remaining > 0) {
-            statusText = `${remaining} Plätze frei`;
-          } else if (slot.waitlist) {
-            statusText = 'Warteliste';
-          } else if (slot.blockedReason) {
-            statusText = slot.blockedReason;
-          } else {
-            statusText = 'Ausgebucht';
+          if (!slot.blocked && (slot.remaining > 0 || slot.waitlist)) {
+            slotElement.addEventListener('click', () => selectTimeSlot(slotElement));
           }
 
-          const badgeClass = remaining > 0 ? 'available' : slot.waitlist ? 'warning' : 'blocked';
-
-          slotDiv.innerHTML = `
-            <div class="slot-time">${slot.time} Uhr</div>
-            <div class="slot-availability">
-              <span class="badge ${badgeClass}">
-                ${statusText}
-              </span>
-            </div>
-            <div class="slot-capacity-bar">
-              <div class="capacity-fill" style="width: ${usagePercent}%"></div>
-            </div>
-          `;
-
-          if (remaining > 0 || slot.waitlist) {
-            slotDiv.addEventListener('click', () => selectTimeSlot(slotDiv));
-          }
-
-          slotsContainer.appendChild(slotDiv);
+          slotsContainer.appendChild(slotElement);
         });
       } catch (error) {
         console.error('Error loading time slots:', error);
