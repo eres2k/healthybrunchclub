@@ -198,24 +198,24 @@ collections:
       - label: "Zeitslots"
         name: "slots"
         widget: "list"
+        summary: "{{fields.time}} - {{fields.capacity}} Plätze"
         fields:
-          - label: "Zeit"
-            name: "time"
-            widget: "text"
-            hint: "Format: HH:MM (z.B. 09:00, 14:30)"
-            default: "09:00"
-            pattern: ["^([0-1]?[0-9]|2[0-3]):[0-5][0-9]$", "Bitte Format HH:MM verwenden"]
-          - {label: "Max. Gäste", name: "max_guests", widget: "number", default: 20}
-      - {label: "Notiz", name: "note", widget: "text", required: false, hint: "Wird Kunden angezeigt"}
+          - {label: "Zeit", name: "time", widget: "string", hint: "z.B. 09:00"}
+          - {label: "Kapazität", name: "capacity", widget: "number", default: 20, min: 0}
 
-  - name: "blocked_reservations"
-    label: "Blockierte Reservierungen"
+  - name: "blocked-reservations"
+    label: "Blockierte Zeitslots"
+    label_singular: "Blockierter Zeitslot"
     folder: "content/blocked-reservations"
     create: true
-    identifier_field: "title"
+    slug: "{{year}}-{{month}}-{{day}}"
+    identifier_field: date
     fields:
-      - {label: "Titel", name: "title", widget: "string"}
-      - {label: "Datum", name: "date", widget: "datetime", format: "YYYY-MM-DD", dateFormat: "DD.MM.YYYY", timeFormat: false}
-      - {label: "Zeit", name: "time", widget: "string"}
-      - {label: "Anzahl blockierte Plätze", name: "blocked_seats", widget: "number"}
-      - {label: "Grund", name: "reason", widget: "text", required: false}
+      - {label: "Datum", name: "date", widget: "date", format: "YYYY-MM-DD"}
+      - label: "Blockierte Slots"
+        name: "blockedSlots"
+        widget: "list"
+        fields:
+          - {label: "Zeit", name: "time", widget: "select", options: ["09:00", "09:30", "10:00", "10:30", "11:00", "11:30", "12:00", "12:30", "13:00", "13:30", "14:00", "14:30", "15:00", "15:30", "16:00", "16:30", "17:00", "17:30", "18:00", "18:30", "19:00", "19:30", "20:00", "20:30"]}
+          - {label: "Blockierte Plätze", name: "blocked_seats", widget: "number", min: 0, max: 40}
+          - {label: "Grund", name: "reason", widget: "string", required: false, hint: "Optional: Grund für Blockierung"}
