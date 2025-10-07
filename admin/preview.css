@@ -1,0 +1,351 @@
+/* admin/preview.css - Elegante Menükarten Vorschau mit Kreisbildern */
+body {
+  font-family: 'Lato', 'Helvetica Neue', sans-serif;
+  color: #2A2A2A;
+  background: #FAF8F3;
+  padding: 20px;
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+}
+
+h1, h2, h3 {
+  font-family: 'Playfair Display', Georgia, serif;
+  color: #1E4A3C;
+  font-weight: 300;
+}
+
+/* Kategorie Container */
+.menu-category {
+  background: #FFFFFF;
+  padding: 60px;
+  margin: 20px 0;
+  box-shadow: 0 15px 50px rgba(0, 0, 0, 0.08);
+  border-radius: 8px;
+}
+
+/* Kategorie Header */
+.category-header {
+  text-align: center;
+  margin-bottom: 50px;
+  position: relative;
+}
+
+.category-image {
+  width: 100%;
+  max-width: 700px;
+  height: 250px;
+  margin: 0 auto 40px;
+  overflow: hidden;
+  border-radius: 8px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+}
+
+.category-image img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.6s ease;
+}
+
+.category-title {
+  font-family: 'Playfair Display', serif;
+  font-size: 38px;
+  color: #1E4A3C;
+  text-transform: uppercase;
+  letter-spacing: 3px;
+  margin-bottom: 15px;
+  position: relative;
+  display: inline-block;
+  padding: 0 60px;
+}
+
+.category-title::before,
+.category-title::after {
+  content: '';
+  position: absolute;
+  top: 50%;
+  width: 70px;
+  height: 1px;
+  background: linear-gradient(to right, transparent, #F0EBE1, transparent);
+}
+
+.category-title::before {
+  right: 100%;
+}
+
+.category-title::after {
+  left: 100%;
+}
+
+.category-description {
+  font-family: 'Crimson Text', Georgia, serif;
+  font-size: 16px;
+  color: #5A5A5A;
+  font-style: italic;
+  max-width: 600px;
+  margin: 0 auto;
+}
+
+/* 3-Spalten Grid */
+.menu-items-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 40px 35px;
+}
+
+/* Menü Item - Elegantes Card Design */
+.menu-item {
+  background: #FAF8F3;
+  padding: 25px;
+  border-radius: 12px;
+  transition: all 0.3s ease;
+  position: relative;
+  overflow: hidden;
+  text-align: center;
+}
+
+.menu-item:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+}
+
+.menu-item.special::before {
+  content: 'Empfehlung';
+  position: absolute;
+  top: 15px;
+  right: -30px;
+  background: #FFB5A7;
+  color: white;
+  padding: 5px 40px;
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  transform: rotate(45deg);
+  font-weight: 600;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+}
+
+/* Kreisförmige Bilder */
+.menu-item-image {
+  width: 100px;
+  height: 100px;
+  margin: -40px auto 15px;
+  overflow: hidden;
+  border-radius: 50%;
+  box-shadow: 0 5px 20px rgba(0, 0, 0, 0.15);
+  position: relative;
+  background: white;
+  padding: 4px;
+}
+
+.menu-item-image img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: 50%;
+}
+
+/* Icon für Items ohne Bild */
+.menu-item.no-image {
+  padding-top: 30px;
+}
+
+.menu-item-icon {
+  width: 50px;
+  height: 50px;
+  margin: 0 auto 15px;
+  background: #C4D0B9;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 24px;
+}
+
+/* Item Header */
+.menu-item-header {
+  margin-bottom: 12px;
+}
+
+.menu-item-name {
+  font-family: 'Crimson Text', serif;
+  font-size: 18px;
+  font-weight: 600;
+  color: #2A2A2A;
+  margin-bottom: 6px;
+  display: block;
+}
+
+.menu-item-price {
+  font-family: 'Lato', sans-serif;
+  font-size: 20px;
+  color: #1E4A3C;
+  font-weight: 300;
+  display: block;
+}
+
+.menu-item-price::before {
+  content: '€ ';
+}
+
+/* Beschreibung */
+.menu-item-description {
+  font-family: 'Crimson Text', serif;
+  font-size: 13px;
+  color: #5A5A5A;
+  line-height: 1.6;
+  margin-bottom: 18px;
+  font-style: italic;
+}
+
+/* Info Container */
+.menu-item-info {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+/* Kalorien - Elegante Badge */
+.menu-item-calories {
+  background: #FFF9F3;
+  padding: 6px 14px;
+  border-radius: 20px;
+  font-size: 11px;
+  color: #5A5A5A;
+  display: inline-block;
+  margin: 0 auto;
+}
+
+.calories-value {
+  font-weight: 600;
+  color: #1E4A3C;
+}
+
+/* Tags - Stilvolle Pills */
+.menu-item-tags {
+  display: flex;
+  gap: 6px;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
+.menu-tag {
+  font-size: 10px;
+  color: #1E4A3C;
+  background: #F0F5EC;
+  padding: 4px 12px;
+  border-radius: 15px;
+  text-transform: lowercase;
+  font-weight: 500;
+}
+
+/* Allergene - Elegante Anzeige */
+.menu-item-allergens {
+  background: #FFF4E6;
+  padding: 6px 10px;
+  border-radius: 8px;
+  font-size: 10px;
+  color: #5A5A5A;
+}
+
+.allergen-label {
+  font-weight: 500;
+  color: #5A5A5A;
+  margin-right: 5px;
+}
+
+.allergen-code {
+  font-weight: 700;
+  color: #D2691E;
+  margin: 0 2px;
+  background: white;
+  padding: 1px 5px;
+  border-radius: 4px;
+  font-size: 9px;
+}
+
+/* Allergen Legende */
+.allergen-legend {
+  margin-top: 60px;
+  padding: 35px;
+  background: linear-gradient(135deg, #FFF4E6, #FAF8F3);
+  border-radius: 12px;
+  text-align: center;
+}
+
+.allergen-legend h3 {
+  font-family: 'Playfair Display', serif;
+  font-size: 24px;
+  margin-bottom: 25px;
+  color: #2A2A2A;
+}
+
+.allergen-list {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 12px;
+  text-align: left;
+  max-width: 800px;
+  margin: 0 auto;
+}
+
+.allergen-item {
+  font-size: 12px;
+  color: #5A5A5A;
+  background: white;
+  padding: 8px 12px;
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+}
+
+.allergen-item strong {
+  color: #D2691E;
+  font-weight: 700;
+  background: #FFF4E6;
+  padding: 2px 6px;
+  border-radius: 4px;
+  margin-right: 8px;
+}
+
+/* Responsive für CMS Vorschau */
+@media (max-width: 1024px) {
+  .menu-items-grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 35px 30px;
+  }
+  
+  .menu-category {
+    padding: 40px;
+  }
+}
+
+@media (max-width: 768px) {
+  .menu-items-grid {
+    grid-template-columns: 1fr;
+    gap: 35px;
+  }
+  
+  .menu-category {
+    padding: 30px 20px;
+  }
+  
+  .category-title {
+    font-size: 28px;
+    padding: 0 30px;
+  }
+  
+  .category-title::before,
+  .category-title::after {
+    width: 40px;
+  }
+  
+  .menu-item {
+    padding: 25px 20px;
+  }
+  
+  .menu-item-image {
+    width: 90px;
+    height: 90px;
+    margin: -35px auto 12px;
+  }
+}

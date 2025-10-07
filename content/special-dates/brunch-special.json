@@ -1,0 +1,9 @@
+{
+  "date": "2024-12-31",
+  "status": "special_hours",
+  "special_slots": [
+    { "time": "09:00", "max_guests": 30 },
+    { "time": "11:30", "max_guests": 30 }
+  ],
+  "note": "Silvester Brunch Special"
+}

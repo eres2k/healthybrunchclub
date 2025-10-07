@@ -1,0 +1,266 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Healthy Brunch Club – Admin</title>
+  <link rel="stylesheet" href="mystyle-premium.css" />
+  <style>
+    body { background: #f6f7f4; color: #243424; font-family: 'Lato', sans-serif; }
+    .container { max-width: 1100px; margin: 0 auto; padding: 2rem; }
+    header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem; }
+    .card { background: #fff; padding: 1.5rem; border-radius: 20px; box-shadow: 0 18px 48px rgba(0,0,0,.08); margin-bottom: 1.5rem; }
+    .grid { display: grid; gap: 1rem; }
+    .grid-2 { grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); }
+    table { width: 100%; border-collapse: collapse; }
+    th, td { padding: .75rem; border-bottom: 1px solid #e4eadf; text-align: left; font-size: .9rem; }
+    th { text-transform: uppercase; letter-spacing: .08em; font-size: .75rem; color: #6b7a6c; }
+    .btn { display: inline-flex; align-items: center; justify-content: center; padding: .75rem 1.6rem; border-radius: 999px; border: none; font-weight: 600; cursor: pointer; }
+    .btn-primary { background: #2f5138; color: #fff; }
+    .btn-secondary { background: #edf3eb; color: #2f5138; }
+    .banner { padding: 1rem; border-radius: 16px; margin-bottom: 1rem; display: none; }
+    .banner.show { display: block; }
+    .banner.error { background: #fdecea; color: #842029; }
+    .banner.success { background: #e6f4ea; color: #0f5132; }
+    input, select { width: 100%; padding: .75rem 1rem; border-radius: 12px; border: 1px solid #ced9cf; font-size: .95rem; }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <header>
+      <h1>Admin-Dashboard</h1>
+      <button id="btn-logout" class="btn btn-secondary">Abmelden</button>
+    </header>
+
+    <div class="card" id="login-card">
+      <h2>Anmeldung</h2>
+      <p>Bitte geben Sie Ihr Admin-Token ein, um fortzufahren.</p>
+      <input type="password" id="admin-token" placeholder="JWT Token" />
+      <button class="btn btn-primary" id="btn-login">Anmelden</button>
+    </div>
+
+    <div class="banner" id="admin-banner"></div>
+
+    <div id="dashboard" hidden>
+      <div class="card">
+        <h2>Verfügbarkeit prüfen</h2>
+        <div class="grid grid-2">
+          <label>
+            <span>Datum</span>
+            <input type="date" id="admin-date" />
+          </label>
+          <label>
+            <span>Gäste</span>
+            <input type="number" id="admin-guests" min="1" value="2" />
+          </label>
+        </div>
+        <button class="btn btn-primary" id="btn-load">Verfügbarkeit laden</button>
+        <div id="availability-result"></div>
+      </div>
+
+      <div class="card">
+        <h2>Reservierungen</h2>
+        <table>
+          <thead>
+            <tr>
+              <th>Datum</th>
+              <th>Zeit</th>
+              <th>Name</th>
+              <th>Gäste</th>
+              <th>Status</th>
+              <th>Aktionen</th>
+            </tr>
+          </thead>
+          <tbody id="reservation-table"></tbody>
+        </table>
+      </div>
+
+      <div class="card">
+        <h2>Zeitslots blockieren</h2>
+        <div class="grid grid-2">
+          <label>
+            <span>Datum</span>
+            <input type="date" id="block-date" />
+          </label>
+          <label>
+            <span>Zeit</span>
+            <input type="time" id="block-time" />
+          </label>
+          <label>
+            <span>Kapazität</span>
+            <input type="number" id="block-capacity" min="0" value="0" />
+          </label>
+        </div>
+        <button class="btn btn-secondary" id="btn-block">Blockieren</button>
+      </div>
+
+      <div class="card">
+        <h2>Export</h2>
+        <div class="grid grid-2">
+          <label>
+            <span>Datum</span>
+            <input type="date" id="export-date" />
+          </label>
+          <label>
+            <span>Format</span>
+            <select id="export-format">
+              <option value="csv">CSV</option>
+              <option value="pdf">PDF</option>
+            </select>
+          </label>
+        </div>
+        <button class="btn btn-primary" id="btn-export">Export starten</button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const banner = document.getElementById('admin-banner');
+    const dashboard = document.getElementById('dashboard');
+    const loginCard = document.getElementById('login-card');
+    let token = localStorage.getItem('hbc-admin-token') || '';
+
+    function showBanner(message, type = 'success') {
+      banner.textContent = message;
+      banner.className = `banner show ${type}`;
+      setTimeout(() => banner.classList.remove('show'), 4000);
+    }
+
+    function updateAuthState() {
+      if (token) {
+        dashboard.hidden = false;
+        loginCard.hidden = true;
+      } else {
+        dashboard.hidden = true;
+        loginCard.hidden = false;
+      }
+    }
+
+    async function authenticatedFetch(url, options = {}) {
+      const response = await fetch(url, {
+        ...options,
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${token}`,
+          ...(options.headers || {})
+        }
+      });
+      if (response.status === 401) {
+        showBanner('Authentifizierung erforderlich.', 'error');
+        token = '';
+        localStorage.removeItem('hbc-admin-token');
+        updateAuthState();
+        throw new Error('Nicht autorisiert');
+      }
+      return response;
+    }
+
+    document.getElementById('btn-login').addEventListener('click', () => {
+      const value = document.getElementById('admin-token').value.trim();
+      if (!value) {
+        showBanner('Bitte Token eingeben.', 'error');
+        return;
+      }
+      token = value;
+      localStorage.setItem('hbc-admin-token', token);
+      updateAuthState();
+      showBanner('Erfolgreich angemeldet.');
+    });
+
+    document.getElementById('btn-logout').addEventListener('click', () => {
+      token = '';
+      localStorage.removeItem('hbc-admin-token');
+      updateAuthState();
+    });
+
+    document.getElementById('btn-load').addEventListener('click', async () => {
+      try {
+        const date = document.getElementById('admin-date').value;
+        if (!date) {
+          showBanner('Bitte Datum auswählen.', 'error');
+          return;
+        }
+        const response = await authenticatedFetch(`/.netlify/functions/manage-reservations?date=${date}`);
+        const data = await response.json();
+        document.getElementById('availability-result').textContent = `${data.availability.slots.length} Slots gefunden.`;
+        const tbody = document.getElementById('reservation-table');
+        tbody.innerHTML = '';
+        data.reservations.forEach((entry) => {
+          const row = document.createElement('tr');
+          row.innerHTML = `
+            <td>${entry.date}</td>
+            <td>${entry.time}</td>
+            <td>${entry.name}</td>
+            <td>${entry.guests}</td>
+            <td>${entry.status}</td>
+            <td><button class="btn btn-secondary" data-code="${entry.confirmationCode}" data-date="${entry.date}">Bestätigen</button></td>
+          `;
+          tbody.appendChild(row);
+        });
+      } catch (error) {
+        showBanner(error.message, 'error');
+      }
+    });
+
+    document.getElementById('reservation-table').addEventListener('click', async (event) => {
+      const button = event.target.closest('button[data-code]');
+      if (!button) return;
+      try {
+        const confirmationCode = button.dataset.code;
+        const date = button.dataset.date;
+        const response = await authenticatedFetch('/.netlify/functions/manage-reservations', {
+          method: 'PATCH',
+          body: JSON.stringify({ confirmationCode, date, status: 'confirmed' })
+        });
+        const data = await response.json();
+        showBanner('Reservierung aktualisiert.');
+      } catch (error) {
+        showBanner(error.message, 'error');
+      }
+    });
+
+    document.getElementById('btn-block').addEventListener('click', async () => {
+      try {
+        const date = document.getElementById('block-date').value;
+        const time = document.getElementById('block-time').value;
+        const capacity = Number(document.getElementById('block-capacity').value);
+        if (!date || !time) {
+          showBanner('Bitte Datum und Zeit angeben.', 'error');
+          return;
+        }
+        await authenticatedFetch('/.netlify/functions/manage-reservations', {
+          method: 'POST',
+          body: JSON.stringify({ action: 'block-slot', date, time, capacity })
+        });
+        showBanner('Slot aktualisiert.');
+      } catch (error) {
+        showBanner(error.message, 'error');
+      }
+    });
+
+    document.getElementById('btn-export').addEventListener('click', async () => {
+      try {
+        const date = document.getElementById('export-date').value;
+        const format = document.getElementById('export-format').value;
+        if (!date) {
+          showBanner('Bitte Datum auswählen.', 'error');
+          return;
+        }
+        const response = await authenticatedFetch(`/.netlify/functions/export-reservations?date=${date}&format=${format}`);
+        const blob = await response.blob();
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = `reservations-${date}.${format}`;
+        a.click();
+        URL.revokeObjectURL(url);
+        showBanner('Export erstellt.');
+      } catch (error) {
+        showBanner(error.message, 'error');
+      }
+    });
+
+    updateAuthState();
+  </script>
+</body>
+</html>

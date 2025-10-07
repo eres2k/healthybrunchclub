@@ -1,0 +1,57 @@
+[build]
+  command = "npm run build"
+  functions = "netlify/functions"
+  publish = "."
+
+[build.environment]
+  NODE_VERSION = "18"
+
+[functions]
+  directory = "netlify/functions"
+  # Include content files in the function bundle
+  included_files = ["content/**/*.md", "content/**/*.yml", "content/**/*.json"]
+  node_bundler = "esbuild"
+
+[[headers]]
+  for = "/netlify/functions/*"
+  [headers.values]
+    Access-Control-Allow-Origin = "*"
+    Access-Control-Allow-Methods = "GET, POST, OPTIONS"
+
+# Legal pages redirects
+[[redirects]]
+  from = "/impressum"
+  to = "/impressum.html"
+  status = 200
+
+[[redirects]]
+  from = "/datenschutz"
+  to = "/datenschutz.html"
+  status = 200
+
+[[redirects]]
+  from = "/agb"
+  to = "/agb.html"
+  status = 200
+
+# PDF redirects
+[[redirects]]
+  from = "/menu-pdf"
+  to = "/.netlify/functions/generate-menu-pdf"
+  status = 200
+
+[[redirects]]
+  from = "/speisekarte.pdf"
+  to = "/.netlify/functions/generate-menu-pdf"
+  status = 200
+
+[[redirects]]
+  from = "/content/menu.pdf"
+  to = "/.netlify/functions/generate-menu-pdf"
+  status = 200
+
+# Test path endpoint
+[[redirects]]
+  from = "/test-paths"
+  to = "/.netlify/functions/test-paths"
+  status = 200

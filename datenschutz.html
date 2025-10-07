@@ -1,0 +1,318 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Datenschutz - Healthy Brunch Club Wien</title>
+    <meta name="description" content="Datenschutzerklärung des Healthy Brunch Club Wien">
+    
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,300;0,400;0,500;0,700;1,400&family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,400&family=Montserrat:wght@300;400;500;600&family=Lato:wght@300;400&display=swap" rel="stylesheet">
+    
+    <!-- Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <!-- Styles -->
+    <link rel="stylesheet" href="mystyle-premium.css">
+    
+    <style>
+        .legal-page {
+            min-height: 100vh;
+            background: var(--off-white);
+            padding-top: 100px;
+        }
+        
+        .legal-container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: var(--spacing-xl) var(--spacing-md);
+            background: var(--pure-white);
+            box-shadow: 0 5px 30px rgba(0, 0, 0, 0.08);
+            border-radius: 8px;
+        }
+        
+        .legal-header {
+            text-align: center;
+            margin-bottom: var(--spacing-xl);
+            padding-bottom: var(--spacing-lg);
+            border-bottom: 1px solid var(--light-gray);
+        }
+        
+        .legal-title {
+            font-family: var(--font-display);
+            font-size: clamp(2rem, 4vw, 3rem);
+            color: var(--black);
+            margin-bottom: var(--spacing-sm);
+        }
+        
+        .legal-subtitle {
+            font-family: var(--font-light);
+            color: var(--warm-gray);
+            font-size: 1.125rem;
+        }
+        
+        .legal-content {
+            line-height: 1.8;
+            color: var(--charcoal);
+        }
+        
+        .legal-content h2 {
+            font-family: var(--font-heading);
+            font-size: 1.75rem;
+            color: var(--black);
+            margin: var(--spacing-lg) 0 var(--spacing-md) 0;
+            padding-bottom: var(--spacing-xs);
+            border-bottom: 2px solid var(--gold);
+        }
+        
+        .legal-content h3 {
+            font-family: var(--font-heading);
+            font-size: 1.375rem;
+            color: var(--charcoal);
+            margin: var(--spacing-md) 0 var(--spacing-sm) 0;
+        }
+        
+        .legal-content p {
+            margin-bottom: var(--spacing-md);
+            text-align: justify;
+        }
+        
+        .legal-content ul, 
+        .legal-content ol {
+            margin: var(--spacing-md) 0;
+            padding-left: var(--spacing-lg);
+        }
+        
+        .legal-content li {
+            margin-bottom: var(--spacing-xs);
+        }
+        
+        .legal-content strong {
+            color: var(--black);
+            font-weight: 500;
+        }
+        
+        .legal-content a {
+            color: var(--gold);
+            text-decoration: none;
+            transition: color var(--transition-fast);
+        }
+        
+        .legal-content a:hover {
+            color: var(--sage);
+            text-decoration: underline;
+        }
+        
+        .back-link {
+            display: inline-flex;
+            align-items: center;
+            gap: var(--spacing-xs);
+            color: var(--warm-gray);
+            text-decoration: none;
+            font-family: var(--font-body);
+            font-size: 0.875rem;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            margin-bottom: var(--spacing-lg);
+            transition: all var(--transition-fast);
+        }
+        
+        .back-link:hover {
+            color: var(--gold);
+            transform: translateX(-5px);
+        }
+        
+        .loading-state {
+            text-align: center;
+            padding: var(--spacing-xl);
+            color: var(--warm-gray);
+        }
+        
+        .loading-state i {
+            font-size: 2rem;
+            margin-bottom: var(--spacing-md);
+            color: var(--gold);
+            animation: spin 1s linear infinite;
+        }
+        
+        .error-state {
+            text-align: center;
+            padding: var(--spacing-xl);
+            color: var(--warm-gray);
+        }
+        
+        .error-state i {
+            font-size: 2rem;
+            margin-bottom: var(--spacing-md);
+            color: #e74c3c;
+        }
+        
+        /* Mobile optimizations */
+        @media (max-width: 768px) {
+            .legal-page {
+                padding-top: 80px;
+            }
+            
+            .legal-container {
+                margin: 0 var(--spacing-sm);
+                padding: var(--spacing-lg) var(--spacing-md);
+                border-radius: 0;
+            }
+            
+            .legal-content p {
+                text-align: left;
+            }
+            
+            .legal-content {
+                font-size: 0.9rem;
+                line-height: 1.7;
+            }
+        }
+        
+        
+        @keyframes spin {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+    </style>
+</head>
+
+<body class="no-transition">
+    <!-- Premium Navigation -->
+    <nav class="nav-premium" id="navbar">
+        <div class="nav-container">
+            <a href="/" class="logo-premium">
+                <img src="content/images/logo.png" alt="Healthy Brunch Club" class="logo-img">
+            </a>
+            
+            <ul class="nav-menu">
+                <li><a href="/" class="nav-link">home</a></li>
+                <li><a href="/#menu" class="nav-link">speisekarte</a></li>
+                <li><a href="/#about" class="nav-link">über uns</a></li>
+                <li><a href="/#reservierung" class="nav-link nav-cta">reservierung</a></li>
+            </ul>
+            
+            <button class="mobile-menu-btn" aria-label="Menu" type="button">
+                <span></span>
+                <span></span>
+                <span></span>
+            </button>
+        </div>
+    </nav>
+
+    <main class="legal-page">
+        <div class="legal-container">
+            <a href="/" class="back-link">
+                <i class="fas fa-arrow-left"></i>
+                <span>zurück zur startseite</span>
+            </a>
+            
+            <div class="legal-header">
+                <h1 class="legal-title">Datenschutz</h1>
+                <p class="legal-subtitle">Schutz Ihrer persönlichen Daten</p>
+            </div>
+            
+            <div id="legalContent" class="legal-content">
+                <div class="loading-state">
+                    <i class="fas fa-spinner fa-spin"></i>
+                    <p>Inhalte werden geladen...</p>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Scripts -->
+    <script src="app-premium.js"></script>
+    
+    <script>
+        // Load legal content from markdown file
+        async function loadLegalContent() {
+            try {
+                const response = await fetch('/content/pages/datenschutz.md');
+                if (!response.ok) {
+                    throw new Error('Content not found');
+                }
+                
+                const markdownText = await response.text();
+                
+                // Parse frontmatter and content
+                const frontmatterMatch = markdownText.match(/^---\s*\n([\s\S]*?)\n---\s*\n([\s\S]*)$/);
+                
+                let title = 'Datenschutz';
+                let content = markdownText;
+                
+                if (frontmatterMatch) {
+                    const frontmatter = frontmatterMatch[1];
+                    content = frontmatterMatch[2];
+                    
+                    // Extract title from frontmatter
+                    const titleMatch = frontmatter.match(/title:\s*(.+)/);
+                    if (titleMatch) {
+                        title = titleMatch[1].replace(/["']/g, '');
+                    }
+                }
+                
+                // Convert markdown to HTML (basic conversion)
+                const htmlContent = convertMarkdownToHTML(content);
+                
+                // Update page title and content
+                document.querySelector('.legal-title').textContent = title;
+                document.title = `${title} - Healthy Brunch Club Wien`;
+                document.getElementById('legalContent').innerHTML = htmlContent;
+                
+            } catch (error) {
+                console.error('Failed to load legal content:', error);
+                document.getElementById('legalContent').innerHTML = `
+                    <div class="error-state">
+                        <i class="fas fa-exclamation-triangle"></i>
+                        <h3>Inhalt nicht verfügbar</h3>
+                        <p>Die angeforderten Informationen konnten nicht geladen werden.</p>
+                        <p>Bitte versuchen Sie es später erneut oder kontaktieren Sie uns direkt.</p>
+                    </div>
+                `;
+            }
+        }
+        
+        // Basic markdown to HTML converter
+        function convertMarkdownToHTML(markdown) {
+            return markdown
+                // Headers
+                .replace(/^### (.*$)/gm, '<h3>$1</h3>')
+                .replace(/^## (.*$)/gm, '<h2>$1</h2>')
+                .replace(/^# (.*$)/gm, '<h2>$1</h2>')
+                
+                // Bold and italic
+                .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')
+                .replace(/\*(.*?)\*/g, '<em>$1</em>')
+                
+                // Links
+                .replace(/\[([^\]]+)\]\(([^)]+)\)/g, '<a href="$2" target="_blank" rel="noopener">$1</a>')
+                
+                // Line breaks and paragraphs
+                .replace(/\n\n/g, '</p><p>')
+                .replace(/^(.+)$/gm, function(match, content) {
+                    // Don't wrap headers in paragraphs
+                    if (content.startsWith('<h') || content === '</p>' || content === '<p>') {
+                        return content;
+                    }
+                    return content;
+                })
+                
+                // Wrap in paragraphs
+                .replace(/^([^<].*?)$/gm, '<p>$1</p>')
+                
+                // Clean up empty paragraphs
+                .replace(/<p><\/p>/g, '')
+                .replace(/<p>(\s*<h[1-6]>)/g, '$1')
+                .replace(/(<\/h[1-6]>\s*)<\/p>/g, '$1');
+        }
+        
+        // Load content when page loads
+        document.addEventListener('DOMContentLoaded', loadLegalContent);
+        
+        // Remove dark mode loading class
+    </script>
+</body>
+</html>
