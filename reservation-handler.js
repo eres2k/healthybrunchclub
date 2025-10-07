@@ -1,3 +1,29 @@
+function normalizeSlotTime(value) {
+  if (value == null) {
+    return '';
+  }
+
+  const stringValue = String(value).trim();
+
+  // Return early if already in HH:MM format
+  if (/^\d{1,2}:\d{2}$/.test(stringValue)) {
+    const [hours, minutes] = stringValue.split(':');
+    return `${hours.padStart(2, '0')}:${minutes.padStart(2, '0')}`;
+  }
+
+  // Handle purely numeric inputs (e.g. 600 -> 10:00)
+  if (/^\d+$/.test(stringValue)) {
+    const minutesTotal = Number(stringValue);
+    if (!Number.isNaN(minutesTotal) && Number.isFinite(minutesTotal)) {
+      const hours = Math.floor(minutesTotal / 60);
+      const minutes = minutesTotal % 60;
+      return `${String(hours).padStart(2, '0')}:${String(minutes).padStart(2, '0')}`;
+    }
+  }
+
+  return stringValue;
+}
+
 class ReservationWizard {
   constructor() {
     this.currentStep = 1;
@@ -149,7 +175,10 @@ class ReservationWizard {
         throw new Error('Verfügbarkeit konnte nicht geladen werden.');
       }
       const payload = await response.json();
-      this.availability = payload.slots || [];
+      this.availability = (payload.slots || []).map((slot) => ({
+        ...slot,
+        time: normalizeSlotTime(slot.time)
+      }));
       this.state.time = '';
       this.renderTimeSlots();
     } catch (error) {
@@ -169,19 +198,20 @@ class ReservationWizard {
     }
 
     this.availability.forEach((slot) => {
+      const displayTime = normalizeSlotTime(slot.time);
       const button = document.createElement('button');
       button.type = 'button';
       button.className = `time-slot ${slot.remaining > 0 ? 'is-available' : 'is-full'}`;
-      button.dataset.time = slot.time;
+      button.dataset.time = displayTime;
       button.disabled = slot.remaining <= 0 && !slot.waitlist;
-      button.setAttribute('aria-pressed', this.state.time === slot.time ? 'true' : 'false');
-      button.setAttribute('aria-label', `${slot.time} Uhr, ${slot.remaining > 0 ? `${slot.remaining} Plätze frei` : 'Warteliste verfügbar'}`);
+      button.setAttribute('aria-pressed', this.state.time === displayTime ? 'true' : 'false');
+      button.setAttribute('aria-label', `${displayTime} Uhr, ${slot.remaining > 0 ? `${slot.remaining} Plätze frei` : 'Warteliste verfügbar'}`);
       button.innerHTML = `
-        <span class="time-slot__time">${slot.time} Uhr</span>
+        <span class="time-slot__time">${displayTime} Uhr</span>
         <span class="time-slot__capacity">${slot.remaining > 0 ? `${slot.remaining} Plätze frei` : 'Warteliste verfügbar'}</span>
       `;
       button.addEventListener('click', () => this.selectTime(slot));
-      if (this.state.time === slot.time) {
+      if (this.state.time === displayTime) {
         button.classList.add('is-selected');
       }
       this.timeContainer.appendChild(button);
@@ -189,9 +219,9 @@ class ReservationWizard {
   }
 
   selectTime(slot) {
-    this.state.time = slot.time;
+    this.state.time = normalizeSlotTime(slot.time);
     this.timeContainer.querySelectorAll('.time-slot').forEach((button) => {
-      const isSelected = button.dataset.time === slot.time;
+      const isSelected = button.dataset.time === this.state.time;
       button.classList.toggle('is-selected', isSelected);
       button.setAttribute('aria-pressed', isSelected ? 'true' : 'false');
     });
@@ -214,7 +244,7 @@ class ReservationWizard {
       });
     }
     if (timeLabel && this.state.time) {
-      timeLabel.textContent = `${this.state.time} Uhr`;
+      timeLabel.textContent = `${normalizeSlotTime(this.state.time)} Uhr`;
     }
     if (guestLabel) {
       guestLabel.textContent = `${this.state.guests} Personen`;
