@@ -10,6 +10,56 @@ const DEFAULT_OPENING = { start: '09:00', end: '21:00' };
 const SLOT_INTERVAL_MINUTES = 15;
 const TIMEZONE = process.env.BOOKING_TIME_ZONE || 'Europe/Vienna';
 
+async function loadCMSTimeSlots(date) {
+  try {
+    const fs = require('fs').promises;
+    const path = require('path');
+    const matter = require('gray-matter');
+
+    const patterns = [
+      `${date}.md`,
+      `${date}.markdown`,
+      `${date.split('-').join('-')}.md`
+    ];
+
+    for (const pattern of patterns) {
+      const filePath = path.join(process.cwd(), 'content', 'time-slots', pattern);
+
+      try {
+        const fileContent = await fs.readFile(filePath, 'utf-8');
+        const { data } = matter(fileContent);
+
+        if (data.slots && Array.isArray(data.slots)) {
+          console.log(`Loaded CMS slots for ${date}:`, data.slots.length, 'slots');
+
+          return {
+            openingTime: data.opening_time || '09:00',
+            closingTime: data.closing_time || '21:00',
+            slots: data.slots.map((slot) => {
+              const capacityNumber = Number(slot.capacity);
+
+              return {
+                time: normalizeTime(slot.time),
+                capacity: Number.isFinite(capacityNumber) && capacityNumber >= 0 ? capacityNumber : MAX_CAPACITY_PER_SLOT,
+                blocked: Boolean(slot.blocked),
+                reason: slot.reason || null
+              };
+            })
+          };
+        }
+      } catch (err) {
+        continue;
+      }
+    }
+
+    console.log(`No CMS slots found for ${date}, using defaults`);
+    return null;
+  } catch (error) {
+    console.error('Error loading CMS time slots:', error);
+    return null;
+  }
+}
+
 function generateConfirmationCode() {
   return `HBC-${Math.random().toString(36).slice(2, 6).toUpperCase()}-${Date.now().toString(36).toUpperCase()}`;
 }
@@ -89,20 +139,77 @@ async function getAvailability({ date, guests }) {
   const blockedSlots = await loadBlocked(date);
   const reservations = await loadReservations(date);
 
-  const slots = createTimeSlots(settings.openingHours || DEFAULT_OPENING).map((time) =>
-    calculateSlotAvailability({
+  const cmsData = await loadCMSTimeSlots(date);
+
+  let timeSlots;
+  const slotConfigs = {};
+  const hasCmsSlots = Boolean(cmsData && Array.isArray(cmsData.slots) && cmsData.slots.length > 0);
+
+  if (hasCmsSlots) {
+    timeSlots = cmsData.slots.map((slot) => slot.time);
+
+    cmsData.slots.forEach((slot) => {
+      slotConfigs[slot.time] = {
+        capacity: slot.capacity,
+        blocked: slot.blocked,
+        reason: slot.reason
+      };
+    });
+
+    console.log(`Using ${timeSlots.length} CMS-defined slots for ${date}`);
+  } else {
+    const openingHours = cmsData
+      ? { start: cmsData.openingTime, end: cmsData.closingTime }
+      : settings.openingHours || DEFAULT_OPENING;
+
+    timeSlots = createTimeSlots(openingHours);
+    console.log(`Generated ${timeSlots.length} default slots for ${date}`);
+  }
+
+  const slots = timeSlots.map((time) => {
+    const cmsConfig = slotConfigs[time] || {};
+    const blockConfig = blockedSlots.find((b) => b.time === time);
+
+    const blockCapacity = blockConfig?.capacity ?? blockConfig?.Capacity;
+    const baseCapacity = cmsConfig.capacity ?? blockCapacity ?? settings.maxCapacity ?? MAX_CAPACITY_PER_SLOT;
+    const capacityNumber = Number(baseCapacity);
+    const capacity = Number.isFinite(capacityNumber) && capacityNumber >= 0
+      ? capacityNumber
+      : (Number(settings.maxCapacity) || MAX_CAPACITY_PER_SLOT);
+
+    const isBlocked = Boolean(cmsConfig.blocked);
+    const blockReason = cmsConfig.reason || blockConfig?.reason || blockConfig?.Reason || null;
+
+    const effectiveCapacity = isBlocked ? 0 : capacity;
+
+    const slot = calculateSlotAvailability({
       reservations,
       blockedSlots,
       time,
       guests,
-      maxCapacity: settings.maxCapacity || MAX_CAPACITY_PER_SLOT
-    })
-  );
+      maxCapacity: effectiveCapacity
+    });
+
+    slot.capacity = effectiveCapacity;
+
+    if (isBlocked) {
+      slot.blocked = true;
+      slot.blockReason = blockReason;
+      slot.remaining = 0;
+      slot.fits = false;
+      slot.waitlist = false;
+    } else if (blockReason && blockConfig) {
+      slot.blockReason = blockReason;
+    }
+
+    return slot;
+  });
 
   return {
     date,
     timezone: settings.timezone || TIMEZONE,
-    slots
+    slots,
+    source: hasCmsSlots ? 'cms' : 'generated'
   };
 }
 
