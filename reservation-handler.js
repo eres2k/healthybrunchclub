@@ -15,6 +15,28 @@ class ReservationWizard {
     this.init();
   }
 
+  normalizeTime(value) {
+    if (value === undefined || value === null) return '';
+    const timeString = String(value).trim();
+    if (!timeString) return '';
+
+    if (timeString.includes(':')) {
+      const [hours = '0', minutes = '0'] = timeString.split(':');
+      return `${hours.padStart(2, '0')}:${minutes.padStart(2, '0')}`;
+    }
+
+    if (/^\d{3,4}$/.test(timeString)) {
+      const padded = timeString.padStart(4, '0');
+      return `${padded.slice(0, 2)}:${padded.slice(2)}`;
+    }
+
+    if (/^\d{1,2}$/.test(timeString)) {
+      return `${timeString.padStart(2, '0')}:00`;
+    }
+
+    return timeString;
+  }
+
   init() {
     this.cacheElements();
     this.registerEvents();
@@ -149,7 +171,10 @@ class ReservationWizard {
         throw new Error('Verfügbarkeit konnte nicht geladen werden.');
       }
       const payload = await response.json();
-      this.availability = payload.slots || [];
+      this.availability = (payload.slots || []).map((slot) => ({
+        ...slot,
+        time: this.normalizeTime(slot.time)
+      }));
       this.state.time = '';
       this.renderTimeSlots();
     } catch (error) {
@@ -172,16 +197,17 @@ class ReservationWizard {
       const button = document.createElement('button');
       button.type = 'button';
       button.className = `time-slot ${slot.remaining > 0 ? 'is-available' : 'is-full'}`;
-      button.dataset.time = slot.time;
+      const formattedTime = this.normalizeTime(slot.time);
+      button.dataset.time = formattedTime;
       button.disabled = slot.remaining <= 0 && !slot.waitlist;
-      button.setAttribute('aria-pressed', this.state.time === slot.time ? 'true' : 'false');
-      button.setAttribute('aria-label', `${slot.time} Uhr, ${slot.remaining > 0 ? `${slot.remaining} Plätze frei` : 'Warteliste verfügbar'}`);
+      button.setAttribute('aria-pressed', this.state.time === formattedTime ? 'true' : 'false');
+      button.setAttribute('aria-label', `${formattedTime} Uhr, ${slot.remaining > 0 ? `${slot.remaining} Plätze frei` : 'Warteliste verfügbar'}`);
       button.innerHTML = `
-        <span class="time-slot__time">${slot.time} Uhr</span>
+        <span class="time-slot__time">${formattedTime} Uhr</span>
         <span class="time-slot__capacity">${slot.remaining > 0 ? `${slot.remaining} Plätze frei` : 'Warteliste verfügbar'}</span>
       `;
-      button.addEventListener('click', () => this.selectTime(slot));
-      if (this.state.time === slot.time) {
+      button.addEventListener('click', () => this.selectTime({ ...slot, time: formattedTime }));
+      if (this.state.time === formattedTime) {
         button.classList.add('is-selected');
       }
       this.timeContainer.appendChild(button);
@@ -214,7 +240,8 @@ class ReservationWizard {
       });
     }
     if (timeLabel && this.state.time) {
-      timeLabel.textContent = `${this.state.time} Uhr`;
+      const formattedTime = this.normalizeTime(this.state.time);
+      timeLabel.textContent = formattedTime ? `${formattedTime} Uhr` : '–';
     }
     if (guestLabel) {
       guestLabel.textContent = `${this.state.guests} Personen`;
