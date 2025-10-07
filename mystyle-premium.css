@@ -21,6 +21,8 @@
     --forest-green: #1e4a3c;
     --sage-green: #8b9474;
     --mint-green: #b8d4b2;
+    --coral: #f8ad9d;
+    --peach: #f8c9a7;
    
     /* typography */
     --font-display: 'playfair display', serif;
@@ -4227,6 +4229,150 @@ body.dark-mode video:hover {
   padding: 2rem;
   color: var(--forest-green);
   font-style: italic;
+}
+
+/* Reservation availability enhancements */
+.time-slots-grid {
+  gap: 1rem;
+}
+
+.time-slots-grid .time-slot {
+  padding: 15px;
+  border: 2px solid var(--sage-green);
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  position: relative;
+  background: #fff;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.time-slots-grid .time-slot:hover:not(.blocked) {
+  border-color: var(--forest-green);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.time-slots-grid .time-slot.blocked {
+  cursor: not-allowed;
+  opacity: 0.6;
+  background: #f5f5f5;
+  border-color: #ccc;
+}
+
+.time-slots-grid .time-slot.nearly-full {
+  border-color: var(--coral);
+  background: rgba(248, 173, 157, 0.1);
+}
+
+.time-slots-grid .time-slot.selected {
+  border-color: var(--forest-green);
+  background: rgba(30, 74, 60, 0.05);
+}
+
+.time-slots-grid .slot-time {
+  font-size: 1.2em;
+  font-weight: 600;
+  color: var(--forest-green);
+}
+
+.time-slots-grid .slot-availability {
+  margin-bottom: 6px;
+}
+
+.badge {
+  padding: 4px 8px;
+  border-radius: 4px;
+  font-size: 0.85em;
+  font-weight: 600;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+}
+
+.badge.available {
+  background: var(--mint-green);
+  color: var(--forest-green);
+}
+
+.badge.warning {
+  background: var(--peach);
+  color: #8b4513;
+}
+
+.badge.blocked {
+  background: #e0e0e0;
+  color: #666;
+}
+
+.slot-capacity-bar {
+  width: 100%;
+  height: 6px;
+  background: #e0e0e0;
+  border-radius: 3px;
+  overflow: hidden;
+  margin: 6px 0 4px;
+}
+
+.slot-capacity-bar .capacity-fill {
+  height: 100%;
+  background: linear-gradient(90deg, var(--sage-green), var(--forest-green));
+  transition: width 0.3s ease;
+}
+
+.slot-details {
+  font-size: 0.85em;
+  color: #666;
+}
+
+#timeSlots .loading,
+#timeSlots .no-slots,
+#timeSlots .error {
+  text-align: center;
+  padding: 1rem;
+  font-size: 0.95em;
+}
+
+#timeSlots .error {
+  color: #e74c3c;
+}
+
+.notification {
+  position: fixed;
+  top: 20px;
+  right: 20px;
+  padding: 15px 20px;
+  border-radius: 8px;
+  color: #fff;
+  z-index: 1000;
+  animation: slideIn 0.3s ease;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
+}
+
+.notification.error {
+  background: #e74c3c;
+}
+
+.notification.warning {
+  background: #f39c12;
+}
+
+.notification.success {
+  background: var(--forest-green);
+}
+
+@keyframes slideIn {
+  from {
+    transform: translateX(100%);
+    opacity: 0;
+  }
+  to {
+    transform: translateX(0);
+    opacity: 1;
+  }
 }
 
 @keyframes fadeIn {
