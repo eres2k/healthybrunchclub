@@ -224,3 +224,23 @@ collections:
           - {label: "Zeit", name: "time", widget: "select", options: ["09:00", "09:30", "10:00", "10:30", "11:00", "11:30", "12:00", "12:30", "13:00", "13:30", "14:00", "14:30", "15:00", "15:30", "16:00", "16:30", "17:00", "17:30", "18:00", "18:30", "19:00", "19:30", "20:00", "20:30"]}
           - {label: "Blockierte Plätze", name: "blocked_seats", widget: "number", min: 0, max: 40}
           - {label: "Grund", name: "reason", widget: "string", required: false, hint: "Optional: Grund für Blockierung"}
+
+  - name: "time-slots"
+    label: "Reservierungs-Zeitfenster"
+    folder: "content/time-slots"
+    create: true
+    identifier_field: date
+    slug: "{{year}}-{{month}}-{{day}}"
+    fields:
+      - {label: "Datum", name: "date", widget: "date", format: "YYYY-MM-DD"}
+      - {label: "Öffnungszeit", name: "opening_time", widget: "string", default: "09:00", pattern: ["^([01]?[0-9]|2[0-3]):[0-5][0-9]$", "Format: HH:MM"]}
+      - {label: "Schließzeit", name: "closing_time", widget: "string", default: "21:00", pattern: ["^([01]?[0-9]|2[0-3]):[0-5][0-9]$", "Format: HH:MM"]}
+      - label: "Zeitfenster"
+        name: "slots"
+        widget: "list"
+        summary: "{{fields.time}} - Kapazität: {{fields.capacity}}"
+        fields:
+          - {label: "Uhrzeit", name: "time", widget: "string", pattern: ["^([01]?[0-9]|2[0-3]):[0-5][0-9]$", "Format: HH:MM"]}
+          - {label: "Kapazität", name: "capacity", widget: "number", default: 40, min: 0, max: 100}
+          - {label: "Blockiert", name: "blocked", widget: "boolean", default: false, required: false}
+          - {label: "Grund (bei Blockierung)", name: "reason", widget: "string", required: false}
