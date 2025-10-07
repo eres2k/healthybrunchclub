@@ -5,6 +5,52 @@ const { DateTime } = require('luxon');
 const { readJSON, writeJSON, withLock } = require('./blob-storage');
 const { sanitizeText } = require('./validation');
 
+async function loadCMSTimeSlots(date) {
+  try {
+    const fs = require('fs').promises;
+    const path = require('path');
+    const matter = require('gray-matter');
+
+    const patterns = [
+      `${date}.md`,
+      `${date}.markdown`,
+      `${date.split('-').join('-')}.md`
+    ];
+
+    for (const pattern of patterns) {
+      const filePath = path.join(process.cwd(), 'content', 'time-slots', pattern);
+
+      try {
+        const fileContent = await fs.readFile(filePath, 'utf-8');
+        const { data } = matter(fileContent);
+
+        if (data.slots && Array.isArray(data.slots)) {
+          console.log(`Loaded CMS slots for ${date}:`, data.slots.length, 'slots');
+
+          return {
+            openingTime: data.opening_time || '09:00',
+            closingTime: data.closing_time || '21:00',
+            slots: data.slots.map((slot) => ({
+              time: normalizeTime(slot.time),
+              capacity: parseInt(slot.capacity, 10) || MAX_CAPACITY_PER_SLOT,
+              blocked: Boolean(slot.blocked),
+              reason: slot.reason || null
+            }))
+          };
+        }
+      } catch (err) {
+        continue;
+      }
+    }
+
+    console.log(`No CMS slots found for ${date}, using defaults`);
+    return null;
+  } catch (error) {
+    console.error('Error loading CMS time slots:', error);
+    return null;
+  }
+}
+
 const MAX_CAPACITY_PER_SLOT = Number(process.env.MAX_CAPACITY_PER_SLOT || 40);
 const DEFAULT_OPENING = { start: '09:00', end: '21:00' };
 const SLOT_INTERVAL_MINUTES = 15;
@@ -89,20 +135,82 @@ async function getAvailability({ date, guests }) {
   const blockedSlots = await loadBlocked(date);
   const reservations = await loadReservations(date);
 
-  const slots = createTimeSlots(settings.openingHours || DEFAULT_OPENING).map((time) =>
-    calculateSlotAvailability({
+  const cmsData = await loadCMSTimeSlots(date);
+  const usingCMS = Boolean(cmsData && cmsData.slots && cmsData.slots.length > 0);
+
+  let timeSlots;
+  const slotConfigs = {};
+
+  if (usingCMS) {
+    timeSlots = cmsData.slots.map((slot) => slot.time);
+
+    cmsData.slots.forEach((slot) => {
+      slotConfigs[slot.time] = {
+        capacity: slot.capacity,
+        blocked: slot.blocked,
+        reason: slot.reason
+      };
+    });
+
+    console.log(`Using ${timeSlots.length} CMS-defined slots for ${date}`);
+  } else {
+    const openingHours = cmsData
+      ? { start: cmsData.openingTime, end: cmsData.closingTime }
+      : settings.openingHours || DEFAULT_OPENING;
+
+    timeSlots = createTimeSlots(openingHours);
+    console.log(`Generated ${timeSlots.length} default slots for ${date}`);
+  }
+
+  const slots = timeSlots.map((time) => {
+    const cmsConfig = slotConfigs[time] || {};
+    const blockConfig = blockedSlots.find((b) => b.time === time);
+
+    const capacity =
+      cmsConfig.capacity ??
+      blockConfig?.capacity ??
+      settings.maxCapacity ??
+      MAX_CAPACITY_PER_SLOT;
+
+    const isBlocked = Boolean(
+      cmsConfig.blocked ||
+      blockConfig?.blocked ||
+      (typeof blockConfig?.capacity === 'number' && blockConfig.capacity <= 0)
+    );
+
+    const blockReason = cmsConfig.reason || blockConfig?.reason || null;
+
+    const effectiveCapacity = isBlocked ? 0 : capacity;
+
+    const slot = calculateSlotAvailability({
       reservations,
       blockedSlots,
       time,
       guests,
-      maxCapacity: settings.maxCapacity || MAX_CAPACITY_PER_SLOT
-    })
-  );
+      maxCapacity: effectiveCapacity
+    });
+
+    slot.capacity = effectiveCapacity;
+
+    if (isBlocked) {
+      slot.blocked = true;
+      slot.blockReason = blockReason;
+      slot.blockedReason = blockReason;
+      slot.remaining = 0;
+      slot.fits = false;
+    } else if (blockReason) {
+      slot.blockReason = blockReason;
+      slot.blockedReason = blockReason;
+    }
+
+    return slot;
+  });
 
   return {
     date,
     timezone: settings.timezone || TIMEZONE,
-    slots
+    slots,
+    source: usingCMS ? 'cms' : 'generated'
   };
 }
 
