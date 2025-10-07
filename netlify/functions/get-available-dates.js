@@ -4,6 +4,39 @@ const fs = require('fs').promises;
 const path = require('path');
 const matter = require('gray-matter');
 
+function formatTimeSlot(time) {
+  if (typeof time === 'number' || !Number.isNaN(Number(time))) {
+    const totalMinutes = parseInt(time, 10);
+    const hours = Math.floor(totalMinutes / 60);
+    const minutes = totalMinutes % 60;
+    return `${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}`;
+  }
+  if (typeof time === 'string' && time.includes(':')) {
+    return time;
+  }
+  return time;
+}
+
+function normalizeSlots(slots) {
+  if (!Array.isArray(slots)) {
+    return [];
+  }
+
+  return slots.map((slot) => {
+    if (slot && typeof slot === 'object') {
+      const timeValue = slot.time ?? slot.slot ?? slot.start ?? slot.startTime ?? slot;
+      return {
+        ...slot,
+        time: formatTimeSlot(timeValue)
+      };
+    }
+    const formattedTime = formatTimeSlot(slot);
+    return {
+      time: formattedTime
+    };
+  });
+}
+
 exports.handler = async (event) => {
   const headers = {
     'Access-Control-Allow-Origin': '*',
@@ -44,7 +77,7 @@ exports.handler = async (event) => {
           return {
             date: data.date,
             title: data.title || 'Verfügbar',
-            slots: data.slots || [],
+            slots: normalizeSlots(data.slots || []),
             note: data.note || ''
           };
         }

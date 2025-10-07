@@ -2,6 +2,19 @@ const fs = require('fs').promises;
 const path = require('path');
 const matter = require('gray-matter');
 
+function formatTimeSlot(time) {
+  if (typeof time === 'number' || !Number.isNaN(Number(time))) {
+    const totalMinutes = parseInt(time, 10);
+    const hours = Math.floor(totalMinutes / 60);
+    const minutes = totalMinutes % 60;
+    return `${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}`;
+  }
+  if (typeof time === 'string' && time.includes(':')) {
+    return time;
+  }
+  return time;
+}
+
 exports.handler = async (event, context) => {
   // Set CORS headers
   const headers = {
@@ -40,7 +53,7 @@ exports.handler = async (event, context) => {
           date: getNextMonday(),
           description: "erlebe entspannte lounge-klänge während deines brunches!",
           musicStyle: "downtempo, organic house",
-          startTime: "9:00 uhr",
+          startTime: formatTimeSlot('9:00 uhr'),
           active: true
         }
       ];
@@ -72,13 +85,14 @@ exports.handler = async (event, context) => {
             }
             
             // Process the event data from the markdown file
-                       return {
+            return {
               title: data.title,
               artist: data.artist || '',
               date: data.date,
               location: data.location || '',
               body: data.body || content.replace(/^---[\s\S]*?---/, '').trim(), // Get markdown body content
               price: data.price || '',
+              startTime: formatTimeSlot(data.startTime || data.start_time || data.time || ''),
               featuredImage: data.featuredImage || data.image || '',
               audioAnnouncement: data.audioAnnouncement || data.audioPreview || '',
               active: data.active !== false // Default to true unless explicitly set to false
@@ -108,7 +122,7 @@ exports.handler = async (event, context) => {
         location: "Wien",
         description: "Bester DJ",
         musicStyle: "electronic, house",
-        startTime: "19:00 uhr",
+        startTime: formatTimeSlot('19:00 uhr'),
         featuredImage: "/images/uploads/osive.png",
         audioAnnouncement: "/images/uploads/artist1.mp3",
         active: true

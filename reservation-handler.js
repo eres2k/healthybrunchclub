@@ -1,3 +1,24 @@
+function formatTimeSlot(time) {
+  if (typeof time === 'number' || !Number.isNaN(Number(time))) {
+    const totalMinutes = parseInt(time, 10);
+    const hours = Math.floor(totalMinutes / 60);
+    const minutes = totalMinutes % 60;
+    return `${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}`;
+  }
+  if (typeof time === 'string' && time.includes(':')) {
+    return time;
+  }
+  return time;
+}
+
+function formatDisplayTime(time) {
+  const formatted = formatTimeSlot(time);
+  if (typeof formatted === 'string' && formatted.toLowerCase().includes('uhr')) {
+    return formatted;
+  }
+  return `${formatted} Uhr`;
+}
+
 class ReservationWizard {
   constructor() {
     this.currentStep = 1;
@@ -149,7 +170,20 @@ class ReservationWizard {
         throw new Error('Verfügbarkeit konnte nicht geladen werden.');
       }
       const payload = await response.json();
-      this.availability = payload.slots || [];
+      this.availability = (payload.slots || []).map((slot) => {
+        const formattedTime = formatTimeSlot(slot?.time ?? slot);
+        if (slot && typeof slot === 'object') {
+          return {
+            ...slot,
+            time: formattedTime
+          };
+        }
+        return {
+          time: formattedTime,
+          remaining: 1,
+          waitlist: false
+        };
+      });
       this.state.time = '';
       this.renderTimeSlots();
     } catch (error) {
@@ -169,19 +203,24 @@ class ReservationWizard {
     }
 
     this.availability.forEach((slot) => {
+      const formattedTime = formatTimeSlot(slot?.time);
+      const displayTime = formatDisplayTime(formattedTime);
       const button = document.createElement('button');
       button.type = 'button';
       button.className = `time-slot ${slot.remaining > 0 ? 'is-available' : 'is-full'}`;
-      button.dataset.time = slot.time;
+      button.dataset.time = formattedTime;
       button.disabled = slot.remaining <= 0 && !slot.waitlist;
-      button.setAttribute('aria-pressed', this.state.time === slot.time ? 'true' : 'false');
-      button.setAttribute('aria-label', `${slot.time} Uhr, ${slot.remaining > 0 ? `${slot.remaining} Plätze frei` : 'Warteliste verfügbar'}`);
+      button.setAttribute('aria-pressed', this.state.time === formattedTime ? 'true' : 'false');
+      button.setAttribute(
+        'aria-label',
+        `${displayTime}, ${slot.remaining > 0 ? `${slot.remaining} Plätze frei` : 'Warteliste verfügbar'}`
+      );
       button.innerHTML = `
-        <span class="time-slot__time">${slot.time} Uhr</span>
+        <span class="time-slot__time">${displayTime}</span>
         <span class="time-slot__capacity">${slot.remaining > 0 ? `${slot.remaining} Plätze frei` : 'Warteliste verfügbar'}</span>
       `;
       button.addEventListener('click', () => this.selectTime(slot));
-      if (this.state.time === slot.time) {
+      if (this.state.time === formattedTime) {
         button.classList.add('is-selected');
       }
       this.timeContainer.appendChild(button);
@@ -189,9 +228,10 @@ class ReservationWizard {
   }
 
   selectTime(slot) {
-    this.state.time = slot.time;
+    const formattedTime = formatTimeSlot(slot?.time);
+    this.state.time = formattedTime;
     this.timeContainer.querySelectorAll('.time-slot').forEach((button) => {
-      const isSelected = button.dataset.time === slot.time;
+      const isSelected = button.dataset.time === formattedTime;
       button.classList.toggle('is-selected', isSelected);
       button.setAttribute('aria-pressed', isSelected ? 'true' : 'false');
     });
@@ -214,7 +254,8 @@ class ReservationWizard {
       });
     }
     if (timeLabel && this.state.time) {
-      timeLabel.textContent = `${this.state.time} Uhr`;
+      const displayTime = formatDisplayTime(this.state.time);
+      timeLabel.textContent = displayTime;
     }
     if (guestLabel) {
       guestLabel.textContent = `${this.state.guests} Personen`;

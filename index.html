@@ -404,6 +404,27 @@
     let selectedDate = null;
     let selectedTime = null;
 
+    function formatTimeSlot(time) {
+      if (typeof time === 'number' || !Number.isNaN(Number(time))) {
+        const totalMinutes = parseInt(time, 10);
+        const hours = Math.floor(totalMinutes / 60);
+        const minutes = totalMinutes % 60;
+        return `${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}`;
+      }
+      if (typeof time === 'string' && time.includes(':')) {
+        return time;
+      }
+      return time;
+    }
+
+    function formatDisplayTime(time) {
+      const formatted = formatTimeSlot(time);
+      if (typeof formatted === 'string' && formatted.toLowerCase().includes('uhr')) {
+        return formatted;
+      }
+      return `${formatted} Uhr`;
+    }
+
     document.addEventListener('DOMContentLoaded', () => {
       if (document.getElementById('available-dates-container')) {
         loadAvailableDates();
@@ -492,14 +513,17 @@
         const slotButton = document.createElement('button');
         slotButton.type = 'button';
         slotButton.className = 'time-slot';
-        slotButton.textContent = slot.time;
-        slotButton.addEventListener('click', (event) => selectTime(slot.time, event.currentTarget));
+        const rawTime = typeof slot === 'object' && slot !== null ? (slot.time ?? slot.slot ?? slot) : slot;
+        const formattedTime = formatTimeSlot(rawTime);
+        slotButton.textContent = formattedTime;
+        slotButton.dataset.time = formattedTime;
+        slotButton.addEventListener('click', (event) => selectTime(formattedTime, event.currentTarget));
         container.appendChild(slotButton);
       });
     }
 
     function selectTime(time, element) {
-      selectedTime = time;
+      selectedTime = formatTimeSlot(time);
 
       document.querySelectorAll('.time-slot').forEach((el) => el.classList.remove('selected'));
       element.classList.add('selected');
@@ -527,7 +551,7 @@
         formTitle.innerHTML = `
           Ihre Angaben<br>
           <small style="font-size: 0.8em; opacity: 0.8;">
-            ${dateStr} um ${selectedTime} Uhr
+            ${dateStr} um ${formatDisplayTime(selectedTime)}
           </small>
         `;
       }
@@ -562,7 +586,7 @@
 
       const formData = {
         date: selectedDate.date,
-        time: selectedTime,
+        time: formatTimeSlot(selectedTime),
         name: document.getElementById('guest-name').value.trim(),
         email: document.getElementById('guest-email').value.trim(),
         phone: document.getElementById('guest-phone').value.trim(),
