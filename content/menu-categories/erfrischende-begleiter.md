@@ -2,8 +2,7 @@
 title: sip happens - make it healthy
 order: 6
 image: /content/images/dsc00362_ergebnis.jpg
-description: prickelnde sodas mit natürlichen aromen – erfrischend, zuckerarm
-  und antioxidativ.
+description: prickelnde sodas mit natürlichen aromen – erfrischend & natürlich gesüßt
 items:
   - name: himbeer soda
     tags:
@@ -41,10 +40,7 @@ items:
       calories: 38g
       carbs: 9g
   - name: golden kurkuma
-    tags:
-      - antioxidativ
-      - immunstärkend
-      - belebend
+    tags: null
     description: goldener mix aus ingwer-zitrone-sirup und frischer kurkuma.
     allergens: []
     price: "4.10"
