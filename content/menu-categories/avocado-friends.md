@@ -29,7 +29,7 @@ items:
       - sättigend
       - proteinreich
     description: >-
-      knuspriges sauerteigbrot vom öfferl, handwerklich gebacken, großzügig
+      knuspriges sauerteigbrot vom joseph, handwerklich gebacken, großzügig
       bestrichen mit cremiger, zerdrückter avocado, verfeinert mit frischen
       sprossen und kresse für eine lebendige, grüne frische.
 
@@ -59,7 +59,7 @@ items:
       * biospeck: 2.50
       * biolachs: 2.30
       * pilzmix: 1.90
-      * zwei scheiben sauerteigbrot vom öferl: 2.40
+      * zwei scheiben sauerteigbrot vom joseph: 2.40
     allergens:
       - c
       - g
