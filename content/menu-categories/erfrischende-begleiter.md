@@ -32,19 +32,14 @@ items:
       protein: 8g
       carbs: 30g
       fat: 10g
-  - name: berry minty
-    tags:
-      - erfrischend
-      - belebend
-      - vegetarisch
-    description: fruchtige kombination aus minze und beeren.
-    allergens: []
+  - special: false
+    name: "berry minty "
+    description: lebendige kombination aus frischer pfefferminze und saftigen
+      beeren, für einen fruchtig-kühlen geschmacksmoment.
     price: "4.10"
     nutrition:
-      calories: "250"
-      protein: 8g
-      carbs: 30g
-      fat: 10g
+      calories: 38g
+      carbs: 9g
   - name: golden kurkuma
     tags:
       - antioxidativ
