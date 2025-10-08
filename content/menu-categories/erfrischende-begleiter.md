@@ -40,8 +40,10 @@ items:
       calories: 38g
       carbs: 9g
   - name: golden kurkuma
-    tags: null
-    description: goldener mix aus ingwer-zitrone-sirup und frischer kurkuma.
+    tags:
+      - immunstärkend
+    description: goldener mix aus ingwer-zitrone-sirup und frischer kurkuma -
+      besonders entzündungshemmend
     allergens: []
     price: "4.10"
     nutrition:
@@ -59,11 +61,15 @@ items:
       protein: 2g
       carbs: 10g
       fat: 2g
+    tags:
+      - proteinreich
+    allergens:
+      - G
   - special: false
     name: chia coco drink
     price: "4.50"
-    description: erfrischend, leicht und voller power, reich an mineralstoffen,
-      omega-3, hydratisierend und energiespendend.
+    description: k﻿okoswasser mit chiasamen. erfrischend, leicht und voller power,
+      reich an mineralstoffen, omega-3, hydratisierend und energiespendend.
     nutrition:
       calories: 176g
       protein: 4g
