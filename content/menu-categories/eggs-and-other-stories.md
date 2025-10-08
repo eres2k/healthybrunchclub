@@ -52,7 +52,7 @@ items:
       - proteinreich
       - sättigend
     description: >-
-      ein oder zwei pochierte eier auf knusprigem sauerteigbrot vom öfferl, mit
+      ein oder zwei pochierte eier auf knusprigem sauerteigbrot vom joseph, mit
       cremiger avocadosauce und sautierten pilzen, verfeinert mit rucula,
       sprossen, kresse und knusprigen pinienkernen.
 
@@ -83,7 +83,7 @@ items:
       * biospeck: 2.50
       * biolachs: 2.30
       * pilzmix: 1.90
-      * zwei scheiben sauerteigbrot vom öferl: 2.40
+      * zwei scheiben sauerteigbrot vom joseph: 2.40
     allergens:
       - c
       - g
