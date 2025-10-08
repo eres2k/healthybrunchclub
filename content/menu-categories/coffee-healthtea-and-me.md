@@ -36,7 +36,8 @@ items:
       - vegetarisch
       - glutenfrei
       - vegan
-    description: kräftiger espresso-latte mit kurkuma – wärmend und antioxidativ.
+    description: kräftiger espresso-latte mit kurkuma – wärmend, antioxidativ &
+      entzündungshemmend.
     allergens: []
     price: "5.90"
     nutrition:
@@ -79,12 +80,13 @@ items:
       protein: 0g
       carbs: 0g
       fat: 0g
-  - name: chaga tee
+  - name: chaga-minz tee
     tags:
       - immunstärkend
       - antioxidativ
       - beruhigend
-    description: kräfiger tee mit chaga.
+    description: kräfiger tee mit frischen minzblätter und  chaga - ein heilpilz der
+      besonders immunstärkend und entzündungshemmend wirkt.
     allergens: []
     price: "4.10"
     nutrition:
@@ -95,9 +97,7 @@ items:
   - name: moringa–minz–tee
     tags:
       - belebend
-      - revitalisierend
-      - beruhigend
-    description: belebender kräutertee aus moringa-blättern mit frischer minze.
+    description: belebender kräutertee aus moringa-blättern und minze.
     allergens: []
     price: "4.50"
     nutrition:
