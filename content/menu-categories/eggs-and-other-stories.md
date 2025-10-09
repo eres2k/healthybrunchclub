@@ -56,7 +56,7 @@ items:
       cremiger avocadosauce und sautierten pilzen, verfeinert mit rucula,
       sprossen, kresse und knusprigen pinienkernen.
 
-      **your style:** schinken / speck / lachs
+      **your style:** speck / lachs
     allergens:
       - c
       - g
