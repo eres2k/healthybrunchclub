@@ -31,9 +31,9 @@ items:
       - proteinreich
       - sättigend
     description: >-
-      ein fluffiges omelette aus zwei oder drei eiern auf knusprigem
-      sauerteigbrot vom öfferl, gefüllt mit zwiebeln, shiitake-pilzen und
-      frischem spinat. gekrönt mit rucula, sprossen und kresse.
+      ein fluffiges omelette aus zwei oder drei eiern gefüllt mit zwiebeln,
+      shiitake-pilzen und frischem spinat. gekrönt mit rucula, sprossen und
+      kresse.
 
       **your style:** tomaten / speckwürfeln / käse / avocado
     allergens:
@@ -56,7 +56,7 @@ items:
       cremiger avocadosauce und sautierten pilzen, verfeinert mit rucula,
       sprossen, kresse und knusprigen pinienkernen.
 
-      **your style:** schinken / speck / lachs
+      **your style:** speck / lachs
     allergens:
       - c
       - g
