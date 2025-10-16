@@ -4,21 +4,23 @@ order: 6
 image: /content/images/dsc00362_ergebnis.jpg
 description: prickelnde sodas mit natürlichen aromen – erfrischend & natürlich gesüßt
 items:
-  - name: himbeer soda
+  - name: oxymel von myHoney himbeer/zitrone/salbei
     tags:
       - erfrischend
       - zuckerarm
       - antioxidativ
-    description: prickelndes himbeersoda von sonnentor, sanft gesüßt mit
-      apfelsaftkonzentrat.
+    description: ein erfrischender mix aus apfelessig, honig und kräutern, od.
+      früchten – natürlich fermentiert und voller power für deinen stoffwechsel
+      und die verdauung. leicht süß-sauer, spritzig und belebend.
+      prickelnd/still
     allergens: []
-    price: "4.10"
+    price: "4.50"
     nutrition:
       calories: "250"
       protein: 8g
       carbs: 30g
       fat: 10g
-  - name: holunder soda
+  - name: holunder oder himbeer soda
     tags:
       - erfrischend
       - zuckerarm
