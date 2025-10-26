@@ -23,14 +23,26 @@ class PDFMenuManager {
     try {
       const response = await fetch('/.netlify/functions/get-menu-pdf');
       const data = await response.json();
-      
-      if (response.ok && data.pdf_url) {
-        this.pdfData = data;
-        return data;
-      } else {
-        console.log('No active PDF menu found');
-        return null;
+
+      if (response.ok) {
+        const pdfUrl = data.pdf_url || data.url || data.menu_file;
+        if (pdfUrl) {
+          this.pdfData = {
+            ...data,
+            pdf_url: pdfUrl
+          };
+          if (!this.pdfData.name) {
+            this.pdfData.name = 'PDF Speisekarte';
+          }
+          if (!this.pdfData.upload_date && data.timestamp) {
+            this.pdfData.upload_date = data.timestamp;
+          }
+          return this.pdfData;
+        }
       }
+
+      console.log('No active PDF menu found');
+      return null;
     } catch (error) {
       console.error('Error loading PDF menu:', error);
       return null;
@@ -50,7 +62,13 @@ class PDFMenuManager {
 
   renderPDFMenu(container) {
     const pdfUrl = this.pdfData.pdf_url;
-    const fullPdfUrl = window.location.origin + pdfUrl;
+    const fullPdfUrl = new URL(pdfUrl, window.location.origin).href;
+    const description = this.pdfData.description || '';
+    const uploadDate = (() => {
+      if (!this.pdfData.upload_date) return null;
+      const parsed = new Date(this.pdfData.upload_date);
+      return Number.isNaN(parsed.getTime()) ? null : parsed;
+    })();
 
     container.innerHTML = `
       <div class="pdf-menu-card">
@@ -64,7 +82,7 @@ class PDFMenuManager {
           </svg>
         </div>
         <h3>${this.pdfData.name}</h3>
-        ${this.pdfData.description ? `<p class="pdf-description">${this.pdfData.description}</p>` : ''}
+        ${description ? `<p class="pdf-description">${description}</p>` : ''}
         <div class="pdf-actions">
           <a href="${pdfUrl}" target="_blank" class="btn-primary pdf-download-btn">
             <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
@@ -84,7 +102,7 @@ class PDFMenuManager {
             QR-Code anzeigen
           </button>
         </div>
-        ${this.pdfData.upload_date ? `<p class="upload-date">Aktualisiert: ${new Date(this.pdfData.upload_date).toLocaleDateString('de-AT')}</p>` : ''}
+        ${uploadDate ? `<p class="upload-date">Aktualisiert: ${uploadDate.toLocaleDateString('de-AT')}</p>` : ''}
       </div>
     `;
 

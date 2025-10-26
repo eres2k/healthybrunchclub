@@ -95,6 +95,16 @@ collections:
           
           - {label: "Chef's Choice", name: "special", widget: "boolean", default: false, required: false, hint: "Als Empfehlung markieren"}
 
+  - name: "menu-pdf"
+    label: "PDF Speisekarte"
+    folder: "content/menu"
+    create: false
+    delete: false
+    fields:
+      - {label: "PDF Datei", name: "menu_file", widget: "file", allow_multiple: false, required: true}
+      - {label: "Upload Datum", name: "date", widget: "datetime"}
+      - {label: "Beschreibung", name: "description", widget: "text", required: false}
+
   - name: "events"
     label: "Veranstaltungen"
     label_singular: "Veranstaltung"
