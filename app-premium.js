@@ -487,6 +487,8 @@ window.toggleEventWindow = function() {
 };
 
 // PDF Download tracking
+let resolvedMenuPdfUrl = '/content/menu.pdf';
+
 function trackPDFDownload() {
     // Track PDF download event if analytics is set up
     if (typeof gtag !== 'undefined') {
@@ -495,34 +497,81 @@ function trackPDFDownload() {
             'event_label': 'PDF Menu Download'
         });
     }
-    
+
     // Or custom tracking
     console.log('Menu PDF downloaded');
 }
 
-// Initialize mobile PDF button
+async function resolvePrimaryMenuPdf() {
+    try {
+        const response = await fetch('/.netlify/functions/get-all-menus');
+        if (!response.ok) {
+            throw new Error(`Failed to load menus: ${response.status}`);
+        }
+
+        const data = await response.json();
+        if (!data.success || !Array.isArray(data.menus)) {
+            return;
+        }
+
+        const activeMenus = data.menus
+            .filter(menu => menu && menu.pdf_file && menu.active !== false)
+            .map(menu => ({
+                ...menu,
+                order: typeof menu.order === 'number' ? menu.order : parseInt(menu.order || '0', 10)
+            }));
+
+        if (!activeMenus.length) {
+            return;
+        }
+
+        const sortedMenus = activeMenus.sort((a, b) => (a.order || 0) - (b.order || 0));
+        const prioritizedMenus = sortedMenus.filter(menu => !menu.isOriginal);
+        const chosenMenu = prioritizedMenus.length ? prioritizedMenus[0] : sortedMenus[0];
+
+        if (chosenMenu && chosenMenu.pdf_file) {
+            resolvedMenuPdfUrl = chosenMenu.pdf_file.startsWith('http')
+                ? chosenMenu.pdf_file
+                : `${chosenMenu.pdf_file.startsWith('/') ? '' : '/'}${chosenMenu.pdf_file}`;
+        }
+    } catch (error) {
+        console.error('Failed to resolve menu PDF:', error);
+    }
+}
+
+function openResolvedMenuPdf() {
+    const targetUrl = resolvedMenuPdfUrl || '/content/menu.pdf';
+    window.open(targetUrl, '_blank');
+    trackPDFDownload();
+}
+
+// Initialize PDF buttons
 document.addEventListener('DOMContentLoaded', function() {
     const pdfButton = document.querySelector('.mobile-pdf-download');
-    if (pdfButton && window.innerWidth <= 768) {
-        pdfButton.style.display = 'flex';
-        
-        // Ensure onclick works
+    if (pdfButton) {
+        if (window.innerWidth <= 768) {
+            pdfButton.style.display = 'flex';
+        }
+
         if (!pdfButton.hasAttribute('data-initialized')) {
             pdfButton.setAttribute('data-initialized', 'true');
-            pdfButton.removeAttribute('onclick'); // Remove inline onclick
             pdfButton.addEventListener('click', function(e) {
                 e.preventDefault();
-                window.open('content/menu.pdf', '_blank');
-                trackPDFDownload();
+                openResolvedMenuPdf();
             });
         }
     }
-    
-    // Desktop PDF button
-    const desktopPdfBtn = document.querySelector('.btn-icon[onclick*="pdf"]');
-    if (desktopPdfBtn) {
-        desktopPdfBtn.addEventListener('click', trackPDFDownload);
+
+    const desktopPdfBtn = document.querySelector('.btn-icon.btn-pdf-download');
+    if (desktopPdfBtn && !desktopPdfBtn.hasAttribute('data-initialized')) {
+        desktopPdfBtn.setAttribute('data-initialized', 'true');
+        desktopPdfBtn.addEventListener('click', function(e) {
+            e.preventDefault();
+            openResolvedMenuPdf();
+        });
     }
+
+    resolvePrimaryMenuPdf();
 });
 
 // Add fade-in-up class styles dynamically
