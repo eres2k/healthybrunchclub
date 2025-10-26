@@ -1,52 +1,57 @@
 [build]
-  publish = "."
+  command = "npm run build"
   functions = "netlify/functions"
+  publish = "."
 
 [build.environment]
   NODE_VERSION = "18"
 
 [functions]
   directory = "netlify/functions"
-  node_bundler = "esbuild"
+  # Include content files in the function bundle
   included_files = ["content/**/*.md", "content/**/*.yml", "content/**/*.json"]
+  node_bundler = "esbuild"
 
+[[headers]]
+  for = "/netlify/functions/*"
+  [headers.values]
+    Access-Control-Allow-Origin = "*"
+    Access-Control-Allow-Methods = "GET, POST, OPTIONS"
+
+# Legal pages redirects
 [[redirects]]
-  from = "/api/*"
-  to = "/.netlify/functions/:splat"
+  from = "/impressum"
+  to = "/impressum.html"
   status = 200
 
-[[headers]]
-  for = "/*"
-  [headers.values]
-    X-Frame-Options = "DENY"
-    X-Content-Type-Options = "nosniff"
-    Referrer-Policy = "strict-origin-when-cross-origin"
-    X-XSS-Protection = "1; mode=block"
+[[redirects]]
+  from = "/datenschutz"
+  to = "/datenschutz.html"
+  status = 200
 
-[[headers]]
-  for = "/content/images/*"
-  [headers.values]
-    Cache-Control = "public, max-age=31536000, immutable"
+[[redirects]]
+  from = "/agb"
+  to = "/agb.html"
+  status = 200
 
-[[headers]]
-  for = "/*.pdf"
-  [headers.values]
-    Content-Type = "application/pdf"
-    Content-Disposition = "inline"
-    Cache-Control = "public, max-age=604800"
+# PDF redirects
+[[redirects]]
+  from = "/menu-pdf"
+  to = "/.netlify/functions/generate-menu-pdf"
+  status = 200
 
-[[headers]]
-  for = "/*.css"
-  [headers.values]
-    Cache-Control = "public, max-age=31536000, immutable"
+[[redirects]]
+  from = "/speisekarte.pdf"
+  to = "/.netlify/functions/generate-menu-pdf"
+  status = 200
 
-[[headers]]
-  for = "/*.js"
-  [headers.values]
-    Cache-Control = "public, max-age=31536000, immutable"
+[[redirects]]
+  from = "/content/menu.pdf"
+  to = "/.netlify/functions/generate-menu-pdf"
+  status = 200
 
-[[headers]]
-  for = "/sw.js"
-  [headers.values]
-    Cache-Control = "public, max-age=0, must-revalidate"
-    Service-Worker-Allowed = "/"
+# Test path endpoint
+[[redirects]]
+  from = "/test-paths"
+  to = "/.netlify/functions/test-paths"
+  status = 200

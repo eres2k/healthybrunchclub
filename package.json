@@ -1,7 +1,7 @@
 {
   "name": "healthy-brunch-club-wien",
   "version": "2.0.0",
-  "description": "Bio-Brunch Restaurant Website mit CMS und PDF-Menü",
+  "description": "Bio-Brunch Restaurant Website with Advanced Reservation System",
   "scripts": {
     "dev": "netlify dev",
     "build": "echo 'No build required for static site'",
