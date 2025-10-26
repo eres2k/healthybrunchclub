@@ -118,6 +118,7 @@
             <ul class="nav-menu">
                 <li><a href="#home" class="nav-link">home</a></li>
                 <li><a href="#menu" class="nav-link">speisekarte</a></li>
+                <li><a href="#menu-pdf-section" class="nav-link">📱 speisekarten</a></li>
                 <li><a href="#about" class="nav-link">über uns</a></li>
                 <li><a href="#reservierung" class="nav-link nav-cta">reservierung</a></li>
             </ul>
@@ -250,6 +251,15 @@
         </div>
     </section>
 
+    <!-- PDF Menus Section -->
+    <section id="menu-pdf-section" class="section">
+      <div class="container">
+        <h2 class="section-title">📱 Unsere Speisekarten</h2>
+        <p class="section-subtitle">Scannen Sie den QR-Code für schnellen Zugriff auf unsere Menüs</p>
+        <div id="menu-display-container"></div>
+      </div>
+    </section>
+
     <!-- Reservation Section -->
     <section id="reservierung" class="section-padding elegant-section">
       <div class="container">
@@ -375,9 +385,10 @@
         <div class="footer-bottom">
             <p>&copy; 2025 healthy brunch club wien. all rights reserved.</p>
             <p>
-                <a href="/impressum">impressum</a> | 
-                <a href="/datenschutz">datenschutz</a> | 
-                <a href="/agb">agb</a>
+                <a href="/impressum">impressum</a> |
+                <a href="/datenschutz">datenschutz</a> |
+                <a href="/agb">agb</a> |
+                <a href="/menu-admin" style="color: var(--sage-green);">menü-verwaltung</a>
             </p>
         </div>
     </footer>
@@ -399,6 +410,14 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
     <script src="cms-loader-premium.js"></script>
     <script src="app-premium.js"></script>
+    <script src="menu-display-widget.js"></script>
+    <script>
+      document.addEventListener('DOMContentLoaded', function() {
+        if (window.menuWidget && document.getElementById('menu-display-container')) {
+          window.menuWidget.init('menu-display-container');
+        }
+      });
+    </script>
     <script>
     // Reservation System
     let selectedDate = null;

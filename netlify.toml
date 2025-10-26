@@ -34,6 +34,11 @@
   to = "/agb.html"
   status = 200
 
+[[redirects]]
+  from = "/menu-admin"
+  to = "/admin-menu-manager.html"
+  status = 200
+
 # PDF redirects
 [[redirects]]
   from = "/menu-pdf"
@@ -55,3 +60,8 @@
   from = "/test-paths"
   to = "/.netlify/functions/test-paths"
   status = 200
+
+[[headers]]
+  for = "/content/*"
+  [headers.values]
+    Cache-Control = "public, max-age=3600"
