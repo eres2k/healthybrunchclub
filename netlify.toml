@@ -1,57 +1,47 @@
 [build]
-  command = "npm run build"
-  functions = "netlify/functions"
   publish = "."
+  functions = "netlify/functions"
 
 [build.environment]
   NODE_VERSION = "18"
 
-[functions]
-  directory = "netlify/functions"
-  # Include content files in the function bundle
-  included_files = ["content/**/*.md", "content/**/*.yml", "content/**/*.json"]
-  node_bundler = "esbuild"
+[[redirects]]
+  from = "/api/*"
+  to = "/.netlify/functions/:splat"
+  status = 200
 
 [[headers]]
-  for = "/netlify/functions/*"
+  for = "/*"
   [headers.values]
-    Access-Control-Allow-Origin = "*"
-    Access-Control-Allow-Methods = "GET, POST, OPTIONS"
+    X-Frame-Options = "DENY"
+    X-Content-Type-Options = "nosniff"
+    Referrer-Policy = "strict-origin-when-cross-origin"
+    X-XSS-Protection = "1; mode=block"
 
-# Legal pages redirects
-[[redirects]]
-  from = "/impressum"
-  to = "/impressum.html"
-  status = 200
+[[headers]]
+  for = "/content/images/*"
+  [headers.values]
+    Cache-Control = "public, max-age=31536000, immutable"
 
-[[redirects]]
-  from = "/datenschutz"
-  to = "/datenschutz.html"
-  status = 200
+[[headers]]
+  for = "/*.pdf"
+  [headers.values]
+    Content-Type = "application/pdf"
+    Content-Disposition = "inline"
+    Cache-Control = "public, max-age=604800"
 
-[[redirects]]
-  from = "/agb"
-  to = "/agb.html"
-  status = 200
+[[headers]]
+  for = "/*.css"
+  [headers.values]
+    Cache-Control = "public, max-age=31536000, immutable"
 
-# PDF redirects
-[[redirects]]
-  from = "/menu-pdf"
-  to = "/.netlify/functions/generate-menu-pdf"
-  status = 200
+[[headers]]
+  for = "/*.js"
+  [headers.values]
+    Cache-Control = "public, max-age=31536000, immutable"
 
-[[redirects]]
-  from = "/speisekarte.pdf"
-  to = "/.netlify/functions/generate-menu-pdf"
-  status = 200
-
-[[redirects]]
-  from = "/content/menu.pdf"
-  to = "/.netlify/functions/generate-menu-pdf"
-  status = 200
-
-# Test path endpoint
-[[redirects]]
-  from = "/test-paths"
-  to = "/.netlify/functions/test-paths"
-  status = 200
+[[headers]]
+  for = "/sw.js"
+  [headers.values]
+    Cache-Control = "public, max-age=0, must-revalidate"
+    Service-Worker-Allowed = "/"
