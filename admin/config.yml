@@ -219,3 +219,18 @@ collections:
       - {label: "Zeit", name: "time", widget: "string"}
       - {label: "Anzahl blockierte Plätze", name: "blocked_seats", widget: "number"}
       - {label: "Grund", name: "reason", widget: "text", required: false}
+
+  - name: "menu-pdfs"
+    label: "PDF Speisekarten"
+    label_singular: "PDF Speisekarte"
+    folder: "content/menus"
+    create: true
+    delete: true
+    slug: "{{year}}-{{month}}-{{day}}-{{slug}}"
+    fields:
+      - {label: "Menü Titel", name: "title", widget: "string", required: true}
+      - {label: "PDF Datei", name: "pdf_file", widget: "file", required: true}
+      - {label: "Aktives Menü", name: "active", widget: "boolean", default: false, hint: "Nur ein Menü kann aktiv sein"}
+      - {label: "Upload Datum", name: "date", widget: "datetime", default: ""}
+      - {label: "Beschreibung", name: "description", widget: "text", required: false}
+      - {label: "QR Code", name: "qr_code", widget: "hidden", required: false}
