@@ -219,3 +219,20 @@ collections:
       - {label: "Zeit", name: "time", widget: "string"}
       - {label: "Anzahl blockierte Plätze", name: "blocked_seats", widget: "number"}
       - {label: "Grund", name: "reason", widget: "text", required: false}
+
+  - name: "menu-collection"
+    label: "PDF Menüs"
+    label_singular: "PDF Menü"
+    folder: "content/menu-items"
+    create: true
+    delete: true
+    slug: "{{slug}}"
+    extension: "json"
+    format: "json"
+    fields:
+      - {label: "Menü Name", name: "title", widget: "string", required: true, hint: "z.B. Frühlings-Menü 2025"}
+      - {label: "PDF Datei", name: "pdf_file", widget: "file", required: true, media_folder: "/content", public_folder: "/content"}
+      - {label: "Beschreibung", name: "description", widget: "text", required: false}
+      - {label: "Upload Datum", name: "date", widget: "datetime", default: "", format: "YYYY-MM-DD"}
+      - {label: "Aktiv", name: "active", widget: "boolean", default: true, hint: "Menü auf Website anzeigen"}
+      - {label: "Sortierung", name: "order", widget: "number", default: 0, value_type: "int", hint: "Niedrigere Zahlen erscheinen zuerst"}
