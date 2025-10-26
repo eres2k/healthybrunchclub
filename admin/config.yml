@@ -219,3 +219,13 @@ collections:
       - {label: "Zeit", name: "time", widget: "string"}
       - {label: "Anzahl blockierte Plätze", name: "blocked_seats", widget: "number"}
       - {label: "Grund", name: "reason", widget: "text", required: false}
+
+  - name: "menu-pdf"
+    label: "PDF Speisekarte"
+    folder: "content/menu"
+    create: false
+    delete: false
+    fields:
+      - {label: "PDF Datei", name: "menu_file", widget: "file", allow_multiple: false, required: true}
+      - {label: "Upload Datum", name: "date", widget: "datetime"}
+      - {label: "Beschreibung", name: "description", widget: "text", required: false}

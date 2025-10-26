@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>QR-Code Generator - Healthy Brunch Club</title>
+    <link rel="stylesheet" href="mystyle-premium.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js" integrity="sha512-d8Kqyi6J5UMzEKBr8WcN6iYG3PaY5E9O+V1YxAECEV4VpWwfvX2gYdExgkt1PyfuzMdGII4JESyzuSe2+l3W0g==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+</head>
+<body class="premium-background">
+    <main class="qr-generator-container">
+        <h1>QR-Code für PDF Speisekarte</h1>
+
+        <div class="qr-preview" aria-live="polite">
+            <div id="qrcode" role="img" aria-label="QR-Code Vorschau"></div>
+        </div>
+
+        <div class="qr-status" id="qr-status" hidden></div>
+
+        <div class="qr-controls">
+            <label for="size-selector">
+                Größe:
+                <select id="size-selector">
+                    <option value="128">128x128 px</option>
+                    <option value="256" selected>256x256 px</option>
+                    <option value="512">512x512 px</option>
+                </select>
+            </label>
+
+            <div class="qr-button-group">
+                <button id="download-btn" type="button">QR-Code herunterladen</button>
+                <button id="regenerate-btn" type="button">Neu generieren</button>
+            </div>
+        </div>
+
+        <div class="menu-url-display">
+            <p><strong>Verlinkung:</strong> <span id="menu-url">Wird geladen…</span></p>
+            <p class="menu-url-meta" id="menu-meta" hidden></p>
+        </div>
+    </main>
+
+    <script src="qr-code-script.js" defer></script>
+</body>
+</html>
