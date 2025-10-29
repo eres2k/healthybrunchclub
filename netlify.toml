@@ -1,57 +1,54 @@
 [build]
   command = "npm run build"
-  functions = "netlify/functions"
   publish = "."
+  functions = "netlify/functions"
 
 [build.environment]
   NODE_VERSION = "18"
 
-[functions]
-  directory = "netlify/functions"
-  # Include content files in the function bundle
-  included_files = ["content/**/*.md", "content/**/*.yml", "content/**/*.json"]
-  node_bundler = "esbuild"
+[build.processing]
+  skip_processing = false
 
+# Production build with PDF rename script
+[context.production]
+  command = "npm run build && bash scripts/rename-menu-pdf.sh"
+
+[context.deploy-preview]
+  command = "npm run build"
+
+# Headers configuration
 [[headers]]
-  for = "/netlify/functions/*"
+  for = "/*"
   [headers.values]
-    Access-Control-Allow-Origin = "*"
-    Access-Control-Allow-Methods = "GET, POST, OPTIONS"
+    X-Frame-Options = "DENY"
+    X-Content-Type-Options = "nosniff"
+    Referrer-Policy = "strict-origin-when-cross-origin"
 
-# Legal pages redirects
-[[redirects]]
-  from = "/impressum"
-  to = "/impressum.html"
-  status = 200
+# Cache static assets
+[[headers]]
+  for = "/content/*"
+  [headers.values]
+    Cache-Control = "public, max-age=31536000, immutable"
 
-[[redirects]]
-  from = "/datenschutz"
-  to = "/datenschutz.html"
-  status = 200
+# PDF specific caching - shorter cache for frequent updates
+[[headers]]
+  for = "/content/menu.pdf"
+  [headers.values]
+    Cache-Control = "public, max-age=3600"
+    Content-Type = "application/pdf"
+    Content-Disposition = "inline; filename=healthy-brunch-club-menu.pdf"
 
+# Redirects for old menu URLs (if any)
 [[redirects]]
-  from = "/agb"
-  to = "/agb.html"
-  status = 200
-
-# PDF redirects
-[[redirects]]
-  from = "/menu-pdf"
-  to = "/.netlify/functions/generate-menu-pdf"
-  status = 200
+  from = "/menu.pdf"
+  to = "/content/menu.pdf"
+  status = 301
 
 [[redirects]]
   from = "/speisekarte.pdf"
-  to = "/.netlify/functions/generate-menu-pdf"
-  status = 200
+  to = "/content/menu.pdf"
+  status = 301
 
-[[redirects]]
-  from = "/content/menu.pdf"
-  to = "/.netlify/functions/generate-menu-pdf"
-  status = 200
-
-# Test path endpoint
-[[redirects]]
-  from = "/test-paths"
-  to = "/.netlify/functions/test-paths"
-  status = 200
+# Identity settings for Netlify CMS
+[context.identity]
+  enabled = true
