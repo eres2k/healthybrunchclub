@@ -55,3 +55,8 @@
   from = "/test-paths"
   to = "/.netlify/functions/test-paths"
   status = 200
+
+[[redirects]]
+  from = "/menu-qr"
+  to = "/index.html#menu-qr-section"
+  status = 200

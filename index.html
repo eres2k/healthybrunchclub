@@ -118,6 +118,7 @@
             <ul class="nav-menu">
                 <li><a href="#home" class="nav-link">home</a></li>
                 <li><a href="#menu" class="nav-link">speisekarte</a></li>
+                <li><a href="#menu-qr-section" class="nav-link">📱 speisekarte</a></li>
                 <li><a href="#about" class="nav-link">über uns</a></li>
                 <li><a href="#reservierung" class="nav-link nav-cta">reservierung</a></li>
             </ul>
@@ -387,6 +388,15 @@
         <i class="fas fa-edit"></i>
     </a>
 
+    <!-- PDF Menu QR Section -->
+    <section id="menu-qr-section" class="section">
+      <div class="container">
+        <h2 class="section-title">📱 Unsere Speisekarte</h2>
+        <p class="section-subtitle">Scannen Sie den QR-Code für unsere aktuelle Speisekarte</p>
+        <div id="menu-qr-container"></div>
+      </div>
+    </section>
+
     <!-- Event Window -->
     <div class="event-window" id="eventWindow" style="display: none;">
         <button class="event-toggle" onclick="toggleEventWindow()" type="button">
@@ -396,6 +406,14 @@
     </div>
 
     <!-- Scripts -->
+    <script src="menu-qr-widget.js"></script>
+    <script>
+      document.addEventListener('DOMContentLoaded', function() {
+        if (window.menuQR) {
+          window.menuQR.init('menu-qr-container');
+        }
+      });
+    </script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
     <script src="cms-loader-premium.js"></script>
     <script src="app-premium.js"></script>
