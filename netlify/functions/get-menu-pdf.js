@@ -2,75 +2,108 @@ const fs = require('fs');
 const path = require('path');
 const matter = require('gray-matter');
 
-exports.handler = async (event, context) => {
+exports.handler = async function (event, context) {
+  const menuPdfUrl = '/.netlify/functions/menu-pdf-url';
+
   try {
-    const menuPdfDir = path.join(process.cwd(), 'content', 'menu-pdf');
-    
-    if (!fs.existsSync(menuPdfDir)) {
+    const menuDir = path.join(process.cwd(), 'content', 'menu');
+    const pdfFilePath = path.join(menuDir, 'menu.pdf');
+    let selectedEntry = null;
+
+    if (fs.existsSync(menuDir)) {
+      const files = fs
+        .readdirSync(menuDir)
+        .filter((file) => /\.(md|markdown)$/i.test(file));
+
+      const entries = files
+        .map((file) => {
+          const filePath = path.join(menuDir, file);
+          try {
+            const { data } = matter.read(filePath);
+            return {
+              ...data,
+              __filePath: filePath,
+            };
+          } catch (error) {
+            console.warn(`Unable to parse menu entry ${file}:`, error);
+            return null;
+          }
+        })
+        .filter(Boolean)
+        .filter((entry) => entry.menu_file);
+
+      if (entries.length > 0) {
+        selectedEntry = entries.sort((a, b) => {
+          const dateA = new Date(a.date || a.upload_date || 0).getTime();
+          const dateB = new Date(b.date || b.upload_date || 0).getTime();
+          return dateB - dateA;
+        })[0];
+      }
+    }
+
+    const fallbackUrl = '/content/menu/menu.pdf';
+    const entryPdfPath = selectedEntry?.menu_file
+      ? path.join(process.cwd(), selectedEntry.menu_file.replace(/^\//, ''))
+      : null;
+    const entryPdfExists = entryPdfPath ? fs.existsSync(entryPdfPath) : false;
+    const pdfExists = fs.existsSync(pdfFilePath) || entryPdfExists;
+    const resolvedUrl = selectedEntry?.menu_file || fallbackUrl;
+
+    if (!pdfExists) {
       return {
         statusCode: 404,
-        body: JSON.stringify({ 
+        headers: {
+          'Content-Type': 'application/json',
+          'Access-Control-Allow-Origin': '*',
+        },
+        body: JSON.stringify({
           error: 'Kein PDF-Menü verfügbar',
-          pdf: null 
-        })
+          pdf_url: null,
+          metadata: selectedEntry || null,
+        }),
       };
     }
 
-    const files = fs.readdirSync(menuPdfDir)
-      .filter(file => file.endsWith('.md'));
+    const statsPath = entryPdfExists ? entryPdfPath : pdfExists ? pdfFilePath : null;
+    const fileStats = statsPath ? fs.statSync(statsPath) : null;
+    const uploadDate =
+      selectedEntry?.date ||
+      selectedEntry?.upload_date ||
+      (fileStats ? fileStats.mtime.toISOString() : null);
 
-    if (files.length === 0) {
-      return {
-        statusCode: 404,
-        body: JSON.stringify({ 
-          error: 'Kein PDF-Menü verfügbar',
-          pdf: null 
-        })
-      };
-    }
-
-    const menus = files.map(file => {
-      const filePath = path.join(menuPdfDir, file);
-      const fileContent = fs.readFileSync(filePath, 'utf8');
-      const { data } = matter(fileContent);
-      return data;
-    }).filter(menu => menu.active);
-
-    if (menus.length === 0) {
-      return {
-        statusCode: 404,
-        body: JSON.stringify({ 
-          error: 'Kein aktives PDF-Menü verfügbar',
-          pdf: null 
-        })
-      };
-    }
-
-    const latestMenu = menus.sort((a, b) => 
-      new Date(b.upload_date) - new Date(a.upload_date)
-    )[0];
+    const responsePayload = {
+      name:
+        selectedEntry?.name ||
+        selectedEntry?.title ||
+        'Speisekarte',
+      description: selectedEntry?.description || '',
+      pdf_url: resolvedUrl,
+      upload_date: uploadDate,
+      url: resolvedUrl,
+      timestamp: new Date().toISOString(),
+      endpoint: menuPdfUrl,
+    };
 
     return {
       statusCode: 200,
       headers: {
         'Content-Type': 'application/json',
-        'Access-Control-Allow-Origin': '*'
+        'Access-Control-Allow-Origin': '*',
       },
-      body: JSON.stringify({
-        name: latestMenu.name,
-        description: latestMenu.description,
-        pdf_url: latestMenu.pdf_file,
-        upload_date: latestMenu.upload_date
-      })
+      body: JSON.stringify(responsePayload),
     };
   } catch (error) {
     console.error('Error fetching PDF menu:', error);
     return {
       statusCode: 500,
-      body: JSON.stringify({ 
+      headers: {
+        'Content-Type': 'application/json',
+        'Access-Control-Allow-Origin': '*',
+      },
+      body: JSON.stringify({
         error: 'Fehler beim Laden des PDF-Menüs',
-        details: error.message 
-      })
+        details: error.message,
+      }),
     };
   }
 };
