@@ -204,16 +204,23 @@ function initReservationForm() {
             const plainData = Object.fromEntries(formData.entries());
 
             try {
-                const emailResponse = await fetch('/.netlify/functions/reservation-email', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json'
-                    },
-                    body: JSON.stringify(plainData)
-                });
+                let emailError = null;
 
-                if (!emailResponse.ok) {
-                    throw new Error('Email dispatch failed');
+                try {
+                    const emailResponse = await fetch('/.netlify/functions/reservation-email', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify(plainData)
+                    });
+
+                    if (!emailResponse.ok) {
+                        const emailErrorText = await emailResponse.text().catch(() => '');
+                        emailError = new Error(emailErrorText || 'Email dispatch failed');
+                    }
+                } catch (error) {
+                    emailError = error;
                 }
 
                 const netlifyResponse = await fetch('/', {
@@ -225,16 +232,29 @@ function initReservationForm() {
                 });
 
                 if (!netlifyResponse.ok) {
-                    throw new Error('Form submission failed');
+                    const netlifyErrorText = await netlifyResponse.text().catch(() => '');
+                    throw new Error(netlifyErrorText || `Form submission failed with status ${netlifyResponse.status}`);
                 }
 
                 form.reset();
                 fillAvailableDates();
 
                 if (statusBox) {
-                    statusBox.innerHTML = '<span class="status-icon">🎉</span><div><strong>vielen dank!</strong> ihre reservierungsanfrage wurde erfolgreich übermittelt. wir melden uns in kürze mit einer persönlichen bestätigung.</div>';
+                    let successMessage = '<span class="status-icon">🎉</span><div><strong>vielen dank!</strong> ihre reservierungsanfrage wurde erfolgreich übermittelt. wir melden uns in kürze mit einer persönlichen bestätigung.';
+
+                    if (emailError) {
+                        successMessage += '<div class="status-note">hinweis: die automatische e-mail-benachrichtigung konnte diesmal nicht versendet werden. ihre anfrage ist dennoch sicher bei uns eingelangt – wir melden uns zeitnah persönlich.</div>';
+                    }
+
+                    successMessage += '</div>';
+
+                    statusBox.innerHTML = successMessage;
                     statusBox.classList.remove('hidden');
                     statusBox.classList.add('success');
+                }
+
+                if (emailError) {
+                    console.warn('Reservation email dispatch issue:', emailError);
                 }
             } catch (error) {
                 console.error('Reservation submission failed:', error);
