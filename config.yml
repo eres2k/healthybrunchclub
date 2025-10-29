@@ -1,0 +1,221 @@
+backend:
+  name: git-gateway
+  branch: main
+
+media_folder: "/content/images"
+public_folder: "/content/images"
+
+# Premium CMS Configuration
+site_url: https://healthybrunchclub.at
+display_url: https://healthybrunchclub.at
+logo_url: https://healthybrunchclub.at/content/images/logo.png
+
+# Publish Mode
+publish_mode: editorial_workflow
+
+collections:
+  - name: "menu-categories"
+    label: "Menü Kategorien"
+    label_singular: "Menü Kategorie"
+    description: "Verwalten Sie die Speisekarte des Healthy Brunch Club"
+    folder: "content/menu-categories"
+    create: true
+    slug: "{{slug}}"
+    preview_path: "/#menu"
+    editor:
+      preview: true
+    fields:
+      - {label: "Kategorie Name", name: "title", widget: "string", hint: "z.B. 'Morning Essentials', 'Power Bowls'"}
+      - {label: "Reihenfolge", name: "order", widget: "number", default: 0, hint: "Niedrigere Zahlen erscheinen weiter oben"}
+      - {label: "Kategorie Bild", name: "image", widget: "image", required: false, hint: "Empfohlene Größe: 1200x400px"}
+      - {label: "Beschreibung", name: "description", widget: "text", required: false, hint: "Kurze Beschreibung der Kategorie"}
+      
+      - label: "Menü Items"
+        name: "items"
+        widget: "list"
+        summary: "{{fields.name}} - €{{fields.price}}"
+        fields:
+          - {label: "Name", name: "name", widget: "string", hint: "Name des Gerichts"}
+          - {label: "Preis (€)", name: "price", widget: "string", required: false, pattern: ["^[0-9]+\\.?[0-9]*$", "Bitte nur Zahlen eingeben (z.B. 12.90)"], hint: "Preis ohne Währungssymbol"}
+          - {label: "Bild", name: "image", widget: "image", required: false, hint: "Empfohlene Größe: 800x800px"}
+          
+          - label: "Beschreibung"
+            name: "description"
+            widget: "markdown"
+            minimal: true
+            buttons: ["bold", "italic", "link", "bulleted-list", "numbered-list"]
+            editor_components: []
+            modes: ["rich_text"]
+            hint: "Detaillierte Beschreibung des Gerichts"
+          
+          - label: "Nährwerte"
+            name: "nutrition"
+            widget: "object"
+            collapsed: true
+            fields:
+              - {label: "Kalorien", name: "calories", widget: "string", hint: "z.B. 320", required: false}
+              - {label: "Protein", name: "protein", widget: "string", hint: "z.B. 18g", required: false}
+              - {label: "Kohlenhydrate", name: "carbs", widget: "string", hint: "z.B. 22g", required: false}
+              - {label: "Fett", name: "fat", widget: "string", hint: "z.B. 16g", required: false}
+          
+          - label: "Tags"
+            name: "tags"
+            widget: "select"
+            multiple: true
+            required: false
+            options:
+              - {label: "Vegetarisch", value: "vegetarisch"}
+              - {label: "Glutenfrei", value: "glutenfrei"}
+              - {label: "Proteinreich", value: "proteinreich"}
+              - {label: "Sättigend", value: "sättigend"}
+              - {label: "Belebend", value: "belebend"}
+              - {label: "Immunstärkend", value: "immunstärkend"}
+          
+          - label: "Allergene"
+            name: "allergens"
+            widget: "select"
+            multiple: true
+            required: false
+            hint: "Wählen Sie alle zutreffenden Allergene"
+            options:
+              - {label: "A - Glutenhaltiges Getreide", value: "A"}
+              - {label: "B - Krebstiere", value: "B"}
+              - {label: "C - Eier", value: "C"}
+              - {label: "D - Fisch", value: "D"}
+              - {label: "E - Erdnüsse", value: "E"}
+              - {label: "F - Soja", value: "F"}
+              - {label: "G - Milch/Laktose", value: "G"}
+              - {label: "H - Schalenfrüchte", value: "H"}
+              - {label: "L - Sellerie", value: "L"}
+              - {label: "M - Senf", value: "M"}
+              - {label: "N - Sesam", value: "N"}
+              - {label: "O - Sulfite", value: "O"}
+              - {label: "P - Lupinen", value: "P"}
+              - {label: "R - Weichtiere", value: "R"}
+          
+          - {label: "Chef's Choice", name: "special", widget: "boolean", default: false, required: false, hint: "Als Empfehlung markieren"}
+
+  - name: "events"
+    label: "Veranstaltungen"
+    label_singular: "Veranstaltung"
+    description: "Verwalten Sie kommende Events und Live-Musik"
+    folder: "content/events"
+    create: true
+    slug: "{{year}}-{{month}}-{{day}}-{{slug}}"
+    preview_path: "/"
+    editor:
+      preview: false
+    fields:
+      - {label: "Aktiv", name: "active", widget: "boolean", default: true, hint: "Deaktivieren um Event zu verbergen"}
+      - {label: "Titel", name: "title", widget: "string", hint: "z.B. 'Jazz Brunch Special'"}
+      - {label: "Künstler/DJ", name: "artist", widget: "string", required: false}
+      - {label: "Musikstil", name: "musicStyle", widget: "string", required: false, hint: "z.B. 'Smooth Jazz, Lounge'"}
+      - {label: "Datum & Zeit", name: "date", widget: "datetime", format: "DD.MM.YYYY HH:mm"}
+      - {label: "Bild", name: "featuredImage", widget: "image", required: false}
+      - {label: "Startzeit", name: "startTime", widget: "string", default: "9:00 Uhr", required: false}
+      - {label: "Location", name: "location", widget: "string", default: "Healthy Brunch Club", required: false}
+      - {label: "Beschreibung", name: "description", widget: "text"}
+      - {label: "Audio Preview", name: "audioAnnouncement", widget: "file", required: false, hint: "MP3 oder WAV Format"}
+
+  - name: "pages"
+    label: "Seiten"
+    label_singular: "Seite"
+    description: "Statische Seiten bearbeiten"
+    files:
+      - label: "Impressum"
+        name: "impressum"
+        file: "content/pages/impressum.md"
+        fields:
+          - {label: "Titel", name: "title", widget: "string"}
+          - {label: "Inhalt", name: "body", widget: "markdown"}
+      
+      - label: "Datenschutz"
+        name: "datenschutz"
+        file: "content/pages/datenschutz.md"
+        fields:
+          - {label: "Titel", name: "title", widget: "string"}
+          - {label: "Inhalt", name: "body", widget: "markdown"}
+      
+      - label: "AGB"
+        name: "agb"
+        file: "content/pages/agb.md"
+        fields:
+          - {label: "Titel", name: "title", widget: "string"}
+          - {label: "Inhalt", name: "body", widget: "markdown"}
+
+  - name: "settings"
+    label: "Einstellungen"
+    description: "Allgemeine Website-Einstellungen"
+    files:
+      - label: "Restaurant Info"
+        name: "restaurant"
+        file: "content/settings/restaurant.yml"
+        fields:
+          - {label: "Restaurant Name", name: "name", widget: "string"}
+          - {label: "Tagline", name: "tagline", widget: "string"}
+          - {label: "Adresse", name: "address", widget: "text"}
+          - {label: "Telefon", name: "phone", widget: "string"}
+          - {label: "E-Mail", name: "email", widget: "string"}
+          - label: "Öffnungszeiten"
+            name: "hours"
+            widget: "object"
+            fields:
+              - {label: "Montag", name: "monday", widget: "string", default: "09:00 - 12:00"}
+              - {label: "Andere Tage", name: "other", widget: "string", default: "Geschlossen"}
+          - label: "Social Media"
+            name: "social"
+            widget: "object"
+            fields:
+              - {label: "Instagram", name: "instagram", widget: "string", required: false}
+              - {label: "Facebook", name: "facebook", widget: "string", required: false}
+              - {label: "Pinterest", name: "pinterest", widget: "string", required: false}
+
+  - name: "reservation_settings"
+    label: "Reservierungs-Einstellungen"
+    files:
+      - name: "general_settings"
+        label: "Allgemeine Einstellungen"
+        file: "content/reservierung/settings.json"
+        format: "json"
+        fields:
+          - label: "Reservierungseinstellungen"
+            name: "settings"
+            widget: "object"
+            fields:
+              - {label: "Max. Tage im Voraus", name: "max_days_advance", widget: "number", default: 30}
+              - {label: "Min. Stunden Vorlaufzeit", name: "min_hours_advance", widget: "number", default: 2}
+              - {label: "Standard Slot-Dauer (Minuten)", name: "slot_duration", widget: "number", default: 90}
+              - {label: "Standard Max. Gäste pro Slot", name: "default_max_guests", widget: "number", default: 20}
+
+  - name: "available_dates"
+    label: "Verfügbare Tage"
+    folder: "content/available-dates"
+    create: true
+    identifier_field: "date"
+    fields:
+      - {label: "Datum", name: "date", widget: "datetime", format: "YYYY-MM-DD", dateFormat: "DD.MM.YYYY", timeFormat: false}
+      - {label: "Titel", name: "title", widget: "string", hint: "z.B. Normaler Tag, Event"}
+      - label: "Zeitslots"
+        name: "slots"
+        widget: "list"
+        fields:
+          - label: "Zeit"
+            name: "time"
+            widget: "text"
+            hint: "Format: HH:MM (z.B. 09:00, 14:30)"
+            default: "09:00"
+            pattern: ["^([0-1]?[0-9]|2[0-3]):[0-5][0-9]$", "Bitte Format HH:MM verwenden"]
+          - {label: "Max. Gäste", name: "max_guests", widget: "number", default: 20}
+      - {label: "Notiz", name: "note", widget: "text", required: false, hint: "Wird Kunden angezeigt"}
+
+  - name: "blocked_reservations"
+    label: "Blockierte Reservierungen"
+    folder: "content/blocked-reservations"
+    create: true
+    identifier_field: "title"
+    fields:
+      - {label: "Titel", name: "title", widget: "string"}
+      - {label: "Datum", name: "date", widget: "datetime", format: "YYYY-MM-DD", dateFormat: "DD.MM.YYYY", timeFormat: false}
+      - {label: "Zeit", name: "time", widget: "string"}
+      - {label: "Anzahl blockierte Plätze", name: "blocked_seats", widget: "number"}
+      - {label: "Grund", name: "reason", widget: "text", required: false}
