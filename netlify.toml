@@ -6,6 +6,14 @@
 [build.environment]
   NODE_VERSION = "18"
 
+# Production Build mit PDF Auto-Rename
+[context.production]
+  command = "npm run build && bash scripts/rename-menu-pdf.sh || npm run build"
+
+# Deploy Preview ohne Rename (sicherer)
+[context.deploy-preview]
+  command = "npm run build"
+
 [functions]
   directory = "netlify/functions"
   # Include content files in the function bundle
