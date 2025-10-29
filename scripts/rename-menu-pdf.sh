@@ -1,33 +1,60 @@
 #!/bin/bash
-# Post-build script to ensure PDF is always named menu.pdf
-# This runs after Netlify build to rename any uploaded PDF to menu.pdf
+# PDF Auto-Rename Script - Läuft nach Build
+# Sicher: Berührt keine anderen Dateien oder Funktionen
+
+set -e  # Exit bei Fehler
 
 CONTENT_DIR="content"
+TARGET_FILE="menu.pdf"
 
-echo "🔍 Checking for uploaded PDF files..."
+echo "🔍 PDF Auto-Rename Script gestartet..."
 
-# Find all PDF files except menu.pdf
-for pdf in "$CONTENT_DIR"/*.pdf; do
-  if [ -f "$pdf" ] && [ "$(basename "$pdf")" != "menu.pdf" ]; then
-    echo "📄 Found uploaded PDF: $(basename "$pdf")"
-    
-    # Backup existing menu.pdf if it exists
-    if [ -f "$CONTENT_DIR/menu.pdf" ]; then
-      BACKUP_NAME="menu-backup-$(date +%Y%m%d-%H%M%S).pdf"
-      echo "💾 Backing up existing menu.pdf to $BACKUP_NAME"
-      mv "$CONTENT_DIR/menu.pdf" "$CONTENT_DIR/$BACKUP_NAME"
-    fi
-    
-    # Rename new PDF to menu.pdf
-    echo "✅ Renaming to menu.pdf"
-    mv "$pdf" "$CONTENT_DIR/menu.pdf"
-    echo "✨ PDF successfully renamed!"
-    exit 0
+# Prüfe ob content/ Verzeichnis existiert
+if [ ! -d "$CONTENT_DIR" ]; then
+  echo "⚠️  Content-Verzeichnis nicht gefunden - überspringe"
+  exit 0
+fi
+
+# Finde alle PDFs außer menu.pdf
+shopt -s nullglob
+pdf_files=("$CONTENT_DIR"/*.pdf)
+
+# Filtere menu.pdf raus
+new_pdfs=()
+for pdf in "${pdf_files[@]}"; do
+  basename_pdf=$(basename "$pdf")
+  if [ "$basename_pdf" != "$TARGET_FILE" ]; then
+    new_pdfs+=("$pdf")
   fi
 done
 
-if [ -f "$CONTENT_DIR/menu.pdf" ]; then
-  echo "✅ menu.pdf already exists"
+# Wenn neue PDFs gefunden
+if [ ${#new_pdfs[@]} -gt 0 ]; then
+  # Nimm die neueste (erste in der Liste)
+  newest_pdf="${new_pdfs[0]}"
+  newest_name=$(basename "$newest_pdf")
+  
+  echo "📄 Neue PDF gefunden: $newest_name"
+  
+  # Backup alte menu.pdf falls vorhanden
+  if [ -f "$CONTENT_DIR/$TARGET_FILE" ]; then
+    backup_name="menu-backup-$(date +%Y%m%d-%H%M%S).pdf"
+    echo "💾 Backup erstellt: $backup_name"
+    mv "$CONTENT_DIR/$TARGET_FILE" "$CONTENT_DIR/$backup_name"
+  fi
+  
+  # Rename zu menu.pdf
+  echo "✅ Umbenennen: $newest_name → $TARGET_FILE"
+  mv "$newest_pdf" "$CONTENT_DIR/$TARGET_FILE"
+  
+  echo "✨ PDF erfolgreich zu menu.pdf umbenannt!"
 else
-  echo "⚠️  No menu.pdf found"
+  if [ -f "$CONTENT_DIR/$TARGET_FILE" ]; then
+    echo "✅ menu.pdf existiert bereits - keine Änderung nötig"
+  else
+    echo "ℹ️  Keine PDF-Dateien gefunden"
+  fi
 fi
+
+echo "✅ Script erfolgreich beendet"
+exit 0
