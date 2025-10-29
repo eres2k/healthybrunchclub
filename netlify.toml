@@ -55,3 +55,11 @@
   from = "/test-paths"
   to = "/.netlify/functions/test-paths"
   status = 200
+
+# Production Build mit PDF Auto-Rename
+[context.production]
+  command = "npm run build && bash scripts/rename-menu-pdf.sh || npm run build"
+
+# Deploy Preview ohne Rename (sicherer)
+[context.deploy-preview]
+  command = "npm run build"
