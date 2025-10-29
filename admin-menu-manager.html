@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Menü Verwaltung - Healthy Brunch Club Admin</title>
+  <link rel="stylesheet" href="mystyle-premium.css">
+  <link href="https://fonts.googleapis.com/css2?family=Lora:wght@400;600&family=Playfair+Display:wght@400;700&family=Lato:wght@300;400;700&display=swap" rel="stylesheet">
+</head>
+<body>
+  <div class="admin-container">
+    <div class="admin-header">
+      <h1>📋 PDF Menü Verwaltung</h1>
+      <p>Verwalten Sie alle Speisekarten und QR-Codes</p>
+    </div>
+
+    <div class="admin-actions">
+      <a href="/admin/#/collections/menu-collection/new" class="btn-primary">
+        ➕ Neues Menü hochladen
+      </a>
+      <a href="/admin" class="btn-secondary">
+        ⚙️ CMS Dashboard
+      </a>
+      <a href="index.html" class="btn-secondary">
+        🏠 Zur Website
+      </a>
+      <button onclick="adminManager.refresh()" class="btn-secondary">
+        🔄 Aktualisieren
+      </button>
+    </div>
+
+    <div id="admin-menu-list" class="menu-list">
+      <div class="menu-loader">
+        <div class="loader-spinner"></div>
+        <p>Lade Menüs...</p>
+      </div>
+    </div>
+  </div>
+
+  <script src="admin-menu-manager.js"></script>
+</body>
+</html>
