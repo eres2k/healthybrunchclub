@@ -1,2 +1,8 @@
 node_modules/
 .netlify/
+
+# PDF Backups (optional - falls du Backups nicht im Repo haben willst)
+content/menu-backup-*.pdf
+
+# Keep menu.pdf in repo
+!content/menu.pdf
