@@ -56,58 +56,33 @@ collections:
               - {label: "Kalorien", name: "calories", widget: "string", hint: "z.B. 320", required: false}
               - {label: "Protein", name: "protein", widget: "string", hint: "z.B. 18g", required: false}
               - {label: "Kohlenhydrate", name: "carbs", widget: "string", hint: "z.B. 22g", required: false}
-              - {label: "Fett", name: "fat", widget: "string", hint: "z.B. 16g", required: false}
-          
-          - label: "Tags"
-            name: "tags"
-            widget: "select"
-            multiple: true
-            required: false
-            options:
-              - {label: "Vegetarisch", value: "vegetarisch"}
-              - {label: "Glutenfrei", value: "glutenfrei"}
-              - {label: "Proteinreich", value: "proteinreich"}
-              - {label: "Sättigend", value: "sättigend"}
-              - {label: "Belebend", value: "belebend"}
-              - {label: "Immunstärkend", value: "immunstärkend"}
-          
-          - label: "Allergene"
-            name: "allergens"
-            widget: "select"
-            multiple: true
-            required: false
-            hint: "Wählen Sie alle zutreffenden Allergene"
-            options:
-              - {label: "A - Glutenhaltiges Getreide", value: "A"}
-              - {label: "B - Krebstiere", value: "B"}
-              - {label: "C - Eier", value: "C"}
-              - {label: "D - Fisch", value: "D"}
-              - {label: "E - Erdnüsse", value: "E"}
-              - {label: "F - Soja", value: "F"}
-              - {label: "G - Milch/Laktose", value: "G"}
-              - {label: "H - Schalenfrüchte", value: "H"}
-              - {label: "L - Sellerie", value: "L"}
-              - {label: "M - Senf", value: "M"}
-              - {label: "N - Sesam", value: "N"}
-              - {label: "O - Sulfite", value: "O"}
-              - {label: "P - Lupinen", value: "P"}
-              - {label: "R - Weichtiere", value: "R"}
-          
-          - {label: "Chef's Choice", name: "special", widget: "boolean", default: false, required: false, hint: "Als Empfehlung markieren"}
+              - {label: "Fett", name: "fat", widget: "string", hint: "z.B. 15g", required: false}
+
+          - label: "Allergene & Diäten"
+            name: "dietary"
+            widget: "object"
+            collapsed: true
+            fields:
+              - {label: "Vegetarisch", name: "vegetarian", widget: "boolean", required: false}
+              - {label: "Vegan", name: "vegan", widget: "boolean", required: false}
+              - {label: "Glutenfrei", name: "glutenFree", widget: "boolean", required: false}
+              - {label: "Laktosefrei", name: "lactoseFree", widget: "boolean", required: false}
+              - {label: "Allergene", name: "allergens", widget: "list", required: false, hint: "z.B. Nüsse, Soja, Eier"}
+
+          - {label: "Empfohlen", name: "recommended", widget: "boolean", default: false, required: false}
+          - {label: "Neu", name: "isNew", widget: "boolean", default: false, required: false}
+          - {label: "Saisonal", name: "seasonal", widget: "boolean", default: false, required: false}
 
   - name: "events"
     label: "Veranstaltungen"
     label_singular: "Veranstaltung"
-    description: "Verwalten Sie kommende Events und Live-Musik"
+    description: "Event- und Live-Musik-Verwaltung"
     folder: "content/events"
     create: true
     slug: "{{year}}-{{month}}-{{day}}-{{slug}}"
-    preview_path: "/"
-    editor:
-      preview: false
+    preview_path: "/#events"
     fields:
-      - {label: "Aktiv", name: "active", widget: "boolean", default: true, hint: "Deaktivieren um Event zu verbergen"}
-      - {label: "Titel", name: "title", widget: "string", hint: "z.B. 'Jazz Brunch Special'"}
+      - {label: "Event Titel", name: "title", widget: "string", hint: "z.B. 'Jazz Brunch Special'"}
       - {label: "Künstler/DJ", name: "artist", widget: "string", required: false}
       - {label: "Musikstil", name: "musicStyle", widget: "string", required: false, hint: "z.B. 'Smooth Jazz, Lounge'"}
       - {label: "Datum & Zeit", name: "date", widget: "datetime", format: "DD.MM.YYYY HH:mm"}
@@ -219,3 +194,24 @@ collections:
       - {label: "Zeit", name: "time", widget: "string"}
       - {label: "Anzahl blockierte Plätze", name: "blocked_seats", widget: "number"}
       - {label: "Grund", name: "reason", widget: "text", required: false}
+
+  - name: "menu_pdf"
+    label: "📄 Speisekarten PDF"
+    description: "PDF-Version der Speisekarte für QR-Code verwalten"
+    files:
+      - label: "Menü PDF"
+        name: "menu_pdf_file"
+        file: "content/menu-pdf-config.json"
+        fields:
+          - {label: "Titel", name: "title", widget: "string", default: "Speisekarte PDF", hint: "Interner Titel"}
+          - {label: "Beschreibung", name: "description", widget: "text", required: false, hint: "Kurze Beschreibung der aktuellen Speisekarte"}
+          - label: "PDF Datei"
+            name: "pdf_file"
+            widget: "file"
+            hint: "⚠️ WICHTIG: Datei wird als 'menu.pdf' gespeichert (QR-Code Link bleibt gültig). Max. Größe: 10MB"
+            media_folder: "/content"
+            public_folder: "/content"
+            allow_multiple: false
+          - {label: "Version", name: "version", widget: "string", required: false, hint: "z.B. Winter 2025, v3.2"}
+          - {label: "Letzte Aktualisierung", name: "last_updated", widget: "datetime", default: "", required: false, hint: "Wird automatisch gesetzt"}
+          - {label: "Aktiv", name: "active", widget: "boolean", default: true, hint: "PDF auf der Website anzeigen?"}
