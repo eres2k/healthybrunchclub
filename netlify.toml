@@ -9,7 +9,7 @@
 [functions]
   directory = "netlify/functions"
   # Include content files in the function bundle
-  included_files = ["content/**/*.md", "content/**/*.yml", "content/**/*.json"]
+  included_files = ["content/**/*.md", "content/**/*.yml", "content/**/*.json", "content/**/*.pdf"]
   node_bundler = "esbuild"
 
 [[headers]]
@@ -34,21 +34,24 @@
   to = "/agb.html"
   status = 200
 
-# PDF redirects
+# PDF redirects - WICHTIG: Alle zeigen auf menu.pdf
 [[redirects]]
   from = "/menu-pdf"
-  to = "/.netlify/functions/generate-menu-pdf"
+  to = "/content/menu.pdf"
   status = 200
+  force = true
 
 [[redirects]]
-  from = "/speisekarte.pdf"
-  to = "/.netlify/functions/generate-menu-pdf"
+  from = "/speisekarte"
+  to = "/content/menu.pdf"
   status = 200
+  force = true
 
 [[redirects]]
-  from = "/content/menu.pdf"
-  to = "/.netlify/functions/generate-menu-pdf"
+  from = "/qr-menu"
+  to = "/content/menu.pdf"
   status = 200
+  force = true
 
 # Test path endpoint
 [[redirects]]

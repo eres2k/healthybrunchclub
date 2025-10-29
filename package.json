@@ -4,7 +4,8 @@
   "description": "Bio-Brunch Restaurant Website with Advanced Reservation System",
   "scripts": {
     "dev": "netlify dev",
-    "build": "echo 'No build required for static site'",
+    "build": "bash scripts/rename-menu-pdf.sh",
+    "postbuild": "bash scripts/rename-menu-pdf.sh",
     "serve": "netlify dev"
   },
   "dependencies": {
