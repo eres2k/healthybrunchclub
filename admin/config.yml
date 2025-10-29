@@ -196,22 +196,20 @@ collections:
       - {label: "Grund", name: "reason", widget: "text", required: false}
 
   - name: "menu_pdf"
-    label: "📄 Speisekarten PDF"
-    description: "PDF-Version der Speisekarte für QR-Code verwalten"
+    label: "📄 Speisekarte PDF"
+    description: "PDF-Speisekarte für QR-Code verwalten"
     files:
       - label: "Menü PDF"
-        name: "menu_pdf_file"
-        file: "content/menu-pdf-config.json"
+        name: "menu_pdf_upload"
+        file: "content/menu-metadata.json"
         fields:
-          - {label: "Titel", name: "title", widget: "string", default: "Speisekarte PDF", hint: "Interner Titel"}
-          - {label: "Beschreibung", name: "description", widget: "text", required: false, hint: "Kurze Beschreibung der aktuellen Speisekarte"}
+          - {label: "Titel", name: "title", widget: "string", default: "Speisekarte", hint: "Interner Name"}
+          - {label: "Version", name: "version", widget: "string", required: false, hint: "z.B. Winter 2025, v2.0"}
           - label: "PDF Datei"
             name: "pdf_file"
             widget: "file"
-            hint: "⚠️ WICHTIG: Datei wird als 'menu.pdf' gespeichert (QR-Code Link bleibt gültig). Max. Größe: 10MB"
             media_folder: "/content"
             public_folder: "/content"
-            allow_multiple: false
-          - {label: "Version", name: "version", widget: "string", required: false, hint: "z.B. Winter 2025, v3.2"}
-          - {label: "Letzte Aktualisierung", name: "last_updated", widget: "datetime", default: "", required: false, hint: "Wird automatisch gesetzt"}
-          - {label: "Aktiv", name: "active", widget: "boolean", default: true, hint: "PDF auf der Website anzeigen?"}
+            hint: "Upload PDF (beliebiger Name) - wird automatisch zu 'menu.pdf' umbenannt beim Deploy"
+          - {label: "Aktualisiert am", name: "updated", widget: "datetime", default: ""}
+          - {label: "Aktiv", name: "active", widget: "boolean", default: true}
