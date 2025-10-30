@@ -16,6 +16,50 @@ const DEFAULT_TIMEOUT_MS = 5000;
 const DEFAULT_RETRY_MS = 150;
 
 const storeCache = new Map();
+const fallbackStoreCache = new Map();
+
+function isMissingBlobsError(error) {
+  if (!error) return false;
+  if (error.name === 'MissingBlobsEnvironmentError') {
+    return true;
+  }
+  const message = typeof error.message === 'string' ? error.message : '';
+  return message.includes('MissingBlobsEnvironmentError');
+}
+
+function createFallbackStore(name) {
+  const cacheKey = STORE_NAMES[name];
+  if (!fallbackStoreCache.has(cacheKey)) {
+    const store = new Map();
+    fallbackStoreCache.set(cacheKey, {
+      async get(key, options = {}) {
+        if (!store.has(key)) {
+          return null;
+        }
+        const value = store.get(key);
+        if (options.type === 'json') {
+          if (typeof value === 'string') {
+            try {
+              return JSON.parse(value);
+            } catch (parseError) {
+              console.warn(`Fallback Blob-Store: JSON konnte nicht geparst werden für Schlüssel "${key}".`);
+              return null;
+            }
+          }
+          return value;
+        }
+        return value;
+      },
+      async set(key, value) {
+        store.set(key, value);
+      },
+      async delete(key) {
+        store.delete(key);
+      }
+    });
+  }
+  return fallbackStoreCache.get(cacheKey);
+}
 
 function getBlobStore(name) {
   if (!STORE_NAMES[name]) {
@@ -23,7 +67,17 @@ function getBlobStore(name) {
   }
 
   if (!storeCache.has(name)) {
-    storeCache.set(name, getStore({ name: STORE_NAMES[name] }));
+    try {
+      storeCache.set(name, getStore({ name: STORE_NAMES[name] }));
+    } catch (error) {
+      if (!isMissingBlobsError(error)) {
+        throw error;
+      }
+      console.warn(
+        `Netlify Blobs ist für die aktuelle Umgebung nicht konfiguriert. Verwende In-Memory-Fallback für Store "${name}".`
+      );
+      storeCache.set(name, createFallbackStore(name));
+    }
   }
 
   return storeCache.get(name);
