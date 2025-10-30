@@ -6,6 +6,44 @@ set -euo pipefail
 
 CONTENT_DIR="content"
 MENU_FILE="$CONTENT_DIR/menu.pdf"
+CONFIG_FILE="$CONTENT_DIR/menu-pdf-config.json"
+
+update_config() {
+  if [ ! -f "$CONFIG_FILE" ]; then
+    echo "ℹ️  menu-pdf-config.json nicht gefunden – überspringe Konfig-Update"
+    return
+  fi
+
+  node <<'NODE'
+const fs = require('fs');
+const path = require('path');
+
+const configPath = path.join(process.cwd(), 'content', 'menu-pdf-config.json');
+
+try {
+  const raw = fs.readFileSync(configPath, 'utf8');
+  const data = JSON.parse(raw);
+  const now = new Date().toISOString();
+
+  let changed = false;
+  if (data.pdf_file !== '/content/menu.pdf') {
+    data.pdf_file = '/content/menu.pdf';
+    changed = true;
+  }
+
+  data.last_updated = now;
+
+  fs.writeFileSync(configPath, JSON.stringify(data, null, 2) + '\n', 'utf8');
+
+  console.log(changed
+    ? '📝 menu-pdf-config.json aktualisiert (pfad & timestamp)'
+    : '📝 menu-pdf-config.json timestamp aktualisiert');
+} catch (error) {
+  console.error('❌ Konnte menu-pdf-config.json nicht aktualisieren:', error.message);
+  process.exitCode = 1;
+}
+NODE
+}
 
 echo "🔍 Healthy Brunch Club - PDF Menu Check..."
 
@@ -53,6 +91,7 @@ while IFS= read -r pdf; do
     echo "✅ Renaming '$FILENAME' → 'menu.pdf'"
     mv "$pdf" "$MENU_FILE"
     chmod 644 "$MENU_FILE"
+    update_config
     echo "✨ PDF successfully updated!"
 
     break
@@ -62,6 +101,7 @@ done <<< "$pdf_candidates"
 if [ "$FOUND_NEW_PDF" = false ]; then
   if [ -f "$CONTENT_DIR/menu.pdf" ]; then
     echo "✅ menu.pdf already exists and is current"
+    update_config
   else
     echo "⚠️  WARNING: No menu.pdf found! Please upload a PDF via CMS."
     exit 1
