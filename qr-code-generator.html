@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>QR-Code Generator – Healthy Brunch Club</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600&family=Lora:wght@400;500&family=Lato:wght@300;400;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="mystyle.css">
+</head>
+<body>
+    <main class="qr-generator-page">
+        <div class="qr-generator-container" aria-live="polite">
+            <a class="qr-back-link" href="/" aria-label="Zurück zur Startseite">&larr; Zurück zur Website</a>
+            <h1>QR-Code für PDF Speisekarte</h1>
+            <p class="qr-intro">Generieren Sie einen aktuellen QR-Code für die hochgeladene PDF-Speisekarte. Der QR-Code kann direkt als PNG oder SVG heruntergeladen werden.</p>
+
+            <p id="status-message" class="status-message" role="status"></p>
+
+            <div class="qr-preview" aria-hidden="false">
+                <div id="qrcode" class="qr-output" aria-label="QR-Code Vorschau"></div>
+                <div id="qrcode-svg" class="qr-output qr-output--hidden" aria-hidden="true"></div>
+            </div>
+
+            <div class="qr-controls">
+                <label for="size-selector">
+                    Größe:
+                    <select id="size-selector" name="size-selector">
+                        <option value="128">128 × 128 px</option>
+                        <option value="256" selected>256 × 256 px</option>
+                        <option value="512">512 × 512 px</option>
+                    </select>
+                </label>
+
+                <div class="qr-actions">
+                    <button type="button" id="download-btn" class="qr-btn">QR-Code als PNG herunterladen</button>
+                    <button type="button" id="download-svg-btn" class="qr-btn qr-btn--secondary">QR-Code als SVG herunterladen</button>
+                    <button type="button" id="regenerate-btn" class="qr-btn qr-btn--ghost">Neu generieren</button>
+                </div>
+            </div>
+
+            <div class="menu-url-display">
+                <p><strong>Verlinkung:</strong> <a id="menu-url" href="#" target="_blank" rel="noopener">wird geladen…</a></p>
+                <p id="menu-meta" class="menu-meta"></p>
+            </div>
+        </div>
+    </main>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js" integrity="sha512-J7yIApZcS7CkSb9VjA36TObgGJE0E7E5Wdl66T4kLlwM651c01qmPvvrLpzjAU6RzG32IOzBSSo+d4v6Qf3Ykg==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <script src="qr-code-script.js" defer></script>
+</body>
+</html>
