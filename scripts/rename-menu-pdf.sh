@@ -86,20 +86,8 @@ while IFS= read -r pdf; do
     FOUND_NEW_PDF=true
 
     if [ -f "$MENU_FILE" ]; then
-      BACKUP_NAME="menu-backup-$(date +%Y%m%d-%H%M%S).pdf"
-      echo "💾 Backing up current menu.pdf → $BACKUP_NAME"
-      mv "$MENU_FILE" "$CONTENT_DIR/$BACKUP_NAME"
-
-      BACKUP_LIST=$(ls -1t "$CONTENT_DIR"/menu-backup-*.pdf 2>/dev/null || true)
-      if [ -n "$BACKUP_LIST" ]; then
-        OLD_BACKUPS=$(printf '%s\n' "$BACKUP_LIST" | tail -n +4)
-        if [ -n "$OLD_BACKUPS" ]; then
-          while IFS= read -r old_backup; do
-            [ -n "$old_backup" ] && rm -f "$old_backup"
-          done <<< "$OLD_BACKUPS"
-          echo "🗑️  Cleaned up old backups (kept last 3)"
-        fi
-      fi
+      echo "�️  Deleting existing menu.pdf"
+      rm -f "$MENU_FILE"
     fi
 
     echo "✅ Renaming '$FILENAME' → 'menu.pdf'"

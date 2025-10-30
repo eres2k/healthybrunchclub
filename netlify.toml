@@ -37,25 +37,19 @@
 # PDF redirects - WICHTIG: Alle zeigen auf menu.pdf
 [[redirects]]
   from = "/menu-pdf"
-  to = "/.netlify/functions/serve-menu-pdf"
+  to = "/content/menu.pdf"
   status = 200
   force = true
 
 [[redirects]]
   from = "/speisekarte"
-  to = "/.netlify/functions/serve-menu-pdf"
+  to = "/content/menu.pdf"
   status = 200
   force = true
 
 [[redirects]]
   from = "/qr-menu"
-  to = "/.netlify/functions/serve-menu-pdf"
-  status = 200
-  force = true
-
-[[redirects]]
-  from = "/content/menu.pdf"
-  to = "/.netlify/functions/serve-menu-pdf"
+  to = "/content/menu.pdf"
   status = 200
   force = true
 
@@ -64,11 +58,3 @@
   from = "/test-paths"
   to = "/.netlify/functions/test-paths"
   status = 200
-
-# Cache control for PDFs to prevent stale content
-[[headers]]
-  for = "/content/*.pdf"
-  [headers.values]
-    Cache-Control = "no-cache, no-store, must-revalidate"
-    Pragma = "no-cache"
-    Expires = "0"

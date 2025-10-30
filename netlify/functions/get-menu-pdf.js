@@ -138,56 +138,9 @@ function buildNotFoundResponse(message) {
   };
 }
 
-async function ensureMenuPdfExists() {
-  const contentDir = path.join(process.cwd(), 'content');
-  const menuPdfPath = path.join(contentDir, 'menu.pdf');
-
-  try {
-    // Find all PDF files in content directory
-    const files = await fsPromises.readdir(contentDir);
-    const pdfFiles = files.filter(file => file.endsWith('.pdf'));
-
-    if (pdfFiles.length === 0) {
-      console.log('No PDF files found');
-      return;
-    }
-
-    // Get stats for all PDFs
-    const pdfStats = await Promise.all(
-      pdfFiles.map(async file => {
-        const filePath = path.join(contentDir, file);
-        const stat = await fsPromises.stat(filePath);
-        return { file, path: filePath, mtime: stat.mtime };
-      })
-    );
-
-    // Sort by modification time, newest first
-    const sortedPdfs = pdfStats.sort((a, b) => b.mtime - a.mtime);
-    const latestPdf = sortedPdfs[0];
-
-    // If the latest PDF is not menu.pdf, rename it
-    if (latestPdf.file !== 'menu.pdf') {
-      // Backup current menu.pdf if it exists
-      if (fs.existsSync(menuPdfPath)) {
-        await backupExistingMenuPdf(menuPdfPath, contentDir);
-      }
-
-      console.log(`Renaming ${latestPdf.file} to menu.pdf`);
-      await fsPromises.rename(latestPdf.path, menuPdfPath);
-      await fsPromises.chmod(menuPdfPath, 0o644);
-
-      // Rotate backups
-      await rotateBackups(contentDir);
-    }
-
-  } catch (error) {
-    console.error('Error ensuring menu.pdf exists:', error);
-  }
-}
 
 exports.handler = async () => {
   try {
-    await ensureMenuPdfExists();
     const config = await ensureMenuPdfFromConfig();
 
     if (config && config.active !== false) {
