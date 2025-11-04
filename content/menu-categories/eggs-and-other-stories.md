@@ -12,7 +12,7 @@ items:
       - proteinreich
     description: eins oder zwei eier nach wahl (spiegelei, pochiert, gekocht oder
       eierspeise), kunstvoll serviert auf scheiben von süßkartoffel und avocado.
-      dazu sautierte champignons und shiitake-pilze, garniert mit rucula,
+      dazu sautierte champignons und shiitake-pilze, garniert mit rucola,
       sprossen und kresse.
     allergens:
       - c
@@ -32,7 +32,7 @@ items:
       - sättigend
     description: >-
       ein fluffiges omelette aus zwei oder drei eiern gefüllt mit zwiebeln,
-      shiitake-pilzen und frischem spinat. gekrönt mit rucula, sprossen und
+      shiitake-pilzen und frischem spinat. gekrönt mit rucola, sprossen und
       kresse.
 
       **your style:** tomaten / speckwürfeln / käse / avocado
@@ -53,7 +53,7 @@ items:
       - sättigend
     description: >-
       ein oder zwei pochierte eier auf knusprigem sauerteigbrot vom joseph, mit
-      cremiger avocadosauce und sautierten pilzen, verfeinert mit rucula,
+      cremiger avocadosauce und sautierten pilzen, verfeinert mit rucola,
       sprossen, kresse und knusprigen pinienkernen.
 
       **your style:** speck / lachs
