@@ -58,10 +58,4 @@ items:
     description: frischer shot aus sellerie und zitrone.
     allergens: []
     price: "2.40"
-  - name: vitamin-c shot
-    tags:
-      - immunstärkend
-    description: Konzentrierter Vitamin-C-Boost.
-    allergens: []
-    price: "2.40"
 ---
