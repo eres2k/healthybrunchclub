@@ -195,26 +195,54 @@ collections:
       - {label: "Anzahl blockierte Plätze", name: "blocked_seats", widget: "number"}
       - {label: "Grund", name: "reason", widget: "text", required: false}
 
-  - name: "menu_pdf"
-    label: "📄 Speisekarten PDF"
-    description: "PDF-Version der Speisekarte für QR-Code verwalten"
+  - name: "speisekarten_pdf"
+    label: "Speisekarten PDF"
+    description: "PDF-Menüs für Download verwalten"
+    folder: "content/pdf-menus"
+    create: false
+    delete: false
     files:
-      - label: "Menü PDF"
-        name: "menu_pdf_file"
-        file: "content/menu-pdf-config.json"
+      - label: "Menü PDFs"
+        name: "menu_pdfs"
+        file: "content/pdf-menus/menu-pdfs.yml"
         fields:
-          - {label: "Titel", name: "title", widget: "string", default: "Speisekarte PDF", hint: "Interner Titel"}
-          - {label: "Beschreibung", name: "description", widget: "text", required: false, hint: "Kurze Beschreibung"}
-          - label: "PDF Datei"
-            name: "pdf_file"
-            widget: "file"
-            hint: "⚠️ WICHTIG: Datei wird automatisch als 'menu.pdf' gespeichert. Max. Größe: 10MB"
-            media_folder: "/content"
-            public_folder: "/content"
-            allow_multiple: false
-            media_library:
-              config:
-                max_file_size: 10485760
-          - {label: "Version", name: "version", widget: "string", required: false, hint: "z.B. Winter 2025, v3.2"}
-          - {label: "Letzte Aktualisierung", name: "last_updated", widget: "datetime", default: "", required: false, hint: "Wird automatisch gesetzt"}
-          - {label: "Aktiv", name: "active", widget: "boolean", default: true, hint: "PDF auf der Website anzeigen?"}
+          - label: "Hauptmenü"
+            name: "main_menu"
+            widget: "object"
+            fields:
+              - label: "PDF Datei"
+                name: "pdf"
+                widget: "file"
+                hint: "Speichert unter /content/menu.pdf"
+                media_folder: "/content"
+                public_folder: "/content"
+                allow_multiple: false
+              - {label: "Button Text", name: "button_text", widget: "string", default: "Speisekarte Download"}
+              - {label: "Download Dateiname", name: "download_filename", widget: "string", default: "Healthy-Brunch-Club-Speisekarte.pdf"}
+              - {label: "QR Code URL", name: "qr_code_url", widget: "string", required: false}
+              - {label: "Letzte Aktualisierung", name: "last_updated", widget: "datetime", required: false}
+
+          - label: "Kids Menü"
+            name: "kids_menu"
+            widget: "object"
+            fields:
+              - label: "PDF Datei"
+                name: "pdf"
+                widget: "file"
+                hint: "Speichert unter /content/kidsmenu.pdf"
+                required: false
+                media_folder: "/content"
+                public_folder: "/content"
+                allow_multiple: false
+              - {label: "Button Text", name: "button_text", widget: "string", default: "Kids Menü Download"}
+              - {label: "Download Dateiname", name: "download_filename", widget: "string", default: "Healthy-Brunch-Club-Kids-Menu.pdf"}
+              - {label: "Aktiv anzeigen", name: "active", widget: "boolean", default: true, hint: "Kids Menü Button auf Website anzeigen?"}
+              - {label: "QR Code URL", name: "qr_code_url", widget: "string", required: false}
+              - {label: "Letzte Aktualisierung", name: "last_updated", widget: "datetime", required: false}
+
+          - label: "Einstellungen"
+            name: "settings"
+            widget: "object"
+            collapsed: true
+            fields:
+              - {label: "Info Text", name: "info_text", widget: "text", default: "💡 Tipp: Scanne den QR-Code an deinem Tisch für die digitale Version!"}
