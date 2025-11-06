@@ -1366,6 +1366,12 @@ h1, h2, h3, h4, h5, h6 {
     line-height: 1;
     margin-top: 0.15rem;
 }
+.reservation-form .form-status .status-note {
+    display: block;
+    margin-top: 0.75rem;
+    font-size: 0.95rem;
+    opacity: 0.8;
+}
 .reservation-form .form-status.success {
     background: linear-gradient(135deg, rgba(247, 229, 211, 0.9), rgba(255, 255, 255, 0.92));
     border-color: rgba(236, 191, 164, 0.65);
@@ -2921,6 +2927,9 @@ body.dark-mode .reservation-form .form-status.success {
 body.dark-mode .reservation-form .form-status.error {
     background: rgba(68, 30, 30, 0.92);
     border-color: rgba(255, 152, 152, 0.45);
+}
+body.dark-mode .reservation-form .form-status .status-note {
+    opacity: 0.9;
 }
 body.dark-mode .reservation-form .form-status a {
     color: var(--gold);
