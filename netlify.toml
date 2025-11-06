@@ -12,11 +12,20 @@
   included_files = ["content/**/*.md", "content/**/*.yml", "content/**/*.json", "content/**/*.pdf"]
   node_bundler = "esbuild"
 
+[[plugins]]
+  package = "@netlify/plugin-functions-install-core"
+
 [[headers]]
   for = "/netlify/functions/*"
   [headers.values]
     Access-Control-Allow-Origin = "*"
     Access-Control-Allow-Methods = "GET, POST, OPTIONS"
+
+[[headers]]
+  for = "/content/*.pdf"
+  [headers.values]
+    Content-Type = "application/pdf"
+    Cache-Control = "public, max-age=3600"
 
 # Legal pages redirects
 [[redirects]]
@@ -52,6 +61,16 @@
   to = "/content/menu.pdf"
   status = 200
   force = true
+
+[[redirects]]
+  from = "/admin/generate-menu"
+  to = "/.netlify/functions/generate-menu-pdf?menuType=regular"
+  status = 200
+
+[[redirects]]
+  from = "/admin/generate-kids-menu"
+  to = "/.netlify/functions/generate-menu-pdf?menuType=kids"
+  status = 200
 
 # Test path endpoint
 [[redirects]]

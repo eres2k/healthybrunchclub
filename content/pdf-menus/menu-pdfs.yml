@@ -1,0 +1,20 @@
+regular:
+  active: true
+  title: "Speisekarte Download"
+  button_text: "Speisekarte Download"
+  description: "Unsere aktuelle Speisekarte als PDF zum Mitnehmen."
+  file: "/content/menu.pdf"
+  download_filename: "Healthy-Brunch-Club-Speisekarte.pdf"
+  qr_url: "https://healthybrunchclub.at/menu"
+  version: "1.0"
+  last_updated: "2025-01-01T00:00:00.000Z"
+kids:
+  active: true
+  title: "Kids Menü Download"
+  button_text: "Kids Menü Download"
+  description: "Perfekt für unsere kleinen Gäste – das Kids Menü als PDF."
+  file: "/content/kidsmenu.pdf"
+  download_filename: "Healthy-Brunch-Club-Kids-Menu.pdf"
+  qr_url: "https://healthybrunchclub.at/kids-menu"
+  version: "1.0"
+  last_updated: "2025-01-01T00:00:00.000Z"
