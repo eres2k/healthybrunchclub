@@ -197,27 +197,58 @@ collections:
 
   - name: "menu_pdf"
     label: "📄 Speisekarten PDF"
-    description: "PDF-Version der Speisekarte für QR-Code verwalten"
+    description: "PDF-Downloads für reguläre und Kids-Speisekarte verwalten"
     files:
-      - label: "Menü PDF"
+      - label: "Speisekarten Downloads"
         name: "menu_pdf_file"
-        file: "content/menu-pdf-config.json"
+        file: "content/pdf-menus/menu-pdfs.yml"
         fields:
-          - {label: "Titel", name: "title", widget: "string", default: "Speisekarte PDF", hint: "Interner Titel"}
-          - {label: "Beschreibung", name: "description", widget: "text", required: false, hint: "Kurze Beschreibung"}
-          - label: "PDF Datei"
-            name: "pdf_file"
-            widget: "file"
-            hint: "⚠️ WICHTIG: Datei wird automatisch als 'menu.pdf' gespeichert. Max. Größe: 10MB"
-            media_folder: "/content"
-            public_folder: "/content"
-            allow_multiple: false
-            media_library:
-              config:
-                max_file_size: 10485760
-          - {label: "Version", name: "version", widget: "string", required: false, hint: "z.B. Winter 2025, v3.2"}
-          - {label: "Letzte Aktualisierung", name: "last_updated", widget: "datetime", default: "", required: false, hint: "Wird automatisch gesetzt"}
-          - {label: "Aktiv", name: "active", widget: "boolean", default: true, hint: "PDF auf der Website anzeigen?"}
+          - label: "Hauptmenü PDF"
+            name: "regular"
+            widget: "object"
+            collapsed: false
+            fields:
+              - {label: "Aktiv", name: "active", widget: "boolean", default: true, hint: "Button auf der Website anzeigen"}
+              - {label: "Titel", name: "title", widget: "string", default: "Speisekarte Download", hint: "Überschrift im CMS"}
+              - {label: "Button Text", name: "button_text", widget: "string", default: "Speisekarte Download"}
+              - {label: "Beschreibung", name: "description", widget: "text", required: false, hint: "Optionaler Hinweis unter dem Button"}
+              - label: "PDF Datei"
+                name: "file"
+                widget: "file"
+                hint: "⚠️ Wird als 'menu.pdf' gespeichert. Max. Größe: 10MB"
+                media_folder: "/content"
+                public_folder: "/content"
+                allow_multiple: false
+                media_library:
+                  config:
+                    max_file_size: 10485760
+              - {label: "Download-Dateiname", name: "download_filename", widget: "string", required: false, hint: "z.B. Healthy-Brunch-Club-Speisekarte.pdf"}
+              - {label: "QR Code URL", name: "qr_url", widget: "string", required: false, hint: "Link für den QR Code"}
+              - {label: "Version", name: "version", widget: "string", required: false}
+              - {label: "Letzte Aktualisierung", name: "last_updated", widget: "datetime", required: false, hint: "Wird automatisch gesetzt"}
+          - label: "Kids Menü PDF"
+            name: "kids"
+            widget: "object"
+            collapsed: true
+            fields:
+              - {label: "Aktiv", name: "active", widget: "boolean", default: true, hint: "Button auf der Website anzeigen"}
+              - {label: "Titel", name: "title", widget: "string", default: "Kids Menü Download", hint: "Überschrift im CMS"}
+              - {label: "Button Text", name: "button_text", widget: "string", default: "Kids Menü Download"}
+              - {label: "Beschreibung", name: "description", widget: "text", required: false}
+              - label: "PDF Datei"
+                name: "file"
+                widget: "file"
+                hint: "⚠️ Wird als 'kidsmenu.pdf' gespeichert. Max. Größe: 10MB"
+                media_folder: "/content"
+                public_folder: "/content"
+                allow_multiple: false
+                media_library:
+                  config:
+                    max_file_size: 10485760
+              - {label: "Download-Dateiname", name: "download_filename", widget: "string", required: false, default: "Healthy-Brunch-Club-Kids-Menu.pdf"}
+              - {label: "QR Code URL", name: "qr_url", widget: "string", required: false}
+              - {label: "Version", name: "version", widget: "string", required: false}
+              - {label: "Letzte Aktualisierung", name: "last_updated", widget: "datetime", required: false, hint: "Wird automatisch gesetzt"}
 
   - name: "regular_menu"
     label: "Haupt-Menü"

@@ -235,7 +235,7 @@
                         <polyline points="7 10 12 15 17 10"></polyline>
                         <line x1="12" y1="15" x2="12" y2="3"></line>
                     </svg>
-                    PDF Download Menü
+                    <span class="button-label">Speisekarte Download</span>
                 </a>
 
                 <a href="/content/kidsmenu.pdf"
@@ -248,7 +248,7 @@
                         <line x1="12" y1="15" x2="12" y2="3"></line>
                     </svg>
                     <span class="kids-emoji">👶</span>
-                    Kids Menü PDF
+                    <span class="button-label">Kids Menü Download</span>
                 </a>
 
                 <button class="btn btn-outline regenerate-btn"
@@ -501,24 +501,54 @@
             }
         }
 
-        checkPDFExistence();
+        const downloadButtons = [
+            { id: 'download-regular-menu', type: 'regular' },
+            { id: 'download-kids-menu', type: 'kids' }
+        ];
 
-        async function checkPDFExistence() {
-            const checks = [
-                { id: 'download-regular-menu', path: '/content/menu.pdf' },
-                { id: 'download-kids-menu', path: '/content/kidsmenu.pdf' }
-            ];
+        downloadButtons.forEach(({ id, type }) => {
+            configureMenuButton(type, id);
+        });
 
-            await Promise.all(checks.map(async ({ id, path }) => {
-                try {
-                    const response = await fetch(path, { method: 'HEAD' });
-                    if (!response.ok) {
-                        document.getElementById(id)?.classList.add('pdf-not-ready');
+        async function configureMenuButton(menuType, buttonId) {
+            const button = document.getElementById(buttonId);
+            if (!button) {
+                return;
+            }
+
+            try {
+                const response = await fetch(`/.netlify/functions/get-menu-pdf?menuType=${menuType}`);
+
+                if (!response.ok) {
+                    if (response.status === 404) {
+                        button.classList.add('pdf-not-ready');
                     }
-                } catch (error) {
-                    document.getElementById(id)?.classList.add('pdf-not-ready');
+                    return;
                 }
-            }));
+
+                const data = await response.json();
+
+                if (data.active === false || !data.pdf_url) {
+                    button.style.display = 'none';
+                    return;
+                }
+
+                button.href = data.pdf_url;
+
+                if (data.download_filename) {
+                    button.setAttribute('download', data.download_filename);
+                }
+
+                const label = button.querySelector('.button-label');
+                if (label && data.button_text) {
+                    label.textContent = data.button_text;
+                }
+
+                button.classList.remove('pdf-not-ready');
+            } catch (error) {
+                console.error(`Error loading ${menuType} menu PDF:`, error);
+                button.classList.add('pdf-not-ready');
+            }
         }
     });
     </script>
