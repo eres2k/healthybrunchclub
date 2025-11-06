@@ -16,6 +16,7 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,300;0,400;0,500;0,700;1,400&family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,400&family=Montserrat:wght@300;400;500;600&family=Lato:wght@300;400&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Lora:wght@400;500;600&display=swap" rel="stylesheet">
     
     <!-- Icons -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
@@ -218,6 +219,218 @@
             </div>
         </div>
     </section>
+
+    <!-- MENÜ PDF DOWNLOAD SECTION -->
+    <section id="menu-pdf-download" class="menu-pdf-section">
+      <div class="container">
+        <h2 class="section-title">Unsere Speisekarten</h2>
+        <p class="section-subtitle">Auch als QR-Code an jedem Tisch verfügbar</p>
+        
+        <div class="pdf-buttons-wrapper">
+          
+          <!-- Hauptspeisekarte Card -->
+          <div class="pdf-button-card" id="main-menu-card">
+            <div class="pdf-icon">
+              <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+                <polyline points="14 2 14 8 20 8"></polyline>
+                <line x1="12" y1="18" x2="12" y2="12"></line>
+                <line x1="9" y1="15" x2="15" y2="15"></line>
+              </svg>
+            </div>
+            <h3 class="pdf-title">Speisekarte</h3>
+            <p class="pdf-description">Vollständige Speisekarte mit allen Gerichten</p>
+            <a href="/content/menu.pdf" 
+               class="btn btn-pdf-download btn-primary" 
+               download="Healthy-Brunch-Club-Speisekarte.pdf"
+               id="download-main-menu">
+              <svg class="btn-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+                <polyline points="7 10 12 15 17 10"></polyline>
+                <line x1="12" y1="15" x2="12" y2="3"></line>
+              </svg>
+              <span class="btn-text">Speisekarte Download</span>
+            </a>
+            <div class="pdf-meta">
+              <span class="pdf-updated" id="main-menu-updated"></span>
+            </div>
+          </div>
+          
+          <!-- Kids Menü Card -->
+          <div class="pdf-button-card kids-card" id="kids-menu-card" style="display: none;">
+            <div class="pdf-icon kids-icon">
+              <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+                <polyline points="14 2 14 8 20 8"></polyline>
+              </svg>
+              <span class="kids-emoji">👶</span>
+            </div>
+            <h3 class="pdf-title">Kids Menü</h3>
+            <p class="pdf-description">Speziell für unsere kleinen Gäste</p>
+            <a href="/content/kidsmenu.pdf" 
+               class="btn btn-pdf-download btn-kids" 
+               download="Healthy-Brunch-Club-Kids-Menu.pdf"
+               id="download-kids-menu">
+              <svg class="btn-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+                <polyline points="7 10 12 15 17 10"></polyline>
+                <line x1="12" y1="15" x2="12" y2="3"></line>
+              </svg>
+              <span class="btn-text">Kids Menü Download</span>
+            </a>
+            <div class="pdf-meta">
+              <span class="pdf-updated" id="kids-menu-updated"></span>
+            </div>
+          </div>
+          
+        </div>
+        
+        <!-- QR Info -->
+        <div class="qr-info-box" id="qr-info-box" style="display: none;">
+          <svg class="info-icon" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+            <circle cx="12" cy="12" r="10"></circle>
+            <line x1="12" y1="16" x2="12" y2="12"></line>
+            <line x1="12" y1="8" x2="12.01" y2="8"></line>
+          </svg>
+          <p id="qr-info-text"></p>
+        </div>
+        
+      </div>
+    </section>
+
+    <!-- JavaScript -->
+    <script>
+(function() {
+  'use strict';
+  
+  document.addEventListener('DOMContentLoaded', initPDFDownloads);
+  
+  async function initPDFDownloads() {
+    try {
+      const response = await fetch('/content/pdf-menus/menu-pdfs.yml');
+      if (!response.ok) {
+        showDefaultButtons();
+        return;
+      }
+      
+      const yamlText = await response.text();
+      const config = parseYAML(yamlText);
+      
+      updateMainMenu(config.main_menu);
+      updateKidsMenu(config.kids_menu);
+      updateSettings(config.settings);
+      checkPDFAvailability();
+      
+    } catch (error) {
+      console.error('PDF Config Error:', error);
+      showDefaultButtons();
+    }
+  }
+  
+  function updateMainMenu(config) {
+    if (!config) return;
+    
+    const card = document.getElementById('main-menu-card');
+    const button = document.getElementById('download-main-menu');
+    const updated = document.getElementById('main-menu-updated');
+    
+    if (card) card.style.display = 'block';
+    if (button) {
+      button.querySelector('.btn-text').textContent = config.button_text || 'Speisekarte Download';
+      button.setAttribute('download', config.download_filename || 'menu.pdf');
+      button.setAttribute('href', config.pdf || '/content/menu.pdf');
+    }
+    if (updated && config.last_updated) {
+      updated.textContent = 'Aktualisiert: ' + new Date(config.last_updated).toLocaleDateString('de-DE');
+    }
+  }
+  
+  function updateKidsMenu(config) {
+    if (!config || config.active === false) return;
+    
+    const card = document.getElementById('kids-menu-card');
+    const button = document.getElementById('download-kids-menu');
+    const updated = document.getElementById('kids-menu-updated');
+    
+    if (card) card.style.display = 'block';
+    if (button) {
+      button.querySelector('.btn-text').textContent = config.button_text || 'Kids Menü Download';
+      button.setAttribute('download', config.download_filename || 'kidsmenu.pdf');
+      button.setAttribute('href', config.pdf || '/content/kidsmenu.pdf');
+    }
+    if (updated && config.last_updated) {
+      updated.textContent = 'Aktualisiert: ' + new Date(config.last_updated).toLocaleDateString('de-DE');
+    }
+  }
+  
+  function updateSettings(config) {
+    if (!config) return;
+    
+    const infoBox = document.getElementById('qr-info-box');
+    const infoText = document.getElementById('qr-info-text');
+    
+    if (infoText && config.info_text) {
+      infoText.textContent = config.info_text;
+      if (infoBox) infoBox.style.display = 'flex';
+    }
+  }
+  
+  function showDefaultButtons() {
+    const mainCard = document.getElementById('main-menu-card');
+    if (mainCard) mainCard.style.display = 'block';
+  }
+  
+  async function checkPDFAvailability() {
+    const pdfs = [
+      { id: 'download-main-menu', path: '/content/menu.pdf' },
+      { id: 'download-kids-menu', path: '/content/kidsmenu.pdf' }
+    ];
+    
+    for (const pdf of pdfs) {
+      const button = document.getElementById(pdf.id);
+      if (!button) continue;
+      
+      try {
+        const response = await fetch(pdf.path, { method: 'HEAD' });
+        if (!response.ok) {
+          button.style.opacity = '0.6';
+          button.style.pointerEvents = 'none';
+        }
+      } catch (error) {
+        button.style.opacity = '0.6';
+        button.style.pointerEvents = 'none';
+      }
+    }
+  }
+  
+  function parseYAML(yaml) {
+    const result = {};
+    let currentSection = null;
+    
+    yaml.split('\n').forEach(line => {
+      line = line.trim();
+      if (!line || line.startsWith('#')) return;
+      
+      if (line.endsWith(':') && !line.includes('  ')) {
+        currentSection = line.slice(0, -1);
+        result[currentSection] = {};
+        return;
+      }
+      
+      const match = line.match(/^(\w+):\s*(.+)$/);
+      if (match && currentSection) {
+        const [, key, value] = match;
+        result[currentSection][key] = value.replace(/^["']|["']$/g, '').trim();
+        if (value === 'true') result[currentSection][key] = true;
+        if (value === 'false') result[currentSection][key] = false;
+      }
+    });
+    
+    return result;
+  }
+  
+})();
+</script>
 
     <!-- About Section -->
     <section class="about-premium" id="about">
