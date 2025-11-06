@@ -80,6 +80,8 @@ while IFS= read -r pdf; do
   case "$FILENAME" in
     menu.pdf) continue ;;
     menu-backup-*.pdf) continue ;;
+    kidsmenu.pdf) continue ;;
+    kidsmenu-backup-*.pdf) continue ;;
   esac
 
   if [ -n "$FILENAME" ]; then
