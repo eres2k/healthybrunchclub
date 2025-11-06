@@ -61,7 +61,7 @@ async function ensureMenuPdfFromConfig() {
     const config = rawConfig.trim() ? JSON.parse(rawConfig) : {};
 
     const menuPdfPath = path.join(contentDir, 'menu.pdf');
-    const configuredPath = config.pdf_file;
+    const configuredPath = config.menu_pdf || config.pdf_file;
     const hasCustomSource = configuredPath && configuredPath !== MENU_PUBLIC_PATH;
 
     let sourcePath = menuPdfPath;
@@ -95,6 +95,11 @@ async function ensureMenuPdfFromConfig() {
     }
 
     let configChanged = false;
+
+    if (config.menu_pdf !== MENU_PUBLIC_PATH) {
+      config.menu_pdf = MENU_PUBLIC_PATH;
+      configChanged = true;
+    }
 
     if (config.pdf_file !== MENU_PUBLIC_PATH) {
       config.pdf_file = MENU_PUBLIC_PATH;

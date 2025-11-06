@@ -36,6 +36,11 @@ try {
   const data = raw.trim() ? JSON.parse(raw) : {};
   let changed = false;
 
+  if (data.menu_pdf !== menuPublicPath) {
+    data.menu_pdf = menuPublicPath;
+    changed = true;
+  }
+
   if (data.pdf_file !== menuPublicPath) {
     data.pdf_file = menuPublicPath;
     changed = true;
