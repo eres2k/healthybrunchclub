@@ -4249,3 +4249,178 @@ body.dark-mode video:hover {
     grid-template-columns: repeat(3, 1fr);
   }
 }
+/* ========================================
+   PDF DOWNLOAD SECTION
+======================================== */
+.menu-download-section {
+    padding: 80px 20px;
+    background: linear-gradient(135deg, var(--warm-white) 0%, var(--cream) 100%);
+    text-align: center;
+}
+
+.menu-download-section h2 {
+    font-family: var(--font-display);
+    font-size: 2.5rem;
+    color: var(--forest-green);
+    margin-bottom: 10px;
+}
+
+.menu-download-section .subtitle {
+    font-size: 1.1rem;
+    color: var(--sage-green);
+    margin-bottom: 40px;
+}
+
+.pdf-buttons {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px;
+    justify-content: center;
+    align-items: center;
+    max-width: 900px;
+    margin: 0 auto 30px;
+}
+
+.pdf-download-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    padding: 16px 32px;
+    font-size: 1.1rem;
+    font-weight: 600;
+    text-decoration: none;
+    border-radius: 50px;
+    transition: all var(--transition-normal);
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+    position: relative;
+    border: none;
+}
+
+.pdf-download-btn .icon {
+    transition: transform var(--transition-normal);
+}
+
+.pdf-download-btn:hover .icon {
+    transform: translateY(3px);
+}
+
+.pdf-download-btn.btn-primary {
+    background: var(--forest-green);
+    color: var(--pure-white);
+}
+
+.pdf-download-btn.btn-primary:hover {
+    background: var(--sage-green);
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(30, 74, 60, 0.3);
+}
+
+.pdf-download-btn.kids-menu-btn {
+    background: var(--peach);
+    color: var(--forest-green);
+}
+
+.pdf-download-btn.kids-menu-btn:hover {
+    background: var(--coral);
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(255, 181, 167, 0.4);
+}
+
+.kids-emoji {
+    font-size: 1.3em;
+    animation: bounce 2s infinite;
+}
+
+@keyframes bounce {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-5px); }
+}
+
+.regenerate-btn {
+    padding: 12px 24px;
+    font-size: 0.9rem;
+    border: 2px solid var(--sage-green);
+    background: transparent;
+    color: var(--forest-green);
+    cursor: pointer;
+    border-radius: 30px;
+    transition: all var(--transition-normal);
+}
+
+.regenerate-btn:hover {
+    background: var(--sage-green);
+    color: var(--pure-white);
+}
+
+.regenerate-btn:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+}
+
+.pdf-not-ready {
+    opacity: 0.5;
+    pointer-events: none;
+    position: relative;
+}
+
+.pdf-not-ready::after {
+    content: 'Wird generiert...';
+    position: absolute;
+    top: -30px;
+    left: 50%;
+    transform: translateX(-50%);
+    background: var(--coral);
+    color: var(--pure-white);
+    padding: 5px 10px;
+    border-radius: 5px;
+    font-size: 0.8rem;
+    white-space: nowrap;
+}
+
+.qr-code-info {
+    margin-top: 30px;
+    padding: 20px;
+    background: rgba(139, 148, 116, 0.1);
+    border-radius: 15px;
+    max-width: 600px;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.qr-code-info p {
+    margin: 0;
+    font-size: 1rem;
+    color: var(--forest-green);
+}
+
+@media (max-width: 768px) {
+    .pdf-buttons {
+        flex-direction: column;
+        width: 100%;
+    }
+
+    .pdf-download-btn {
+        width: 100%;
+        max-width: 300px;
+    }
+
+    .menu-download-section h2 {
+        font-size: 2rem;
+    }
+
+    .regenerate-btn {
+        font-size: 0.85rem;
+        padding: 10px 20px;
+    }
+}
+
+@media (max-width: 480px) {
+    .menu-download-section {
+        padding: 60px 15px;
+    }
+
+    .pdf-download-btn {
+        font-size: 1rem;
+        padding: 14px 24px;
+    }
+}
