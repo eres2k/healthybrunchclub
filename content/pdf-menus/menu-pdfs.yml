@@ -1,0 +1,17 @@
+main_menu:
+  pdf: /content/menu.pdf
+  button_text: Speisekarte Download
+  download_filename: Healthy-Brunch-Club-Speisekarte.pdf
+  qr_code_url: https://healthybrunchclub.at
+  last_updated: 2025-01-15T10:00:00.000Z
+
+kids_menu:
+  pdf: /content/kidsmenu.pdf
+  button_text: Kids Menü Download
+  download_filename: Healthy-Brunch-Club-Kids-Menu.pdf
+  active: true
+  qr_code_url: https://healthybrunchclub.at/kids
+  last_updated: 2025-01-15T10:00:00.000Z
+
+settings:
+  info_text: "💡 Tipp: Scanne den QR-Code an deinem Tisch für die digitale Version!"
