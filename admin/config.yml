@@ -218,3 +218,59 @@ collections:
           - {label: "Version", name: "version", widget: "string", required: false, hint: "z.B. Winter 2025, v3.2"}
           - {label: "Letzte Aktualisierung", name: "last_updated", widget: "datetime", default: "", required: false, hint: "Wird automatisch gesetzt"}
           - {label: "Aktiv", name: "active", widget: "boolean", default: true, hint: "PDF auf der Website anzeigen?"}
+  - name: "kids_menu"
+    label: "Kids Menü"
+    folder: "content/kids-menu"
+    create: true
+    slug: "{{year}}-{{month}}-{{day}}-{{slug}}"
+    fields:
+      - {label: "Titel", name: "title", widget: "string", default: "Kids Menü"}
+      - {label: "Untertitel", name: "subtitle", widget: "string", required: false}
+      - {label: "Aktiv", name: "active", widget: "boolean", default: true}
+      - {label: "Publish Date", name: "date", widget: "datetime"}
+      - label: "Header Bild"
+        name: "headerImage"
+        widget: "image"
+        required: false
+      - label: "Kategorien"
+        name: "categories"
+        widget: "list"
+        fields:
+          - {label: "Kategorie Name", name: "name", widget: "string"}
+          - {label: "Icon Emoji", name: "icon", widget: "string", default: "🍽️", hint: "z.B. 🍕 🍝 🥤"}
+          - label: "Gerichte"
+            name: "items"
+            widget: "list"
+            fields:
+              - {label: "Name", name: "name", widget: "string"}
+              - {label: "Beschreibung", name: "description", widget: "text", required: false}
+              - {label: "Preis", name: "price", widget: "string"}
+              - {label: "Allergene", name: "allergens", widget: "string", required: false, hint: "z.B. Gluten, Laktose"}
+              - {label: "Vegetarisch", name: "vegetarian", widget: "boolean", default: false}
+              - {label: "Bild", name: "image", widget: "image", required: false}
+      - {label: "Footer Text", name: "footer", widget: "text", required: false, default: "Alle Preise in Euro. Änderungen vorbehalten."}
+      - {label: "QR Code URL", name: "qrCodeUrl", widget: "string", required: false, hint: "URL für QR Code auf PDF"}
+  - name: "regular_menu"
+    label: "Haupt-Menü"
+    folder: "content/regular-menu"
+    create: true
+    slug: "{{year}}-{{month}}-{{day}}-{{slug}}"
+    fields:
+      - {label: "Titel", name: "title", widget: "string", default: "Speisekarte"}
+      - {label: "Aktiv", name: "active", widget: "boolean", default: true}
+      - {label: "Publish Date", name: "date", widget: "datetime"}
+      - label: "Kategorien"
+        name: "categories"
+        widget: "list"
+        fields:
+          - {label: "Kategorie Name", name: "name", widget: "string"}
+          - label: "Gerichte"
+            name: "items"
+            widget: "list"
+            fields:
+              - {label: "Name", name: "name", widget: "string"}
+              - {label: "Beschreibung", name: "description", widget: "text"}
+              - {label: "Preis", name: "price", widget: "string"}
+              - {label: "Allergene", name: "allergens", widget: "string", required: false}
+      - {label: "Footer Text", name: "footer", widget: "text", required: false}
+      - {label: "QR Code URL", name: "qrCodeUrl", widget: "string", required: false}
