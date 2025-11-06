@@ -219,6 +219,57 @@
         </div>
     </section>
 
+    <!-- Menü Download Section -->
+    <section id="menu-download" class="menu-download-section">
+      <div class="container">
+        <h2>Unsere Speisekarten zum Download</h2>
+        <p class="subtitle">Auch als QR-Code an jedem Tisch verfügbar</p>
+
+        <div class="pdf-buttons">
+          <a
+            href="/content/menu.pdf"
+            class="btn btn-primary pdf-download-btn"
+            download="Healthy-Brunch-Club-Speisekarte.pdf"
+            id="download-regular-menu"
+          >
+            <svg class="icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+              <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+              <polyline points="7 10 12 15 17 10"></polyline>
+              <line x1="12" y1="15" x2="12" y2="3"></line>
+            </svg>
+            PDF Download Menü
+          </a>
+
+          <a
+            href="/content/kidsmenu.pdf"
+            class="btn btn-secondary pdf-download-btn kids-menu-btn"
+            download="Healthy-Brunch-Club-Kids-Menu.pdf"
+            id="download-kids-menu"
+          >
+            <svg class="icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+              <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+              <polyline points="7 10 12 15 17 10"></polyline>
+              <line x1="12" y1="15" x2="12" y2="3"></line>
+            </svg>
+            <span class="kids-emoji">👶</span>
+            Kids Menü PDF
+          </a>
+
+          <button class="btn btn-outline regenerate-btn" id="regenerate-regular" style="display:none;">
+            🔄 Hauptmenü neu generieren
+          </button>
+
+          <button class="btn btn-outline regenerate-btn" id="regenerate-kids" style="display:none;">
+            🔄 Kids Menü neu generieren
+          </button>
+        </div>
+
+        <div class="qr-code-info">
+          <p>💡 <strong>Tipp:</strong> Scanne den QR-Code an deinem Tisch für die digitale Version!</p>
+        </div>
+      </div>
+    </section>
+
     <!-- About Section -->
     <section class="about-premium" id="about">
         <div class="about-container">
@@ -397,6 +448,83 @@
 
     <!-- Scripts -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script>
+    document.addEventListener('DOMContentLoaded', function () {
+      if (typeof netlifyIdentity !== 'undefined') {
+        netlifyIdentity.on('login', () => {
+          document.querySelectorAll('.regenerate-btn').forEach((btn) => {
+            btn.style.display = 'inline-block';
+          });
+        });
+      }
+
+      document.getElementById('regenerate-regular')?.addEventListener('click', async function () {
+        await regenerateMenu('regular', this);
+      });
+
+      document.getElementById('regenerate-kids')?.addEventListener('click', async function () {
+        await regenerateMenu('kids', this);
+      });
+
+      checkPDFExistence();
+    });
+
+    async function regenerateMenu(menuType, button) {
+      const originalText = button.innerHTML;
+      button.innerHTML = '⏳ Generiere...';
+      button.disabled = true;
+
+      try {
+        const response = await fetch(`/.netlify/functions/generate-menu-pdf?menuType=${menuType}`);
+
+        if (response.ok) {
+          const blob = await response.blob();
+          const url = window.URL.createObjectURL(blob);
+          const a = document.createElement('a');
+          a.href = url;
+          a.download = `${menuType}-menu.pdf`;
+          document.body.appendChild(a);
+          a.click();
+          window.URL.revokeObjectURL(url);
+          a.remove();
+
+          button.innerHTML = '✅ Erfolgreich!';
+          setTimeout(() => {
+            button.innerHTML = originalText;
+            button.disabled = false;
+            window.location.reload();
+          }, 2000);
+        } else {
+          throw new Error('PDF generation failed');
+        }
+      } catch (error) {
+        console.error('Error:', error);
+        button.innerHTML = '❌ Fehler';
+        setTimeout(() => {
+          button.innerHTML = originalText;
+          button.disabled = false;
+        }, 2000);
+      }
+    }
+
+    async function checkPDFExistence() {
+      const buttons = [
+        { id: 'download-regular-menu', path: '/content/menu.pdf' },
+        { id: 'download-kids-menu', path: '/content/kidsmenu.pdf' }
+      ];
+
+      for (const btn of buttons) {
+        try {
+          const response = await fetch(btn.path, { method: 'HEAD' });
+          if (!response.ok) {
+            document.getElementById(btn.id)?.classList.add('pdf-not-ready');
+          }
+        } catch (error) {
+          document.getElementById(btn.id)?.classList.add('pdf-not-ready');
+        }
+      }
+    }
+    </script>
     <script src="cms-loader-premium.js"></script>
     <script src="app-premium.js"></script>
     <script>

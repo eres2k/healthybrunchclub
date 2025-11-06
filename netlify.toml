@@ -3,6 +3,9 @@
   functions = "netlify/functions"
   publish = "."
 
+[[plugins]]
+  package = "@netlify/plugin-functions-install-core"
+
 [build.environment]
   NODE_VERSION = "18"
 
@@ -17,6 +20,12 @@
   [headers.values]
     Access-Control-Allow-Origin = "*"
     Access-Control-Allow-Methods = "GET, POST, OPTIONS"
+
+[[headers]]
+  for = "/content/*.pdf"
+  [headers.values]
+    Content-Type = "application/pdf"
+    Cache-Control = "public, max-age=3600"
 
 # Legal pages redirects
 [[redirects]]
@@ -52,6 +61,16 @@
   to = "/content/menu.pdf"
   status = 200
   force = true
+
+[[redirects]]
+  from = "/admin/generate-menu"
+  to = "/.netlify/functions/generate-menu-pdf?menuType=regular"
+  status = 200
+
+[[redirects]]
+  from = "/admin/generate-kids-menu"
+  to = "/.netlify/functions/generate-menu-pdf?menuType=kids"
+  status = 200
 
 # Test path endpoint
 [[redirects]]
