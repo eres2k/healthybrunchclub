@@ -22,11 +22,11 @@ items:
       protein: 14g
       carbs: 42g
       fat: 12g
-    price: "12.50"
+    price: "11.50"
     image: /content/images/whatsapp-image-2025-09-17-at-14.16.00.jpeg
   - special: false
     name: chia lovers
-    price: "9.50"
+    price: "6.90"
     description: zarte chiasamen, sanft in kokosdrink gequollen, treffen auf frische
       und samtige mangocreme, getoppt mit fruchtigen heidelbeeren - natürlich,
       leicht und voller energie.
