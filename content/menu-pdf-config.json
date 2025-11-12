@@ -1,7 +1,7 @@
 {
   "title": "Speisekarte PDF",
   "description": "Aktuelle Speisekarte des Healthy Brunch Club",
-  "menu_pdf": "/content/menu.pdf",
+  "menu_pdf": "/content/speisekarte-hbc.pdf",
   "kids_menu_pdf": "/content/für-die-kleinen.pdf",
   "pdf_file": "/content/menu.pdf",
   "version": "1.0",
