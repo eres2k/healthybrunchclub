@@ -10,10 +10,10 @@ items:
       - vegetarisch
       - glutenfrei
       - proteinreich
-    description: eins oder zwei eier nach wahl (spiegelei, pochiert, gekocht oder
-      eierspeise), kunstvoll serviert auf scheiben von süßkartoffel und avocado.
-      dazu sautierte champignons und shiitake-pilze, garniert mit rucola,
-      sprossen und kresse.
+    description: zwei eier nach wahl (spiegelei, pochiert, gekocht oder eierspeise),
+      kunstvoll serviert auf scheiben von süßkartoffel und avocado. dazu
+      sautierte champignons und shiitake-pilze, garniert mit rucola, sprossen
+      und kresse.
     allergens:
       - c
       - g
@@ -23,7 +23,7 @@ items:
       protein: 38g
       carbs: 16g
       fat: 26g
-    price: "14.90"
+    price: "16.90"
     image: /content/images/dsc00153_ergebnis.jpg
   - name: omelette creation
     tags:
