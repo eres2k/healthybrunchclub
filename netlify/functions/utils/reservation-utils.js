@@ -14,15 +14,46 @@ function generateConfirmationCode() {
   return `HBC-${Math.random().toString(36).slice(2, 6).toUpperCase()}-${Date.now().toString(36).toUpperCase()}`;
 }
 
-function normalizeTime(timeString) {
-  const [hour, minute] = timeString.split(':').map((value) => value.padStart(2, '0'));
-  return `${hour}:${minute}`;
+function normalizeTime(input) {
+  if (input === null || input === undefined) {
+    return null;
+  }
+
+  if (typeof input === 'number' && Number.isFinite(input)) {
+    const hours = Math.floor(input / 60);
+    const minutes = input % 60;
+    return `${String(hours).padStart(2, '0')}:${String(minutes).padStart(2, '0')}`;
+  }
+
+  const value = String(input).trim();
+
+  if (!value) {
+    return null;
+  }
+
+  if (/^\d+$/.test(value)) {
+    const minutesTotal = Number(value);
+    if (!Number.isNaN(minutesTotal)) {
+      const hours = Math.floor(minutesTotal / 60);
+      const minutes = minutesTotal % 60;
+      return `${String(hours).padStart(2, '0')}:${String(minutes).padStart(2, '0')}`;
+    }
+  }
+
+  if (/^\d{1,2}:\d{1,2}$/.test(value)) {
+    const [hour, minute] = value.split(':');
+    return `${hour.padStart(2, '0')}:${minute.padStart(2, '0')}`;
+  }
+
+  return null;
 }
 
 function createTimeSlots(openingHours = DEFAULT_OPENING) {
   const slots = [];
-  const start = DateTime.fromFormat(openingHours.start, 'HH:mm', { zone: TIMEZONE });
-  const end = DateTime.fromFormat(openingHours.end, 'HH:mm', { zone: TIMEZONE });
+  const normalizedStart = normalizeTime(openingHours.start) || DEFAULT_OPENING.start;
+  const normalizedEnd = normalizeTime(openingHours.end) || DEFAULT_OPENING.end;
+  const start = DateTime.fromFormat(normalizedStart, 'HH:mm', { zone: TIMEZONE });
+  const end = DateTime.fromFormat(normalizedEnd, 'HH:mm', { zone: TIMEZONE });
 
   let cursor = start;
   while (cursor < end) {
@@ -64,18 +95,19 @@ async function saveReservations(date, reservations) {
 }
 
 function calculateSlotAvailability({ reservations, blockedSlots, time, guests, maxCapacity }) {
-  const blocked = blockedSlots.find((entry) => entry.time === time);
+  const normalizedTime = normalizeTime(time) || time;
+  const blocked = blockedSlots.find((entry) => normalizeTime(entry.time) === normalizedTime);
   const capacity = blocked?.capacity ?? maxCapacity;
 
   const confirmedGuests = reservations
-    .filter((reservation) => reservation.time === time && reservation.status === 'confirmed')
+    .filter((reservation) => reservation.time === normalizedTime && reservation.status === 'confirmed')
     .reduce((sum, reservation) => sum + Number(reservation.guests || 0), 0);
 
   const remaining = Math.max(capacity - confirmedGuests, 0);
   const fits = guests ? remaining >= guests : remaining > 0;
 
   return {
-    time,
+    time: normalizedTime,
     capacity,
     reserved: confirmedGuests,
     remaining,
