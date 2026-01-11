@@ -213,19 +213,8 @@ function initReservationForm() {
                 });
 
                 if (!emailResponse.ok) {
-                    throw new Error('Email dispatch failed');
-                }
-
-                const netlifyResponse = await fetch('/', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/x-www-form-urlencoded'
-                    },
-                    body: encodeFormData(formData)
-                });
-
-                if (!netlifyResponse.ok) {
-                    throw new Error('Form submission failed');
+                    const errorData = await emailResponse.json();
+                    throw new Error(errorData.message || 'Email dispatch failed');
                 }
 
                 form.reset();
