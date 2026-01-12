@@ -3,6 +3,6 @@
     "max_days_advance": 14,
     "min_hours_advance": 2,
     "slot_duration": 120,
-    "default_max_guests": 5
+    "default_max_guests": 4
   }
 }
