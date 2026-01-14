@@ -1,9 +1,8 @@
 {
   "title": "Speisekarte PDF",
-  "description": "Aktuelle Speisekarte des Healthy Brunch Club",
+  "description": "Aktuelle Speisekarte des Healthy Brunch Clubs x LASA",
   "menu_pdf": "/content/healthy-brunch-club-speisekarte.pdf",
   "kids_menu_pdf": "/content/für-die-kleinen.pdf",
-  "english_menu_pdf": "",
   "pdf_file": "/content/menu.pdf",
   "version": "1.0",
   "last_updated": "2025-11-06T19:44:56.177Z",
