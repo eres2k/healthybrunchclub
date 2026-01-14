@@ -274,7 +274,7 @@ h1, h2, h3, h4, h5, h6 {
 }
 .hero-title .main-logo {
     display: block;
-    width: clamp(110px, 18vw, 220px);
+    width: 400px;
     margin: var(--spacing-sm) auto;
     height: auto;
 }
