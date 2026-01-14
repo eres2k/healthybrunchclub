@@ -25,48 +25,6 @@
     
     <!-- Mobile Specific Inline Styles -->
     <style>
-        .mobile-pdf-download {
-            display: none;
-            background: #1A1A1A !important;
-            color: #FFFFFF !important;
-            border: none !important;
-            padding: 0.75rem 1.5rem !important;
-            border-radius: 25px !important;
-            font-family: 'Montserrat', sans-serif !important;
-            font-size: 0.75rem !important;
-            font-weight: 500 !important;
-            text-transform: uppercase !important;
-            letter-spacing: 0.1em !important;
-            cursor: pointer !important;
-            transition: all 0.3s ease !important;
-            margin: 0 auto 2rem !important;
-            gap: 0.5rem !important;
-            align-items: center !important;
-            justify-content: center !important;
-            -webkit-appearance: none !important;
-            -moz-appearance: none !important;
-            appearance: none !important;
-        }
-
-        @media (max-width: 768px) {
-            .mobile-pdf-download {
-                display: flex !important;
-            }
-        }
-
-        .mobile-pdf-download:active {
-            transform: scale(0.95) !important;
-            background: #C9A961 !important;
-        }
-
-        /* iOS Safari Specific Fixes */
-        @supports (-webkit-touch-callout: none) {
-            .mobile-pdf-download {
-                -webkit-tap-highlight-color: transparent;
-                touch-action: manipulation;
-            }
-        }
-
         /* Fix für iOS Zoom */
         @media (max-width: 768px) {
             input, select, textarea, button {
@@ -175,12 +133,6 @@
                 👶 Kids Menu PDF
             </a>
         </div>
-
-        <!-- Mobile PDF Download Button -->
-        <button class="mobile-pdf-download" type="button">
-            <i class="fas fa-download"></i>
-            <span>speisekarte pdf</span>
-        </button>
 
         <!-- Elegant Minimal Filter System -->
         <div class="menu-filter-container">
