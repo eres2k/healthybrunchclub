@@ -2037,12 +2037,16 @@ address a:hover {
     .hero-content {
         padding: var(--spacing-md) !important;
     }
-   
+
+    .hero-title .main-logo {
+        width: clamp(80px, 25vw, 120px) !important;
+    }
+
     .hero-actions {
         flex-direction: column !important;
         gap: var(--spacing-sm) !important;
     }
-   
+
     .btn-luxury {
         width: 100% !important;
         padding: 1rem !important;
