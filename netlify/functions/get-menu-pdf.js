@@ -4,6 +4,7 @@ const path = require('path');
 const matter = require('gray-matter');
 
 const MENU_PUBLIC_PATH = '/content/menu.pdf';
+const MENU_ENGLISH_PUBLIC_PATH = '/content/menu-english.pdf';
 
 async function backupExistingMenuPdf(menuPdfPath, contentDir) {
   if (!fs.existsSync(menuPdfPath)) {
@@ -109,6 +110,34 @@ async function ensureMenuPdfFromConfig() {
     if (!config.last_updated || renamed) {
       config.last_updated = new Date().toISOString();
       configChanged = true;
+    }
+
+    // Handle English menu PDF renaming
+    const englishMenuPdfPath = path.join(contentDir, 'menu-english.pdf');
+    const englishConfiguredPath = config.english_menu_pdf;
+    const hasEnglishCustomSource = englishConfiguredPath && englishConfiguredPath !== MENU_ENGLISH_PUBLIC_PATH && englishConfiguredPath !== '';
+
+    if (hasEnglishCustomSource) {
+      let englishSourcePath;
+      if (englishConfiguredPath.startsWith('/')) {
+        const cleaned = englishConfiguredPath.replace(/^\/+/, '');
+        englishSourcePath = path.join(process.cwd(), cleaned);
+      } else if (englishConfiguredPath.startsWith('content/')) {
+        englishSourcePath = path.join(process.cwd(), englishConfiguredPath);
+      } else {
+        englishSourcePath = path.join(contentDir, englishConfiguredPath);
+      }
+
+      if (fs.existsSync(englishSourcePath) && englishSourcePath !== englishMenuPdfPath) {
+        if (fs.existsSync(englishMenuPdfPath)) {
+          await fsPromises.unlink(englishMenuPdfPath);
+        }
+        await fsPromises.rename(englishSourcePath, englishMenuPdfPath);
+        await fsPromises.chmod(englishMenuPdfPath, 0o644);
+        console.log(`Renamed ${englishConfiguredPath} to ${MENU_ENGLISH_PUBLIC_PATH}`);
+        config.english_menu_pdf = MENU_ENGLISH_PUBLIC_PATH;
+        configChanged = true;
+      }
     }
 
     if (configChanged) {
