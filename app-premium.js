@@ -500,25 +500,8 @@ function trackPDFDownload() {
     console.log('Menu PDF downloaded');
 }
 
-// Initialize mobile PDF button
+// Initialize desktop PDF button tracking
 document.addEventListener('DOMContentLoaded', function() {
-    const pdfButton = document.querySelector('.mobile-pdf-download');
-    if (pdfButton && window.innerWidth <= 768) {
-        pdfButton.style.display = 'flex';
-        
-        // Ensure onclick works
-        if (!pdfButton.hasAttribute('data-initialized')) {
-            pdfButton.setAttribute('data-initialized', 'true');
-            pdfButton.removeAttribute('onclick'); // Remove inline onclick
-            pdfButton.addEventListener('click', function(e) {
-                e.preventDefault();
-                window.open('content/menu.pdf', '_blank');
-                trackPDFDownload();
-            });
-        }
-    }
-    
-    // Desktop PDF button
     const desktopPdfBtn = document.querySelector('.btn-icon[onclick*="pdf"]');
     if (desktopPdfBtn) {
         desktopPdfBtn.addEventListener('click', trackPDFDownload);

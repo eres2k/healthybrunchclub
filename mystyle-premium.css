@@ -1406,7 +1406,6 @@ h1, h2, h3, h4, h5, h6 {
     width: 120px;
     height: auto;
     margin-bottom: var(--spacing-sm);
-    filter: brightness(0) invert(1);
 }
 .footer-tagline {
     font-family: var(--font-heading);
@@ -2465,47 +2464,6 @@ html {
 /* ===============================================
    mobile specific fixes - add to end of mystyle-premium.css
    =============================================== */
-/* force mobile pdf button visibility */
-@media (max-width: 768px) {
-    .mobile-pdf-download {
-        display: flex !important;
-        background: #1a1a1a !important;
-        color: #ffffff !important;
-        border: none !important;
-        padding: 0.75rem 1.5rem !important;
-        border-radius: 25px !important;
-        font-family: 'montserrat', sans-serif !important;
-        font-size: 0.75rem !important;
-        font-weight: 500 !important;
-        text-transform: uppercase !important;
-        letter-spacing: 0.1em !important;
-        cursor: pointer !important;
-        transition: all 0.3s ease !important;
-        margin: 0 auto 2rem !important;
-        gap: 0.5rem !important;
-        align-items: center !important;
-        justify-content: center !important;
-        -webkit-appearance: none !important;
-        -moz-appearance: none !important;
-        appearance: none !important;
-        -webkit-tap-highlight-color: transparent !important;
-        touch-action: manipulation !important;
-    }
-   
-    .mobile-pdf-download:active {
-        transform: scale(0.95) !important;
-        background: #c9a961 !important;
-    }
-   
-    body.dark-mode .mobile-pdf-download {
-        background: #c9a961 !important;
-        color: #0a0a0a !important;
-    }
-   
-    body.dark-mode .mobile-pdf-download:active {
-        background: #e6d097 !important;
-    }
-}
 /* mobile dark mode toggle styles */
 .mobile-dark-mode-item {
     display: block !important;
@@ -2559,7 +2517,6 @@ body.dark-mode .mobile-dark-mode-toggle:hover {
 /* ios specific fixes */
 @supports (-webkit-touch-callout: none) {
     /* ios safari button fixes */
-    .mobile-pdf-download,
     .mobile-dark-mode-toggle,
     .btn-luxury,
     .filter-btn,
@@ -2569,7 +2526,7 @@ body.dark-mode .mobile-dark-mode-toggle:hover {
         -webkit-user-select: none !important;
         touch-action: manipulation !important;
     }
-   
+
     /* prevent ios zoom on form inputs */
     input[type="text"],
     input[type="email"],
@@ -2579,7 +2536,7 @@ body.dark-mode .mobile-dark-mode-toggle:hover {
     textarea {
         font-size: 16px !important;
     }
-   
+
     /* fix for ios button appearance */
     button,
     input[type="button"],
@@ -2587,12 +2544,7 @@ body.dark-mode .mobile-dark-mode-toggle:hover {
         -webkit-appearance: none !important;
         border-radius: 0 !important;
     }
-   
-    /* maintain border radius where needed */
-    .mobile-pdf-download {
-        border-radius: 25px !important;
-    }
-   
+
     .mobile-dark-mode-toggle {
         border-radius: 0 !important;
     }
@@ -2602,22 +2554,19 @@ body.dark-mode .mobile-dark-mode-toggle:hover {
     /* fix button tap states on android */
     button:active,
     .btn-luxury:active,
-    .mobile-pdf-download:active,
     .mobile-dark-mode-toggle:active {
         outline: none !important;
         -webkit-tap-highlight-color: transparent !important;
     }
-   
+
     /* ensure proper button sizing on small screens */
-    .mobile-pdf-download,
     .mobile-dark-mode-toggle {
         min-height: 44px !important; /* minimum touch target size */
     }
 }
 /* force visibility of mobile elements */
 @media (max-width: 768px) {
-    .mobile-dark-mode-item,
-    .mobile-pdf-download {
+    .mobile-dark-mode-item {
         opacity: 1 !important;
         visibility: visible !important;
         pointer-events: auto !important;
@@ -2658,7 +2607,6 @@ body.dark-mode .mobile-dark-mode-toggle:hover {
     }
 }
 /* ensure icons are visible */
-.mobile-pdf-download i,
 .mobile-dark-mode-toggle i {
     display: inline-block !important;
     font-size: 1rem !important;
@@ -2666,15 +2614,10 @@ body.dark-mode .mobile-dark-mode-toggle:hover {
 }
 /* fix potential z-index issues */
 @media (max-width: 768px) {
-    .mobile-pdf-download {
-        position: relative !important;
-        z-index: 10 !important;
-    }
-   
     .nav-premium {
         z-index: 1000 !important;
     }
-   
+
     .nav-menu.active {
         z-index: 999 !important;
     }
