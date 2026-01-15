@@ -1406,7 +1406,6 @@ h1, h2, h3, h4, h5, h6 {
     width: 120px;
     height: auto;
     margin-bottom: var(--spacing-sm);
-    filter: brightness(0) invert(1);
 }
 .footer-tagline {
     font-family: var(--font-heading);
