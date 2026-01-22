@@ -35,7 +35,14 @@ items:
 
       **your style:**
 
+
       ei (nach wunsch zubereitet)/biospeck/biolachs/shiitake und champignons pilze
+
+
+      **G﻿lutenfreie Alternative:**
+
+
+      1﻿ große Scheibe Süsskartoffel
     allergens:
       - a
     nutrition:
