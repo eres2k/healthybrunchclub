@@ -2,6 +2,7 @@ const fs = require('fs').promises;
 const path = require('path');
 const matter = require('gray-matter');
 const { checkSpamFilter, logSpamAttempt } = require('./utils/spam-filter');
+const { readJSON, writeJSON } = require('./utils/blob-storage');
 
 // System prompt with guardrails for food-only questions
 const SYSTEM_PROMPT = `Du bist "Tina", die freundliche virtuelle Assistentin des Healthy Brunch Club in Wien. Du hilfst Gästen bei Fragen rund ums Essen, unsere Speisekarte, Zutaten, Nährwerte, Allergene und Reservierungen.
@@ -178,6 +179,11 @@ ${datesContext}
       };
     }
 
+    // Log conversation for future improvements (non-blocking)
+    logConversation(message, aiResponse).catch(err => {
+      console.error('Failed to log conversation:', err.message);
+    });
+
     return {
       statusCode: 200,
       headers,
@@ -311,4 +317,25 @@ async function loadAvailableDatesContext() {
     console.error('Error loading dates context:', error);
     return 'WICHTIG: Termine konnten nicht geladen werden. Bitte Gäste an hello@healthybrunchclub.at verweisen.';
   }
+}
+
+// Log conversation for future analysis and improvements
+async function logConversation(userMessage, botResponse) {
+  const now = new Date();
+  const dateKey = now.toISOString().split('T')[0]; // YYYY-MM-DD
+  const key = `conversations/${dateKey}.json`;
+
+  const logEntry = {
+    timestamp: now.toISOString(),
+    userMessage: userMessage.substring(0, 500), // Limit stored message length
+    botResponse: botResponse.substring(0, 1000) // Limit stored response length
+  };
+
+  const existingLogs = await readJSON('chatbotLogs', key, []);
+  existingLogs.push(logEntry);
+
+  // Keep only last 1000 conversations per day to prevent unbounded growth
+  const trimmedLogs = existingLogs.slice(-1000);
+
+  await writeJSON('chatbotLogs', key, trimmedLogs);
 }

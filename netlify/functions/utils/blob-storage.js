@@ -10,7 +10,8 @@ const STORE_NAMES = {
   rateLimits: 'rate-limits',
   emailLog: 'email-log',
   locks: 'locks',
-  chatbotSpam: 'chatbot-spam'
+  chatbotSpam: 'chatbot-spam',
+  chatbotLogs: 'chatbot-logs'
 };
 
 const DEFAULT_TIMEOUT_MS = 5000;
