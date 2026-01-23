@@ -12,63 +12,66 @@ items:
       - proteinreich
     description: zwei eier nach wahl (spiegelei, pochiert, gekocht oder eierspeise),
       kunstvoll serviert auf scheiben von süßkartoffel und avocado. dazu
-      sautierte champignons und shiitake-pilze, garniert mit rucola, sprossen
-      und kresse.
+      sautierte champignons und shiitake-pilze, garniert mit rucola, rote beete,
+      sprossen und kresse.
     allergens:
       - c
       - g
       - h
     nutrition:
-      calories: "320"
-      protein: 38g
-      carbs: 16g
-      fat: 26g
-    price: "16.90"
+      calories: "457"
+      protein: 21g
+      carbs: 49g
+      fat: 21g
+    price: "17.90"
     image: /content/images/dsc00153_ergebnis.jpg
+    dietary:
+      lactoseFree: true
+      vegetarian: true
   - name: omelette creation
     tags:
       - vegetarisch
       - proteinreich
       - sättigend
     description: >-
-      ein fluffiges omelette aus zwei oder drei eiern gefüllt mit zwiebeln,
-      shiitake-pilzen und frischem spinat. gekrönt mit rucola, sprossen und
-      kresse.
+      ein fluffiges omelette aus zwei eiern gefüllt mit zwiebeln,
+      shiitake-pilzen und frischem spinat. gekrönt mit rucola, rote beete,
+      sprossen und kresse. 
 
-      **your style:** tomaten / speckwürfeln / käse / avocado
+      **your style:** käse / speck / bio-lachs / 1/2 avocado
     allergens:
       - c
       - g
     nutrition:
-      calories: "250"
-      protein: 13g
-      carbs: 9g
-      fat: 9g
-    price: "16.90"
+      calories: 472g
+      protein: 21g
+      carbs: 31g
+      fat: 15g
+    price: "17.90"
     image: /content/images/img-20250806-wa0005.jpg
-  - name: beggs enedict
-    tags:
-      - vegetarisch
-      - proteinreich
-      - sättigend
-    description: >-
-      ein oder zwei pochierte eier auf knusprigem sauerteigbrot vom joseph, mit
-      cremiger avocadosauce und sautierten pilzen, verfeinert mit rucola,
-      sprossen, kresse und knusprigen pinienkernen.
-
-      **your style:** speck / lachs
+  - price: "17.90"
+    name: beggs enedict
     allergens:
       - c
       - g
       - h
     nutrition:
-      calories: "250"
-      protein: 13g
-      carbs: 9g
-      fat: 34g
-    price: "17.90"
+      calories: 345g
+      protein: 19g
+      carbs: 31g
+      fat: 15g
+    tags:
+      - vegetarisch
+      - proteinreich
+      - sättigend
     special: false
     image: /content/images/whatsapp-image-2025-09-17-at-09.51.42.jpeg
+    recommended: true
+    description: >-
+      zwei pochierte eier auf knusprigem sauerteigbrot vom joseph, mit cremiger
+      avocadosauce und sautierten pilzen, verfeinert mit rucola, sprossen,
+      kresse, rote beete und knusprigen pinienkernen 
+       **your style:** speck / lachs
   - name: extras
     tags:
       - optional
@@ -84,6 +87,7 @@ items:
       * biolachs: 2.30
       * pilzmix: 1.90
       * zwei scheiben sauerteigbrot vom joseph: 2.40
+      * s﻿cheibe Süsskartoffel (glutenfreie alternative):
     allergens:
       - c
       - g
