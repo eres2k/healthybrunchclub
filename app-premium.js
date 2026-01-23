@@ -20,13 +20,6 @@ function initializeApp() {
     initVideoOptimization();
     initParallax();
     fillAvailableDates();
-    
-    // Initialize event window
-    const eventWindow = document.getElementById('eventWindow');
-    if (eventWindow) {
-        eventWindow.classList.add('collapsed');
-        eventWindow.style.display = 'block';
-    }
 }
 
 // Loading Screen
@@ -478,13 +471,172 @@ function debounce(func, wait) {
     };
 }
 
-// Toggle Event Window
-window.toggleEventWindow = function() {
-    const eventWindow = document.getElementById('eventWindow');
-    if (eventWindow) {
-        eventWindow.classList.toggle('collapsed');
+// ===============================================
+// ASK TINA CHATBOT
+// ===============================================
+
+let chatbotConversationHistory = [];
+
+// Toggle Chatbot Window
+window.toggleChatbot = function() {
+    const container = document.getElementById('chatbotContainer');
+    const chatWindow = document.getElementById('chatbotWindow');
+    const input = document.getElementById('chatbotInput');
+
+    if (container && chatWindow) {
+        const isOpen = container.classList.contains('open');
+
+        if (isOpen) {
+            container.classList.remove('open');
+            chatWindow.style.display = 'none';
+        } else {
+            container.classList.add('open');
+            chatWindow.style.display = 'flex';
+            // Focus input when opening
+            setTimeout(() => {
+                if (input) input.focus();
+            }, 300);
+        }
     }
 };
+
+// Send Chat Message
+window.sendChatMessage = async function(event) {
+    event.preventDefault();
+
+    const input = document.getElementById('chatbotInput');
+    const messagesContainer = document.getElementById('chatbotMessages');
+    const message = input.value.trim();
+
+    if (!message) return;
+
+    // Clear input
+    input.value = '';
+
+    // Add user message to UI
+    addChatMessage('user', message);
+
+    // Add to conversation history
+    chatbotConversationHistory.push({ role: 'user', content: message });
+
+    // Show typing indicator
+    const typingIndicator = addTypingIndicator();
+
+    try {
+        const response = await fetch('/.netlify/functions/ask-tina', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+                message: message,
+                conversationHistory: chatbotConversationHistory.slice(-6)
+            })
+        });
+
+        // Remove typing indicator
+        if (typingIndicator) typingIndicator.remove();
+
+        if (!response.ok) {
+            throw new Error('Network response was not ok');
+        }
+
+        const data = await response.json();
+
+        if (data.response) {
+            // Add bot response to UI
+            addChatMessage('bot', data.response);
+
+            // Add to conversation history
+            chatbotConversationHistory.push({ role: 'assistant', content: data.response });
+        } else {
+            addChatMessage('bot', 'Entschuldigung, ich konnte deine Frage gerade nicht verarbeiten. Bitte versuche es nochmal!');
+        }
+
+    } catch (error) {
+        console.error('Chatbot error:', error);
+
+        // Remove typing indicator
+        if (typingIndicator) typingIndicator.remove();
+
+        addChatMessage('bot', 'Ups, da ist etwas schiefgelaufen. Bitte versuche es später nochmal oder schreib uns an hello@healthybrunchclub.at');
+    }
+
+    // Scroll to bottom
+    if (messagesContainer) {
+        messagesContainer.scrollTop = messagesContainer.scrollHeight;
+    }
+};
+
+// Add Chat Message to UI
+function addChatMessage(role, content) {
+    const messagesContainer = document.getElementById('chatbotMessages');
+    if (!messagesContainer) return;
+
+    const messageDiv = document.createElement('div');
+    messageDiv.className = `chat-message ${role}`;
+
+    const contentDiv = document.createElement('div');
+    contentDiv.className = 'message-content';
+    contentDiv.textContent = content;
+
+    messageDiv.appendChild(contentDiv);
+    messagesContainer.appendChild(messageDiv);
+
+    // Scroll to bottom
+    messagesContainer.scrollTop = messagesContainer.scrollHeight;
+}
+
+// Add Typing Indicator
+function addTypingIndicator() {
+    const messagesContainer = document.getElementById('chatbotMessages');
+    if (!messagesContainer) return null;
+
+    const typingDiv = document.createElement('div');
+    typingDiv.className = 'chat-message bot typing-indicator';
+    typingDiv.innerHTML = `
+        <div class="message-content">
+            <span class="typing-dot"></span>
+            <span class="typing-dot"></span>
+            <span class="typing-dot"></span>
+        </div>
+    `;
+
+    messagesContainer.appendChild(typingDiv);
+    messagesContainer.scrollTop = messagesContainer.scrollHeight;
+
+    return typingDiv;
+}
+
+// ===============================================
+// INFO MODAL
+// ===============================================
+
+window.openInfoModal = function() {
+    const overlay = document.getElementById('infoModalOverlay');
+    if (overlay) {
+        overlay.classList.add('active');
+        document.body.style.overflow = 'hidden';
+    }
+};
+
+window.closeInfoModal = function() {
+    const overlay = document.getElementById('infoModalOverlay');
+    if (overlay) {
+        overlay.classList.remove('active');
+        document.body.style.overflow = '';
+    }
+};
+
+// Close modal on escape key
+document.addEventListener('keydown', function(e) {
+    if (e.key === 'Escape') {
+        closeInfoModal();
+        // Also close chatbot if open
+        const container = document.getElementById('chatbotContainer');
+        if (container && container.classList.contains('open')) {
+            toggleChatbot();
+        }
+    }
+});
 
 // PDF Download tracking
 function trackPDFDownload() {

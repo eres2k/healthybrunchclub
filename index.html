@@ -78,6 +78,7 @@
                 <li><a href="#menu" class="nav-link">speisekarte</a></li>
                 <li><a href="#about" class="nav-link">über uns</a></li>
                 <li><a href="#reservierung" class="nav-link nav-cta">reservierung</a></li>
+                <li><button class="nav-info-btn" onclick="openInfoModal()" type="button" aria-label="Informationen"><i class="fas fa-info-circle"></i></button></li>
             </ul>
             
             <button class="mobile-menu-btn" aria-label="Menu" type="button">
@@ -347,12 +348,59 @@
         <i class="fas fa-edit"></i>
     </a>
 
-    <!-- Event Window -->
-    <div class="event-window" id="eventWindow" style="display: none;">
-        <button class="event-toggle" onclick="toggleEventWindow()" type="button">
-            <i class="fas fa-music"></i>
+    <!-- Ask Tina Chatbot -->
+    <div class="chatbot-container" id="chatbotContainer">
+        <button class="chatbot-toggle" id="chatbotToggle" onclick="toggleChatbot()" type="button" aria-label="Ask Tina Chatbot">
+            <i class="fas fa-comment-dots"></i>
+            <span class="chatbot-label">Ask Tina</span>
         </button>
-        <div class="event-content" id="eventContent"></div>
+        <div class="chatbot-window" id="chatbotWindow">
+            <div class="chatbot-header">
+                <div class="chatbot-title">
+                    <span class="chatbot-avatar">👩‍🍳</span>
+                    <div>
+                        <h4>Ask Tina</h4>
+                        <span class="chatbot-subtitle">Deine Food-Expertin</span>
+                    </div>
+                </div>
+                <button class="chatbot-close" onclick="toggleChatbot()" type="button" aria-label="Schließen">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <div class="chatbot-messages" id="chatbotMessages">
+                <div class="chat-message bot">
+                    <div class="message-content">
+                        Hallo! Ich bin Tina 👋 Frag mich alles über unsere Speisekarte, Zutaten, Nährwerte oder verfügbare Brunch-Termine!
+                    </div>
+                </div>
+            </div>
+            <div class="chatbot-input-container">
+                <form id="chatbotForm" onsubmit="sendChatMessage(event)">
+                    <input type="text" id="chatbotInput" placeholder="Frag mich etwas über unser Essen..." autocomplete="off">
+                    <button type="submit" class="chatbot-send" aria-label="Senden">
+                        <i class="fas fa-paper-plane"></i>
+                    </button>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Info Modal -->
+    <div class="info-modal-overlay" id="infoModalOverlay" onclick="closeInfoModal()">
+        <div class="info-modal" onclick="event.stopPropagation()">
+            <button class="info-modal-close" onclick="closeInfoModal()" type="button" aria-label="Schließen">
+                <i class="fas fa-times"></i>
+            </button>
+            <div class="info-modal-content">
+                <h3><i class="fas fa-info-circle"></i> Hinweis</h3>
+                <p>
+                    Die Inhalte und Informationen auf unserer Speisekarte sowie auf dieser Website basieren auf persönlichen Erfahrungen, sorgfältiger Recherche und ausgewählten, verlässlichen Quellen. Wir legen großen Wert darauf, Informationen verantwortungsbewusst und nach bestem Wissen bereitzustellen.
+                </p>
+                <p>
+                    Dennoch ersetzen diese Inhalte keine individuelle medizinische oder ernährungswissenschaftliche Beratung.
+                </p>
+            </div>
+        </div>
     </div>
 
     <!-- Scripts -->

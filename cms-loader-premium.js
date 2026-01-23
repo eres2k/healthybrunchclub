@@ -58,8 +58,6 @@ document.addEventListener('DOMContentLoaded', function() {
             window.mobileFilters.init();
         }
     });
-    loadEventsFromCMS();
-    
 });
 
 // Load Menu from CMS
@@ -594,91 +592,6 @@ function displayAllergenLegend() {
     container.style.display = 'block';
 }
 
-// Load Events
-async function loadEventsFromCMS() {
-    try {
-        console.log('CMS Loader: Loading events...');
-        const response = await fetch('/.netlify/functions/get-events');
-        if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
-        
-        const eventsData = await response.json();
-        console.log('CMS Loader: Events loaded:', eventsData);
-        displayEvents(eventsData);
-        
-    } catch (error) {
-        console.error('CMS Loader: Error loading events:', error);
-        displayFallbackEvent();
-    }
-}
-
-// Display Events - Dark Mode Aware
-function displayEvents(eventsData) {
-    const eventWindow = document.getElementById('eventWindow');
-    const eventContent = document.getElementById('eventContent');
-    
-    if (!eventWindow || !eventContent) {
-        console.warn('CMS Loader: Event window elements not found');
-        return;
-    }
-    
-    if (!eventsData || eventsData.length === 0) {
-        eventWindow.style.display = 'none';
-        return;
-    }
-    
-    const nextEvent = eventsData[0];
-    const eventDate = new Date(nextEvent.date);
-    const formattedDate = eventDate.toLocaleDateString('de-AT', {
-        weekday: 'long',
-        day: 'numeric',
-        month: 'long'
-    });
-    
-    // Use CSS variables for consistent colors
-    eventContent.innerHTML = `
-        ${nextEvent.featuredImage ? `
-            <div class="event-image" style="margin-bottom: 1rem;">
-                <img src="${formatImageUrl(nextEvent.featuredImage)}" alt="${nextEvent.title}"
-                     style="width: 100%; height: auto; border-radius: 8px;">
-            </div>
-        ` : ''}
-        
-        <h3 style="font-family: var(--font-heading); font-size: 1.5rem; margin-bottom: 0.5rem; color: var(--charcoal);">
-            ${nextEvent.title}
-        </h3>
-        
-        <p style="color: var(--warm-gray); font-size: 0.875rem; margin-bottom: 1rem;">
-            ${formattedDate}
-        </p>
-        
-        <p style="font-size: 0.875rem; line-height: 1.6; color: var(--charcoal);">
-            ${nextEvent.body || nextEvent.description || ''}
-        </p>
-        
-        ${nextEvent.audioAnnouncement ? `
-            <div style="margin-top: 1.5rem; padding-top: 1.5rem; border-top: 1px solid var(--light-gray);">
-                <h4 style="font-size: 0.875rem; margin-bottom: 0.75rem; text-transform: uppercase; letter-spacing: 0.05em; color: var(--warm-gray);">
-                    🎧 Sound Preview
-                </h4>
-                <audio controls style="width: 100%;">
-                    <source src="${formatImageUrl(nextEvent.audioAnnouncement)}" type="audio/mpeg">
-                    Your browser does not support the audio element.
-                </audio>
-            </div>
-        ` : ''}
-    `;
-    
-    eventWindow.classList.add('collapsed');
-    eventWindow.style.display = 'block';
-}
-
-// Toggle Event Window
-window.toggleEventWindow = function() {
-    const eventWindow = document.getElementById('eventWindow');
-    if (eventWindow) {
-        eventWindow.classList.toggle('collapsed');
-    }
-};
 
 // Fallback Menu
 function displayFallbackMenu() {
@@ -739,16 +652,6 @@ function displayFallbackMenu() {
     displayPremiumMenu(fallbackMenu);
 }
 
-// Fallback Event
-function displayFallbackEvent() {
-    const fallbackEvent = [{
-        title: "Live Music Monday",
-        date: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000).toISOString(),
-        description: "Genießen Sie sanfte Jazz-Klänge zu Ihrem Brunch. Jeden Montag live!"
-    }];
-    
-    displayEvents(fallbackEvent);
-}
 
 // Initialize Admin Features
 if (window.netlifyIdentity) {
@@ -775,7 +678,6 @@ window.cmsLoader = {
     refresh: function() {
         console.log('CMS Loader: Refreshing content...');
         loadMenuFromCMS();
-        loadEventsFromCMS();
     },
     getCurrentFilters: function() {
         return currentFilters;
