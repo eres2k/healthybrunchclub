@@ -535,11 +535,24 @@ window.sendChatMessage = async function(event) {
         // Remove typing indicator
         if (typingIndicator) typingIndicator.remove();
 
-        if (!response.ok) {
-            throw new Error('Network response was not ok');
-        }
-
         const data = await response.json();
+
+        if (!response.ok) {
+            // Handle specific error cases with user-friendly messages
+            console.error('Chatbot API error:', response.status, data);
+
+            if (response.status === 429) {
+                // Rate limited / spam blocked
+                addChatMessage('bot', data.error || 'Du sendest zu viele Nachrichten. Bitte warte kurz und versuche es dann nochmal.');
+            } else if (response.status === 400) {
+                // Bad request (message too long, etc.)
+                addChatMessage('bot', data.error || 'Deine Nachricht konnte nicht verarbeitet werden. Bitte versuche es mit einer kürzeren Nachricht.');
+            } else {
+                // Server error
+                addChatMessage('bot', 'Entschuldigung, der Chatbot ist gerade nicht verfügbar. Bitte versuche es später nochmal oder schreib uns an hello@healthybrunchclub.at');
+            }
+            return;
+        }
 
         if (data.response) {
             // Add bot response to UI
