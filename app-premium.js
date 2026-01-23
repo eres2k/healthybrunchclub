@@ -715,5 +715,361 @@ if ('serviceWorker' in navigator) {
     });
 }
 
+// ===============================================
+// SMART MENU RECOMMENDATIONS
+// ===============================================
+
+// User preferences storage key
+const PREFERENCES_STORAGE_KEY = 'hbc_user_preferences';
+const ORDER_HISTORY_KEY = 'hbc_order_history';
+
+// Initialize recommendations on page load
+document.addEventListener('DOMContentLoaded', function() {
+    initializeRecommendations();
+});
+
+// Initialize the recommendations system
+function initializeRecommendations() {
+    // Load saved preferences
+    const preferences = loadUserPreferences();
+
+    // Update modal UI with saved preferences
+    updatePreferencesModal(preferences);
+
+    // Load recommendations
+    loadRecommendations();
+}
+
+// Load user preferences from localStorage
+function loadUserPreferences() {
+    try {
+        const stored = localStorage.getItem(PREFERENCES_STORAGE_KEY);
+        if (stored) {
+            return JSON.parse(stored);
+        }
+    } catch (e) {
+        console.warn('Could not load preferences:', e);
+    }
+
+    // Default preferences
+    return {
+        dietaryPreferences: [],
+        nutritionalGoal: 'balanced',
+        hasSetPreferences: false
+    };
+}
+
+// Save user preferences to localStorage
+function saveUserPreferences(preferences) {
+    try {
+        localStorage.setItem(PREFERENCES_STORAGE_KEY, JSON.stringify(preferences));
+    } catch (e) {
+        console.warn('Could not save preferences:', e);
+    }
+}
+
+// Load order history from localStorage
+function loadOrderHistory() {
+    try {
+        const stored = localStorage.getItem(ORDER_HISTORY_KEY);
+        if (stored) {
+            return JSON.parse(stored);
+        }
+    } catch (e) {
+        console.warn('Could not load order history:', e);
+    }
+    return [];
+}
+
+// Add item to order history
+window.addToOrderHistory = function(itemName) {
+    try {
+        const history = loadOrderHistory();
+        if (!history.includes(itemName)) {
+            history.push(itemName);
+            // Keep only last 20 items
+            const trimmed = history.slice(-20);
+            localStorage.setItem(ORDER_HISTORY_KEY, JSON.stringify(trimmed));
+        }
+    } catch (e) {
+        console.warn('Could not save order history:', e);
+    }
+};
+
+// Update the preferences modal UI
+function updatePreferencesModal(preferences) {
+    // Update dietary checkboxes
+    const dietaryCheckboxes = document.querySelectorAll('input[name="dietary"]');
+    dietaryCheckboxes.forEach(checkbox => {
+        checkbox.checked = preferences.dietaryPreferences.includes(checkbox.value);
+    });
+
+    // Update goal radio buttons
+    const goalRadios = document.querySelectorAll('input[name="goal"]');
+    goalRadios.forEach(radio => {
+        radio.checked = radio.value === preferences.nutritionalGoal;
+    });
+}
+
+// Open preferences modal
+window.openPreferencesModal = function() {
+    const overlay = document.getElementById('preferencesModalOverlay');
+    if (overlay) {
+        overlay.classList.add('active');
+        document.body.style.overflow = 'hidden';
+    }
+};
+
+// Close preferences modal
+window.closePreferencesModal = function() {
+    const overlay = document.getElementById('preferencesModalOverlay');
+    if (overlay) {
+        overlay.classList.remove('active');
+        document.body.style.overflow = '';
+    }
+};
+
+// Save preferences from modal
+window.savePreferences = function() {
+    const dietaryCheckboxes = document.querySelectorAll('input[name="dietary"]:checked');
+    const goalRadio = document.querySelector('input[name="goal"]:checked');
+
+    const preferences = {
+        dietaryPreferences: Array.from(dietaryCheckboxes).map(cb => cb.value),
+        nutritionalGoal: goalRadio ? goalRadio.value : 'balanced',
+        hasSetPreferences: true
+    };
+
+    saveUserPreferences(preferences);
+    closePreferencesModal();
+    loadRecommendations();
+};
+
+// Load recommendations from API
+async function loadRecommendations() {
+    const section = document.getElementById('recommendationsSection');
+    const track = document.getElementById('recommendationsTrack');
+    const subtitle = document.getElementById('recommendationsSubtitle');
+
+    if (!section || !track) return;
+
+    // Show loading state
+    track.innerHTML = `
+        <div class="recommendation-loading">
+            <i class="fas fa-spinner fa-spin"></i>
+            <span>Empfehlungen werden geladen...</span>
+        </div>
+    `;
+    section.style.display = 'block';
+
+    try {
+        const preferences = loadUserPreferences();
+        const orderHistory = loadOrderHistory();
+
+        const response = await fetch('/.netlify/functions/get-recommendations', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+                dietaryPreferences: preferences.dietaryPreferences,
+                nutritionalGoal: preferences.nutritionalGoal,
+                previousOrders: orderHistory,
+                count: 4
+            })
+        });
+
+        if (!response.ok) {
+            throw new Error('Failed to load recommendations');
+        }
+
+        const data = await response.json();
+
+        if (data.recommendations && data.recommendations.length > 0) {
+            renderRecommendations(data.recommendations);
+
+            // Update subtitle based on preferences
+            if (preferences.hasSetPreferences) {
+                const goalLabels = {
+                    'fitness': 'Fitness & Muskelaufbau',
+                    'wellness': 'Wellness & Leichtigkeit',
+                    'energy': 'Energie & Vitalität',
+                    'balanced': 'Ausgewogen'
+                };
+                const dietaryText = preferences.dietaryPreferences.length > 0
+                    ? preferences.dietaryPreferences.join(', ') + ' · '
+                    : '';
+                subtitle.textContent = `${dietaryText}${goalLabels[preferences.nutritionalGoal] || 'Ausgewogen'}`;
+            } else {
+                subtitle.textContent = 'Basierend auf der Tageszeit und beliebten Gerichten';
+            }
+
+            section.style.display = 'block';
+        } else {
+            section.style.display = 'none';
+        }
+    } catch (error) {
+        console.error('Error loading recommendations:', error);
+        // Hide section on error
+        section.style.display = 'none';
+    }
+}
+
+// Render recommendation cards
+function renderRecommendations(recommendations) {
+    const track = document.getElementById('recommendationsTrack');
+    if (!track) return;
+
+    const TAG_DISPLAY_NAMES = {
+        'vegetarisch': 'Vegetarisch',
+        'glutenfrei': 'Glutenfrei',
+        'proteinreich': 'Proteinreich',
+        'sättigend': 'Sättigend',
+        'belebend': 'Belebend',
+        'immunstärkend': 'Immunstärkend'
+    };
+
+    track.innerHTML = recommendations.map(item => {
+        const hasImage = item.image ? true : false;
+        const price = item.price ? `€ ${item.price}`.replace('.', ',') : '';
+        const tags = (item.tags || [])
+            .slice(0, 2)
+            .map(tag => TAG_DISPLAY_NAMES[tag.toLowerCase()] || tag)
+            .join(' · ');
+
+        const reason = item.reasons && item.reasons.length > 0
+            ? `<span class="recommendation-reason">${item.reasons[0]}</span>`
+            : '';
+
+        return `
+            <div class="recommendation-card" onclick="scrollToMenuItem('${item.name.replace(/'/g, "\\'")}')">
+                ${hasImage ? `
+                    <div class="recommendation-image">
+                        <img src="${item.image}" alt="${item.name}" loading="lazy">
+                    </div>
+                ` : `
+                    <div class="recommendation-image recommendation-image-placeholder">
+                        <span class="recommendation-icon">${getItemEmoji(item.name)}</span>
+                    </div>
+                `}
+                <div class="recommendation-content">
+                    <h4 class="recommendation-name">${item.name}</h4>
+                    ${tags ? `<span class="recommendation-tags">${tags}</span>` : ''}
+                    ${reason}
+                    <span class="recommendation-price">${price}</span>
+                </div>
+            </div>
+        `;
+    }).join('');
+
+    // Update arrow visibility
+    updateCarouselArrows();
+}
+
+// Get emoji for item based on name
+function getItemEmoji(name) {
+    const lowerName = name.toLowerCase();
+    if (lowerName.includes('kaffee') || lowerName.includes('coffee') || lowerName.includes('latte')) return '☕';
+    if (lowerName.includes('ei') || lowerName.includes('egg')) return '🥚';
+    if (lowerName.includes('bowl')) return '🥣';
+    if (lowerName.includes('avocado') || lowerName.includes('avo')) return '🥑';
+    if (lowerName.includes('saft') || lowerName.includes('juice')) return '🥤';
+    if (lowerName.includes('pancake') || lowerName.includes('pfannkuchen')) return '🥞';
+    if (lowerName.includes('toast') || lowerName.includes('bread') || lowerName.includes('brot')) return '🍞';
+    if (lowerName.includes('porridge') || lowerName.includes('hafer') || lowerName.includes('oat')) return '🥣';
+    if (lowerName.includes('berry') || lowerName.includes('beere')) return '🫐';
+    if (lowerName.includes('shot')) return '🧴';
+    if (lowerName.includes('tea') || lowerName.includes('tee')) return '🍵';
+    return '🌿';
+}
+
+// Scroll to menu item when clicking a recommendation
+window.scrollToMenuItem = function(itemName) {
+    // Add to order history (user showed interest)
+    addToOrderHistory(itemName);
+
+    // Find the menu item card
+    const menuItems = document.querySelectorAll('.menu-item-card');
+    for (const card of menuItems) {
+        const nameEl = card.querySelector('.menu-item-name');
+        if (nameEl && nameEl.textContent.toLowerCase() === itemName.toLowerCase()) {
+            // Scroll to the item
+            const offset = 100;
+            const elementPosition = card.getBoundingClientRect().top + window.pageYOffset;
+            window.scrollTo({
+                top: elementPosition - offset,
+                behavior: 'smooth'
+            });
+
+            // Highlight the card briefly
+            card.classList.add('highlight-card');
+            setTimeout(() => {
+                card.classList.remove('highlight-card');
+            }, 2000);
+
+            return;
+        }
+    }
+
+    // If item not found, scroll to menu section
+    const menuSection = document.getElementById('menu');
+    if (menuSection) {
+        menuSection.scrollIntoView({ behavior: 'smooth' });
+    }
+};
+
+// Scroll the recommendations carousel
+window.scrollRecommendations = function(direction) {
+    const track = document.getElementById('recommendationsTrack');
+    if (!track) return;
+
+    const cardWidth = track.querySelector('.recommendation-card')?.offsetWidth || 280;
+    const gap = 16; // Gap between cards
+    const scrollAmount = cardWidth + gap;
+
+    if (direction === 'left') {
+        track.scrollBy({ left: -scrollAmount, behavior: 'smooth' });
+    } else {
+        track.scrollBy({ left: scrollAmount, behavior: 'smooth' });
+    }
+
+    // Update arrows after scroll
+    setTimeout(updateCarouselArrows, 300);
+};
+
+// Update carousel arrow visibility
+function updateCarouselArrows() {
+    const track = document.getElementById('recommendationsTrack');
+    const leftArrow = document.querySelector('.carousel-arrow-left');
+    const rightArrow = document.querySelector('.carousel-arrow-right');
+
+    if (!track || !leftArrow || !rightArrow) return;
+
+    const isAtStart = track.scrollLeft <= 0;
+    const isAtEnd = track.scrollLeft >= track.scrollWidth - track.clientWidth - 5;
+
+    leftArrow.style.opacity = isAtStart ? '0.3' : '1';
+    leftArrow.style.pointerEvents = isAtStart ? 'none' : 'auto';
+
+    rightArrow.style.opacity = isAtEnd ? '0.3' : '1';
+    rightArrow.style.pointerEvents = isAtEnd ? 'none' : 'auto';
+}
+
+// Add scroll listener to track
+document.addEventListener('DOMContentLoaded', function() {
+    const track = document.getElementById('recommendationsTrack');
+    if (track) {
+        track.addEventListener('scroll', debounce(updateCarouselArrows, 50));
+    }
+});
+
+// Close preferences modal on escape
+document.addEventListener('keydown', function(e) {
+    if (e.key === 'Escape') {
+        const prefsOverlay = document.getElementById('preferencesModalOverlay');
+        if (prefsOverlay && prefsOverlay.classList.contains('active')) {
+            closePreferencesModal();
+        }
+    }
+});
+
 // Log initialization
 console.log('Premium restaurant app initialized.');

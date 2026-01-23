@@ -124,6 +124,86 @@
             <p class="section-subtitle">mit gutem Gewissen genießen</p>
         </div>
 
+        <!-- Personalized Recommendations Section -->
+        <div class="recommendations-section" id="recommendationsSection" style="display: none;">
+            <div class="recommendations-header">
+                <div class="recommendations-title">
+                    <span class="sparkle-icon">✨</span>
+                    <h3>für dich empfohlen</h3>
+                    <button class="preferences-btn" onclick="openPreferencesModal()" type="button" aria-label="Präferenzen anpassen">
+                        <i class="fas fa-sliders-h"></i>
+                    </button>
+                </div>
+                <p class="recommendations-subtitle" id="recommendationsSubtitle">Basierend auf deinen Vorlieben</p>
+            </div>
+            <div class="recommendations-carousel" id="recommendationsCarousel">
+                <button class="carousel-arrow carousel-arrow-left" onclick="scrollRecommendations('left')" type="button" aria-label="Nach links scrollen">
+                    <i class="fas fa-chevron-left"></i>
+                </button>
+                <div class="recommendations-track" id="recommendationsTrack">
+                    <!-- Recommendation cards will be inserted here -->
+                </div>
+                <button class="carousel-arrow carousel-arrow-right" onclick="scrollRecommendations('right')" type="button" aria-label="Nach rechts scrollen">
+                    <i class="fas fa-chevron-right"></i>
+                </button>
+            </div>
+        </div>
+
+        <!-- Preferences Modal -->
+        <div class="preferences-modal-overlay" id="preferencesModalOverlay" onclick="closePreferencesModal()">
+            <div class="preferences-modal" onclick="event.stopPropagation()">
+                <button class="preferences-modal-close" onclick="closePreferencesModal()" type="button" aria-label="Schließen">
+                    <i class="fas fa-times"></i>
+                </button>
+                <div class="preferences-modal-content">
+                    <h3><i class="fas fa-heart"></i> Deine Präferenzen</h3>
+                    <p class="preferences-intro">Hilf uns, die perfekten Gerichte für dich zu finden!</p>
+
+                    <div class="preferences-section">
+                        <h4>Ernährungsweise</h4>
+                        <div class="preferences-options dietary-options">
+                            <label class="preference-chip">
+                                <input type="checkbox" name="dietary" value="vegetarisch">
+                                <span>🥬 Vegetarisch</span>
+                            </label>
+                            <label class="preference-chip">
+                                <input type="checkbox" name="dietary" value="glutenfrei">
+                                <span>🌾 Glutenfrei</span>
+                            </label>
+                        </div>
+                    </div>
+
+                    <div class="preferences-section">
+                        <h4>Dein Ziel</h4>
+                        <div class="preferences-options goal-options">
+                            <label class="preference-chip goal-chip">
+                                <input type="radio" name="goal" value="balanced" checked>
+                                <span>⚖️ Ausgewogen</span>
+                            </label>
+                            <label class="preference-chip goal-chip">
+                                <input type="radio" name="goal" value="fitness">
+                                <span>💪 Fitness</span>
+                            </label>
+                            <label class="preference-chip goal-chip">
+                                <input type="radio" name="goal" value="wellness">
+                                <span>🧘 Wellness</span>
+                            </label>
+                            <label class="preference-chip goal-chip">
+                                <input type="radio" name="goal" value="energy">
+                                <span>⚡ Energie</span>
+                            </label>
+                        </div>
+                    </div>
+
+                    <div class="preferences-actions">
+                        <button class="btn-save-preferences" onclick="savePreferences()">
+                            Empfehlungen aktualisieren
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
         <div class="pdf-downloads">
             <a href="/content/menu.pdf" download="Healthy-Brunch-Club-Speisekarte.pdf" class="pdf-download-btn">
                 📄 Speisekarte PDF
