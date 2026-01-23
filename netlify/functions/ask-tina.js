@@ -129,10 +129,9 @@ exports.handler = async (event, context) => {
       });
     }
 
-    // Include context data in first message
-    const userMessageWithContext = conversationHistory.length === 0
-      ? `AKTUELLE DATEN (NUR DIESE VERWENDEN!):\n${contextJSON}\n\nGast-Frage: ${message}`
-      : message;
+    // Include context data in EVERY message to prevent hallucinations
+    // The AI needs fresh data on each request, not just the first one
+    const userMessageWithContext = `AKTUELLE DATEN (NUR DIESE VERWENDEN!):\n${contextJSON}\n\nGast-Frage: ${message}`;
 
     contents.push({
       role: 'user',
