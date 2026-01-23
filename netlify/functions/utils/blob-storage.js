@@ -24,7 +24,16 @@ function getBlobStore(name) {
   }
 
   if (!storeCache.has(name)) {
-    storeCache.set(name, getStore({ name: STORE_NAMES[name] }));
+    const storeConfig = { name: STORE_NAMES[name] };
+
+    // Support manual configuration when automatic Netlify context detection fails
+    // This is needed for local development or when environment isn't fully configured
+    if (process.env.NETLIFY_SITE_ID && process.env.NETLIFY_AUTH_TOKEN) {
+      storeConfig.siteID = process.env.NETLIFY_SITE_ID;
+      storeConfig.token = process.env.NETLIFY_AUTH_TOKEN;
+    }
+
+    storeCache.set(name, getStore(storeConfig));
   }
 
   return storeCache.get(name);
