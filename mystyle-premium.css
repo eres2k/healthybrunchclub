@@ -4603,6 +4603,51 @@ body.dark-mode .nav-info-btn:hover {
     }
 }
 
+/* Nav Admin Button (circular, hidden by default) */
+.nav-admin-btn {
+    display: none;
+    align-items: center;
+    justify-content: center;
+    width: 36px;
+    height: 36px;
+    background: var(--black, #1a1a1a);
+    color: var(--pure-white, #fff);
+    border-radius: 50%;
+    text-decoration: none;
+    font-size: 0.9rem;
+    transition: all 0.2s ease;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+}
+
+.nav-admin-btn:hover {
+    background: var(--gold, #c9a96e);
+    color: var(--pure-white, #fff);
+    transform: scale(1.1);
+}
+
+.nav-admin-btn.show {
+    display: flex;
+}
+
+body.dark-mode .nav-admin-btn {
+    background: var(--gold, #c9a96e);
+    color: var(--pure-white, #fff);
+}
+
+body.dark-mode .nav-admin-btn:hover {
+    background: var(--sage, #87a878);
+}
+
+/* Mobile nav admin button */
+@media (max-width: 768px) {
+    .nav-admin-btn {
+        margin-top: 10px;
+        width: 40px;
+        height: 40px;
+        font-size: 1rem;
+    }
+}
+
 /* ===============================================
    INFO MODAL STYLES
    =============================================== */
