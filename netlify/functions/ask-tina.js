@@ -1,6 +1,7 @@
 const fs = require('fs').promises;
 const path = require('path');
 const matter = require('gray-matter');
+const { checkSpamFilter, logSpamAttempt } = require('./utils/spam-filter');
 
 // System prompt with guardrails for food-only questions
 const SYSTEM_PROMPT = `Du bist "Tina", die freundliche virtuelle Assistentin des Healthy Brunch Club in Wien. Du hilfst Gästen bei Fragen rund ums Essen, unsere Speisekarte, Zutaten, Nährwerte, Allergene und Reservierungen.
@@ -12,7 +13,8 @@ WICHTIGE REGELN:
 4. Antworte auf Deutsch, es sei denn der Gast schreibt auf Englisch.
 5. Sei warmherzig, einladend und hilfreich - wie eine echte Gastgeberin.
 6. Bei Fragen zu Adaptogenen, Superfoods oder Zutaten gib hilfreiche Ernährungsinformationen.
-7. Erwähne bei passenden Gelegenheiten unsere aktuellen verfügbaren Termine.
+7. KRITISCH: Bei Terminfragen nenne NUR die exakten Daten aus der Liste "VERFÜGBARE BRUNCH-TERMINE". Erfinde NIEMALS andere Daten!
+8. Falls keine Termine verfügbar sind, verweise auf hello@healthybrunchclub.at.
 
 ÜBER DEN HEALTHY BRUNCH CLUB:
 - Adresse: Neubaugasse 15, 1070 Wien
@@ -52,6 +54,31 @@ exports.handler = async (event, context) => {
         statusCode: 400,
         headers,
         body: JSON.stringify({ error: 'Message is required' })
+      };
+    }
+
+    // Check message length
+    if (message.length > 1000) {
+      return {
+        statusCode: 400,
+        headers,
+        body: JSON.stringify({ error: 'Nachricht zu lang. Maximal 1000 Zeichen.' })
+      };
+    }
+
+    // Check spam filter
+    const spamCheck = await checkSpamFilter(event, message);
+    if (!spamCheck.allowed) {
+      console.log(`Spam blocked: ${spamCheck.reason} from ${spamCheck.ip}`);
+      await logSpamAttempt(spamCheck.ip, message, spamCheck.reason);
+      return {
+        statusCode: 429,
+        headers,
+        body: JSON.stringify({
+          error: spamCheck.message,
+          blocked: true,
+          reason: spamCheck.reason
+        })
       };
     }
 
@@ -250,11 +277,14 @@ async function loadAvailableDatesContext() {
       .slice(0, 10); // Next 10 dates
 
     if (futureDates.length === 0) {
-      return 'Aktuell keine Termine verfügbar. Bitte per E-Mail anfragen.';
+      return 'WICHTIG: Aktuell sind keine Termine verfügbar. Bitte Gäste an hello@healthybrunchclub.at verweisen.';
     }
 
-    let datesText = '';
-    for (const date of futureDates) {
+    // More explicit formatting to prevent hallucinations
+    let datesText = `WICHTIG: Nenne NUR diese ${futureDates.length} Termine - keine anderen Daten erfinden!\n\n`;
+
+    for (let i = 0; i < futureDates.length; i++) {
+      const date = futureDates[i];
       const d = new Date(date.date);
       const formatted = d.toLocaleDateString('de-AT', {
         weekday: 'long',
@@ -262,18 +292,23 @@ async function loadAvailableDatesContext() {
         month: 'long',
         year: 'numeric'
       });
-      datesText += `- ${formatted}`;
+
+      // Extract just the times for clarity
+      let times = [];
       if (date.slots && date.slots.length > 0) {
-        const times = date.slots.map(s => s.time || s).join(', ');
-        datesText += ` (Zeiten: ${times})`;
+        times = date.slots.map(s => s.time || s);
       }
-      if (date.note) datesText += ` - ${date.note}`;
+
+      datesText += `${i + 1}. ${formatted}`;
+      if (times.length > 0) {
+        datesText += ` um ${times.join(' Uhr, ')} Uhr`;
+      }
       datesText += '\n';
     }
 
     return datesText;
   } catch (error) {
     console.error('Error loading dates context:', error);
-    return 'Termine nicht verfügbar.';
+    return 'WICHTIG: Termine konnten nicht geladen werden. Bitte Gäste an hello@healthybrunchclub.at verweisen.';
   }
 }
