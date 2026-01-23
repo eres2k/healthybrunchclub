@@ -4,27 +4,43 @@ const matter = require('gray-matter');
 const { checkSpamFilter, logSpamAttempt } = require('./utils/spam-filter');
 const { readJSON, writeJSON } = require('./utils/blob-storage');
 
-// System prompt with guardrails for food-only questions
-const SYSTEM_PROMPT = `Du bist "Tina", die freundliche virtuelle Assistentin des Healthy Brunch Club in Wien. Du hilfst Gästen bei Fragen rund ums Essen, unsere Speisekarte, Zutaten, Nährwerte, Allergene und Reservierungen.
+// Allergen code mapping
+const ALLERGEN_CODES = {
+  a: 'Gluten',
+  b: 'Krebstiere',
+  c: 'Eier',
+  d: 'Fisch',
+  e: 'Erdnüsse',
+  f: 'Soja',
+  g: 'Milch/Laktose',
+  h: 'Schalenfrüchte/Nüsse',
+  i: 'Sellerie',
+  j: 'Senf',
+  k: 'Sesam',
+  l: 'Sulfite',
+  m: 'Lupinen',
+  n: 'Weichtiere'
+};
 
-WICHTIGE REGELN:
-1. Beantworte NUR Fragen zu Essen, Ernährung, Zutaten, Gesundheitsvorteilen von Lebensmitteln, unserer Speisekarte und unseren verfügbaren Terminen.
-2. Bei Off-Topic-Fragen (Politik, Sport, Technik, persönliche Themen etc.) antworte freundlich: "Das ist eine interessante Frage, aber ich bin hier um dir bei allem rund ums Essen und unseren Healthy Brunch Club zu helfen! Kann ich dir etwas über unsere Gerichte oder verfügbaren Termine erzählen?"
-3. Fördere aktiv unsere Gerichte und verfügbaren Brunch-Termine.
-4. Antworte auf Deutsch, es sei denn der Gast schreibt auf Englisch.
-5. Sei warmherzig, einladend und hilfreich - wie eine echte Gastgeberin.
-6. Bei Fragen zu Adaptogenen, Superfoods oder Zutaten gib hilfreiche Ernährungsinformationen.
-7. KRITISCH: Bei Terminfragen nenne NUR die exakten Daten aus der Liste "VERFÜGBARE BRUNCH-TERMINE". Erfinde NIEMALS andere Daten!
-8. Falls keine Termine verfügbar sind, verweise auf hello@healthybrunchclub.at.
+// System prompt with strict data usage rules
+const SYSTEM_PROMPT = `Du bist "Tina", die freundliche virtuelle Assistentin des Healthy Brunch Club in Wien.
+
+STRIKTE REGELN - UNBEDINGT BEFOLGEN:
+1. Du erhältst strukturierte JSON-Daten über verfügbare Termine und Speisekarte.
+2. VERWENDE AUSSCHLIESSLICH die Daten aus dem JSON. Erfinde NIEMALS eigene Termine, Gerichte oder Preise!
+3. Wenn du nach Terminen gefragt wirst, nenne NUR die Termine aus "availableDates". KEINE ANDEREN DATEN!
+4. Wenn du nach Gerichten gefragt wirst, nenne NUR Gerichte aus "menuItems". KEINE ANDEREN GERICHTE!
+5. Bei Off-Topic-Fragen antworte: "Das ist eine interessante Frage, aber ich bin hier um dir bei allem rund ums Essen und unseren Healthy Brunch Club zu helfen!"
+6. Antworte auf Deutsch, es sei denn der Gast schreibt auf Englisch.
+7. Halte Antworten prägnant (2-3 Sätze), außer bei detaillierten Menüfragen.
 
 ÜBER DEN HEALTHY BRUNCH CLUB:
 - Adresse: Neubaugasse 15, 1070 Wien
 - E-Mail: hello@healthybrunchclub.at
 - Konzept: Gesunde, darmfreundliche und entzündungshemmende Speisen
 - Gegründet von drei Schwestern mit philippinischen Wurzeln
-- Fokus auf gesunde Alternativen und entzündungshemmende Zutaten nach Tinas Crohn-Diagnose
 
-Antworte immer freundlich, kompetent und halte die Antworten prägnant (max. 2-3 Sätze, außer bei detaillierten Menüfragen).`;
+WICHTIG: Wenn keine Termine oder Gerichte in den Daten vorhanden sind, verweise auf hello@healthybrunchclub.at.`;
 
 exports.handler = async (event, context) => {
   const headers = {
@@ -34,7 +50,6 @@ exports.handler = async (event, context) => {
     'Content-Type': 'application/json'
   };
 
-  // Handle preflight requests
   if (event.httpMethod === 'OPTIONS') {
     return { statusCode: 200, headers, body: '' };
   }
@@ -58,7 +73,6 @@ exports.handler = async (event, context) => {
       };
     }
 
-    // Check message length
     if (message.length > 1000) {
       return {
         statusCode: 400,
@@ -67,7 +81,6 @@ exports.handler = async (event, context) => {
       };
     }
 
-    // Check spam filter
     const spamCheck = await checkSpamFilter(event, message);
     if (!spamCheck.allowed) {
       console.log(`Spam blocked: ${spamCheck.reason} from ${spamCheck.ip}`);
@@ -83,7 +96,6 @@ exports.handler = async (event, context) => {
       };
     }
 
-    // Get API key from environment
     const apiKey = process.env.GEMINI_API_KEY;
     if (!apiKey) {
       console.error('GEMINI_API_KEY not configured');
@@ -94,33 +106,32 @@ exports.handler = async (event, context) => {
       };
     }
 
-    // Load menu data for context
-    const menuContext = await loadMenuContext();
-    const datesContext = await loadAvailableDatesContext();
+    // Load data as structured JSON
+    const menuData = await loadMenuData();
+    const datesData = await loadAvailableDates();
 
-    // Build the full context
-    const contextInfo = `
-AKTUELLE SPEISEKARTE:
-${menuContext}
+    // Build strict JSON context
+    const contextData = {
+      instruction: "VERWENDE NUR DIESE DATEN. ERFINDE NICHTS!",
+      availableDates: datesData,
+      menuItems: menuData
+    };
 
-VERFÜGBARE BRUNCH-TERMINE:
-${datesContext}
-`;
+    const contextJSON = JSON.stringify(contextData, null, 2);
 
     // Build conversation for Gemini
     const contents = [];
 
-    // Add conversation history
-    for (const msg of conversationHistory.slice(-6)) { // Keep last 6 messages for context
+    for (const msg of conversationHistory.slice(-6)) {
       contents.push({
         role: msg.role === 'user' ? 'user' : 'model',
         parts: [{ text: msg.content }]
       });
     }
 
-    // Add current user message with context
+    // Include context data in first message
     const userMessageWithContext = conversationHistory.length === 0
-      ? `${contextInfo}\n\nGast-Frage: ${message}`
+      ? `AKTUELLE DATEN (NUR DIESE VERWENDEN!):\n${contextJSON}\n\nGast-Frage: ${message}`
       : message;
 
     contents.push({
@@ -128,7 +139,6 @@ ${datesContext}
       parts: [{ text: userMessageWithContext }]
     });
 
-    // Call Gemini API
     const response = await fetch(
       `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-lite:generateContent?key=${apiKey}`,
       {
@@ -140,9 +150,9 @@ ${datesContext}
             parts: [{ text: SYSTEM_PROMPT }]
           },
           generationConfig: {
-            temperature: 0.7,
-            topK: 40,
-            topP: 0.95,
+            temperature: 0.3, // Lower temperature to reduce hallucinations
+            topK: 20,
+            topP: 0.8,
             maxOutputTokens: 500
           },
           safetySettings: [
@@ -166,8 +176,6 @@ ${datesContext}
     }
 
     const data = await response.json();
-
-    // Extract the response text
     const aiResponse = data.candidates?.[0]?.content?.parts?.[0]?.text;
 
     if (!aiResponse) {
@@ -206,53 +214,8 @@ ${datesContext}
   }
 };
 
-// Load menu data for context
-async function loadMenuContext() {
-  try {
-    const menuDir = path.join(__dirname, '../../content/menu-categories');
-    const files = await fs.readdir(menuDir);
-
-    const categories = await Promise.all(
-      files
-        .filter(file => file.endsWith('.md'))
-        .map(async (file) => {
-          try {
-            const filePath = path.join(menuDir, file);
-            const content = await fs.readFile(filePath, 'utf8');
-            const { data } = matter(content);
-            return data;
-          } catch (error) {
-            return null;
-          }
-        })
-    );
-
-    // Format menu data for AI context
-    let menuText = '';
-    for (const cat of categories.filter(c => c !== null)) {
-      menuText += `\n## ${cat.title}\n`;
-      if (cat.description) menuText += `${cat.description}\n`;
-      if (cat.items && Array.isArray(cat.items)) {
-        for (const item of cat.items) {
-          menuText += `- ${item.name}`;
-          if (item.price) menuText += ` (€${item.price})`;
-          if (item.description) menuText += `: ${item.description}`;
-          if (item.tags && item.tags.length > 0) menuText += ` [${item.tags.join(', ')}]`;
-          if (item.allergens && item.allergens.length > 0) menuText += ` Allergene: ${item.allergens.join(', ')}`;
-          menuText += '\n';
-        }
-      }
-    }
-
-    return menuText || 'Speisekarte wird gerade aktualisiert.';
-  } catch (error) {
-    console.error('Error loading menu context:', error);
-    return 'Speisekarte nicht verfügbar.';
-  }
-}
-
-// Load available dates for context
-async function loadAvailableDatesContext() {
+// Load available dates as structured JSON array
+async function loadAvailableDates() {
   try {
     const datesDir = path.join(__dirname, '../../content/available-dates');
     const files = await fs.readdir(datesDir);
@@ -275,67 +238,99 @@ async function loadAvailableDatesContext() {
         })
     );
 
-    // Filter future dates and format
+    // Filter and format future dates
     const futureDates = dates
       .filter(d => d !== null && d.date)
       .filter(d => new Date(d.date) >= today)
       .sort((a, b) => new Date(a.date) - new Date(b.date))
-      .slice(0, 10); // Next 10 dates
+      .slice(0, 15);
 
     if (futureDates.length === 0) {
-      return 'WICHTIG: Aktuell sind keine Termine verfügbar. Bitte Gäste an hello@healthybrunchclub.at verweisen.';
+      return [];
     }
 
-    // More explicit formatting to prevent hallucinations
-    let datesText = `WICHTIG: Nenne NUR diese ${futureDates.length} Termine - keine anderen Daten erfinden!\n\n`;
-
-    for (let i = 0; i < futureDates.length; i++) {
-      const date = futureDates[i];
+    // Return clean structured data
+    return futureDates.map(date => {
       const d = new Date(date.date);
-      const formatted = d.toLocaleDateString('de-AT', {
-        weekday: 'long',
-        day: 'numeric',
-        month: 'long',
-        year: 'numeric'
-      });
+      const times = date.slots?.map(s => s.time || s) || [];
 
-      // Extract just the times for clarity
-      let times = [];
-      if (date.slots && date.slots.length > 0) {
-        times = date.slots.map(s => s.time || s);
-      }
-
-      datesText += `${i + 1}. ${formatted}`;
-      if (times.length > 0) {
-        datesText += ` um ${times.join(' Uhr, ')} Uhr`;
-      }
-      datesText += '\n';
-    }
-
-    return datesText;
+      return {
+        date: date.date,
+        formattedDate: d.toLocaleDateString('de-AT', {
+          weekday: 'long',
+          day: 'numeric',
+          month: 'long',
+          year: 'numeric'
+        }),
+        title: date.title || null,
+        times: times,
+        note: date.note || null
+      };
+    });
   } catch (error) {
-    console.error('Error loading dates context:', error);
-    return 'WICHTIG: Termine konnten nicht geladen werden. Bitte Gäste an hello@healthybrunchclub.at verweisen.';
+    console.error('Error loading dates:', error);
+    return [];
+  }
+}
+
+// Load menu data as structured JSON array
+async function loadMenuData() {
+  try {
+    const menuDir = path.join(__dirname, '../../content/menu-categories');
+    const files = await fs.readdir(menuDir);
+
+    const categories = await Promise.all(
+      files
+        .filter(file => file.endsWith('.md'))
+        .map(async (file) => {
+          try {
+            const filePath = path.join(menuDir, file);
+            const content = await fs.readFile(filePath, 'utf8');
+            const { data } = matter(content);
+            return data;
+          } catch (error) {
+            return null;
+          }
+        })
+    );
+
+    // Return clean structured data
+    return categories
+      .filter(c => c !== null)
+      .sort((a, b) => (a.order || 99) - (b.order || 99))
+      .map(cat => ({
+        category: cat.title,
+        description: cat.description || null,
+        items: (cat.items || []).map(item => ({
+          name: item.name,
+          price: item.price ? `€${item.price}` : null,
+          description: item.description || null,
+          tags: item.tags || [],
+          allergens: (item.allergens || []).map(code => ALLERGEN_CODES[code] || code),
+          nutrition: item.nutrition || null
+        }))
+      }));
+  } catch (error) {
+    console.error('Error loading menu:', error);
+    return [];
   }
 }
 
 // Log conversation for future analysis and improvements
 async function logConversation(userMessage, botResponse) {
   const now = new Date();
-  const dateKey = now.toISOString().split('T')[0]; // YYYY-MM-DD
+  const dateKey = now.toISOString().split('T')[0];
   const key = `conversations/${dateKey}.json`;
 
   const logEntry = {
     timestamp: now.toISOString(),
-    userMessage: userMessage.substring(0, 500), // Limit stored message length
-    botResponse: botResponse.substring(0, 1000) // Limit stored response length
+    userMessage: userMessage.substring(0, 500),
+    botResponse: botResponse.substring(0, 1000)
   };
 
   const existingLogs = await readJSON('chatbotLogs', key, []);
   existingLogs.push(logEntry);
 
-  // Keep only last 1000 conversations per day to prevent unbounded growth
   const trimmedLogs = existingLogs.slice(-1000);
-
   await writeJSON('chatbotLogs', key, trimmedLogs);
 }
