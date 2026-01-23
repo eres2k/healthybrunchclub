@@ -176,7 +176,7 @@ ${datesContext}
 // Load menu data for context
 async function loadMenuContext() {
   try {
-    const menuDir = path.join(process.cwd(), 'content', 'menu-categories');
+    const menuDir = path.join(__dirname, '../../content/menu-categories');
     const files = await fs.readdir(menuDir);
 
     const categories = await Promise.all(
@@ -221,7 +221,7 @@ async function loadMenuContext() {
 // Load available dates for context
 async function loadAvailableDatesContext() {
   try {
-    const datesDir = path.join(process.cwd(), 'content', 'available-dates');
+    const datesDir = path.join(__dirname, '../../content/available-dates');
     const files = await fs.readdir(datesDir);
 
     const today = new Date();
