@@ -49,14 +49,14 @@
 }
 /* base styles */
 html {
-    font-size: 16px;
+    font-size: 15px;
     scroll-behavior: smooth;
     overflow-x: hidden;
 }
 body {
     font-family: var(--font-body);
     font-weight: 300;
-    line-height: 1.6;
+    line-height: 1.55;
     color: var(--charcoal);
     background-color: var(--pure-white);
     overflow-x: hidden;
@@ -71,17 +71,17 @@ h1, h2, h3, h4, h5, h6 {
     color: var(--black);
 }
 .section-title {
-    font-size: clamp(2.5rem, 5vw, 4rem);
+    font-size: clamp(2rem, 4vw, 3rem);
     text-align: center;
-    margin-bottom: var(--spacing-md);
+    margin-bottom: var(--spacing-sm);
     letter-spacing: -0.02em;
 }
 .section-subtitle {
     font-family: var(--font-light);
-    font-size: 1.125rem;
+    font-size: 1rem;
     text-align: center;
     color: var(--warm-gray);
-    margin-bottom: var(--spacing-xl);
+    margin-bottom: var(--spacing-lg);
     font-weight: 300;
 }
 /* loading screen */
@@ -849,19 +849,19 @@ h1, h2, h3, h4, h5, h6 {
 }
 /* category container */
 .menu-category {
-    margin-bottom: var(--spacing-xxl);
+    margin-bottom: var(--spacing-xl);
     position: relative;
 }
 /* category hero image container */
 .category-hero {
     position: relative;
     width: 100%;
-    max-width: 1200px;
-    height: 250px;
-    margin: 0 auto var(--spacing-lg);
+    max-width: 1100px;
+    height: 200px;
+    margin: 0 auto var(--spacing-md);
     overflow: hidden;
-    border-radius: 12px;
-    box-shadow: 0 8px 30px rgba(0, 0, 0, 0.12);
+    border-radius: 10px;
+    box-shadow: 0 6px 24px rgba(0, 0, 0, 0.1);
     background: linear-gradient(135deg, var(--cream), var(--light-gray));
     opacity: 0;
     transform: translatey(10px);
@@ -912,11 +912,11 @@ h1, h2, h3, h4, h5, h6 {
 /* category title overlay */
 .category-title-overlay {
     font-family: var(--font-display);
-    font-size: clamp(2rem, 5vw, 3.5rem);
+    font-size: clamp(1.5rem, 4vw, 2.5rem);
     font-weight: 400;
     color: white;
     text-transform: uppercase;
-    letter-spacing: 0.15em;
+    letter-spacing: 0.12em;
     text-align: center;
     margin: 0;
     text-shadow:
@@ -925,7 +925,7 @@ h1, h2, h3, h4, h5, h6 {
         0px 0px 40px rgba(0, 0, 0, 0.5);
     position: relative;
     line-height: 1.2;
-    padding: var(--spacing-sm) var(--spacing-md);
+    padding: var(--spacing-xs) var(--spacing-sm);
     background: rgba(0, 0, 0, 0.2);
     backdrop-filter: blur(5px);
     -webkit-backdrop-filter: blur(5px);
@@ -936,7 +936,7 @@ h1, h2, h3, h4, h5, h6 {
 /* category header */
 .category-header {
     text-align: center;
-    margin-bottom: var(--spacing-xl);
+    margin-bottom: var(--spacing-lg);
     position: relative;
 }
 .category-header::before,
@@ -944,30 +944,30 @@ h1, h2, h3, h4, h5, h6 {
     content: '';
     position: absolute;
     top: 50%;
-    width: 100px;
+    width: 80px;
     height: 1px;
     background: linear-gradient(to right, transparent, var(--light-gray), transparent);
 }
 .category-header::before {
-    right: calc(50% + 200px);
+    right: calc(50% + 180px);
 }
 .category-header::after {
-    left: calc(50% + 200px);
+    left: calc(50% + 180px);
 }
 .category-name {
     font-family: var(--font-display);
-    font-size: 2.5rem;
+    font-size: 2rem;
     color: var(--black);
     text-transform: uppercase;
     letter-spacing: 0.1em;
-    margin-bottom: var(--spacing-sm);
+    margin-bottom: var(--spacing-xs);
 }
 .category-description {
     font-family: var(--font-heading);
-    font-size: 1.125rem;
+    font-size: 0.95rem;
     color: var(--warm-gray);
     font-style: italic;
-    max-width: 600px;
+    max-width: 550px;
     margin: 0 auto;
 }
 /* menu items grid - 3 columns */
@@ -1044,16 +1044,16 @@ h1, h2, h3, h4, h5, h6 {
     display: flex;
     justify-content: space-between;
     align-items: baseline;
-    margin-bottom: var(--spacing-sm);
+    margin-bottom: var(--spacing-xs);
 }
 .menu-item-name {
     font-family: var(--font-heading);
-    font-size: 1.5rem;
+    font-size: 1.2rem;
     color: var(--black);
 }
 .menu-item-price {
     font-family: var(--font-display);
-    font-size: 1.375rem;
+    font-size: 1.1rem;
     color: var(--gold);
     display: inline-block !important;
     opacity: 1 !important;
@@ -1063,17 +1063,17 @@ h1, h2, h3, h4, h5, h6 {
 }
 .menu-item-description {
     font-family: var(--font-light);
-    font-size: 0.875rem;
-    line-height: 1.6;
+    font-size: 0.8rem;
+    line-height: 1.5;
     color: var(--warm-gray);
-    margin-bottom: var(--spacing-md);
+    margin-bottom: var(--spacing-sm);
 }
 /* nutrition info */
 .menu-item-nutrition {
     display: flex;
-    gap: var(--spacing-sm);
-    margin-bottom: var(--spacing-sm);
-    font-size: 0.75rem;
+    gap: var(--spacing-xs);
+    margin-bottom: var(--spacing-xs);
+    font-size: 0.7rem;
     color: var(--warm-gray);
 }
 .nutrition-item {
@@ -1088,15 +1088,15 @@ h1, h2, h3, h4, h5, h6 {
 /* tags */
 .menu-item-tags {
     display: flex;
-    gap: var(--spacing-xs);
+    gap: 0.25rem;
     flex-wrap: wrap;
-    margin-bottom: var(--spacing-sm);
+    margin-bottom: var(--spacing-xs);
 }
 .menu-tag {
     background: var(--cream);
     color: var(--charcoal);
-    padding: 0.25rem 0.75rem;
-    font-size: 0.625rem;
+    padding: 0.2rem 0.5rem;
+    font-size: 0.6rem;
     text-transform: uppercase;
     letter-spacing: 0.05em;
     transition: all var(--transition-fast);
@@ -1107,7 +1107,7 @@ h1, h2, h3, h4, h5, h6 {
 }
 /* allergens */
 .menu-item-allergens {
-    font-size: 0.75rem;
+    font-size: 0.7rem;
     color: var(--warm-gray);
 }
 .allergen-codes {
@@ -2158,11 +2158,11 @@ address a:hover {
 /* desktop specific adjustments */
 @media (min-width: 1200px) {
     .category-hero {
-        height: 280px;
+        height: 220px;
     }
-   
+
     .category-title-overlay {
-        font-size: 3.5rem;
+        font-size: 2.5rem;
     }
    
     .filter-buttons {
@@ -2177,11 +2177,11 @@ address a:hover {
 /* tablet adjustments */
 @media (min-width: 769px) and (max-width: 1199px) {
     .category-hero {
-        height: 240px;
+        height: 180px;
     }
-   
+
     .category-title-overlay {
-        font-size: 3rem;
+        font-size: 2rem;
     }
 }
 /* high contrast mode */
@@ -3422,17 +3422,17 @@ body.dark-mode video:hover {
 
 .reservation-title {
     font-family: 'Playfair Display', serif;
-    font-size: 2.5rem;
+    font-size: 2rem;
     color: var(--forest-green);
     text-align: center;
-    margin-bottom: 10px;
+    margin-bottom: 8px;
 }
 
 .reservation-subtitle {
     text-align: center;
     color: var(--sage-green);
-    margin-bottom: 40px;
-    font-size: 1.1rem;
+    margin-bottom: 30px;
+    font-size: 0.95rem;
 }
 
 /* Progress Indicator */
@@ -3479,8 +3479,8 @@ body.dark-mode video:hover {
 }
 
 .step-label {
-    margin-top: 8px;
-    font-size: 0.9rem;
+    margin-top: 6px;
+    font-size: 0.8rem;
     color: var(--sage-green);
 }
 
@@ -3490,10 +3490,10 @@ body.dark-mode video:hover {
 }
 
 .progress-line {
-    width: 60px;
+    width: 50px;
     height: 2px;
     background: var(--cream);
-    margin: 0 10px;
+    margin: 0 8px;
 }
 
 .progress-step.completed + .progress-line {
@@ -3518,19 +3518,19 @@ body.dark-mode video:hover {
 .reservation-step h3 {
     font-family: 'Lora', serif;
     color: var(--forest-green);
-    margin-bottom: 20px;
-    font-size: 1.8rem;
+    margin-bottom: 16px;
+    font-size: 1.4rem;
 }
 
 /* Date Selector */
 .date-selector {
-    margin-bottom: 30px;
+    margin-bottom: 24px;
 }
 
 .date-input {
     width: 100%;
-    padding: 15px;
-    font-size: 1.1rem;
+    padding: 12px;
+    font-size: 0.95rem;
     border: 2px solid var(--cream);
     border-radius: 10px;
     font-family: 'Lato', sans-serif;
@@ -3964,29 +3964,29 @@ body.dark-mode video:hover {
 
 /* Reservation System Styles */
 .reservation-step {
-  min-height: 400px;
+  min-height: 350px;
   animation: fadeIn 0.3s ease-in;
 }
 
 .step-title {
   font-family: 'Playfair Display', serif;
   color: var(--forest-green);
-  margin-bottom: 2rem;
-  font-size: 1.8rem;
+  margin-bottom: 1.5rem;
+  font-size: 1.4rem;
 }
 
 .dates-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
-  gap: 1.5rem;
-  margin: 2rem 0;
+  grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+  gap: 1rem;
+  margin: 1.5rem 0;
 }
 
 .date-card {
   background: var(--warm-white);
   border: 2px solid var(--sage-green);
-  border-radius: 12px;
-  padding: 1.5rem;
+  border-radius: 10px;
+  padding: 1rem;
   cursor: pointer;
   transition: all 0.3s ease;
   text-align: center;
@@ -3994,8 +3994,8 @@ body.dark-mode video:hover {
 }
 
 .date-card:hover {
-  transform: translateY(-5px);
-  box-shadow: 0 8px 20px rgba(30, 74, 60, 0.15);
+  transform: translateY(-3px);
+  box-shadow: 0 6px 16px rgba(30, 74, 60, 0.12);
   border-color: var(--forest-green);
 }
 
@@ -4006,8 +4006,8 @@ body.dark-mode video:hover {
 
 .date-card h4 {
   font-family: 'Lora', serif;
-  font-size: 1.3rem;
-  margin-bottom: 0.5rem;
+  font-size: 0.95rem;
+  margin-bottom: 0.35rem;
   color: var(--forest-green);
 }
 
@@ -4016,10 +4016,11 @@ body.dark-mode video:hover {
 }
 
 .date-card .date-day {
-  font-size: 2rem;
+  font-size: 1.5rem;
   font-weight: bold;
   color: var(--forest-green);
   display: block;
+  line-height: 1.2;
 }
 
 .date-card.selected .date-day {
@@ -4027,28 +4028,29 @@ body.dark-mode video:hover {
 }
 
 .date-card .date-month {
-  font-size: 1rem;
+  font-size: 0.75rem;
   text-transform: uppercase;
-  letter-spacing: 1px;
+  letter-spacing: 0.5px;
   opacity: 0.8;
 }
 
 .date-card .date-note {
-  font-size: 0.9rem;
-  margin-top: 0.5rem;
+  font-size: 0.7rem;
+  margin-top: 0.4rem;
   font-style: italic;
   opacity: 0.7;
+  line-height: 1.3;
 }
 
 .time-slots-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
-  gap: 1rem;
-  margin: 2rem 0;
+  grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
+  gap: 0.75rem;
+  margin: 1.5rem 0;
 }
 
 .time-slot {
-  padding: 1rem;
+  padding: 0.75rem;
   border: 2px solid var(--taupe);
   border-radius: 8px;
   text-align: center;
@@ -4056,7 +4058,7 @@ body.dark-mode video:hover {
   transition: all 0.2s ease;
   background: var(--cream);
   font-family: 'Lato', sans-serif;
-  font-size: 1.1rem;
+  font-size: 0.95rem;
   color: var(--forest-green);
 }
 
