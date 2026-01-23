@@ -4,7 +4,7 @@ order: 6
 image: /content/images/dsc00362_ergebnis.jpg
 description: prickelnde sodas mit natürlichen aromen – erfrischend & natürlich gesüßt
 items:
-  - name: oxymel von myHoney himbeer/zitrone/salbei
+  - name: honey-cider soda von myHoney himbeer/zitrone/salbei
     tags:
       - erfrischend
       - zuckerarm
