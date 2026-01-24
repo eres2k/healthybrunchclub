@@ -23,7 +23,7 @@ items:
       protein: 26g
       carbs: 63g
       fat: 38g
-    price: "18.9"
+    price: "21.90"
   - name: tina's soul food set
     tags:
       - ausgewogen
@@ -31,7 +31,7 @@ items:
       - sättigend
     description: |-
       * heißgetränk mit adaptogenen
-      * avocado bread mit ei, speck und pilzmix
+      * avocado bread mit 3 extras
       * hafer dich lieb
     allergens:
       - a
@@ -41,7 +41,7 @@ items:
       protein: 26g
       carbs: 63g
       fat: 38g
-    price: "25.3"
+    price: "25.90"
   - name: charlotte's healthy treat set
     tags:
       - ausgewogen
@@ -49,7 +49,7 @@ items:
       - genussvoll
     description: |-
       * heißgetränk mit adaptogenen 
-      * eggcitement deiner wahl (aufpreis zweites ei: € 1,40)
+      * eggcitement deiner wahl (aufpreis zweites ei: € 1,90)
       * berry good choice
     allergens:
       - a
@@ -62,5 +62,5 @@ items:
       protein: 14g
       carbs: 78g
       fat: 9g
-    price: "28.9"
+    price: "27.90"
 ---
