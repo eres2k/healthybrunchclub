@@ -359,10 +359,15 @@ function createCategoryHTML(category, catIndex) {
     let html = `<div class="menu-category" data-category="${categorySlug}">`;
     
     if (hasImage) {
-        // Category with hero image and overlay
+        // Category with hero image and overlay - using WebP with fallback
+        const imgUrl = formatImageUrl(category.image);
+        const webpSrcset = getWebPSrcset(category.image);
         html += `
             <div class="category-hero">
-                <img src="${formatImageUrl(category.image)}" alt="${category.title}" loading="lazy">
+                <picture>
+                    <source srcset="${webpSrcset}" sizes="(max-width: 480px) 100vw, (max-width: 768px) 100vw, 1200px" type="image/webp">
+                    <img src="${imgUrl}" alt="${category.title}" loading="lazy" width="1200" height="400">
+                </picture>
                 <div class="category-hero-gradient"></div>
                 <div class="category-hero-overlay">
                     <h3 class="category-title-overlay">${category.title}</h3>
@@ -462,11 +467,17 @@ function createMenuItemCard(item) {
     const hasImage = item.image ? true : false;
     const isSpecial = item.special || false;
     
+    const imgUrl = hasImage ? formatImageUrl(item.image) : '';
+    const webpSrcset = hasImage ? getWebPSrcset(item.image) : '';
+
     return `
         <div class="menu-item-card ${isSpecial ? 'special' : ''} ${!hasImage ? 'no-image' : ''}">
             ${hasImage ? `
                 <div class="menu-item-image">
-                    <img src="${formatImageUrl(item.image)}" alt="${item.name}" loading="lazy">
+                    <picture>
+                        <source srcset="${webpSrcset}" sizes="(max-width: 480px) 100vw, (max-width: 768px) 50vw, 300px" type="image/webp">
+                        <img src="${imgUrl}" alt="${item.name}" loading="lazy" width="400" height="300">
+                    </picture>
                 </div>
             ` : `
                 <div class="menu-item-icon">${getItemIcon(item)}</div>
@@ -572,6 +583,40 @@ function formatImageUrl(url) {
     if (url.startsWith('http')) return url;
     // Otherwise ensure it starts with /
     return url.startsWith('/') ? url : `/${url}`;
+}
+
+// Get WebP URL from original image URL
+function getWebPUrl(url) {
+    if (!url) return '';
+    const formatted = formatImageUrl(url);
+    // Replace extension with .webp
+    return formatted.replace(/\.(jpg|jpeg|png)$/i, '.webp');
+}
+
+// Get responsive srcset for WebP images
+function getWebPSrcset(url) {
+    if (!url) return '';
+    const formatted = formatImageUrl(url);
+    const basePath = formatted.replace(/\.(jpg|jpeg|png)$/i, '');
+    const ext = 'webp';
+
+    // Return srcset with responsive sizes
+    return `${basePath}-400w.${ext} 400w, ${basePath}-800w.${ext} 800w, ${basePath}.${ext} 1200w`;
+}
+
+// Create picture element HTML for responsive WebP images
+function createResponsiveImageHTML(url, alt, className = '', loading = 'lazy') {
+    if (!url) return '';
+    const formatted = formatImageUrl(url);
+    const webpSrcset = getWebPSrcset(url);
+    const webpUrl = getWebPUrl(url);
+
+    return `
+        <picture>
+            <source srcset="${webpSrcset}" sizes="(max-width: 480px) 400px, (max-width: 768px) 600px, 800px" type="image/webp">
+            <img src="${formatted}" alt="${alt}" class="${className}" loading="${loading}" width="800" height="267">
+        </picture>
+    `;
 }
 
 // Display Allergen Legend - Dark Mode Aware
