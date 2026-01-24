@@ -1,6 +1,5 @@
 'use strict';
 
-const jwt = require('jsonwebtoken');
 const { jsPDF } = require('jspdf');
 const { loadReservations } = require('./utils/reservation-utils');
 
@@ -10,23 +9,13 @@ const DEFAULT_HEADERS = {
   'Access-Control-Allow-Methods': 'GET, OPTIONS'
 };
 
-function authenticate(event) {
-  const authHeader = event.headers.authorization || event.headers.Authorization;
-  if (!authHeader) {
-    throw new Error('Nicht autorisiert.');
+function authenticate(context) {
+  // Check for Netlify Identity user from clientContext
+  const user = context?.clientContext?.user;
+  if (!user) {
+    throw new Error('Nicht autorisiert. Bitte mit Netlify Identity anmelden.');
   }
-
-  const [scheme, token] = authHeader.split(' ');
-  if (scheme !== 'Bearer' || !token) {
-    throw new Error('Ungültiger Authentifizierungs-Header.');
-  }
-
-  const secret = process.env.RESERVATION_ADMIN_TOKEN;
-  if (!secret) {
-    throw new Error('Admin-Token nicht konfiguriert.');
-  }
-
-  jwt.verify(token, secret);
+  return user;
 }
 
 function toCsv(reservations) {
@@ -77,7 +66,7 @@ function toPdf(reservations) {
   return doc.output('arraybuffer');
 }
 
-exports.handler = async (event) => {
+exports.handler = async (event, context) => {
   if (event.httpMethod === 'OPTIONS') {
     return { statusCode: 200, headers: DEFAULT_HEADERS, body: '' };
   }
@@ -87,7 +76,7 @@ exports.handler = async (event) => {
   }
 
   try {
-    authenticate(event);
+    authenticate(context);
   } catch (error) {
     return { statusCode: 401, headers: DEFAULT_HEADERS, body: JSON.stringify({ message: error.message }) };
   }
