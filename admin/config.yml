@@ -73,25 +73,6 @@ collections:
           - {label: "Neu", name: "isNew", widget: "boolean", default: false, required: false}
           - {label: "Saisonal", name: "seasonal", widget: "boolean", default: false, required: false}
 
-  - name: "events"
-    label: "Veranstaltungen"
-    label_singular: "Veranstaltung"
-    description: "Event- und Live-Musik-Verwaltung"
-    folder: "content/events"
-    create: true
-    slug: "{{year}}-{{month}}-{{day}}-{{slug}}"
-    preview_path: "/#events"
-    fields:
-      - {label: "Event Titel", name: "title", widget: "string", hint: "z.B. 'Jazz Brunch Special'"}
-      - {label: "Künstler/DJ", name: "artist", widget: "string", required: false}
-      - {label: "Musikstil", name: "musicStyle", widget: "string", required: false, hint: "z.B. 'Smooth Jazz, Lounge'"}
-      - {label: "Datum & Zeit", name: "date", widget: "datetime", format: "DD.MM.YYYY HH:mm"}
-      - {label: "Bild", name: "featuredImage", widget: "image", required: false}
-      - {label: "Startzeit", name: "startTime", widget: "string", default: "9:00 Uhr", required: false}
-      - {label: "Location", name: "location", widget: "string", default: "Healthy Brunch Club", required: false}
-      - {label: "Beschreibung", name: "description", widget: "text"}
-      - {label: "Audio Preview", name: "audioAnnouncement", widget: "file", required: false, hint: "MP3 oder WAV Format"}
-
   - name: "pages"
     label: "Seiten"
     label_singular: "Seite"

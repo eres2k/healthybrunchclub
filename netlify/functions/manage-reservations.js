@@ -1,6 +1,5 @@
 'use strict';
 
-const jwt = require('jsonwebtoken');
 const { getAvailability, loadReservations, saveBlocked, loadBlocked, updateReservationStatus } = require('./utils/reservation-utils');
 const { sendReservationEmails } = require('./utils/email-service');
 
@@ -19,27 +18,13 @@ function response(statusCode, body) {
   };
 }
 
-function authenticate(event) {
-  const authHeader = event.headers.authorization || event.headers.Authorization;
-  if (!authHeader) {
-    throw new Error('Nicht autorisiert.');
+function authenticate(context) {
+  // Check for Netlify Identity user from clientContext
+  const user = context?.clientContext?.user;
+  if (!user) {
+    throw new Error('Nicht autorisiert. Bitte mit Netlify Identity anmelden.');
   }
-
-  const [scheme, token] = authHeader.split(' ');
-  if (scheme !== 'Bearer' || !token) {
-    throw new Error('Ungültiger Authentifizierungs-Header.');
-  }
-
-  const secret = process.env.RESERVATION_ADMIN_TOKEN;
-  if (!secret) {
-    throw new Error('Admin-Token nicht konfiguriert.');
-  }
-
-  try {
-    return jwt.verify(token, secret);
-  } catch (error) {
-    throw new Error('Token konnte nicht verifiziert werden.');
-  }
+  return user;
 }
 
 async function handleGet(event) {
@@ -103,13 +88,13 @@ async function handlePost(event) {
   return response(400, { message: 'Unbekannte Aktion.' });
 }
 
-exports.handler = async (event) => {
+exports.handler = async (event, context) => {
   if (event.httpMethod === 'OPTIONS') {
     return response(200, {});
   }
 
   try {
-    authenticate(event);
+    authenticate(context);
   } catch (error) {
     return response(401, { message: error.message });
   }

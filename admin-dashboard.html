@@ -5,6 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Healthy Brunch Club – Admin</title>
   <link rel="stylesheet" href="mystyle-premium.css" />
+  <script src="https://identity.netlify.com/v1/netlify-identity-widget.js"></script>
   <style>
     body { background: #f6f7f4; color: #243424; font-family: 'Lato', sans-serif; }
     .container { max-width: 1100px; margin: 0 auto; padding: 2rem; }
@@ -46,9 +47,11 @@
 
     <div class="card" id="login-card">
       <h2>Anmeldung</h2>
-      <p>Bitte geben Sie Ihr Admin-Token ein, um fortzufahren.</p>
-      <input type="password" id="admin-token" placeholder="JWT Token" />
-      <button class="btn btn-primary" id="btn-login">Anmelden</button>
+      <p>Bitte melden Sie sich mit Ihrem Netlify Identity Account an.</p>
+      <button class="btn btn-primary" id="btn-login">Mit Netlify anmelden</button>
+      <p style="margin-top: 1rem; font-size: .85rem; color: #6b7a6c;">
+        <a href="/admin/" style="color: #2f5138;">Zurück zum CMS</a>
+      </p>
     </div>
 
     <div class="banner" id="admin-banner"></div>
@@ -154,7 +157,7 @@
     const banner = document.getElementById('admin-banner');
     const dashboard = document.getElementById('dashboard');
     const loginCard = document.getElementById('login-card');
-    let token = localStorage.getItem('hbc-admin-token') || '';
+    let currentUser = null;
 
     function showBanner(message, type = 'success') {
       banner.textContent = message;
@@ -163,7 +166,8 @@
     }
 
     function updateAuthState() {
-      if (token) {
+      currentUser = netlifyIdentity.currentUser();
+      if (currentUser) {
         dashboard.hidden = false;
         loginCard.hidden = true;
       } else {
@@ -172,7 +176,17 @@
       }
     }
 
+    async function getAuthToken() {
+      if (!currentUser) {
+        throw new Error('Nicht angemeldet');
+      }
+      await netlifyIdentity.refresh();
+      currentUser = netlifyIdentity.currentUser();
+      return currentUser.token.access_token;
+    }
+
     async function authenticatedFetch(url, options = {}) {
+      const token = await getAuthToken();
       const response = await fetch(url, {
         ...options,
         headers: {
@@ -183,30 +197,41 @@
       });
       if (response.status === 401) {
         showBanner('Authentifizierung erforderlich.', 'error');
-        token = '';
-        localStorage.removeItem('hbc-admin-token');
+        netlifyIdentity.logout();
         updateAuthState();
         throw new Error('Nicht autorisiert');
       }
       return response;
     }
 
-    document.getElementById('btn-login').addEventListener('click', () => {
-      const value = document.getElementById('admin-token').value.trim();
-      if (!value) {
-        showBanner('Bitte Token eingeben.', 'error');
-        return;
+    // Netlify Identity event handlers
+    netlifyIdentity.on('init', user => {
+      currentUser = user;
+      updateAuthState();
+      if (user) {
+        loadAvailableDates();
       }
-      token = value;
-      localStorage.setItem('hbc-admin-token', token);
+    });
+
+    netlifyIdentity.on('login', user => {
+      currentUser = user;
+      netlifyIdentity.close();
       updateAuthState();
       showBanner('Erfolgreich angemeldet.');
+      loadAvailableDates();
+    });
+
+    netlifyIdentity.on('logout', () => {
+      currentUser = null;
+      updateAuthState();
+    });
+
+    document.getElementById('btn-login').addEventListener('click', () => {
+      netlifyIdentity.open('login');
     });
 
     document.getElementById('btn-logout').addEventListener('click', () => {
-      token = '';
-      localStorage.removeItem('hbc-admin-token');
-      updateAuthState();
+      netlifyIdentity.logout();
     });
 
     document.getElementById('btn-load').addEventListener('click', async () => {
@@ -436,16 +461,8 @@
       renderLogs(filtered);
     });
 
-    // Load available dates on auth
-    const originalUpdateAuthState = updateAuthState;
-    updateAuthState = function() {
-      originalUpdateAuthState();
-      if (token) {
-        loadAvailableDates();
-      }
-    };
-
-    updateAuthState();
+    // Init Netlify Identity
+    netlifyIdentity.init();
   </script>
 </body>
 </html>

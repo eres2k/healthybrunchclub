@@ -255,8 +255,8 @@
     <div class="login-card">
       <div class="login-logo">Healthy Brunch Club</div>
       <div class="login-subtitle">Chatbot-Logs Verwaltung</div>
-      <input type="password" id="admin-token" placeholder="Admin-Token eingeben" />
-      <button class="btn btn-primary" id="btn-login">Anmelden</button>
+      <p style="color: #6b7a6c; margin-bottom: 1.5rem;">Bitte melden Sie sich mit Ihrem Netlify Identity Account an.</p>
+      <button class="btn btn-primary" id="btn-login">Mit Netlify anmelden</button>
       <p style="margin-top: 1rem; font-size: .85rem; color: #999;">
         <a href="/admin/" style="color: #2f5138;">Zurück zum CMS</a>
       </p>
@@ -339,7 +339,7 @@
     const searchInput = document.getElementById('search-input');
     const userDisplay = document.getElementById('user-display');
 
-    let token = localStorage.getItem('hbc-admin-token') || '';
+    let currentUser = null;
     let currentLogs = [];
 
     // Banner
@@ -349,12 +349,13 @@
       setTimeout(() => banner.classList.remove('show'), 4000);
     }
 
-    // Auth
+    // Netlify Identity Auth
     function updateAuthState() {
-      if (token) {
+      currentUser = netlifyIdentity.currentUser();
+      if (currentUser) {
         loginOverlay.style.display = 'none';
         mainContent.style.display = 'block';
-        userDisplay.textContent = 'Admin';
+        userDisplay.textContent = currentUser.user_metadata?.full_name || currentUser.email;
         loadAvailableDates();
       } else {
         loginOverlay.style.display = 'flex';
@@ -362,7 +363,18 @@
       }
     }
 
+    async function getAuthToken() {
+      if (!currentUser) {
+        throw new Error('Nicht angemeldet');
+      }
+      // Refresh token if needed
+      await netlifyIdentity.refresh();
+      currentUser = netlifyIdentity.currentUser();
+      return currentUser.token.access_token;
+    }
+
     async function authenticatedFetch(url, options = {}) {
+      const token = await getAuthToken();
       const response = await fetch(url, {
         ...options,
         headers: {
@@ -372,34 +384,37 @@
         }
       });
       if (response.status === 401) {
-        token = '';
-        localStorage.removeItem('hbc-admin-token');
+        netlifyIdentity.logout();
         updateAuthState();
         throw new Error('Nicht autorisiert');
       }
       return response;
     }
 
-    // Login
-    document.getElementById('btn-login').addEventListener('click', () => {
-      const value = document.getElementById('admin-token').value.trim();
-      if (!value) {
-        alert('Bitte Token eingeben.');
-        return;
-      }
-      token = value;
-      localStorage.setItem('hbc-admin-token', token);
+    // Netlify Identity event handlers
+    netlifyIdentity.on('init', user => {
+      currentUser = user;
       updateAuthState();
     });
 
-    document.getElementById('admin-token').addEventListener('keypress', (e) => {
-      if (e.key === 'Enter') document.getElementById('btn-login').click();
+    netlifyIdentity.on('login', user => {
+      currentUser = user;
+      netlifyIdentity.close();
+      updateAuthState();
+    });
+
+    netlifyIdentity.on('logout', () => {
+      currentUser = null;
+      updateAuthState();
+    });
+
+    // Login button opens Netlify Identity modal
+    document.getElementById('btn-login').addEventListener('click', () => {
+      netlifyIdentity.open('login');
     });
 
     document.getElementById('btn-logout').addEventListener('click', () => {
-      token = '';
-      localStorage.removeItem('hbc-admin-token');
-      updateAuthState();
+      netlifyIdentity.logout();
     });
 
     // Date loading
@@ -579,8 +594,8 @@
     document.getElementById('btn-load').addEventListener('click', loadLogs);
     document.getElementById('btn-refresh').addEventListener('click', loadAvailableDates);
 
-    // Init
-    updateAuthState();
+    // Init Netlify Identity
+    netlifyIdentity.init();
   </script>
 </body>
 </html>

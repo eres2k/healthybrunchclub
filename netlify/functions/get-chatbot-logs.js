@@ -1,6 +1,5 @@
 'use strict';
 
-const jwt = require('jsonwebtoken');
 const { getBlobStore, readJSON } = require('./utils/blob-storage');
 
 const DEFAULT_HEADERS = {
@@ -18,27 +17,13 @@ function response(statusCode, body) {
   };
 }
 
-function authenticate(event) {
-  const authHeader = event.headers.authorization || event.headers.Authorization;
-  if (!authHeader) {
-    throw new Error('Nicht autorisiert.');
+function authenticate(context) {
+  // Check for Netlify Identity user from clientContext
+  const user = context?.clientContext?.user;
+  if (!user) {
+    throw new Error('Nicht autorisiert. Bitte mit Netlify Identity anmelden.');
   }
-
-  const [scheme, token] = authHeader.split(' ');
-  if (scheme !== 'Bearer' || !token) {
-    throw new Error('Ungültiger Authentifizierungs-Header.');
-  }
-
-  const secret = process.env.RESERVATION_ADMIN_TOKEN;
-  if (!secret) {
-    throw new Error('Admin-Token nicht konfiguriert.');
-  }
-
-  try {
-    return jwt.verify(token, secret);
-  } catch (error) {
-    throw new Error('Token konnte nicht verifiziert werden.');
-  }
+  return user;
 }
 
 async function listAvailableDates() {
@@ -84,13 +69,13 @@ async function handleGet(event) {
   return response(400, { message: 'Bitte Datum angeben oder action=list-dates verwenden.' });
 }
 
-exports.handler = async (event) => {
+exports.handler = async (event, context) => {
   if (event.httpMethod === 'OPTIONS') {
     return response(200, {});
   }
 
   try {
-    authenticate(event);
+    authenticate(context);
   } catch (error) {
     return response(401, { message: error.message });
   }
