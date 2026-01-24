@@ -34,6 +34,18 @@ STRIKTE REGELN - UNBEDINGT BEFOLGEN:
 6. Antworte auf Deutsch, es sei denn der Gast schreibt auf Englisch.
 7. Halte Antworten prägnant (2-3 Sätze), außer bei detaillierten Menüfragen.
 
+RESERVIERUNGEN - SEHR WICHTIG:
+- Du kannst KEINE Reservierungen direkt durchführen oder bestätigen!
+- Sage NIEMALS "Ich habe reserviert" oder "Dein Tisch ist reserviert" - das ist FALSCH!
+- Wenn jemand reservieren möchte, hilf ihnen mit den verfügbaren Terminen aus "availableDates".
+- Um eine Reservierung zu starten, füge am Ende deiner Antwort diese Zeile hinzu:
+  [RESERVATION_ACTION:{"date":"YYYY-MM-DD","time":"HH:MM"}]
+- Beispiel: Der Gast fragt "Kann ich am 29. Jänner um 10 Uhr reservieren?"
+  Deine Antwort: "Der 29. Jänner um 10:00 Uhr ist verfügbar! Ich öffne das Reservierungsformular für dich."
+  Dann füge hinzu: [RESERVATION_ACTION:{"date":"2026-01-29","time":"10:00"}]
+- Wenn der Gast nur ein Datum nennt aber keine Uhrzeit, frage nach der gewünschten Uhrzeit BEVOR du das Formular öffnest.
+- Wenn der Gast nur "reservieren" sagt ohne Details, zeige die nächsten verfügbaren Termine und frage nach dem Wunschtermin.
+
 PRODUKT-EMPFEHLUNGEN:
 - Wenn du ein bestimmtes Gericht empfiehlst oder erwähnst, schreibe den Namen EXAKT wie in den Daten (z.B. "eggs any style", "omelette creation").
 - Empfehle aktiv passende Gerichte basierend auf den Wünschen des Gastes.
@@ -194,8 +206,11 @@ exports.handler = async (event, context) => {
     // Extract recommended products from the AI response
     const recommendedProducts = extractRecommendedProducts(aiResponse, menuData);
 
+    // Extract reservation action if present
+    const { cleanResponse, reservationAction } = extractReservationAction(aiResponse);
+
     // Log conversation for future improvements (non-blocking)
-    logConversation(message, aiResponse).catch(err => {
+    logConversation(message, cleanResponse).catch(err => {
       console.error('Failed to log conversation:', err.message);
     });
 
@@ -203,8 +218,9 @@ exports.handler = async (event, context) => {
       statusCode: 200,
       headers,
       body: JSON.stringify({
-        response: aiResponse,
+        response: cleanResponse,
         recommendedProducts: recommendedProducts,
+        reservationAction: reservationAction,
         timestamp: new Date().toISOString()
       })
     };
@@ -368,6 +384,34 @@ function extractRecommendedProducts(aiResponse, menuData) {
 
   // Limit to max 3 products to keep the chat clean
   return recommendedProducts.slice(0, 3);
+}
+
+// Extract reservation action from AI response
+function extractReservationAction(aiResponse) {
+  const actionPattern = /\[RESERVATION_ACTION:(\{[^}]+\})\]/;
+  const match = aiResponse.match(actionPattern);
+
+  if (match) {
+    try {
+      const actionData = JSON.parse(match[1]);
+      // Remove the action tag from the visible response
+      const cleanResponse = aiResponse.replace(actionPattern, '').trim();
+
+      return {
+        cleanResponse,
+        reservationAction: {
+          type: 'open_reservation',
+          date: actionData.date || null,
+          time: actionData.time || null
+        }
+      };
+    } catch (e) {
+      console.error('Failed to parse reservation action:', e);
+      return { cleanResponse: aiResponse, reservationAction: null };
+    }
+  }
+
+  return { cleanResponse: aiResponse, reservationAction: null };
 }
 
 // Log conversation for future analysis and improvements
