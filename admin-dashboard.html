@@ -3,14 +3,58 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Healthy Brunch Club – Admin</title>
-  <link rel="stylesheet" href="mystyle-premium.css" />
+  <title>Reservierungen - Healthy Brunch Club CMS</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Lato:wght@400;600;700&display=swap" rel="stylesheet">
   <script src="https://identity.netlify.com/v1/netlify-identity-widget.js"></script>
   <style>
-    body { background: #f6f7f4; color: #243424; font-family: 'Lato', sans-serif; }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body { background: #f6f7f4; color: #243424; font-family: 'Lato', sans-serif; min-height: 100vh; }
+
+    /* Header - matches Netlify CMS style */
+    .cms-header {
+      background: #fff;
+      border-bottom: 1px solid #e8e8e8;
+      padding: 0 1.5rem;
+      height: 56px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+    }
+    .cms-header-left { display: flex; align-items: center; gap: 1.5rem; }
+    .cms-logo { font-weight: 700; font-size: 1.1rem; color: #2f5138; text-decoration: none; }
+    .cms-nav { display: flex; gap: .5rem; }
+    .cms-nav a {
+      padding: .5rem 1rem;
+      border-radius: 6px;
+      text-decoration: none;
+      color: #555;
+      font-size: .9rem;
+      transition: background .15s;
+    }
+    .cms-nav a:hover { background: #f0f0f0; }
+    .cms-nav a.active { background: #2f5138; color: #fff; }
+    .cms-user { display: flex; align-items: center; gap: .75rem; }
+    .cms-user-name { font-size: .9rem; color: #666; }
+    .btn-logout {
+      padding: .4rem .8rem;
+      border-radius: 6px;
+      border: 1px solid #ddd;
+      background: #fff;
+      color: #555;
+      font-size: .85rem;
+      cursor: pointer;
+    }
+    .btn-logout:hover { background: #f5f5f5; }
+
     .container { max-width: 1100px; margin: 0 auto; padding: 2rem; }
-    header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem; }
-    .card { background: #fff; padding: 1.5rem; border-radius: 20px; box-shadow: 0 18px 48px rgba(0,0,0,.08); margin-bottom: 1.5rem; }
+    .page-title { font-size: 1.75rem; font-weight: 700; margin-bottom: .5rem; color: #243424; }
+    .page-subtitle { color: #6b7a6c; margin-bottom: 2rem; }
+    .card { background: #fff; padding: 1.5rem; border-radius: 12px; box-shadow: 0 2px 8px rgba(0,0,0,.06); margin-bottom: 1.5rem; }
+    .card-title { font-size: 1.1rem; font-weight: 600; margin-bottom: 1rem; color: #2f5138; }
     .grid { display: grid; gap: 1rem; }
     .grid-2 { grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); }
     table { width: 100%; border-collapse: collapse; }
@@ -28,35 +72,85 @@
     .stat-label { font-size: .75rem; color: #6b7a6c; text-transform: uppercase; letter-spacing: .05em; }
     .search-box { margin-bottom: 1rem; }
     .search-box input { max-width: 300px; }
-    .btn { display: inline-flex; align-items: center; justify-content: center; padding: .75rem 1.6rem; border-radius: 999px; border: none; font-weight: 600; cursor: pointer; }
+    .btn { display: inline-flex; align-items: center; justify-content: center; padding: .75rem 1.6rem; border-radius: 8px; border: none; font-weight: 600; cursor: pointer; transition: all .15s; }
     .btn-primary { background: #2f5138; color: #fff; }
+    .btn-primary:hover { background: #243f2c; }
     .btn-secondary { background: #edf3eb; color: #2f5138; }
-    .banner { padding: 1rem; border-radius: 16px; margin-bottom: 1rem; display: none; }
+    .btn-secondary:hover { background: #dfe8dd; }
+    .banner { padding: 1rem; border-radius: 8px; margin-bottom: 1rem; display: none; }
     .banner.show { display: block; }
     .banner.error { background: #fdecea; color: #842029; }
     .banner.success { background: #e6f4ea; color: #0f5132; }
-    input, select { width: 100%; padding: .75rem 1rem; border-radius: 12px; border: 1px solid #ced9cf; font-size: .95rem; }
+    input, select { width: 100%; padding: .75rem 1rem; border-radius: 8px; border: 1px solid #ced9cf; font-size: .95rem; }
+    input:focus, select:focus { outline: none; border-color: #2f5138; }
+
+    /* Login overlay */
+    .login-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(36, 52, 36, .95);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 1000;
+    }
+    .login-card {
+      background: #fff;
+      padding: 2.5rem;
+      border-radius: 16px;
+      width: 100%;
+      max-width: 400px;
+      text-align: center;
+    }
+    .login-logo { font-size: 1.5rem; font-weight: 700; color: #2f5138; margin-bottom: .5rem; }
+    .login-subtitle { color: #6b7a6c; margin-bottom: 2rem; }
+    .login-card .btn { width: 100%; }
+
+    /* Responsive */
+    @media (max-width: 768px) {
+      .cms-nav { display: none; }
+    }
   </style>
 </head>
 <body>
-  <div class="container">
-    <header>
-      <h1>Admin-Dashboard</h1>
-      <button id="btn-logout" class="btn btn-secondary">Abmelden</button>
-    </header>
-
-    <div class="card" id="login-card">
-      <h2>Anmeldung</h2>
-      <p>Bitte melden Sie sich mit Ihrem Netlify Identity Account an.</p>
+  <!-- Login Overlay -->
+  <div class="login-overlay" id="login-overlay">
+    <div class="login-card">
+      <div class="login-logo">Healthy Brunch Club</div>
+      <div class="login-subtitle">Reservierungen Verwaltung</div>
+      <p style="color: #6b7a6c; margin-bottom: 1.5rem;">Bitte melden Sie sich mit Ihrem Netlify Identity Account an.</p>
       <button class="btn btn-primary" id="btn-login">Mit Netlify anmelden</button>
-      <p style="margin-top: 1rem; font-size: .85rem; color: #6b7a6c;">
+      <p style="margin-top: 1rem; font-size: .85rem; color: #999;">
         <a href="/admin/" style="color: #2f5138;">Zurück zum CMS</a>
       </p>
     </div>
+  </div>
+
+  <!-- Header -->
+  <header class="cms-header">
+    <div class="cms-header-left">
+      <a href="/admin/" class="cms-logo">Healthy Brunch Club</a>
+      <nav class="cms-nav">
+        <a href="/admin/">Content</a>
+        <a href="/admin/#/workflow">Workflow</a>
+        <a href="/admin/chatbot-logs.html">Chatbot-Logs</a>
+        <a href="/admin-dashboard.html" class="active">Reservierungen</a>
+      </nav>
+    </div>
+    <div class="cms-user">
+      <span class="cms-user-name" id="user-display"></span>
+      <button class="btn-logout" id="btn-logout">Abmelden</button>
+    </div>
+  </header>
+
+  <!-- Main Content -->
+  <div class="container" id="main-content" style="display: none;">
+    <h1 class="page-title">Reservierungen</h1>
+    <p class="page-subtitle">Reservierungen verwalten, Verfügbarkeit prüfen und Zeitslots blockieren</p>
 
     <div class="banner" id="admin-banner"></div>
 
-    <div id="dashboard" hidden>
+    <div id="dashboard">
       <div class="card">
         <h2>Verfügbarkeit prüfen</h2>
         <div class="grid grid-2">
@@ -156,7 +250,9 @@
   <script>
     const banner = document.getElementById('admin-banner');
     const dashboard = document.getElementById('dashboard');
-    const loginCard = document.getElementById('login-card');
+    const loginOverlay = document.getElementById('login-overlay');
+    const mainContent = document.getElementById('main-content');
+    const userDisplay = document.getElementById('user-display');
     let currentUser = null;
 
     function showBanner(message, type = 'success') {
@@ -168,11 +264,12 @@
     function updateAuthState() {
       currentUser = netlifyIdentity.currentUser();
       if (currentUser) {
-        dashboard.hidden = false;
-        loginCard.hidden = true;
+        loginOverlay.style.display = 'none';
+        mainContent.style.display = 'block';
+        userDisplay.textContent = currentUser.user_metadata?.full_name || currentUser.email;
       } else {
-        dashboard.hidden = true;
-        loginCard.hidden = false;
+        loginOverlay.style.display = 'flex';
+        mainContent.style.display = 'none';
       }
     }
 
