@@ -96,7 +96,7 @@ items:
     description: kräfiger tee mit frischen minzblätter und  chaga - ein heilpilz der
       besonders immunstärkend und entzündungshemmend wirkt.
     allergens: []
-    price: "4.10"
+    price: "4.50"
     nutrition:
       calories: "2"
       protein: 0g
