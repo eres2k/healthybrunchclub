@@ -12,16 +12,46 @@
     <!-- Theme Color for Mobile Browsers -->
     <meta name="theme-color" content="#1A1A1A">
     
-    <!-- Refined Typography -->
+    <!-- Preconnect to critical domains -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,300;0,400;0,500;0,700;1,400&family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,400&family=Montserrat:wght@300;400;500;600&family=Lato:wght@300;400&display=swap" rel="stylesheet">
-    
-    <!-- Icons -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    
-    <!-- Styles -->
-    <link rel="stylesheet" href="mystyle-premium.css">
+    <link rel="preconnect" href="https://cdnjs.cloudflare.com" crossorigin>
+
+    <!-- Preload critical assets -->
+    <link rel="preload" href="content/images/logo.webp" as="image" type="image/webp">
+
+    <!-- Critical CSS inline for above-the-fold content -->
+    <style>
+        /* Critical CSS for initial render */
+        *{margin:0;padding:0;box-sizing:border-box}
+        :root{--bg-dark:#0a0a0a;--text-light:#f5f5f5;--accent:#c9a55c}
+        body{font-family:system-ui,-apple-system,sans-serif;background:var(--bg-dark);color:var(--text-light);overflow-x:hidden}
+        .loading-screen{position:fixed;inset:0;background:var(--bg-dark);display:flex;align-items:center;justify-content:center;z-index:10000}
+        .loading-content{text-align:center}
+        .loading-logo{width:200px;height:auto;animation:pulse 2s ease-in-out infinite}
+        @keyframes pulse{0%,100%{opacity:1}50%{opacity:.7}}
+        .loading-bar{width:200px;height:2px;background:rgba(255,255,255,.1);margin:2rem auto;overflow:hidden;border-radius:1px}
+        .loading-progress{height:100%;background:var(--accent);animation:loading 2s ease-in-out infinite}
+        @keyframes loading{0%{width:0;margin-left:0}50%{width:100%;margin-left:0}100%{width:0;margin-left:100%}}
+        .loading-text{font-size:.875rem;letter-spacing:.2em;opacity:.6}
+        .nav-premium{position:fixed;top:0;left:0;right:0;z-index:1000;padding:1rem 2rem;transition:all .3s}
+        .hero-premium{min-height:100vh;display:flex;align-items:center;justify-content:center;position:relative;overflow:hidden}
+        .hero-video-container{position:absolute;inset:0}
+        .hero-video{width:100%;height:100%;object-fit:cover}
+        .hero-overlay{position:absolute;inset:0;background:linear-gradient(to bottom,rgba(0,0,0,.4),rgba(0,0,0,.7))}
+    </style>
+
+    <!-- Main stylesheet - non-blocking -->
+    <link rel="preload" href="mystyle-premium.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
+    <noscript><link rel="stylesheet" href="mystyle-premium.css"></noscript>
+
+    <!-- Fonts - with display swap for better performance -->
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,300;0,400;0,500;0,700;1,400&family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,400&family=Montserrat:wght@300;400;500;600&family=Lato:wght@300;400&display=swap" rel="stylesheet" media="print" onload="this.media='all'">
+    <noscript><link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,300;0,400;0,500;0,700;1,400&family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,400&family=Montserrat:wght@300;400;500;600&family=Lato:wght@300;400&display=swap" rel="stylesheet"></noscript>
+
+    <!-- Icons - defer loading -->
+    <link rel="preload" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
+    <noscript><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"></noscript>
     
     <!-- Mobile Specific Inline Styles -->
     <style>
@@ -39,9 +69,9 @@
         }
     </style>
     
-    <!-- Netlify Identity -->
-    <script type="text/javascript" src="https://identity.netlify.com/v1/netlify-identity-widget.js"></script>
-<script src="force-lowercase.js"></script>
+    <!-- Netlify Identity - defer non-critical -->
+    <script defer src="https://identity.netlify.com/v1/netlify-identity-widget.js"></script>
+    <script defer src="force-lowercase.js"></script>
 
 
     <!-- PWA -->
@@ -58,7 +88,10 @@
     <!-- Elegant Loading Screen -->
     <div class="loading-screen" id="loadingScreen">
         <div class="loading-content">
-            <img src="content/images/logo.png" alt="Healthy Brunch Club" class="loading-logo">
+            <picture>
+                <source srcset="content/images/logo.webp" type="image/webp">
+                <img src="content/images/logo.png" alt="Healthy Brunch Club" class="loading-logo" width="200" height="90" fetchpriority="high">
+            </picture>
             <div class="loading-bar">
                 <div class="loading-progress"></div>
             </div>
@@ -70,7 +103,10 @@
     <nav class="nav-premium" id="navbar">
         <div class="nav-container">
             <a href="#home" class="logo-premium">
-                <img src="content/images/logo.png" alt="Healthy Brunch Club" class="logo-img">
+                <picture>
+                    <source srcset="content/images/logo.webp" type="image/webp">
+                    <img src="content/images/logo.png" alt="Healthy Brunch Club" class="logo-img" width="140" height="63">
+                </picture>
             </a>
             
             <ul class="nav-menu">
@@ -93,7 +129,7 @@
     <!-- Hero Section -->
     <section class="hero-premium" id="home">
         <div class="hero-video-container">
-            <video class="hero-video" autoplay muted loop playsinline>
+            <video class="hero-video" autoplay muted loop playsinline preload="metadata" poster="content/images/dsc00153_ergebnis.webp">
                 <source src="/content/videos/healthybrunchclub.mp4" type="video/mp4">
             </video>
             <div class="hero-overlay"></div>
@@ -102,7 +138,10 @@
         <div class="hero-content">
             <h1 class="hero-title">
                 <span class="hero-subtitle">willkommen</span>
-                <img src="content/images/logo.png" alt="Healthy Brunch Club" class="main-logo">
+                <picture>
+                    <source srcset="content/images/logo-400w.webp 400w, content/images/logo-800w.webp 800w, content/images/logo.webp 1246w" sizes="(max-width: 600px) 280px, (max-width: 900px) 400px, 500px" type="image/webp">
+                    <img src="content/images/logo.png" alt="Healthy Brunch Club" class="main-logo" width="500" height="225" loading="eager">
+                </picture>
                 <span class="hero-tagline">healthy food, elevated brunch</span>
             </h1>
             
@@ -286,7 +325,10 @@
                 </p>
             </div>
             <div class="about-image">
-                <img src="content/images/p38.png" alt="Die Gründerinnen" class="founder-image">
+                <picture>
+                    <source srcset="content/images/p38-400w.webp 400w, content/images/p38.webp 658w" sizes="(max-width: 768px) 100vw, 400px" type="image/webp">
+                    <img src="content/images/p38.png" alt="Die Gründerinnen" class="founder-image" width="658" height="496" loading="lazy">
+                </picture>
                 <div class="image-caption">die drei schwestern – vereint in ihrer vision</div>
             </div>
         </div>
@@ -383,7 +425,10 @@
     <footer class="footer-premium">
         <div class="footer-content">
             <div class="footer-section">
-                <img src="content/images/logo.png" alt="Healthy Brunch Club" class="footer-logo">
+                <picture>
+                    <source srcset="content/images/logo-400w.webp" type="image/webp">
+                    <img src="content/images/logo.png" alt="Healthy Brunch Club" class="footer-logo" width="150" height="68" loading="lazy">
+                </picture>
                 <p class="footer-tagline">healthy food, elevated brunch</p>
                 <div class="social-links">
                     <a href="#" aria-label="Instagram"><i class="fab fa-instagram"></i></a>
@@ -479,10 +524,10 @@
         </div>
     </div>
 
-    <!-- Scripts -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
-    <script src="cms-loader-premium.js"></script>
-    <script src="app-premium.js"></script>
+    <!-- Scripts - defer for non-blocking load -->
+    <script defer src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script defer src="cms-loader-premium.js"></script>
+    <script defer src="app-premium.js"></script>
     <script>
     // Reservation System
     let selectedDate = null;

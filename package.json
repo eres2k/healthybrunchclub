@@ -4,7 +4,8 @@
   "description": "Bio-Brunch Restaurant Website with Advanced Reservation System",
   "scripts": {
     "dev": "netlify dev",
-    "build": "bash scripts/rename-menu-pdf.sh",
+    "optimize-images": "node scripts/optimize-images.js",
+    "build": "npm run optimize-images && bash scripts/rename-menu-pdf.sh",
     "postbuild": "bash scripts/rename-menu-pdf.sh",
     "serve": "netlify dev"
   },
@@ -13,14 +14,15 @@
     "@netlify/functions": "^2.0.0",
     "@sendgrid/mail": "^7.7.0",
     "gray-matter": "^4.0.3",
-    "jspdf": "^2.5.1",
     "jsonwebtoken": "^9.0.2",
+    "jspdf": "^2.5.1",
     "luxon": "^3.4.4",
     "node-fetch": "^2.6.7",
     "qrcode": "^1.5.3",
     "uuid": "^9.0.0"
   },
   "devDependencies": {
-    "netlify-cli": "^17.0.0"
+    "netlify-cli": "^17.0.0",
+    "sharp": "^0.34.5"
   }
 }
