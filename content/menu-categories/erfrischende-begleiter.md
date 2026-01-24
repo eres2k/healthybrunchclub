@@ -26,7 +26,7 @@ items:
     description: goldener mix aus ingwer-zitrone-sirup und frischer kurkuma -
       besonders entzündungshemmend
     allergens: []
-    price: "4.10"
+    price: "4.30"
     nutrition:
       calories: "250"
       protein: 8g
@@ -47,16 +47,6 @@ items:
     allergens:
       - G
   - special: false
-    name: chia coco drink
-    price: "4.50"
-    description: k﻿okoswasser mit chiasamen. erfrischend, leicht und voller power,
-      reich an mineralstoffen, omega-3, hydratisierend und energiespendend.
-    nutrition:
-      calories: 176g
-      protein: 4g
-      carbs: 259g
-      fat: 7g
-  - special: false
     name: cherry ice glow
     price: "4.50"
     description: ein erfrischender kollagendrink von biogena mit fruchtigem
@@ -66,4 +56,41 @@ items:
       protein: 10g
       carbs: 9g
       fat: 0g
+    isNew: false
+  - recommended: false
+    isNew: true
+    seasonal: false
+    name: guava soda
+    price: "4.80"
+    description: g﻿uave sirup & chiasamen, aufgegossen mit sodawasser
+    nutrition:
+      calories: 108g
+      protein: 1g
+      carbs: 20g
+      fat: 2g
+  - recommended: false
+    isNew: true
+    seasonal: false
+    name: calamansi soda
+    price: "4.80"
+    description: " calamansi sirup mit frischer ingwer & zitronengras aufgegossen
+      mit sodawasser."
+    nutrition:
+      calories: 108g
+      protein: 1g
+      carbs: 20g
+      fat: 2g
+  - recommended: false
+    isNew: true
+    seasonal: false
+    name: roasted buko
+    price: "8.80"
+    description: s﻿anft geröstetes buko (junges kokoswasser) & mit pandan
+      infundierte mandelmilch, verfeinert mit sternanis und frischen
+      pandanblätter.
+    nutrition:
+      calories: 215g
+      protein: 2g
+      carbs: 4g
+      fat: 22g
 ---
