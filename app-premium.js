@@ -555,8 +555,8 @@ window.sendChatMessage = async function(event) {
         }
 
         if (data.response) {
-            // Add bot response to UI
-            addChatMessage('bot', data.response);
+            // Add bot response to UI with any recommended products
+            addChatMessage('bot', data.response, data.recommendedProducts || []);
 
             // Add to conversation history
             chatbotConversationHistory.push({ role: 'assistant', content: data.response });
@@ -580,7 +580,7 @@ window.sendChatMessage = async function(event) {
 };
 
 // Add Chat Message to UI
-function addChatMessage(role, content) {
+function addChatMessage(role, content, recommendedProducts = []) {
     const messagesContainer = document.getElementById('chatbotMessages');
     if (!messagesContainer) return;
 
@@ -592,10 +592,89 @@ function addChatMessage(role, content) {
     contentDiv.textContent = content;
 
     messageDiv.appendChild(contentDiv);
+
+    // Add product cards if there are recommended products (for bot messages)
+    if (role === 'bot' && recommendedProducts && recommendedProducts.length > 0) {
+        const productsContainer = createProductCards(recommendedProducts);
+        messageDiv.appendChild(productsContainer);
+    }
+
     messagesContainer.appendChild(messageDiv);
 
     // Scroll to bottom
     messagesContainer.scrollTop = messagesContainer.scrollHeight;
+}
+
+// Create product cards for recommended products in chat
+function createProductCards(products) {
+    const container = document.createElement('div');
+    container.className = 'chat-product-cards';
+
+    products.forEach(product => {
+        const card = document.createElement('div');
+        card.className = 'chat-product-card';
+        card.onclick = () => scrollToMenuItem(product.name);
+
+        // Product image
+        if (product.image) {
+            const imageDiv = document.createElement('div');
+            imageDiv.className = 'chat-product-image';
+            const img = document.createElement('img');
+            img.src = product.image;
+            img.alt = product.name;
+            img.loading = 'lazy';
+            imageDiv.appendChild(img);
+            card.appendChild(imageDiv);
+        }
+
+        // Product info
+        const infoDiv = document.createElement('div');
+        infoDiv.className = 'chat-product-info';
+
+        const nameDiv = document.createElement('div');
+        nameDiv.className = 'chat-product-name';
+        nameDiv.textContent = product.name;
+        infoDiv.appendChild(nameDiv);
+
+        // Tags (max 2)
+        if (product.tags && product.tags.length > 0) {
+            const tagsDiv = document.createElement('div');
+            tagsDiv.className = 'chat-product-tags';
+            const TAG_DISPLAY = {
+                'vegetarisch': 'Vegetarisch',
+                'glutenfrei': 'Glutenfrei',
+                'proteinreich': 'Proteinreich',
+                'sättigend': 'Sättigend',
+                'belebend': 'Belebend',
+                'immunstärkend': 'Immunstärkend'
+            };
+            tagsDiv.textContent = product.tags
+                .slice(0, 2)
+                .map(t => TAG_DISPLAY[t.toLowerCase()] || t)
+                .join(' · ');
+            infoDiv.appendChild(tagsDiv);
+        }
+
+        // Price
+        if (product.price) {
+            const priceDiv = document.createElement('div');
+            priceDiv.className = 'chat-product-price';
+            priceDiv.textContent = product.price.replace('.', ',');
+            infoDiv.appendChild(priceDiv);
+        }
+
+        card.appendChild(infoDiv);
+
+        // Arrow indicator
+        const arrowDiv = document.createElement('div');
+        arrowDiv.className = 'chat-product-arrow';
+        arrowDiv.innerHTML = '<i class="fas fa-chevron-right"></i>';
+        card.appendChild(arrowDiv);
+
+        container.appendChild(card);
+    });
+
+    return container;
 }
 
 // Add Typing Indicator
