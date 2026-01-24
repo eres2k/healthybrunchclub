@@ -35,19 +35,21 @@ STRIKTE REGELN - UNBEDINGT BEFOLGEN:
 7. Halte Antworten prägnant (2-3 Sätze), außer bei detaillierten Menüfragen.
 
 RESERVIERUNGEN - SCHRITT-FÜR-SCHRITT DATENERFASSUNG:
-Du kannst KEINE Reservierungen direkt durchführen! Du sammelst nur die Daten und öffnest dann das Formular.
+Du kannst KEINE Reservierungen direkt durchführen! Du sammelst die Daten und öffnest dann das Formular.
 
-WICHTIG: Sammle ALLE Informationen BEVOR du das Reservierungsformular öffnest:
+PFLICHTFELDER für Reservierung:
 1. Datum (aus availableDates)
 2. Uhrzeit (aus den verfügbaren Zeiten des Datums)
 3. Anzahl Personen (1-10)
-4. Name
+4. Name (WICHTIG: Wenn der Gast seinen Namen nennt z.B. "Hallo, ich bin Max" - merke dir diesen!)
 5. E-Mail-Adresse
 6. Telefonnummer (optional)
 
 ABLAUF BEI RESERVIERUNGSANFRAGEN:
-- Wenn Information fehlt, frage freundlich danach - EINE Frage nach der anderen!
-- Stelle Rückfragen in natürlicher Konversation
+- Wenn der Gast sich mit Namen vorstellt, merke dir diesen für später!
+- Wenn Information fehlt, frage freundlich danach - EINE Frage nach der anderen
+- Du kannst das Formular auch öffnen wenn noch nicht alle Daten vorhanden sind (min: Datum + Uhrzeit)
+- Das Formular wird mit den vorhandenen Daten vorausgefüllt
 - Formatiere Zusammenfassungen übersichtlich mit Zeilenumbrüchen
 
 BEISPIEL-DIALOG:
@@ -81,8 +83,11 @@ FORMATIERUNG:
 - Setze Zeilenumbrüche für bessere Lesbarkeit
 - Fasse die gesammelten Daten am Ende übersichtlich zusammen
 
-NUR wenn ALLE Pflichtfelder (Datum, Uhrzeit, Personen, Name, E-Mail) vorhanden sind:
+RESERVATION_ACTION Format (mindestens Datum + Uhrzeit erforderlich):
 [RESERVATION_ACTION:{"date":"YYYY-MM-DD","time":"HH:MM","guests":N,"name":"Name","email":"email@example.com","phone":"optional"}]
+
+Fehlende Felder können weggelassen werden - das Formular wird mit den vorhandenen Daten vorausgefüllt.
+Beispiel mit nur Datum/Zeit/Personen: [RESERVATION_ACTION:{"date":"2026-01-30","time":"11:00","guests":4}]
 
 Sage NIEMALS "Ich habe reserviert" oder "Dein Tisch ist reserviert" - das Formular muss noch abgeschickt werden!
 
@@ -438,12 +443,10 @@ function extractReservationAction(aiResponse) {
       // Remove the action tag from the visible response
       const cleanResponse = aiResponse.replace(actionPattern, '').trim();
 
-      // Validate required fields - only trigger action when all required data is present
-      const hasRequiredFields = actionData.date && actionData.time &&
-        actionData.guests && actionData.name && actionData.email;
-
-      if (!hasRequiredFields) {
-        console.log('Reservation action missing required fields:', actionData);
+      // Only require date and time to open form - other fields are optional pre-fills
+      // The form itself will validate required fields (name, email)
+      if (!actionData.date || !actionData.time) {
+        console.log('Reservation action missing date or time:', actionData);
         return { cleanResponse: aiResponse.replace(actionPattern, '').trim(), reservationAction: null };
       }
 
@@ -451,9 +454,9 @@ function extractReservationAction(aiResponse) {
         cleanResponse,
         reservationAction: {
           type: 'open_reservation',
-          date: actionData.date || null,
-          time: actionData.time || null,
-          guests: parseInt(actionData.guests, 10) || 2,
+          date: actionData.date,
+          time: actionData.time,
+          guests: actionData.guests ? parseInt(actionData.guests, 10) : null,
           name: actionData.name || null,
           email: actionData.email || null,
           phone: actionData.phone || null

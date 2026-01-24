@@ -778,6 +778,13 @@ function handleReservationAction(action) {
 function autoSelectReservationDate(targetDate, targetTime) {
     const dateCards = document.querySelectorAll('.date-card');
 
+    // If no date cards yet, dates might still be loading - retry after delay
+    if (dateCards.length === 0) {
+        console.log('Date cards not loaded yet, retrying...');
+        setTimeout(() => autoSelectReservationDate(targetDate, targetTime), 500);
+        return;
+    }
+
     for (const card of dateCards) {
         // Try to find the date from the card's click handler or data
         const cardDateText = card.querySelector('.date-day')?.textContent;
@@ -796,9 +803,11 @@ function autoSelectReservationDate(targetDate, targetTime) {
 
                 // If time is provided, auto-select it after time slots load
                 if (targetTime) {
-                    setTimeout(() => {
-                        autoSelectReservationTime(targetTime);
-                    }, 500);
+                    // Wait for time slots to load (they load via fetch after date selection)
+                    waitForTimeSlotsAndSelect(targetTime);
+                } else {
+                    // No time specified, just fill the form after a delay
+                    setTimeout(() => autoFillReservationForm(), 800);
                 }
 
                 return;
@@ -806,9 +815,25 @@ function autoSelectReservationDate(targetDate, targetTime) {
         }
     }
 
-    // If no matching date found, dates might still be loading
-    // The user will need to select manually
-    console.log('Could not auto-select date:', targetDate);
+    // If no matching date found, log it
+    console.log('Could not auto-select date:', targetDate, '- dates available:', dateCards.length);
+}
+
+// Wait for time slots to load and then select the target time
+function waitForTimeSlotsAndSelect(targetTime, attempts = 0) {
+    const maxAttempts = 10;
+    const timeSlots = document.querySelectorAll('#time-slots-container .time-slot');
+
+    if (timeSlots.length > 0) {
+        autoSelectReservationTime(targetTime);
+    } else if (attempts < maxAttempts) {
+        // Time slots not loaded yet, retry
+        setTimeout(() => waitForTimeSlotsAndSelect(targetTime, attempts + 1), 300);
+    } else {
+        console.log('Time slots did not load after', maxAttempts, 'attempts');
+        // Still try to fill the form with available data
+        autoFillReservationForm();
+    }
 }
 
 // Auto-select a time slot in the reservation widget
