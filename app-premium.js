@@ -584,6 +584,30 @@ window.sendChatMessage = async function(event) {
     }
 };
 
+// Format chat message for display with line breaks and bullet points
+function formatChatMessage(content) {
+    // Escape HTML to prevent XSS
+    const escapeHtml = (text) => {
+        const div = document.createElement('div');
+        div.textContent = text;
+        return div.innerHTML;
+    };
+
+    // Escape the content first
+    let formatted = escapeHtml(content);
+
+    // Convert line breaks to <br> tags
+    formatted = formatted.replace(/\n/g, '<br>');
+
+    // Convert bullet points (• or -) at the start of lines to styled list items
+    formatted = formatted.replace(/(^|<br>)(•|-)\s+/g, '$1<span class="chat-bullet">•</span> ');
+
+    // Make text between ** bold (markdown-style)
+    formatted = formatted.replace(/\*\*([^*]+)\*\*/g, '<strong>$1</strong>');
+
+    return formatted;
+}
+
 // Add Chat Message to UI
 function addChatMessage(role, content, recommendedProducts = []) {
     const messagesContainer = document.getElementById('chatbotMessages');
@@ -594,7 +618,11 @@ function addChatMessage(role, content, recommendedProducts = []) {
 
     const contentDiv = document.createElement('div');
     contentDiv.className = 'message-content';
-    contentDiv.textContent = content;
+
+    // Format the message with line breaks and basic styling
+    // Escape HTML but preserve line breaks and bullet points
+    const formattedContent = formatChatMessage(content);
+    contentDiv.innerHTML = formattedContent;
 
     messageDiv.appendChild(contentDiv);
 
@@ -726,14 +754,18 @@ function handleReservationAction(action) {
             chatWindow.style.display = 'none';
         }
 
+        // Store the complete reservation data for auto-fill
+        window.pendingReservationAction = {
+            date: action.date,
+            time: action.time,
+            guests: action.guests || 2,
+            name: action.name || '',
+            email: action.email || '',
+            phone: action.phone || ''
+        };
+
         // If date is provided, try to auto-select it after dates load
         if (action.date) {
-            // Store the target date/time for auto-selection
-            window.pendingReservationAction = {
-                date: action.date,
-                time: action.time
-            };
-
             // Trigger auto-selection after a short delay to allow dates to load
             setTimeout(() => {
                 autoSelectReservationDate(action.date, action.time);
@@ -791,11 +823,88 @@ function autoSelectReservationTime(targetTime) {
 
         if (slotTime === normalizedTarget || slotTime === targetTime) {
             slot.click();
+
+            // After selecting time, fill in the other form fields from pendingReservationAction
+            setTimeout(() => {
+                autoFillReservationForm();
+            }, 300);
+
             return;
         }
     }
 
     console.log('Could not auto-select time:', targetTime);
+}
+
+// Auto-fill the reservation form fields with chatbot-collected data
+function autoFillReservationForm() {
+    const action = window.pendingReservationAction;
+    if (!action) return;
+
+    // Try both form structures: index.html (#reservation-form) and reservation-widget.html ([data-reservation-form])
+    const form = document.querySelector('#reservation-form') || document.querySelector('[data-reservation-form]');
+    if (!form) return;
+
+    // Fill guests (index.html uses #guest-count select, widget uses input[name="guests"])
+    if (action.guests) {
+        const guestsSelect = document.getElementById('guest-count');
+        const guestsInput = form.querySelector('[name="guests"], [data-input-guests]');
+
+        if (guestsSelect) {
+            // For select dropdown, find the matching option
+            const guestValue = action.guests >= 8 ? '8' : String(action.guests);
+            guestsSelect.value = guestValue;
+            guestsSelect.dispatchEvent(new Event('change', { bubbles: true }));
+        } else if (guestsInput) {
+            guestsInput.value = action.guests;
+            guestsInput.dispatchEvent(new Event('change', { bubbles: true }));
+        }
+    }
+
+    // Fill name (index.html uses #guest-name, widget uses input[name="name"])
+    if (action.name) {
+        const nameInput = document.getElementById('guest-name') || form.querySelector('[name="name"]');
+        if (nameInput) {
+            nameInput.value = action.name;
+            nameInput.dispatchEvent(new Event('input', { bubbles: true }));
+        }
+    }
+
+    // Fill email (index.html uses #guest-email, widget uses input[name="email"])
+    if (action.email) {
+        const emailInput = document.getElementById('guest-email') || form.querySelector('[name="email"]');
+        if (emailInput) {
+            emailInput.value = action.email;
+            emailInput.dispatchEvent(new Event('input', { bubbles: true }));
+        }
+    }
+
+    // Fill phone (index.html uses #guest-phone, widget uses input[name="phone"])
+    if (action.phone) {
+        const phoneInput = document.getElementById('guest-phone') || form.querySelector('[name="phone"]');
+        if (phoneInput) {
+            phoneInput.value = action.phone;
+            phoneInput.dispatchEvent(new Event('input', { bubbles: true }));
+        }
+    }
+
+    // Auto-advance to step 3 (details) after a short delay
+    setTimeout(() => {
+        // Try widget next button first
+        const widgetNextButton = document.querySelector('[data-reservation-step="2"] [data-action-next]');
+        if (widgetNextButton) {
+            widgetNextButton.click();
+            return;
+        }
+
+        // For index.html, show the guest-details step directly
+        const guestDetailsStep = document.getElementById('guest-details');
+        const timeSelectionStep = document.getElementById('time-selection');
+        if (guestDetailsStep && timeSelectionStep) {
+            timeSelectionStep.style.display = 'none';
+            guestDetailsStep.style.display = 'block';
+        }
+    }, 500);
 }
 
 // Expose for external use

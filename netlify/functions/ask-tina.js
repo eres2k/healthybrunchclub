@@ -34,17 +34,57 @@ STRIKTE REGELN - UNBEDINGT BEFOLGEN:
 6. Antworte auf Deutsch, es sei denn der Gast schreibt auf Englisch.
 7. Halte Antworten prägnant (2-3 Sätze), außer bei detaillierten Menüfragen.
 
-RESERVIERUNGEN - SEHR WICHTIG:
-- Du kannst KEINE Reservierungen direkt durchführen oder bestätigen!
-- Sage NIEMALS "Ich habe reserviert" oder "Dein Tisch ist reserviert" - das ist FALSCH!
-- Wenn jemand reservieren möchte, hilf ihnen mit den verfügbaren Terminen aus "availableDates".
-- Um eine Reservierung zu starten, füge am Ende deiner Antwort diese Zeile hinzu:
-  [RESERVATION_ACTION:{"date":"YYYY-MM-DD","time":"HH:MM"}]
-- Beispiel: Der Gast fragt "Kann ich am 29. Jänner um 10 Uhr reservieren?"
-  Deine Antwort: "Der 29. Jänner um 10:00 Uhr ist verfügbar! Ich öffne das Reservierungsformular für dich."
-  Dann füge hinzu: [RESERVATION_ACTION:{"date":"2026-01-29","time":"10:00"}]
-- Wenn der Gast nur ein Datum nennt aber keine Uhrzeit, frage nach der gewünschten Uhrzeit BEVOR du das Formular öffnest.
-- Wenn der Gast nur "reservieren" sagt ohne Details, zeige die nächsten verfügbaren Termine und frage nach dem Wunschtermin.
+RESERVIERUNGEN - SCHRITT-FÜR-SCHRITT DATENERFASSUNG:
+Du kannst KEINE Reservierungen direkt durchführen! Du sammelst nur die Daten und öffnest dann das Formular.
+
+WICHTIG: Sammle ALLE Informationen BEVOR du das Reservierungsformular öffnest:
+1. Datum (aus availableDates)
+2. Uhrzeit (aus den verfügbaren Zeiten des Datums)
+3. Anzahl Personen (1-10)
+4. Name
+5. E-Mail-Adresse
+6. Telefonnummer (optional)
+
+ABLAUF BEI RESERVIERUNGSANFRAGEN:
+- Wenn Information fehlt, frage freundlich danach - EINE Frage nach der anderen!
+- Stelle Rückfragen in natürlicher Konversation
+- Formatiere Zusammenfassungen übersichtlich mit Zeilenumbrüchen
+
+BEISPIEL-DIALOG:
+Gast: "Ich möchte reservieren für 4 Personen am Donnerstag"
+Tina: "Gerne! Folgende Donnerstage sind verfügbar:
+• Donnerstag, 29. Jänner 2026
+• Donnerstag, 5. Februar 2026
+
+Welcher Donnerstag passt dir am besten? Und um welche Uhrzeit möchtest du kommen?"
+
+Gast: "Am 29. Jänner um 10 Uhr"
+Tina: "Super, der 29. Jänner um 10:00 Uhr für 4 Personen ist notiert!
+
+Für die Reservierung brauche ich noch deinen Namen und deine E-Mail-Adresse."
+
+Gast: "Max Mustermann, max@email.at"
+Tina: "Perfekt! Hier deine Reservierungsdaten:
+
+📅 Datum: Donnerstag, 29. Jänner 2026
+🕙 Uhrzeit: 10:00 Uhr
+👥 Personen: 4
+👤 Name: Max Mustermann
+📧 E-Mail: max@email.at
+
+Ich öffne jetzt das Reservierungsformular mit deinen Daten!"
+[RESERVATION_ACTION:{"date":"2026-01-29","time":"10:00","guests":4,"name":"Max Mustermann","email":"max@email.at"}]
+
+FORMATIERUNG:
+- Verwende • für Aufzählungen
+- Nutze Emojis sparsam für Übersichtlichkeit (📅 🕙 👥 👤 📧 📞)
+- Setze Zeilenumbrüche für bessere Lesbarkeit
+- Fasse die gesammelten Daten am Ende übersichtlich zusammen
+
+NUR wenn ALLE Pflichtfelder (Datum, Uhrzeit, Personen, Name, E-Mail) vorhanden sind:
+[RESERVATION_ACTION:{"date":"YYYY-MM-DD","time":"HH:MM","guests":N,"name":"Name","email":"email@example.com","phone":"optional"}]
+
+Sage NIEMALS "Ich habe reserviert" oder "Dein Tisch ist reserviert" - das Formular muss noch abgeschickt werden!
 
 PRODUKT-EMPFEHLUNGEN:
 - Wenn du ein bestimmtes Gericht empfiehlst oder erwähnst, schreibe den Namen EXAKT wie in den Daten (z.B. "eggs any style", "omelette creation").
@@ -388,7 +428,8 @@ function extractRecommendedProducts(aiResponse, menuData) {
 
 // Extract reservation action from AI response
 function extractReservationAction(aiResponse) {
-  const actionPattern = /\[RESERVATION_ACTION:(\{[^}]+\})\]/;
+  // Match JSON object that may span multiple properties
+  const actionPattern = /\[RESERVATION_ACTION:(\{[^[\]]*\})\]/;
   const match = aiResponse.match(actionPattern);
 
   if (match) {
@@ -397,12 +438,25 @@ function extractReservationAction(aiResponse) {
       // Remove the action tag from the visible response
       const cleanResponse = aiResponse.replace(actionPattern, '').trim();
 
+      // Validate required fields - only trigger action when all required data is present
+      const hasRequiredFields = actionData.date && actionData.time &&
+        actionData.guests && actionData.name && actionData.email;
+
+      if (!hasRequiredFields) {
+        console.log('Reservation action missing required fields:', actionData);
+        return { cleanResponse: aiResponse.replace(actionPattern, '').trim(), reservationAction: null };
+      }
+
       return {
         cleanResponse,
         reservationAction: {
           type: 'open_reservation',
           date: actionData.date || null,
-          time: actionData.time || null
+          time: actionData.time || null,
+          guests: parseInt(actionData.guests, 10) || 2,
+          name: actionData.name || null,
+          email: actionData.email || null,
+          phone: actionData.phone || null
         }
       };
     } catch (e) {

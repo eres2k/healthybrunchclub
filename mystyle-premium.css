@@ -4421,6 +4421,18 @@ body.dark-mode video:hover {
     box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
 }
 
+/* Chat message formatting */
+.chat-bullet {
+    color: var(--gold, #c9a96e);
+    font-weight: 600;
+    margin-right: 0.25em;
+}
+
+.message-content strong {
+    font-weight: 600;
+    color: var(--forest-green, #2f5138);
+}
+
 /* Typing indicator */
 .typing-indicator .message-content {
     display: flex;
