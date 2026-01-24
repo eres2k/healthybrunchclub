@@ -560,6 +560,11 @@ window.sendChatMessage = async function(event) {
 
             // Add to conversation history
             chatbotConversationHistory.push({ role: 'assistant', content: data.response });
+
+            // Handle reservation action if present
+            if (data.reservationAction && data.reservationAction.type === 'open_reservation') {
+                handleReservationAction(data.reservationAction);
+            }
         } else {
             addChatMessage('bot', 'Entschuldigung, ich konnte deine Frage gerade nicht verarbeiten. Bitte versuche es nochmal!');
         }
@@ -697,6 +702,104 @@ function addTypingIndicator() {
 
     return typingDiv;
 }
+
+// Handle reservation action from chatbot
+function handleReservationAction(action) {
+    // Small delay to let the message appear first
+    setTimeout(() => {
+        // Scroll to reservation section
+        const reservationSection = document.getElementById('reservierung');
+        if (reservationSection) {
+            const offset = 80;
+            const targetPosition = reservationSection.offsetTop - offset;
+            window.scrollTo({
+                top: targetPosition,
+                behavior: 'smooth'
+            });
+        }
+
+        // Close the chatbot window
+        const container = document.getElementById('chatbotContainer');
+        const chatWindow = document.getElementById('chatbotWindow');
+        if (container && chatWindow) {
+            container.classList.remove('open');
+            chatWindow.style.display = 'none';
+        }
+
+        // If date is provided, try to auto-select it after dates load
+        if (action.date) {
+            // Store the target date/time for auto-selection
+            window.pendingReservationAction = {
+                date: action.date,
+                time: action.time
+            };
+
+            // Trigger auto-selection after a short delay to allow dates to load
+            setTimeout(() => {
+                autoSelectReservationDate(action.date, action.time);
+            }, 500);
+        }
+    }, 800);
+}
+
+// Auto-select a date in the reservation widget
+function autoSelectReservationDate(targetDate, targetTime) {
+    const dateCards = document.querySelectorAll('.date-card');
+
+    for (const card of dateCards) {
+        // Try to find the date from the card's click handler or data
+        const cardDateText = card.querySelector('.date-day')?.textContent;
+        const cardMonthText = card.querySelector('.date-month')?.textContent;
+
+        if (cardDateText && cardMonthText) {
+            // Parse the target date
+            const target = new Date(targetDate);
+            const targetDay = target.getDate();
+            const targetMonth = target.toLocaleDateString('de-DE', { month: 'long' });
+
+            // Check if this card matches
+            if (parseInt(cardDateText) === targetDay && cardMonthText.toLowerCase() === targetMonth.toLowerCase()) {
+                // Click this card to select the date
+                card.click();
+
+                // If time is provided, auto-select it after time slots load
+                if (targetTime) {
+                    setTimeout(() => {
+                        autoSelectReservationTime(targetTime);
+                    }, 500);
+                }
+
+                return;
+            }
+        }
+    }
+
+    // If no matching date found, dates might still be loading
+    // The user will need to select manually
+    console.log('Could not auto-select date:', targetDate);
+}
+
+// Auto-select a time slot in the reservation widget
+function autoSelectReservationTime(targetTime) {
+    const timeSlots = document.querySelectorAll('#time-slots-container .time-slot');
+
+    // Normalize the target time (ensure HH:MM format)
+    const normalizedTarget = targetTime.includes(':') ? targetTime : targetTime + ':00';
+
+    for (const slot of timeSlots) {
+        const slotTime = slot.dataset.time || slot.textContent.replace(' Uhr', '').trim();
+
+        if (slotTime === normalizedTarget || slotTime === targetTime) {
+            slot.click();
+            return;
+        }
+    }
+
+    console.log('Could not auto-select time:', targetTime);
+}
+
+// Expose for external use
+window.handleReservationAction = handleReservationAction;
 
 // ===============================================
 // INFO MODAL
