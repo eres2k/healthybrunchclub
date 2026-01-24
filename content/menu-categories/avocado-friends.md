@@ -77,4 +77,5 @@ items:
       protein: 8g
       carbs: 36g
       fat: 18g
+    image: /content/images/screenshot-2026-01-24-1324100.png
 ---
