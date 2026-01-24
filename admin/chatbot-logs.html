@@ -178,6 +178,34 @@
       font-weight: 600;
     }
 
+    /* User data badge row */
+    .user-data-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: .5rem;
+      margin-bottom: .75rem;
+      padding-bottom: .75rem;
+      border-bottom: 1px solid #e4eadf;
+    }
+    .user-data-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: .3rem;
+      padding: .25rem .6rem;
+      background: #edf3eb;
+      border-radius: 6px;
+      font-size: .75rem;
+      color: #3d6a4a;
+    }
+    .user-data-badge svg {
+      width: 12px;
+      height: 12px;
+      opacity: .7;
+    }
+    .user-data-badge.location { background: #e8f4fc; color: #1a5276; }
+    .user-data-badge.device { background: #fef5e7; color: #9a6700; }
+    .user-data-badge.browser { background: #f4ecf7; color: #6c3483; }
+
     /* Empty state */
     .empty-state {
       text-align: center;
@@ -465,6 +493,59 @@
       return div.innerHTML;
     }
 
+    function renderUserData(log) {
+      const badges = [];
+
+      // Location badge
+      if (log.city || log.countryName || log.country) {
+        const location = [log.city, log.region, log.countryName || log.country].filter(Boolean).join(', ');
+        badges.push(`
+          <span class="user-data-badge location" title="Standort">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z"/><circle cx="12" cy="10" r="3"/></svg>
+            ${escapeHtml(location)}
+          </span>
+        `);
+      }
+
+      // Device/OS badge
+      if (log.os || log.device) {
+        const deviceInfo = [log.device, log.os].filter(Boolean).join(' • ');
+        badges.push(`
+          <span class="user-data-badge device" title="Gerät & Betriebssystem">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="5" y="2" width="14" height="20" rx="2" ry="2"/><line x1="12" y1="18" x2="12.01" y2="18"/></svg>
+            ${escapeHtml(deviceInfo)}
+          </span>
+        `);
+      }
+
+      // Browser badge
+      if (log.browser) {
+        badges.push(`
+          <span class="user-data-badge browser" title="Browser">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 014 10 15.3 15.3 0 01-4 10 15.3 15.3 0 01-4-10 15.3 15.3 0 014-10z"/></svg>
+            ${escapeHtml(log.browser)}
+          </span>
+        `);
+      }
+
+      // IP badge (only show last part for privacy)
+      if (log.ip) {
+        const maskedIp = log.ip.split('.').map((p, i) => i < 2 ? p : '***').join('.');
+        badges.push(`
+          <span class="user-data-badge" title="IP: ${escapeHtml(log.ip)}">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+            ${escapeHtml(maskedIp)}
+          </span>
+        `);
+      }
+
+      if (badges.length === 0) {
+        return '';
+      }
+
+      return `<div class="user-data-row">${badges.join('')}</div>`;
+    }
+
     // Stats
     function updateStats(logs) {
       if (logs.length === 0) {
@@ -476,11 +557,33 @@
       const avgBotLen = Math.round(logs.reduce((s, l) => s + l.botResponse.length, 0) / logs.length);
 
       const hourCounts = {};
+      const countryCounts = {};
+      const osCounts = {};
+      const deviceCounts = {};
+
       logs.forEach(log => {
         const hour = new Date(log.timestamp).getHours();
         hourCounts[hour] = (hourCounts[hour] || 0) + 1;
+
+        if (log.countryName || log.country) {
+          const country = log.countryName || log.country;
+          countryCounts[country] = (countryCounts[country] || 0) + 1;
+        }
+
+        if (log.os) {
+          osCounts[log.os] = (osCounts[log.os] || 0) + 1;
+        }
+
+        if (log.device) {
+          deviceCounts[log.device] = (deviceCounts[log.device] || 0) + 1;
+        }
       });
+
       const peakHour = Object.entries(hourCounts).sort((a, b) => b[1] - a[1])[0];
+      const topCountry = Object.entries(countryCounts).sort((a, b) => b[1] - a[1])[0];
+      const topOS = Object.entries(osCounts).sort((a, b) => b[1] - a[1])[0];
+      const mobileCount = logs.filter(l => l.device && (l.device.includes('Phone') || l.device.includes('iPhone') || l.device === 'Mobile')).length;
+      const mobilePercent = Math.round((mobileCount / logs.length) * 100);
 
       statsRow.style.display = 'flex';
       statsRow.innerHTML = `
@@ -488,20 +591,28 @@
           <div class="stat-number">${logs.length}</div>
           <div class="stat-label">Gespräche</div>
         </div>
-        <div class="stat-box">
-          <div class="stat-number">${avgUserLen}</div>
-          <div class="stat-label">Ø Zeichen (User)</div>
-        </div>
-        <div class="stat-box">
-          <div class="stat-number">${avgBotLen}</div>
-          <div class="stat-label">Ø Zeichen (Bot)</div>
-        </div>
         ${peakHour ? `
         <div class="stat-box">
           <div class="stat-number">${String(peakHour[0]).padStart(2, '0')}:00</div>
           <div class="stat-label">Peak-Stunde (${peakHour[1]}x)</div>
         </div>
         ` : ''}
+        ${topCountry ? `
+        <div class="stat-box">
+          <div class="stat-number" style="font-size: 1.2rem;">${topCountry[0]}</div>
+          <div class="stat-label">Top Land (${topCountry[1]}x)</div>
+        </div>
+        ` : ''}
+        ${topOS ? `
+        <div class="stat-box">
+          <div class="stat-number" style="font-size: 1rem;">${topOS[0]}</div>
+          <div class="stat-label">Top OS (${topOS[1]}x)</div>
+        </div>
+        ` : ''}
+        <div class="stat-box">
+          <div class="stat-number">${mobilePercent}%</div>
+          <div class="stat-label">Mobile User</div>
+        </div>
       `;
     }
 
@@ -528,6 +639,7 @@
               ${formatTime(log.timestamp)}
             </span>
           </div>
+          ${renderUserData(log)}
           <div class="chat-message chat-user">
             <div class="chat-label">Benutzer</div>
             ${escapeHtml(log.userMessage)}
