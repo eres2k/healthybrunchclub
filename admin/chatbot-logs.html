@@ -1,0 +1,586 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Chatbot-Logs - Healthy Brunch Club CMS</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Lato:wght@400;600;700&display=swap" rel="stylesheet">
+  <script src="https://identity.netlify.com/v1/netlify-identity-widget.js"></script>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body { background: #f6f7f4; color: #243424; font-family: 'Lato', sans-serif; min-height: 100vh; }
+
+    /* Header - matches Netlify CMS style */
+    .cms-header {
+      background: #fff;
+      border-bottom: 1px solid #e8e8e8;
+      padding: 0 1.5rem;
+      height: 56px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+    }
+    .cms-header-left { display: flex; align-items: center; gap: 1.5rem; }
+    .cms-logo { font-weight: 700; font-size: 1.1rem; color: #2f5138; text-decoration: none; }
+    .cms-nav { display: flex; gap: .5rem; }
+    .cms-nav a {
+      padding: .5rem 1rem;
+      border-radius: 6px;
+      text-decoration: none;
+      color: #555;
+      font-size: .9rem;
+      transition: background .15s;
+    }
+    .cms-nav a:hover { background: #f0f0f0; }
+    .cms-nav a.active { background: #2f5138; color: #fff; }
+    .cms-user { display: flex; align-items: center; gap: .75rem; }
+    .cms-user-name { font-size: .9rem; color: #666; }
+    .btn-logout {
+      padding: .4rem .8rem;
+      border-radius: 6px;
+      border: 1px solid #ddd;
+      background: #fff;
+      color: #555;
+      font-size: .85rem;
+      cursor: pointer;
+    }
+    .btn-logout:hover { background: #f5f5f5; }
+
+    /* Main Content */
+    .container { max-width: 1200px; margin: 0 auto; padding: 2rem; }
+    .page-title { font-size: 1.75rem; font-weight: 700; margin-bottom: .5rem; color: #243424; }
+    .page-subtitle { color: #6b7a6c; margin-bottom: 2rem; }
+
+    /* Cards */
+    .card { background: #fff; padding: 1.5rem; border-radius: 12px; box-shadow: 0 2px 8px rgba(0,0,0,.06); margin-bottom: 1.5rem; }
+    .card-title { font-size: 1.1rem; font-weight: 600; margin-bottom: 1rem; color: #2f5138; }
+
+    /* Controls */
+    .controls { display: flex; gap: 1rem; flex-wrap: wrap; align-items: flex-end; margin-bottom: 1.5rem; }
+    .control-group { display: flex; flex-direction: column; gap: .4rem; }
+    .control-group label { font-size: .8rem; font-weight: 600; text-transform: uppercase; letter-spacing: .05em; color: #6b7a6c; }
+    select, input[type="text"] {
+      padding: .6rem 1rem;
+      border-radius: 8px;
+      border: 1px solid #ced9cf;
+      font-size: .95rem;
+      min-width: 200px;
+      background: #fff;
+    }
+    select:focus, input:focus { outline: none; border-color: #2f5138; }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      padding: .6rem 1.2rem;
+      border-radius: 8px;
+      border: none;
+      font-weight: 600;
+      font-size: .9rem;
+      cursor: pointer;
+      transition: all .15s;
+      gap: .5rem;
+    }
+    .btn-primary { background: #2f5138; color: #fff; }
+    .btn-primary:hover { background: #243f2c; }
+    .btn-secondary { background: #edf3eb; color: #2f5138; }
+    .btn-secondary:hover { background: #dfe8dd; }
+
+    /* Stats */
+    .stats-row { display: flex; gap: 1rem; margin-bottom: 1.5rem; flex-wrap: wrap; }
+    .stat-box {
+      background: linear-gradient(135deg, #2f5138 0%, #3d6a4a 100%);
+      padding: 1.25rem 1.75rem;
+      border-radius: 12px;
+      text-align: center;
+      color: #fff;
+      min-width: 140px;
+    }
+    .stat-number { font-size: 2rem; font-weight: 700; line-height: 1; }
+    .stat-label { font-size: .75rem; text-transform: uppercase; letter-spacing: .05em; opacity: .85; margin-top: .4rem; }
+
+    /* Search */
+    .search-box { position: relative; flex: 1; max-width: 400px; }
+    .search-box input {
+      width: 100%;
+      padding-left: 2.5rem;
+    }
+    .search-icon {
+      position: absolute;
+      left: .85rem;
+      top: 50%;
+      transform: translateY(-50%);
+      color: #999;
+      pointer-events: none;
+    }
+
+    /* Logs */
+    .logs-container { max-height: 700px; overflow-y: auto; }
+    .chat-log {
+      border: 1px solid #e4eadf;
+      border-radius: 12px;
+      padding: 1.25rem;
+      margin-bottom: 1rem;
+      background: #fafbf9;
+      transition: box-shadow .15s;
+    }
+    .chat-log:hover { box-shadow: 0 4px 12px rgba(0,0,0,.08); }
+    .chat-log-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: .75rem;
+    }
+    .chat-log-time {
+      font-size: .8rem;
+      color: #6b7a6c;
+      display: flex;
+      align-items: center;
+      gap: .4rem;
+    }
+    .chat-log-index {
+      background: #2f5138;
+      color: #fff;
+      padding: .2rem .6rem;
+      border-radius: 999px;
+      font-size: .75rem;
+      font-weight: 600;
+    }
+    .chat-message {
+      padding: .85rem 1rem;
+      border-radius: 12px;
+      margin-bottom: .5rem;
+      line-height: 1.5;
+      white-space: pre-wrap;
+      word-break: break-word;
+    }
+    .chat-message:last-child { margin-bottom: 0; }
+    .chat-user {
+      background: #edf3eb;
+      border-radius: 12px 12px 12px 4px;
+    }
+    .chat-bot {
+      background: #fff;
+      border: 1px solid #ced9cf;
+      border-radius: 12px 12px 4px 12px;
+    }
+    .chat-label {
+      font-size: .7rem;
+      text-transform: uppercase;
+      letter-spacing: .05em;
+      color: #6b7a6c;
+      margin-bottom: .4rem;
+      font-weight: 600;
+    }
+
+    /* Empty state */
+    .empty-state {
+      text-align: center;
+      padding: 4rem 2rem;
+      color: #6b7a6c;
+    }
+    .empty-state-icon { font-size: 3rem; margin-bottom: 1rem; opacity: .5; }
+    .empty-state-title { font-size: 1.1rem; font-weight: 600; margin-bottom: .5rem; color: #243424; }
+
+    /* Loading */
+    .loading {
+      text-align: center;
+      padding: 3rem;
+      color: #6b7a6c;
+    }
+    .spinner {
+      width: 40px;
+      height: 40px;
+      border: 3px solid #edf3eb;
+      border-top-color: #2f5138;
+      border-radius: 50%;
+      animation: spin 1s linear infinite;
+      margin: 0 auto 1rem;
+    }
+    @keyframes spin { to { transform: rotate(360deg); } }
+
+    /* Banner */
+    .banner {
+      padding: 1rem 1.25rem;
+      border-radius: 8px;
+      margin-bottom: 1.5rem;
+      display: none;
+      animation: slideIn .3s ease;
+    }
+    .banner.show { display: block; }
+    .banner.error { background: #fdecea; color: #842029; }
+    .banner.success { background: #e6f4ea; color: #0f5132; }
+    @keyframes slideIn { from { opacity: 0; transform: translateY(-10px); } to { opacity: 1; transform: translateY(0); } }
+
+    /* Login */
+    .login-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(36, 52, 36, .95);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 1000;
+    }
+    .login-card {
+      background: #fff;
+      padding: 2.5rem;
+      border-radius: 16px;
+      width: 100%;
+      max-width: 400px;
+      text-align: center;
+    }
+    .login-logo { font-size: 1.5rem; font-weight: 700; color: #2f5138; margin-bottom: .5rem; }
+    .login-subtitle { color: #6b7a6c; margin-bottom: 2rem; }
+    .login-card input { width: 100%; margin-bottom: 1rem; }
+    .login-card .btn { width: 100%; }
+
+    /* Responsive */
+    @media (max-width: 768px) {
+      .cms-nav { display: none; }
+      .controls { flex-direction: column; align-items: stretch; }
+      .search-box { max-width: none; }
+      .stats-row { flex-direction: column; }
+    }
+  </style>
+</head>
+<body>
+  <!-- Login Overlay -->
+  <div class="login-overlay" id="login-overlay">
+    <div class="login-card">
+      <div class="login-logo">Healthy Brunch Club</div>
+      <div class="login-subtitle">Chatbot-Logs Verwaltung</div>
+      <input type="password" id="admin-token" placeholder="Admin-Token eingeben" />
+      <button class="btn btn-primary" id="btn-login">Anmelden</button>
+      <p style="margin-top: 1rem; font-size: .85rem; color: #999;">
+        <a href="/admin/" style="color: #2f5138;">Zurück zum CMS</a>
+      </p>
+    </div>
+  </div>
+
+  <!-- Header -->
+  <header class="cms-header">
+    <div class="cms-header-left">
+      <a href="/admin/" class="cms-logo">Healthy Brunch Club</a>
+      <nav class="cms-nav">
+        <a href="/admin/">Content</a>
+        <a href="/admin/#/workflow">Workflow</a>
+        <a href="/admin/chatbot-logs.html" class="active">Chatbot-Logs</a>
+        <a href="/admin-dashboard.html">Reservierungen</a>
+      </nav>
+    </div>
+    <div class="cms-user">
+      <span class="cms-user-name" id="user-display"></span>
+      <button class="btn-logout" id="btn-logout">Abmelden</button>
+    </div>
+  </header>
+
+  <!-- Main Content -->
+  <div class="container" id="main-content" style="display: none;">
+    <h1 class="page-title">Chatbot-Logs</h1>
+    <p class="page-subtitle">Alle Gespräche mit dem AI-Assistenten "Tina" einsehen und analysieren</p>
+
+    <div class="banner" id="banner"></div>
+
+    <!-- Controls -->
+    <div class="card">
+      <div class="controls">
+        <div class="control-group">
+          <label>Datum auswählen</label>
+          <select id="date-select">
+            <option value="">Wird geladen...</option>
+          </select>
+        </div>
+        <button class="btn btn-primary" id="btn-load">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12a9 9 0 11-9-9c2.52 0 4.93 1 6.74 2.74L21 8"/><path d="M21 3v5h-5"/></svg>
+          Logs laden
+        </button>
+        <button class="btn btn-secondary" id="btn-refresh">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M23 4v6h-6M1 20v-6h6"/><path d="M3.51 9a9 9 0 0114.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0020.49 15"/></svg>
+          Aktualisieren
+        </button>
+        <div class="search-box">
+          <svg class="search-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="M21 21l-4.35-4.35"/></svg>
+          <input type="text" id="search-input" placeholder="Logs durchsuchen..." />
+        </div>
+      </div>
+    </div>
+
+    <!-- Stats -->
+    <div class="stats-row" id="stats-row" style="display: none;"></div>
+
+    <!-- Logs -->
+    <div class="card">
+      <div class="card-title" id="logs-title">Gespräche</div>
+      <div class="logs-container" id="logs-container">
+        <div class="empty-state">
+          <div class="empty-state-icon">💬</div>
+          <div class="empty-state-title">Wählen Sie ein Datum</div>
+          <p>Wählen Sie oben ein Datum aus und klicken Sie auf "Logs laden"</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // Elements
+    const loginOverlay = document.getElementById('login-overlay');
+    const mainContent = document.getElementById('main-content');
+    const banner = document.getElementById('banner');
+    const dateSelect = document.getElementById('date-select');
+    const logsContainer = document.getElementById('logs-container');
+    const statsRow = document.getElementById('stats-row');
+    const logsTitle = document.getElementById('logs-title');
+    const searchInput = document.getElementById('search-input');
+    const userDisplay = document.getElementById('user-display');
+
+    let token = localStorage.getItem('hbc-admin-token') || '';
+    let currentLogs = [];
+
+    // Banner
+    function showBanner(message, type = 'success') {
+      banner.textContent = message;
+      banner.className = `banner show ${type}`;
+      setTimeout(() => banner.classList.remove('show'), 4000);
+    }
+
+    // Auth
+    function updateAuthState() {
+      if (token) {
+        loginOverlay.style.display = 'none';
+        mainContent.style.display = 'block';
+        userDisplay.textContent = 'Admin';
+        loadAvailableDates();
+      } else {
+        loginOverlay.style.display = 'flex';
+        mainContent.style.display = 'none';
+      }
+    }
+
+    async function authenticatedFetch(url, options = {}) {
+      const response = await fetch(url, {
+        ...options,
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${token}`,
+          ...(options.headers || {})
+        }
+      });
+      if (response.status === 401) {
+        token = '';
+        localStorage.removeItem('hbc-admin-token');
+        updateAuthState();
+        throw new Error('Nicht autorisiert');
+      }
+      return response;
+    }
+
+    // Login
+    document.getElementById('btn-login').addEventListener('click', () => {
+      const value = document.getElementById('admin-token').value.trim();
+      if (!value) {
+        alert('Bitte Token eingeben.');
+        return;
+      }
+      token = value;
+      localStorage.setItem('hbc-admin-token', token);
+      updateAuthState();
+    });
+
+    document.getElementById('admin-token').addEventListener('keypress', (e) => {
+      if (e.key === 'Enter') document.getElementById('btn-login').click();
+    });
+
+    document.getElementById('btn-logout').addEventListener('click', () => {
+      token = '';
+      localStorage.removeItem('hbc-admin-token');
+      updateAuthState();
+    });
+
+    // Date loading
+    async function loadAvailableDates() {
+      try {
+        const response = await authenticatedFetch('/.netlify/functions/get-chatbot-logs?action=list-dates');
+        const data = await response.json();
+
+        dateSelect.innerHTML = '<option value="">Datum auswählen...</option>';
+        data.dates.forEach(date => {
+          const option = document.createElement('option');
+          option.value = date;
+          option.textContent = formatDate(date);
+          dateSelect.appendChild(option);
+        });
+
+        if (data.dates.length === 0) {
+          dateSelect.innerHTML = '<option value="">Keine Logs vorhanden</option>';
+        }
+      } catch (error) {
+        console.error('Fehler:', error);
+        showBanner('Fehler beim Laden der Daten', 'error');
+      }
+    }
+
+    function formatDate(dateStr) {
+      const date = new Date(dateStr + 'T00:00:00');
+      return date.toLocaleDateString('de-AT', {
+        weekday: 'long',
+        day: '2-digit',
+        month: '2-digit',
+        year: 'numeric'
+      });
+    }
+
+    function formatTime(isoString) {
+      const date = new Date(isoString);
+      return date.toLocaleTimeString('de-AT', {
+        hour: '2-digit',
+        minute: '2-digit',
+        second: '2-digit'
+      });
+    }
+
+    function escapeHtml(text) {
+      const div = document.createElement('div');
+      div.textContent = text;
+      return div.innerHTML;
+    }
+
+    // Stats
+    function updateStats(logs) {
+      if (logs.length === 0) {
+        statsRow.style.display = 'none';
+        return;
+      }
+
+      const avgUserLen = Math.round(logs.reduce((s, l) => s + l.userMessage.length, 0) / logs.length);
+      const avgBotLen = Math.round(logs.reduce((s, l) => s + l.botResponse.length, 0) / logs.length);
+
+      const hourCounts = {};
+      logs.forEach(log => {
+        const hour = new Date(log.timestamp).getHours();
+        hourCounts[hour] = (hourCounts[hour] || 0) + 1;
+      });
+      const peakHour = Object.entries(hourCounts).sort((a, b) => b[1] - a[1])[0];
+
+      statsRow.style.display = 'flex';
+      statsRow.innerHTML = `
+        <div class="stat-box">
+          <div class="stat-number">${logs.length}</div>
+          <div class="stat-label">Gespräche</div>
+        </div>
+        <div class="stat-box">
+          <div class="stat-number">${avgUserLen}</div>
+          <div class="stat-label">Ø Zeichen (User)</div>
+        </div>
+        <div class="stat-box">
+          <div class="stat-number">${avgBotLen}</div>
+          <div class="stat-label">Ø Zeichen (Bot)</div>
+        </div>
+        ${peakHour ? `
+        <div class="stat-box">
+          <div class="stat-number">${String(peakHour[0]).padStart(2, '0')}:00</div>
+          <div class="stat-label">Peak-Stunde (${peakHour[1]}x)</div>
+        </div>
+        ` : ''}
+      `;
+    }
+
+    // Render logs
+    function renderLogs(logs) {
+      if (logs.length === 0) {
+        logsContainer.innerHTML = `
+          <div class="empty-state">
+            <div class="empty-state-icon">📭</div>
+            <div class="empty-state-title">Keine Logs gefunden</div>
+            <p>Für dieses Datum sind keine Chatbot-Gespräche vorhanden.</p>
+          </div>
+        `;
+        return;
+      }
+
+      logsTitle.textContent = `Gespräche (${logs.length})`;
+      logsContainer.innerHTML = logs.map((log, index) => `
+        <div class="chat-log">
+          <div class="chat-log-header">
+            <span class="chat-log-index">#${logs.length - index}</span>
+            <span class="chat-log-time">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg>
+              ${formatTime(log.timestamp)}
+            </span>
+          </div>
+          <div class="chat-message chat-user">
+            <div class="chat-label">Benutzer</div>
+            ${escapeHtml(log.userMessage)}
+          </div>
+          <div class="chat-message chat-bot">
+            <div class="chat-label">Tina (AI-Assistent)</div>
+            ${escapeHtml(log.botResponse)}
+          </div>
+        </div>
+      `).join('');
+    }
+
+    // Load logs
+    async function loadLogs() {
+      const date = dateSelect.value;
+      if (!date) {
+        showBanner('Bitte wählen Sie ein Datum aus.', 'error');
+        return;
+      }
+
+      logsContainer.innerHTML = `
+        <div class="loading">
+          <div class="spinner"></div>
+          <p>Lade Logs...</p>
+        </div>
+      `;
+
+      try {
+        const response = await authenticatedFetch(`/.netlify/functions/get-chatbot-logs?date=${date}`);
+        const data = await response.json();
+        currentLogs = data.logs;
+        updateStats(currentLogs);
+        renderLogs(currentLogs);
+        showBanner(`${data.count} Gespräche geladen.`);
+      } catch (error) {
+        showBanner(error.message, 'error');
+        logsContainer.innerHTML = `
+          <div class="empty-state">
+            <div class="empty-state-icon">⚠️</div>
+            <div class="empty-state-title">Fehler beim Laden</div>
+            <p>${error.message}</p>
+          </div>
+        `;
+      }
+    }
+
+    // Search
+    searchInput.addEventListener('input', (e) => {
+      const query = e.target.value.toLowerCase();
+      if (!query) {
+        renderLogs(currentLogs);
+        logsTitle.textContent = `Gespräche (${currentLogs.length})`;
+        return;
+      }
+      const filtered = currentLogs.filter(log =>
+        log.userMessage.toLowerCase().includes(query) ||
+        log.botResponse.toLowerCase().includes(query)
+      );
+      renderLogs(filtered);
+      logsTitle.textContent = `Gespräche (${filtered.length} von ${currentLogs.length})`;
+    });
+
+    // Event listeners
+    document.getElementById('btn-load').addEventListener('click', loadLogs);
+    document.getElementById('btn-refresh').addEventListener('click', loadAvailableDates);
+
+    // Init
+    updateAuthState();
+  </script>
+</body>
+</html>
