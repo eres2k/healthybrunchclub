@@ -34,6 +34,11 @@ STRIKTE REGELN - UNBEDINGT BEFOLGEN:
 6. Antworte auf Deutsch, es sei denn der Gast schreibt auf Englisch.
 7. Halte Antworten prägnant (2-3 Sätze), außer bei detaillierten Menüfragen.
 
+PRODUKT-EMPFEHLUNGEN:
+- Wenn du ein bestimmtes Gericht empfiehlst oder erwähnst, schreibe den Namen EXAKT wie in den Daten (z.B. "eggs any style", "omelette creation").
+- Empfehle aktiv passende Gerichte basierend auf den Wünschen des Gastes.
+- Bei Fragen zu Ernährungswünschen (vegan, glutenfrei, proteinreich etc.) empfehle konkrete Gerichte aus dem Menü.
+
 ÜBER DEN HEALTHY BRUNCH CLUB:
 - Adresse: Neubaugasse 15, 1070 Wien
 - E-Mail: hello@healthybrunchclub.at
@@ -186,6 +191,9 @@ exports.handler = async (event, context) => {
       };
     }
 
+    // Extract recommended products from the AI response
+    const recommendedProducts = extractRecommendedProducts(aiResponse, menuData);
+
     // Log conversation for future improvements (non-blocking)
     logConversation(message, aiResponse).catch(err => {
       console.error('Failed to log conversation:', err.message);
@@ -196,6 +204,7 @@ exports.handler = async (event, context) => {
       headers,
       body: JSON.stringify({
         response: aiResponse,
+        recommendedProducts: recommendedProducts,
         timestamp: new Date().toISOString()
       })
     };
@@ -306,13 +315,59 @@ async function loadMenuData() {
           description: item.description || null,
           tags: item.tags || [],
           allergens: (item.allergens || []).map(code => ALLERGEN_CODES[code] || code),
-          nutrition: item.nutrition || null
+          nutrition: item.nutrition || null,
+          image: item.image || null
         }))
       }));
   } catch (error) {
     console.error('Error loading menu:', error);
     return [];
   }
+}
+
+// Extract mentioned products from AI response
+function extractRecommendedProducts(aiResponse, menuData) {
+  const recommendedProducts = [];
+  const responseLower = aiResponse.toLowerCase();
+
+  // Build a flat list of all items with their category info
+  const allItems = [];
+  for (const category of menuData) {
+    for (const item of category.items) {
+      if (item.name && item.name.toLowerCase() !== 'extras') {
+        allItems.push({
+          ...item,
+          categoryTitle: category.category
+        });
+      }
+    }
+  }
+
+  // Sort by name length (longest first) to match longer names before shorter ones
+  allItems.sort((a, b) => b.name.length - a.name.length);
+
+  // Find items mentioned in the response
+  for (const item of allItems) {
+    const itemNameLower = item.name.toLowerCase();
+
+    // Check if the item name appears in the response
+    if (responseLower.includes(itemNameLower)) {
+      // Avoid duplicates
+      if (!recommendedProducts.find(p => p.name.toLowerCase() === itemNameLower)) {
+        recommendedProducts.push({
+          name: item.name,
+          price: item.price,
+          description: item.description,
+          image: item.image,
+          tags: item.tags,
+          categoryTitle: item.categoryTitle
+        });
+      }
+    }
+  }
+
+  // Limit to max 3 products to keep the chat clean
+  return recommendedProducts.slice(0, 3);
 }
 
 // Log conversation for future analysis and improvements
