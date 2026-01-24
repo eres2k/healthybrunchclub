@@ -60,18 +60,6 @@
     table { width: 100%; border-collapse: collapse; }
     th, td { padding: .75rem; border-bottom: 1px solid #e4eadf; text-align: left; font-size: .9rem; }
     th { text-transform: uppercase; letter-spacing: .08em; font-size: .75rem; color: #6b7a6c; }
-    .chat-log { border: 1px solid #e4eadf; border-radius: 12px; padding: 1rem; margin-bottom: .75rem; background: #fafbf9; }
-    .chat-log-time { font-size: .75rem; color: #6b7a6c; margin-bottom: .5rem; }
-    .chat-log-user { background: #edf3eb; padding: .75rem; border-radius: 12px 12px 12px 4px; margin-bottom: .5rem; }
-    .chat-log-bot { background: #fff; border: 1px solid #ced9cf; padding: .75rem; border-radius: 12px 12px 4px 12px; }
-    .chat-log-label { font-size: .7rem; text-transform: uppercase; letter-spacing: .05em; color: #6b7a6c; margin-bottom: .25rem; }
-    .logs-container { max-height: 600px; overflow-y: auto; }
-    .stats-row { display: flex; gap: 1rem; margin-bottom: 1rem; flex-wrap: wrap; }
-    .stat-box { background: #edf3eb; padding: 1rem 1.5rem; border-radius: 12px; text-align: center; }
-    .stat-number { font-size: 1.5rem; font-weight: 700; color: #2f5138; }
-    .stat-label { font-size: .75rem; color: #6b7a6c; text-transform: uppercase; letter-spacing: .05em; }
-    .search-box { margin-bottom: 1rem; }
-    .search-box input { max-width: 300px; }
     .btn { display: inline-flex; align-items: center; justify-content: center; padding: .75rem 1.6rem; border-radius: 8px; border: none; font-weight: 600; cursor: pointer; transition: all .15s; }
     .btn-primary { background: #2f5138; color: #fff; }
     .btn-primary:hover { background: #243f2c; }
@@ -221,29 +209,6 @@
         <button class="btn btn-primary" id="btn-export">Export starten</button>
       </div>
 
-      <div class="card">
-        <h2>Chatbot-Logs (Ask Tina)</h2>
-        <div class="grid grid-2">
-          <label>
-            <span>Datum auswählen</span>
-            <select id="chatlog-date">
-              <option value="">Datum laden...</option>
-            </select>
-          </label>
-          <div style="display: flex; align-items: flex-end; gap: .5rem;">
-            <button class="btn btn-primary" id="btn-load-chatlogs">Logs laden</button>
-            <button class="btn btn-secondary" id="btn-refresh-dates">Daten aktualisieren</button>
-          </div>
-        </div>
-
-        <div id="chatlog-stats" class="stats-row" style="display: none; margin-top: 1rem;"></div>
-
-        <div class="search-box" style="margin-top: 1rem;">
-          <input type="text" id="chatlog-search" placeholder="Logs durchsuchen..." />
-        </div>
-
-        <div id="chatlog-container" class="logs-container"></div>
-      </div>
     </div>
   </div>
 
@@ -305,9 +270,6 @@
     netlifyIdentity.on('init', user => {
       currentUser = user;
       updateAuthState();
-      if (user) {
-        loadAvailableDates();
-      }
     });
 
     netlifyIdentity.on('login', user => {
@@ -315,7 +277,6 @@
       netlifyIdentity.close();
       updateAuthState();
       showBanner('Erfolgreich angemeldet.');
-      loadAvailableDates();
     });
 
     netlifyIdentity.on('logout', () => {
@@ -416,146 +377,6 @@
       } catch (error) {
         showBanner(error.message, 'error');
       }
-    });
-
-    // Chatbot Logs functionality
-    const chatlogDateSelect = document.getElementById('chatlog-date');
-    const chatlogContainer = document.getElementById('chatlog-container');
-    const chatlogStats = document.getElementById('chatlog-stats');
-    const chatlogSearch = document.getElementById('chatlog-search');
-    let currentLogs = [];
-
-    async function loadAvailableDates() {
-      try {
-        const response = await authenticatedFetch('/.netlify/functions/get-chatbot-logs?action=list-dates');
-        const data = await response.json();
-        chatlogDateSelect.innerHTML = '<option value="">Datum auswählen...</option>';
-        data.dates.forEach(date => {
-          const option = document.createElement('option');
-          option.value = date;
-          option.textContent = formatDate(date);
-          chatlogDateSelect.appendChild(option);
-        });
-        if (data.dates.length === 0) {
-          chatlogDateSelect.innerHTML = '<option value="">Keine Logs vorhanden</option>';
-        }
-      } catch (error) {
-        console.error('Fehler beim Laden der Daten:', error);
-      }
-    }
-
-    function formatDate(dateStr) {
-      const date = new Date(dateStr + 'T00:00:00');
-      return date.toLocaleDateString('de-AT', { weekday: 'short', day: '2-digit', month: '2-digit', year: 'numeric' });
-    }
-
-    function formatTime(isoString) {
-      const date = new Date(isoString);
-      return date.toLocaleTimeString('de-AT', { hour: '2-digit', minute: '2-digit', second: '2-digit' });
-    }
-
-    function escapeHtml(text) {
-      const div = document.createElement('div');
-      div.textContent = text;
-      return div.innerHTML;
-    }
-
-    function renderLogs(logs) {
-      if (logs.length === 0) {
-        chatlogContainer.innerHTML = '<p style="color: #6b7a6c; text-align: center; padding: 2rem;">Keine Logs für dieses Datum gefunden.</p>';
-        return;
-      }
-
-      chatlogContainer.innerHTML = logs.map(log => `
-        <div class="chat-log">
-          <div class="chat-log-time">${formatTime(log.timestamp)}</div>
-          <div class="chat-log-user">
-            <div class="chat-log-label">Benutzer</div>
-            ${escapeHtml(log.userMessage)}
-          </div>
-          <div class="chat-log-bot">
-            <div class="chat-log-label">Tina (Bot)</div>
-            ${escapeHtml(log.botResponse)}
-          </div>
-        </div>
-      `).join('');
-    }
-
-    function updateStats(logs) {
-      const totalConversations = logs.length;
-      const avgUserLength = logs.length > 0
-        ? Math.round(logs.reduce((sum, log) => sum + log.userMessage.length, 0) / logs.length)
-        : 0;
-      const avgBotLength = logs.length > 0
-        ? Math.round(logs.reduce((sum, log) => sum + log.botResponse.length, 0) / logs.length)
-        : 0;
-
-      // Calculate hourly distribution
-      const hourCounts = {};
-      logs.forEach(log => {
-        const hour = new Date(log.timestamp).getHours();
-        hourCounts[hour] = (hourCounts[hour] || 0) + 1;
-      });
-      const peakHour = Object.entries(hourCounts).sort((a, b) => b[1] - a[1])[0];
-
-      chatlogStats.style.display = 'flex';
-      chatlogStats.innerHTML = `
-        <div class="stat-box">
-          <div class="stat-number">${totalConversations}</div>
-          <div class="stat-label">Gespräche</div>
-        </div>
-        <div class="stat-box">
-          <div class="stat-number">${avgUserLength}</div>
-          <div class="stat-label">Ø Zeichen (User)</div>
-        </div>
-        <div class="stat-box">
-          <div class="stat-number">${avgBotLength}</div>
-          <div class="stat-label">Ø Zeichen (Bot)</div>
-        </div>
-        ${peakHour ? `
-        <div class="stat-box">
-          <div class="stat-number">${peakHour[0]}:00</div>
-          <div class="stat-label">Peak-Stunde (${peakHour[1]}x)</div>
-        </div>
-        ` : ''}
-      `;
-    }
-
-    async function loadChatLogs() {
-      const date = chatlogDateSelect.value;
-      if (!date) {
-        showBanner('Bitte Datum auswählen.', 'error');
-        return;
-      }
-
-      try {
-        chatlogContainer.innerHTML = '<p style="color: #6b7a6c; text-align: center; padding: 2rem;">Lade Logs...</p>';
-        const response = await authenticatedFetch(`/.netlify/functions/get-chatbot-logs?date=${date}`);
-        const data = await response.json();
-        currentLogs = data.logs;
-        updateStats(currentLogs);
-        renderLogs(currentLogs);
-        showBanner(`${data.count} Gespräche geladen.`);
-      } catch (error) {
-        showBanner(error.message, 'error');
-        chatlogContainer.innerHTML = '';
-      }
-    }
-
-    document.getElementById('btn-load-chatlogs').addEventListener('click', loadChatLogs);
-    document.getElementById('btn-refresh-dates').addEventListener('click', loadAvailableDates);
-
-    chatlogSearch.addEventListener('input', (e) => {
-      const query = e.target.value.toLowerCase();
-      if (!query) {
-        renderLogs(currentLogs);
-        return;
-      }
-      const filtered = currentLogs.filter(log =>
-        log.userMessage.toLowerCase().includes(query) ||
-        log.botResponse.toLowerCase().includes(query)
-      );
-      renderLogs(filtered);
     });
 
     // Init Netlify Identity

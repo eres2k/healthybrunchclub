@@ -332,9 +332,32 @@
           <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M23 4v6h-6M1 20v-6h6"/><path d="M3.51 9a9 9 0 0114.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0020.49 15"/></svg>
           Aktualisieren
         </button>
+        <div class="control-group">
+          <label>Sortieren nach</label>
+          <select id="sort-select">
+            <option value="time-desc">Zeit (neueste zuerst)</option>
+            <option value="time-asc">Zeit (älteste zuerst)</option>
+            <option value="user">Nach Benutzer (IP)</option>
+          </select>
+        </div>
         <div class="search-box">
           <svg class="search-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="M21 21l-4.35-4.35"/></svg>
           <input type="text" id="search-input" placeholder="Logs durchsuchen..." />
+        </div>
+      </div>
+      <div class="controls" style="margin-top: 1rem; border-top: 1px solid #e4eadf; padding-top: 1rem;">
+        <div class="control-group">
+          <label>Export</label>
+          <div style="display: flex; gap: .5rem;">
+            <button class="btn btn-secondary" id="btn-export-csv">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><path d="M14 2v6h6M8 13h8M8 17h8"/></svg>
+              CSV
+            </button>
+            <button class="btn btn-secondary" id="btn-export-json">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><path d="M14 2v6h6"/></svg>
+              JSON
+            </button>
+          </div>
         </div>
       </div>
     </div>
@@ -366,9 +389,11 @@
     const logsTitle = document.getElementById('logs-title');
     const searchInput = document.getElementById('search-input');
     const userDisplay = document.getElementById('user-display');
+    const sortSelect = document.getElementById('sort-select');
 
     let currentUser = null;
     let currentLogs = [];
+    let currentSortedLogs = [];
 
     // Banner
     function showBanner(message, type = 'success') {
@@ -616,6 +641,106 @@
       `;
     }
 
+    // Sort logs
+    function sortLogs(logs, sortBy) {
+      const sorted = [...logs];
+      switch (sortBy) {
+        case 'time-desc':
+          // Newest first (reverse chronological)
+          sorted.sort((a, b) => new Date(b.timestamp) - new Date(a.timestamp));
+          break;
+        case 'time-asc':
+          // Oldest first (chronological)
+          sorted.sort((a, b) => new Date(a.timestamp) - new Date(b.timestamp));
+          break;
+        case 'user':
+          // Group by IP/user
+          sorted.sort((a, b) => {
+            const ipA = a.ip || 'unknown';
+            const ipB = b.ip || 'unknown';
+            if (ipA !== ipB) return ipA.localeCompare(ipB);
+            // Within same user, sort by time (newest first)
+            return new Date(b.timestamp) - new Date(a.timestamp);
+          });
+          break;
+      }
+      return sorted;
+    }
+
+    function applySort() {
+      const sortBy = sortSelect.value;
+      currentSortedLogs = sortLogs(currentLogs, sortBy);
+      const query = searchInput.value.toLowerCase();
+      if (query) {
+        const filtered = currentSortedLogs.filter(log =>
+          log.userMessage.toLowerCase().includes(query) ||
+          log.botResponse.toLowerCase().includes(query)
+        );
+        renderLogs(filtered);
+        logsTitle.textContent = `Gespräche (${filtered.length} von ${currentLogs.length})`;
+      } else {
+        renderLogs(currentSortedLogs);
+        logsTitle.textContent = `Gespräche (${currentLogs.length})`;
+      }
+    }
+
+    // Export functions
+    function exportToCSV(logs) {
+      if (logs.length === 0) {
+        showBanner('Keine Logs zum Exportieren vorhanden.', 'error');
+        return;
+      }
+      const date = dateSelect.value;
+      const headers = ['Timestamp', 'User Message', 'Bot Response', 'IP', 'Country', 'City', 'Region', 'OS', 'Browser', 'Device'];
+      const csvContent = [
+        headers.join(';'),
+        ...logs.map(log => [
+          log.timestamp,
+          `"${(log.userMessage || '').replace(/"/g, '""')}"`,
+          `"${(log.botResponse || '').replace(/"/g, '""')}"`,
+          log.ip || '',
+          log.countryName || log.country || '',
+          log.city || '',
+          log.region || '',
+          log.os || '',
+          log.browser || '',
+          log.device || ''
+        ].join(';'))
+      ].join('\n');
+
+      const blob = new Blob(['\ufeff' + csvContent], { type: 'text/csv;charset=utf-8;' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = `chatbot-logs-${date}.csv`;
+      a.click();
+      URL.revokeObjectURL(url);
+      showBanner(`${logs.length} Logs als CSV exportiert.`);
+    }
+
+    function exportToJSON(logs) {
+      if (logs.length === 0) {
+        showBanner('Keine Logs zum Exportieren vorhanden.', 'error');
+        return;
+      }
+      const date = dateSelect.value;
+      const exportData = {
+        date: date,
+        exportedAt: new Date().toISOString(),
+        totalLogs: logs.length,
+        logs: logs
+      };
+
+      const blob = new Blob([JSON.stringify(exportData, null, 2)], { type: 'application/json;charset=utf-8;' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = `chatbot-logs-${date}.json`;
+      a.click();
+      URL.revokeObjectURL(url);
+      showBanner(`${logs.length} Logs als JSON exportiert.`);
+    }
+
     // Render logs
     function renderLogs(logs) {
       if (logs.length === 0) {
@@ -672,7 +797,7 @@
         const data = await response.json();
         currentLogs = data.logs;
         updateStats(currentLogs);
-        renderLogs(currentLogs);
+        applySort();
         showBanner(`${data.count} Gespräche geladen.`);
       } catch (error) {
         showBanner(error.message, 'error');
@@ -690,16 +815,36 @@
     searchInput.addEventListener('input', (e) => {
       const query = e.target.value.toLowerCase();
       if (!query) {
-        renderLogs(currentLogs);
+        renderLogs(currentSortedLogs);
         logsTitle.textContent = `Gespräche (${currentLogs.length})`;
         return;
       }
-      const filtered = currentLogs.filter(log =>
+      const filtered = currentSortedLogs.filter(log =>
         log.userMessage.toLowerCase().includes(query) ||
         log.botResponse.toLowerCase().includes(query)
       );
       renderLogs(filtered);
       logsTitle.textContent = `Gespräche (${filtered.length} von ${currentLogs.length})`;
+    });
+
+    // Sort handler
+    sortSelect.addEventListener('change', applySort);
+
+    // Export handlers
+    document.getElementById('btn-export-csv').addEventListener('click', () => {
+      const query = searchInput.value.toLowerCase();
+      const logsToExport = query
+        ? currentSortedLogs.filter(log => log.userMessage.toLowerCase().includes(query) || log.botResponse.toLowerCase().includes(query))
+        : currentSortedLogs;
+      exportToCSV(logsToExport);
+    });
+
+    document.getElementById('btn-export-json').addEventListener('click', () => {
+      const query = searchInput.value.toLowerCase();
+      const logsToExport = query
+        ? currentSortedLogs.filter(log => log.userMessage.toLowerCase().includes(query) || log.botResponse.toLowerCase().includes(query))
+        : currentSortedLogs;
+      exportToJSON(logsToExport);
     });
 
     // Event listeners
