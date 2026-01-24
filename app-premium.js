@@ -472,7 +472,7 @@ function debounce(func, wait) {
 }
 
 // ===============================================
-// ASK TINA CHATBOT
+// ASK AVA CHATBOT
 // ===============================================
 
 let chatbotConversationHistory = [];
@@ -523,7 +523,7 @@ window.sendChatMessage = async function(event) {
     const typingIndicator = addTypingIndicator();
 
     try {
-        const response = await fetch('/.netlify/functions/ask-tina', {
+        const response = await fetch('/.netlify/functions/ask-ava', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({

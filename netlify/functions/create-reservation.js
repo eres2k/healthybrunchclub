@@ -1,5 +1,3 @@
-const fetch = require('node-fetch');
-
 const headers = {
   'Access-Control-Allow-Origin': '*',
   'Access-Control-Allow-Headers': 'Content-Type',
@@ -8,6 +6,7 @@ const headers = {
 
 // Import E-Mail Service
 const { sendReservationEmails } = require('./utils/email-service');
+const { createReservation } = require('./utils/reservation-utils');
 
 exports.handler = async (event, context) => {
   if (event.httpMethod === 'OPTIONS') {
@@ -24,7 +23,6 @@ exports.handler = async (event, context) => {
 
   try {
     const data = JSON.parse(event.body);
-    const siteUrl = process.env.URL || 'https://healthybrunchclub.at';
 
     // Normalize data
     const normalized = {
@@ -34,7 +32,7 @@ exports.handler = async (event, context) => {
       date: data.date || '',
       time: data.time || '',
       guests: parseInt(data.guests, 10) || 1,
-      message: data.specialRequests?.trim() || data.message?.trim() || '',
+      specialRequests: data.specialRequests?.trim() || data.message?.trim() || '',
       honeypot: data.honeypot || ''
     };
 
@@ -56,45 +54,26 @@ exports.handler = async (event, context) => {
       };
     }
 
-    // Generate confirmation code
-    const confirmationCode = 'HBC' + Date.now().toString(36).toUpperCase().slice(-6);
+    // Create reservation in blob storage
+    const result = await createReservation(normalized);
 
-    // Create reservation object for email
-    const reservation = {
-      ...normalized,
-      confirmationCode,
-      status: 'confirmed',
-      createdAt: new Date().toISOString()
-    };
-
-    // Submit to Netlify Forms
-    const formData = new URLSearchParams({
-      'form-name': 'reservations',
-      ...Object.entries(normalized).reduce((acc, [key, value]) => {
-        if (value !== undefined) {
-          acc[key] = value == null ? '' : String(value);
-        }
-        return acc;
-      }, {})
-    });
-
-    const response = await fetch(`${siteUrl}/`, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-      body: formData.toString()
-    });
-
-    if (!response.ok) {
-      throw new Error(`Netlify Forms request failed: ${response.status}`);
+    if (!result.success) {
+      return {
+        statusCode: 400,
+        headers,
+        body: JSON.stringify({ error: result.message })
+      };
     }
 
-    // WICHTIG: E-Mail-Versand aktivieren
+    const reservation = result.reservation;
+
+    // Send confirmation emails
     try {
       await sendReservationEmails(reservation);
       console.log('E-Mail-Bestätigung wurde versendet an:', reservation.email);
     } catch (emailError) {
       console.error('E-Mail konnte nicht versendet werden:', emailError);
-      // Fortsetzung auch wenn E-Mail fehlschlägt
+      // Continue even if email fails
     }
 
     return {
@@ -105,10 +84,11 @@ exports.handler = async (event, context) => {
         message:
           'Ihre Reservierung wurde erfolgreich übermittelt! Sie erhalten in Kürze eine Bestätigung per E-Mail.',
         reservation: {
-          confirmationCode,
-          date: normalized.date,
-          time: normalized.time,
-          guests: normalized.guests
+          confirmationCode: reservation.confirmationCode,
+          date: reservation.date,
+          time: reservation.time,
+          guests: reservation.guests,
+          status: reservation.status
         }
       })
     };

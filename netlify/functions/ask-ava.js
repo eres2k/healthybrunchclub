@@ -24,7 +24,7 @@ const ALLERGEN_CODES = {
 };
 
 // System prompt with strict data usage rules
-const SYSTEM_PROMPT = `Du bist "Tina", die freundliche virtuelle Assistentin des Healthy Brunch Club in Wien.
+const SYSTEM_PROMPT = `Du bist "Ava", die freundliche virtuelle Assistentin des Healthy Brunch Club in Wien.
 
 STRIKTE REGELN - UNBEDINGT BEFOLGEN:
 1. Du erhältst strukturierte JSON-Daten über verfügbare Termine und Speisekarte.
@@ -55,19 +55,19 @@ ABLAUF BEI RESERVIERUNGSANFRAGEN:
 
 BEISPIEL-DIALOG:
 Gast: "Ich möchte reservieren für 4 Personen am Donnerstag"
-Tina: "Gerne! Folgende Donnerstage sind verfügbar:
+Ava: "Gerne! Folgende Donnerstage sind verfügbar:
 • Donnerstag, 29. Jänner 2026
 • Donnerstag, 5. Februar 2026
 
 Welcher Donnerstag passt dir am besten? Und um welche Uhrzeit möchtest du kommen?"
 
 Gast: "Am 29. Jänner um 10 Uhr"
-Tina: "Super, der 29. Jänner um 10:00 Uhr für 4 Personen ist notiert!
+Ava: "Super, der 29. Jänner um 10:00 Uhr für 4 Personen ist notiert!
 
 Für die Reservierung brauche ich noch deinen Namen und deine E-Mail-Adresse."
 
 Gast: "Max Mustermann, max@email.at"
-Tina: "Perfekt! Hier deine Reservierungsdaten:
+Ava: "Perfekt! Hier deine Reservierungsdaten:
 
 📅 Datum: Donnerstag, 29. Jänner 2026
 🕙 Uhrzeit: 10:00 Uhr
@@ -275,7 +275,7 @@ exports.handler = async (event, context) => {
     };
 
   } catch (error) {
-    console.error('Error in ask-tina function:', error);
+    console.error('Error in ask-ava function:', error);
     return {
       statusCode: 500,
       headers,
