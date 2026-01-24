@@ -3,6 +3,7 @@ const path = require('path');
 const matter = require('gray-matter');
 const { checkSpamFilter, logSpamAttempt } = require('./utils/spam-filter');
 const { readJSON, writeJSON } = require('./utils/blob-storage');
+const { extractUserData } = require('./utils/user-data');
 
 // Allergen code mapping
 const ALLERGEN_CODES = {
@@ -254,8 +255,11 @@ exports.handler = async (event, context) => {
     // Extract reservation action if present
     const { cleanResponse, reservationAction } = extractReservationAction(aiResponse);
 
+    // Extract user data for logging
+    const userData = extractUserData(event);
+
     // Log conversation for future improvements (non-blocking)
-    logConversation(message, cleanResponse).catch(err => {
+    logConversation(message, cleanResponse, userData).catch(err => {
       console.error('Failed to log conversation:', err.message);
     });
 
@@ -472,7 +476,7 @@ function extractReservationAction(aiResponse) {
 }
 
 // Log conversation for future analysis and improvements
-async function logConversation(userMessage, botResponse) {
+async function logConversation(userMessage, botResponse, userData = {}) {
   const now = new Date();
   const dateKey = now.toISOString().split('T')[0];
   const key = `conversations/${dateKey}.json`;
@@ -480,7 +484,16 @@ async function logConversation(userMessage, botResponse) {
   const logEntry = {
     timestamp: now.toISOString(),
     userMessage: userMessage.substring(0, 500),
-    botResponse: botResponse.substring(0, 1000)
+    botResponse: botResponse.substring(0, 1000),
+    // User data
+    ip: userData.ip || null,
+    country: userData.country || null,
+    countryName: userData.countryName || null,
+    city: userData.city || null,
+    region: userData.region || null,
+    os: userData.os || null,
+    browser: userData.browser || null,
+    device: userData.device || null
   };
 
   const existingLogs = await readJSON('chatbotLogs', key, []);
