@@ -10,7 +10,7 @@ items:
       - vegetarisch
       - glutenfrei
       - proteinreich
-    description: zwei eier nach wahl (spiegelei, pochiert, gekocht oder eierspeise),
+    description: 1 Ei nach wahl (spiegelei, pochiert, gekocht oder eierspeise),
       kunstvoll serviert auf scheiben von süßkartoffel und avocado. dazu
       sautierte champignons und shiitake-pilze, garniert mit rucola, rote beete,
       sprossen und kresse.
@@ -47,9 +47,9 @@ items:
       protein: 21g
       carbs: 31g
       fat: 15g
-    price: "17.90"
+    price: "18.90"
     image: /content/images/img-20250806-wa0005.jpg
-  - price: "17.90"
+  - price: "18.90"
     name: beggs enedict
     allergens:
       - c
@@ -68,10 +68,12 @@ items:
     image: /content/images/whatsapp-image-2025-09-17-at-09.51.42.jpeg
     recommended: true
     description: >-
-      zwei pochierte eier auf knusprigem sauerteigbrot vom joseph, mit cremiger
-      avocadosauce und sautierten pilzen, verfeinert mit rucola, sprossen,
-      kresse, rote beete und knusprigen pinienkernen 
-       **your style:** speck / lachs
+      zwei pochierte eier auf knusprigem sauerteigbrot vom joseph, sautierten
+      pilzen, verfeinert mit rucola, sprossen, kresse, rote beete. Getoppt mit
+      cremiger avocadosauce und knusprigen pinienkerne
+
+
+      **your style:** speck / lachs
   - name: extras
     tags:
       - optional
@@ -82,20 +84,20 @@ items:
 
       * ei nach wunsch: 1.90
       * käse: 1.50
-      * halbe avocado: 2.90
+      * halbe avocado: 1,50
       * biospeck: 2.50
-      * biolachs: 2.30
+      * biolachs: 2.50
       * pilzmix: 1.90
-      * zwei scheiben sauerteigbrot vom joseph: 2.40
-      * s﻿cheibe Süsskartoffel (glutenfreie alternative):
+      * zwei scheiben sauerteigbrot vom joseph: 2.50
+      * Süsskartoffel Scheiben (glutenfreie alternative): 2,50
     allergens:
       - c
       - g
       - d
       - a
     nutrition:
-      calories: "320"
+      calories: "345"
       protein: 20g
-      carbs: 15g
-      fat: 22g
+      carbs: 31,1g
+      fat: 15,5g
 ---
