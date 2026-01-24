@@ -10,9 +10,10 @@ items:
       - vegetarisch
       - glutenfrei
       - beruhigend
-    description: ein geschmeidiger latte mit adaptogenem ashwagandha, der sanft beruhigt.
+    description: "calm energy in a cup: cremiger latte mit ashwagandha – wirkt
+      ausgleichend, stressreduzierend und unterstützt innere ruhe & fokus."
     allergens: []
-    price: "5.50"
+    price: "6.10"
     nutrition:
       calories: "150"
       protein: 7g
@@ -23,9 +24,10 @@ items:
       - vegetarisch
       - glutenfrei
       - beruhigend
-    description: samtiger cappuccino mit reishi – unterstützt das immunsystem.
+    description: "grounded & balanced: cremiger cappuccino mit reishi – bekannt für
+      seine ausgleichende, stärkende wirkung auf körper & geist."
     allergens: []
-    price: "4.60"
+    price: "5.90"
     nutrition:
       calories: "150"
       protein: 7g
@@ -39,7 +41,7 @@ items:
     description: kräftiger espresso-latte mit kurkuma – wärmend, antioxidativ &
       entzündungshemmend.
     allergens: []
-    price: "5.90"
+    price: "6.10"
     nutrition:
       calories: "150"
       protein: 7g
@@ -49,11 +51,17 @@ items:
     name: extras
     price: ""
     description: |-
-      trinke deinen Kaffee mit 30g protein geschmacksneutral +2,50
+      trinke deinen Kaffee mit 
 
-      vegane milchalternativen:
+      15g protein von ESN geschmacksneutral +1,50
 
-      hafer, soja, kokos  kostenlos
+      1﻿0g kollagen von animalbased.de
+
+
+
+      (vegane) milchalternativen:
+
+      hafer, soja, kokos, lactosefrei kostenlos
   - name: fenchel–anis–kümmel
     tags:
       - erfrischend
@@ -105,6 +113,13 @@ items:
       protein: 0g
       carbs: 0g
       fat: 0g
+  - recommended: false
+    isNew: false
+    seasonal: false
+    price: "5.90"
+    description: aromatischer chai mit wärmenden gewürzen wie zimt und ingwer
+      (entzündungshemmend & antioxidativ)
+    name: chai-tea (latte)
 extras:
   - name: whey protein (esn, geschmacksneutral)
     price: "1.90"
