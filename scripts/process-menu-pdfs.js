@@ -6,10 +6,10 @@
  * This replaces the previous bash script with a cleaner Node.js implementation.
  *
  * Standard PDF filenames:
- * - menu.pdf          - Main German menu
- * - menu-english.pdf  - English menu
- * - kidsmenu.pdf      - Kids menu
- * - lasa-english.pdf  - LASA English menu
+ * - HBC_DE_MENU.pdf   - Main German menu
+ * - HBC_EN_MENU.pdf   - English menu
+ * - HBC_KIDS_MENU.pdf - Kids menu
+ * - LASA_DE_MENU.PDF  - LASA menu
  */
 
 const fs = require('fs');
@@ -23,7 +23,7 @@ const STANDARD_FILENAMES = {
   menu_pdf: 'HBC_DE_MENU.pdf',
   english_menu_pdf: 'HBC_EN_MENU.pdf',
   kids_menu_pdf: 'HBC_KIDS_MENU.pdf',
-  lasa_english_menu_pdf: 'LASA_EN_MENU.pdf'
+  lasa_menu_pdf: 'LASA_DE_MENU.PDF'
 };
 
 // Public paths (what gets stored in config)
@@ -31,7 +31,7 @@ const PUBLIC_PATHS = {
   menu_pdf: '/content/HBC_DE_MENU.pdf',
   english_menu_pdf: '/content/HBC_EN_MENU.pdf',
   kids_menu_pdf: '/content/HBC_KIDS_MENU.pdf',
-  lasa_english_menu_pdf: '/content/LASA_EN_MENU.pdf'
+  lasa_menu_pdf: '/content/LASA_DE_MENU.PDF'
 };
 
 function log(emoji, message) {
@@ -237,7 +237,7 @@ function main() {
     menu_pdf: 'Main Menu (DE)',
     english_menu_pdf: 'English Menu',
     kids_menu_pdf: 'Kids Menu',
-    lasa_english_menu_pdf: 'LASA English Menu'
+    lasa_menu_pdf: 'LASA Menu (DE)'
   };
 
   for (const [key, result] of Object.entries(results)) {

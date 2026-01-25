@@ -20,7 +20,7 @@ const MENU_PATHS = {
   main: '/content/HBC_DE_MENU.pdf',
   english: '/content/HBC_EN_MENU.pdf',
   kids: '/content/HBC_KIDS_MENU.pdf',
-  lasa: '/content/LASA_EN_MENU.pdf'
+  lasa: '/content/LASA_DE_MENU.PDF'
 };
 
 function loadConfig() {
@@ -88,7 +88,7 @@ exports.handler = async (event) => {
         ? { url: MENU_PATHS.kids, label: 'Kinderkarte' }
         : null,
       lasa: checkPdfExists(MENU_PATHS.lasa)
-        ? { url: MENU_PATHS.lasa, label: 'LASA English' }
+        ? { url: MENU_PATHS.lasa, label: 'LASA Menu' }
         : null
     };
 

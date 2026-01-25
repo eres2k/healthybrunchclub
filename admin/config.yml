@@ -207,12 +207,12 @@ collections:
             media_folder: "/content"
             public_folder: "/content"
             hint: "Für die Kleinen (wird automatisch zu HBC_KIDS_MENU.pdf)"
-          - label: "🌿 LASA English Menu"
-            name: "lasa_english_menu_pdf"
+          - label: "🌿 LASA Speisekarte"
+            name: "lasa_menu_pdf"
             widget: "file"
             required: false
             media_folder: "/content"
             public_folder: "/content"
-            hint: "LASA special English menu (wird automatisch zu LASA_EN_MENU.pdf)"
+            hint: "LASA Speisekarte (wird automatisch zu LASA_DE_MENU.PDF)"
           - {label: "Version", name: "version", widget: "string", required: false, hint: "z.B. Frühjahr 2026, v3.2"}
           - {label: "Aktiv", name: "active", widget: "boolean", default: true, hint: "Menü auf der Website anzeigen?"}
