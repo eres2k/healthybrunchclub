@@ -1,0 +1,32 @@
+[
+  {
+    "id": "550e8400-e29b-41d4-a716-446655440010",
+    "confirmationCode": "HBC-TODAY-0001",
+    "date": "2026-01-25",
+    "time": "10:00",
+    "guests": 2,
+    "name": "Emma Weber",
+    "email": "emma@example.com",
+    "phone": "+43 660 123 4567",
+    "specialRequests": "",
+    "status": "confirmed",
+    "timezone": "Europe/Vienna",
+    "createdAt": "2026-01-20T09:00:00.000Z",
+    "updatedAt": "2026-01-20T09:00:00.000Z"
+  },
+  {
+    "id": "550e8400-e29b-41d4-a716-446655440011",
+    "confirmationCode": "HBC-TODAY-0002",
+    "date": "2026-01-25",
+    "time": "11:00",
+    "guests": 4,
+    "name": "Felix Gruber",
+    "email": "felix@example.com",
+    "phone": "+43 664 987 6543",
+    "specialRequests": "Tisch am Fenster bitte",
+    "status": "confirmed",
+    "timezone": "Europe/Vienna",
+    "createdAt": "2026-01-21T14:30:00.000Z",
+    "updatedAt": "2026-01-21T14:30:00.000Z"
+  }
+]

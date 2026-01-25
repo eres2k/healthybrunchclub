@@ -1,0 +1,47 @@
+[
+  {
+    "id": "550e8400-e29b-41d4-a716-446655440020",
+    "confirmationCode": "HBC-TMRW-0001",
+    "date": "2026-01-26",
+    "time": "09:30",
+    "guests": 3,
+    "name": "Sophie Bauer",
+    "email": "sophie@example.com",
+    "phone": "+43 676 111 2222",
+    "specialRequests": "Glutenfrei",
+    "status": "confirmed",
+    "timezone": "Europe/Vienna",
+    "createdAt": "2026-01-22T10:00:00.000Z",
+    "updatedAt": "2026-01-22T10:00:00.000Z"
+  },
+  {
+    "id": "550e8400-e29b-41d4-a716-446655440021",
+    "confirmationCode": "HBC-TMRW-0002",
+    "date": "2026-01-26",
+    "time": "12:30",
+    "guests": 5,
+    "name": "Lukas Steiner",
+    "email": "lukas@example.com",
+    "phone": "+43 699 333 4444",
+    "specialRequests": "",
+    "status": "waitlisted",
+    "timezone": "Europe/Vienna",
+    "createdAt": "2026-01-23T16:45:00.000Z",
+    "updatedAt": "2026-01-23T16:45:00.000Z"
+  },
+  {
+    "id": "550e8400-e29b-41d4-a716-446655440022",
+    "confirmationCode": "HBC-TMRW-0003",
+    "date": "2026-01-26",
+    "time": "10:00",
+    "guests": 2,
+    "name": "Marie Huber",
+    "email": "marie@example.com",
+    "phone": "+43 650 555 6666",
+    "specialRequests": "Geburtstagskuchen mitbringen",
+    "status": "confirmed",
+    "timezone": "Europe/Vienna",
+    "createdAt": "2026-01-24T08:15:00.000Z",
+    "updatedAt": "2026-01-24T08:15:00.000Z"
+  }
+]
