@@ -66,12 +66,19 @@ async function sendWithResend(options, from) {
   const emailData = {
     from,
     to: options.to,
-    subject: options.subject,
-    text: options.text,
-    html: options.html,
-    reply_to: options.replyTo
+    subject: options.subject
   };
 
+  // Only add text and html if they are defined to avoid Resend treating undefined values incorrectly
+  if (options.text) {
+    emailData.text = options.text;
+  }
+  if (options.html) {
+    emailData.html = options.html;
+  }
+  if (options.replyTo) {
+    emailData.reply_to = options.replyTo;
+  }
   if (attachments.length > 0) {
     emailData.attachments = attachments;
   }

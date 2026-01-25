@@ -50,7 +50,7 @@
     }
     .btn-logout:hover { background: #f5f5f5; }
 
-    .container { max-width: 1100px; margin: 0 auto; padding: 2rem; }
+    .container { max-width: 1200px; margin: 0 auto; padding: 2rem; }
     .page-title { font-size: 1.75rem; font-weight: 700; margin-bottom: .5rem; color: #243424; }
     .page-subtitle { color: #6b7a6c; margin-bottom: 2rem; }
     .card { background: #fff; padding: 1.5rem; border-radius: 12px; box-shadow: 0 2px 8px rgba(0,0,0,.06); margin-bottom: 1.5rem; }
@@ -106,9 +106,176 @@
     .login-subtitle { color: #6b7a6c; margin-bottom: 2rem; }
     .login-card .btn { width: 100%; }
 
+    /* Stats Row */
+    .stats-row {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+      gap: 1rem;
+      margin-bottom: 1.5rem;
+    }
+    .stat-card {
+      background: linear-gradient(135deg, #edf3eb, #fff);
+      border-radius: 12px;
+      padding: 1.2rem;
+      text-align: center;
+    }
+    .stat-value {
+      font-size: 2rem;
+      font-weight: 700;
+      color: #2f5138;
+    }
+    .stat-label {
+      font-size: .75rem;
+      text-transform: uppercase;
+      letter-spacing: .1em;
+      color: #6b7a6c;
+      margin-top: .3rem;
+    }
+
+    /* Tabs */
+    .tabs {
+      display: flex;
+      gap: .5rem;
+      margin-bottom: 1.5rem;
+      border-bottom: 2px solid #e4eadf;
+      padding-bottom: 0;
+    }
+    .tab {
+      padding: .8rem 1.5rem;
+      border: none;
+      background: transparent;
+      cursor: pointer;
+      font-size: .9rem;
+      text-transform: uppercase;
+      letter-spacing: .1em;
+      color: #6b7a6c;
+      border-bottom: 3px solid transparent;
+      margin-bottom: -2px;
+      transition: all .2s ease;
+    }
+    .tab:hover { color: #243424; }
+    .tab.active {
+      color: #2f5138;
+      border-bottom-color: #2f5138;
+    }
+    .tab-content { display: none; }
+    .tab-content.active { display: block; }
+
+    /* Calendar Styles */
+    .calendar-container { margin-top: 1rem; }
+    .calendar-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 1rem;
+    }
+    .calendar-nav {
+      display: flex;
+      gap: .5rem;
+      align-items: center;
+    }
+    .calendar-nav button {
+      padding: .5rem 1rem;
+      border: 1px solid #ced9cf;
+      background: #fff;
+      border-radius: 8px;
+      cursor: pointer;
+      font-size: 1rem;
+    }
+    .calendar-nav button:hover { background: #f6f7f4; }
+    .calendar-month {
+      font-size: 1.1rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: .1em;
+      color: #243424;
+    }
+    .calendar-grid {
+      display: grid;
+      grid-template-columns: repeat(7, 1fr);
+      gap: 4px;
+    }
+    .calendar-day-header {
+      padding: .5rem;
+      text-align: center;
+      font-size: .75rem;
+      text-transform: uppercase;
+      letter-spacing: .1em;
+      color: #6b7a6c;
+      font-weight: 600;
+    }
+    .calendar-day {
+      min-height: 80px;
+      padding: .5rem;
+      border: 1px solid #e4eadf;
+      border-radius: 8px;
+      background: #fff;
+      cursor: pointer;
+      transition: all .2s ease;
+    }
+    .calendar-day:hover {
+      background: #f6f7f4;
+      border-color: #2f5138;
+    }
+    .calendar-day.other-month {
+      background: #fafafa;
+      color: #bbb;
+    }
+    .calendar-day.today {
+      border-color: #2f5138;
+      border-width: 2px;
+    }
+    .calendar-day.selected {
+      background: rgba(47, 81, 56, 0.1);
+      border-color: #2f5138;
+    }
+    .calendar-day-number {
+      font-size: .9rem;
+      font-weight: 600;
+      margin-bottom: .3rem;
+    }
+    .calendar-day-count {
+      font-size: .7rem;
+      padding: .2rem .5rem;
+      border-radius: 999px;
+      display: inline-block;
+    }
+    .calendar-day-count.has-reservations {
+      background: rgba(47, 81, 56, 0.15);
+      color: #2f5138;
+    }
+    .calendar-day-count.no-reservations {
+      background: #f0f0f0;
+      color: #999;
+    }
+
+    /* Day Detail */
+    .day-detail {
+      margin-top: 1.5rem;
+      padding: 1.5rem;
+      background: #f6f7f4;
+      border-radius: 12px;
+      display: none;
+    }
+    .day-detail.show { display: block; }
+    .day-detail-title {
+      margin: 0 0 1rem 0;
+      font-size: 1rem;
+      text-transform: uppercase;
+      letter-spacing: .1em;
+      color: #243424;
+    }
+
     /* Responsive */
     @media (max-width: 768px) {
       .cms-nav { display: none; }
+      .calendar-grid { gap: 2px; }
+      .calendar-day {
+        min-height: 60px;
+        padding: .3rem;
+      }
+      .calendar-day-number { font-size: .8rem; }
+      .stats-row { grid-template-columns: repeat(2, 1fr); }
     }
   </style>
 </head>
@@ -121,7 +288,7 @@
       <p style="color: #6b7a6c; margin-bottom: 1.5rem;">Bitte melden Sie sich mit Ihrem Netlify Identity Account an.</p>
       <button class="btn btn-primary" id="btn-login">Mit Netlify anmelden</button>
       <p style="margin-top: 1rem; font-size: .85rem; color: #999;">
-        <a href="/admin/" style="color: #2f5138;">Zurück zum CMS</a>
+        <a href="/admin/" style="color: #2f5138;">Zuruck zum CMS</a>
       </p>
     </div>
   </div>
@@ -146,48 +313,125 @@
   <!-- Main Content -->
   <div class="container" id="main-content" style="display: none;">
     <h1 class="page-title">Reservierungen</h1>
-    <p class="page-subtitle">Reservierungen verwalten, Verfügbarkeit prüfen und Zeitslots blockieren</p>
+    <p class="page-subtitle">Reservierungen verwalten, Verfugbarkeit prufen und Zeitslots blockieren</p>
 
     <div class="banner" id="admin-banner"></div>
 
+    <!-- Stats Row -->
+    <div class="stats-row" id="stats-row" style="display: none;">
+      <div class="stat-card">
+        <div class="stat-value" id="stat-total">0</div>
+        <div class="stat-label">Gesamt</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-value" id="stat-confirmed">0</div>
+        <div class="stat-label">Bestatigt</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-value" id="stat-guests">0</div>
+        <div class="stat-label">Gaste</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-value" id="stat-today">0</div>
+        <div class="stat-label">Heute</div>
+      </div>
+    </div>
+
     <div id="dashboard">
       <div class="card">
-        <h2>Verfügbarkeit prüfen</h2>
+        <h2 class="card-title">Verfugbarkeit prufen</h2>
         <div class="grid grid-2">
           <label>
             <span>Datum</span>
             <input type="date" id="admin-date" />
           </label>
           <label>
-            <span>Gäste</span>
+            <span>Gaste</span>
             <input type="number" id="admin-guests" min="1" value="2" />
           </label>
         </div>
-        <button class="btn btn-primary" id="btn-load">Verfügbarkeit laden</button>
-        <button class="btn btn-secondary" id="btn-load-all" style="margin-left: .5rem;">Alle Reservierungen anzeigen</button>
-        <div id="availability-result"></div>
+        <div style="margin-top: 1rem;">
+          <button class="btn btn-primary" id="btn-load">Verfugbarkeit laden</button>
+          <button class="btn btn-secondary" id="btn-load-all" style="margin-left: .5rem;">Alle Reservierungen laden</button>
+          <button class="btn btn-secondary" id="btn-export-csv" style="margin-left: .5rem;">CSV Export</button>
+        </div>
+        <div id="availability-result" style="margin-top: 1rem; color: #6b7a6c;"></div>
+      </div>
+
+      <!-- Tabs -->
+      <div class="tabs" id="tabs" style="display: none;">
+        <button class="tab active" data-tab="calendar">Kalender</button>
+        <button class="tab" data-tab="list">Liste</button>
+      </div>
+
+      <!-- Calendar View -->
+      <div class="tab-content active" id="calendar-tab">
+        <div class="card">
+          <div class="calendar-container">
+            <div class="calendar-header">
+              <div class="calendar-nav">
+                <button id="prev-month">&larr;</button>
+                <span class="calendar-month" id="calendar-month">Januar 2026</span>
+                <button id="next-month">&rarr;</button>
+              </div>
+              <button class="btn btn-secondary btn-sm" id="today-btn">Heute</button>
+            </div>
+            <div class="calendar-grid" id="calendar-grid">
+              <!-- Calendar will be rendered here -->
+            </div>
+          </div>
+
+          <!-- Day Detail -->
+          <div class="day-detail" id="day-detail">
+            <h3 class="day-detail-title" id="day-detail-title"></h3>
+            <table>
+              <thead>
+                <tr>
+                  <th>Zeit</th>
+                  <th>Name / Kontakt</th>
+                  <th>Gaste</th>
+                  <th>Status</th>
+                  <th>Aktionen</th>
+                </tr>
+              </thead>
+              <tbody id="day-detail-body"></tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+      <!-- List View -->
+      <div class="tab-content" id="list-tab">
+        <div class="card">
+          <h2 class="card-title">Reservierungen</h2>
+          <div class="grid grid-2" style="margin-bottom: 1rem;">
+            <label>
+              <span>Datum filtern</span>
+              <input type="date" id="filter-date" />
+            </label>
+            <div style="display: flex; align-items: flex-end;">
+              <button class="btn btn-secondary" id="clear-filter">Filter loschen</button>
+            </div>
+          </div>
+          <div id="reservation-count" style="margin-bottom: 1rem; color: #6b7a6c;"></div>
+          <table>
+            <thead>
+              <tr>
+                <th id="th-date">Datum</th>
+                <th>Zeit</th>
+                <th>Name / Kontakt</th>
+                <th>Gaste</th>
+                <th>Status</th>
+                <th>Aktionen</th>
+              </tr>
+            </thead>
+            <tbody id="reservation-table"></tbody>
+          </table>
+        </div>
       </div>
 
       <div class="card">
-        <h2 class="card-title">Reservierungen</h2>
-        <div id="reservation-count" style="margin-bottom: 1rem; color: #6b7a6c;"></div>
-        <table>
-          <thead>
-            <tr>
-              <th id="th-date" style="display: none;">Datum</th>
-              <th>Zeit</th>
-              <th>Name / Kontakt</th>
-              <th>Gäste</th>
-              <th>Status</th>
-              <th>Aktionen</th>
-            </tr>
-          </thead>
-          <tbody id="reservation-table"></tbody>
-        </table>
-      </div>
-
-      <div class="card">
-        <h2>Zeitslots blockieren</h2>
+        <h2 class="card-title">Zeitslots blockieren</h2>
         <div class="grid grid-2">
           <label>
             <span>Datum</span>
@@ -198,15 +442,15 @@
             <input type="time" id="block-time" />
           </label>
           <label>
-            <span>Kapazität</span>
+            <span>Kapazitat</span>
             <input type="number" id="block-capacity" min="0" value="0" />
           </label>
         </div>
-        <button class="btn btn-secondary" id="btn-block">Blockieren</button>
+        <button class="btn btn-secondary" id="btn-block" style="margin-top: 1rem;">Blockieren</button>
       </div>
 
       <div class="card">
-        <h2>Export</h2>
+        <h2 class="card-title">Export</h2>
         <div class="grid grid-2">
           <label>
             <span>Datum</span>
@@ -220,7 +464,7 @@
             </select>
           </label>
         </div>
-        <button class="btn btn-primary" id="btn-export">Export starten</button>
+        <button class="btn btn-primary" id="btn-export" style="margin-top: 1rem;">Export starten</button>
       </div>
 
     </div>
@@ -232,7 +476,15 @@
     const loginOverlay = document.getElementById('login-overlay');
     const mainContent = document.getElementById('main-content');
     const userDisplay = document.getElementById('user-display');
+    const statsRow = document.getElementById('stats-row');
+    const tabsContainer = document.getElementById('tabs');
     let currentUser = null;
+    let allReservations = [];
+    let currentMonth = new Date();
+
+    const MONTH_NAMES = ['Januar', 'Februar', 'Marz', 'April', 'Mai', 'Juni',
+                         'Juli', 'August', 'September', 'Oktober', 'November', 'Dezember'];
+    const DAY_NAMES = ['Mo', 'Di', 'Mi', 'Do', 'Fr', 'Sa', 'So'];
 
     function showBanner(message, type = 'success') {
       banner.textContent = message;
@@ -311,11 +563,186 @@
 
     function getStatusBadge(status) {
       const labels = {
-        confirmed: 'Bestätigt',
+        confirmed: 'Bestatigt',
         waitlisted: 'Warteliste',
         cancelled: 'Storniert'
       };
       return `<span class="status-badge status-${status}">${labels[status] || status}</span>`;
+    }
+
+    function formatDate(dateStr) {
+      const [year, month, day] = dateStr.split('-');
+      return `${day}.${month}.${year}`;
+    }
+
+    function formatContact(reservation) {
+      let html = `<div>${reservation.name}</div>`;
+      html += `<div class="reservation-email">${reservation.email}</div>`;
+      if (reservation.phone) {
+        html += `<div class="reservation-details">${reservation.phone}</div>`;
+      }
+      if (reservation.specialRequests) {
+        html += `<div class="reservation-details">${reservation.specialRequests}</div>`;
+      }
+      return html;
+    }
+
+    function updateStats() {
+      const today = new Date().toISOString().split('T')[0];
+      const confirmed = allReservations.filter(r => r.status === 'confirmed');
+      const todayReservations = allReservations.filter(r => r.date === today && r.status !== 'cancelled');
+      const totalGuests = confirmed.reduce((sum, r) => sum + Number(r.guests || 0), 0);
+
+      document.getElementById('stat-total').textContent = allReservations.length;
+      document.getElementById('stat-confirmed').textContent = confirmed.length;
+      document.getElementById('stat-guests').textContent = totalGuests;
+      document.getElementById('stat-today').textContent = todayReservations.length;
+    }
+
+    function getReservationsForDate(dateStr) {
+      return allReservations.filter(r => r.date === dateStr);
+    }
+
+    function renderCalendar() {
+      const grid = document.getElementById('calendar-grid');
+      const monthLabel = document.getElementById('calendar-month');
+
+      const year = currentMonth.getFullYear();
+      const month = currentMonth.getMonth();
+
+      monthLabel.textContent = `${MONTH_NAMES[month]} ${year}`;
+
+      const firstDay = new Date(year, month, 1);
+      const lastDay = new Date(year, month + 1, 0);
+      const daysInMonth = lastDay.getDate();
+
+      let startDay = firstDay.getDay() - 1;
+      if (startDay < 0) startDay = 6;
+
+      const today = new Date().toISOString().split('T')[0];
+
+      let html = '';
+
+      // Day headers
+      DAY_NAMES.forEach(day => {
+        html += `<div class="calendar-day-header">${day}</div>`;
+      });
+
+      // Empty cells before first day
+      const prevMonth = new Date(year, month, 0);
+      const prevMonthDays = prevMonth.getDate();
+      for (let i = startDay - 1; i >= 0; i--) {
+        const day = prevMonthDays - i;
+        const prevMonthNum = month === 0 ? 12 : month;
+        const prevYear = month === 0 ? year - 1 : year;
+        const dateStr = `${prevYear}-${String(prevMonthNum).padStart(2, '0')}-${String(day).padStart(2, '0')}`;
+        const reservations = getReservationsForDate(dateStr);
+        const count = reservations.filter(r => r.status !== 'cancelled').length;
+
+        html += `
+          <div class="calendar-day other-month" data-date="${dateStr}">
+            <div class="calendar-day-number">${day}</div>
+            ${count > 0 ? `<div class="calendar-day-count has-reservations">${count} Res.</div>` : ''}
+          </div>
+        `;
+      }
+
+      // Days of current month
+      for (let day = 1; day <= daysInMonth; day++) {
+        const dateStr = `${year}-${String(month + 1).padStart(2, '0')}-${String(day).padStart(2, '0')}`;
+        const reservations = getReservationsForDate(dateStr);
+        const count = reservations.filter(r => r.status !== 'cancelled').length;
+        const isToday = dateStr === today;
+
+        html += `
+          <div class="calendar-day${isToday ? ' today' : ''}" data-date="${dateStr}">
+            <div class="calendar-day-number">${day}</div>
+            ${count > 0
+              ? `<div class="calendar-day-count has-reservations">${count} Res.</div>`
+              : `<div class="calendar-day-count no-reservations">-</div>`}
+          </div>
+        `;
+      }
+
+      // Empty cells after last day
+      const totalCells = startDay + daysInMonth;
+      const remainingCells = (7 - (totalCells % 7)) % 7;
+      for (let i = 1; i <= remainingCells; i++) {
+        const nextMonthNum = month === 11 ? 1 : month + 2;
+        const nextYear = month === 11 ? year + 1 : year;
+        const dateStr = `${nextYear}-${String(nextMonthNum).padStart(2, '0')}-${String(i).padStart(2, '0')}`;
+        const reservations = getReservationsForDate(dateStr);
+        const count = reservations.filter(r => r.status !== 'cancelled').length;
+
+        html += `
+          <div class="calendar-day other-month" data-date="${dateStr}">
+            <div class="calendar-day-number">${i}</div>
+            ${count > 0 ? `<div class="calendar-day-count has-reservations">${count} Res.</div>` : ''}
+          </div>
+        `;
+      }
+
+      grid.innerHTML = html;
+
+      // Add click handlers
+      grid.querySelectorAll('.calendar-day').forEach(dayEl => {
+        dayEl.addEventListener('click', () => {
+          const date = dayEl.dataset.date;
+          showDayDetail(date);
+
+          grid.querySelectorAll('.calendar-day').forEach(d => d.classList.remove('selected'));
+          dayEl.classList.add('selected');
+        });
+      });
+    }
+
+    function showDayDetail(dateStr) {
+      const detail = document.getElementById('day-detail');
+      const title = document.getElementById('day-detail-title');
+      const body = document.getElementById('day-detail-body');
+
+      const reservations = getReservationsForDate(dateStr);
+
+      title.textContent = `Reservierungen fur ${formatDate(dateStr)}`;
+
+      if (reservations.length === 0) {
+        body.innerHTML = '<tr><td colspan="5" style="text-align: center; color: #999; padding: 2rem;">Keine Reservierungen fur diesen Tag.</td></tr>';
+      } else {
+        const rows = reservations
+          .sort((a, b) => a.time.localeCompare(b.time))
+          .map((r) => {
+            const actions = buildActionButtons(r, dateStr);
+            return `
+              <tr data-id="${r.id}" data-code="${r.confirmationCode}" data-date="${r.date}" style="opacity: ${r.status === 'cancelled' ? '0.5' : '1'}">
+                <td><strong>${r.time}</strong></td>
+                <td>${formatContact(r)}</td>
+                <td>${r.guests}</td>
+                <td>${getStatusBadge(r.status)}</td>
+                <td><div class="btn-group">${actions}</div></td>
+              </tr>
+            `;
+          })
+          .join('');
+        body.innerHTML = rows;
+      }
+
+      detail.classList.add('show');
+    }
+
+    function buildActionButtons(entry, date) {
+      const entryDate = entry.date || date;
+      const actions = [];
+      if (entry.status !== 'confirmed') {
+        actions.push(`<button class="btn btn-primary btn-sm" data-action="confirm" data-code="${entry.confirmationCode}" data-date="${entryDate}">Bestatigen</button>`);
+      }
+      if (entry.status !== 'waitlisted') {
+        actions.push(`<button class="btn btn-warning btn-sm" data-action="waitlist" data-code="${entry.confirmationCode}" data-date="${entryDate}">Warteliste</button>`);
+      }
+      if (entry.status !== 'cancelled') {
+        actions.push(`<button class="btn btn-secondary btn-sm" data-action="cancel" data-code="${entry.confirmationCode}" data-date="${entryDate}">Stornieren</button>`);
+      }
+      actions.push(`<button class="btn btn-danger btn-sm" data-action="delete" data-code="${entry.confirmationCode}" data-date="${entryDate}">Loschen</button>`);
+      return actions.join('');
     }
 
     function renderReservations(reservations, date) {
@@ -324,7 +751,6 @@
       const thDate = document.getElementById('th-date');
       tbody.innerHTML = '';
 
-      // Show/hide date column based on mode
       thDate.style.display = showAllMode ? '' : 'none';
 
       const active = reservations.filter(r => r.status !== 'cancelled');
@@ -334,12 +760,11 @@
 
       if (reservations.length === 0) {
         const colspan = showAllMode ? 6 : 5;
-        const message = showAllMode ? 'Keine Reservierungen vorhanden' : 'Keine Reservierungen für dieses Datum';
+        const message = showAllMode ? 'Keine Reservierungen vorhanden' : 'Keine Reservierungen fur dieses Datum';
         tbody.innerHTML = `<tr><td colspan="${colspan}" style="text-align: center; color: #999; padding: 2rem;">${message}</td></tr>`;
         return;
       }
 
-      // Sort: in all mode, already sorted by date desc then time; in single mode, sort by time
       if (!showAllMode) {
         reservations.sort((a, b) => a.time.localeCompare(b.time));
       }
@@ -349,30 +774,16 @@
         row.style.opacity = entry.status === 'cancelled' ? '0.5' : '1';
 
         const entryDate = entry.date || date;
-        const actions = [];
-        if (entry.status !== 'confirmed') {
-          actions.push(`<button class="btn btn-primary btn-sm" data-action="confirm" data-code="${entry.confirmationCode}" data-date="${entryDate}">Bestätigen</button>`);
-        }
-        if (entry.status !== 'waitlisted') {
-          actions.push(`<button class="btn btn-warning btn-sm" data-action="waitlist" data-code="${entry.confirmationCode}" data-date="${entryDate}">Warteliste</button>`);
-        }
-        if (entry.status !== 'cancelled') {
-          actions.push(`<button class="btn btn-secondary btn-sm" data-action="cancel" data-code="${entry.confirmationCode}" data-date="${entryDate}">Stornieren</button>`);
-        }
-        actions.push(`<button class="btn btn-danger btn-sm" data-action="delete" data-code="${entry.confirmationCode}" data-date="${entryDate}">Löschen</button>`);
+        const actions = buildActionButtons(entry, entryDate);
 
-        const dateCell = showAllMode ? `<td><strong>${entryDate}</strong></td>` : '';
+        const dateCell = showAllMode ? `<td><strong>${formatDate(entryDate)}</strong></td>` : '';
         row.innerHTML = `
           ${dateCell}
           <td><strong>${entry.time}</strong></td>
-          <td>
-            <div>${entry.name}</div>
-            <div class="reservation-email">${entry.email}</div>
-            <div class="reservation-details">${entry.phone || ''} ${entry.specialRequests ? '• ' + entry.specialRequests : ''}</div>
-          </td>
+          <td>${formatContact(entry)}</td>
           <td>${entry.guests}</td>
           <td>${getStatusBadge(entry.status)}</td>
-          <td><div class="btn-group">${actions.join('')}</div></td>
+          <td><div class="btn-group">${actions}</div></td>
         `;
         tbody.appendChild(row);
       });
@@ -381,7 +792,7 @@
     async function loadReservations() {
       const date = document.getElementById('admin-date').value;
       if (!date) {
-        showBanner('Bitte Datum auswählen.', 'error');
+        showBanner('Bitte Datum auswahlen.', 'error');
         return;
       }
       currentDate = date;
@@ -390,7 +801,12 @@
         const response = await authenticatedFetch(`/.netlify/functions/manage-reservations?date=${date}`);
         const data = await response.json();
         document.getElementById('availability-result').textContent = `${data.availability.slots.length} Slots gefunden.`;
-        renderReservations(data.reservations, date);
+        allReservations = data.reservations || [];
+        renderReservations(allReservations, date);
+        renderCalendar();
+        updateStats();
+        statsRow.style.display = 'grid';
+        tabsContainer.style.display = 'flex';
       } catch (error) {
         showBanner(error.message, 'error');
       }
@@ -402,17 +818,102 @@
       try {
         const response = await authenticatedFetch('/.netlify/functions/manage-reservations?all=true');
         const data = await response.json();
-        document.getElementById('availability-result').textContent = `${data.reservations.length} Reservierungen insgesamt gefunden.`;
-        renderReservations(data.reservations, '');
+        allReservations = data.reservations || [];
+        document.getElementById('availability-result').textContent = `${allReservations.length} Reservierungen insgesamt gefunden.`;
+        renderReservations(allReservations, '');
+        renderCalendar();
+        updateStats();
+        statsRow.style.display = 'grid';
+        tabsContainer.style.display = 'flex';
       } catch (error) {
         showBanner(error.message, 'error');
       }
     }
 
+    async function exportAllReservationsCSV() {
+      if (allReservations.length === 0) {
+        showBanner('Bitte zuerst Reservierungen laden.', 'error');
+        return;
+      }
+
+      const headers = ['Datum', 'Zeit', 'Name', 'E-Mail', 'Telefon', 'Gaste', 'Status', 'Wunsche'];
+      const rows = allReservations.map(r => [
+        r.date,
+        r.time,
+        r.name,
+        r.email,
+        r.phone || '',
+        r.guests,
+        r.status,
+        r.specialRequests || ''
+      ]);
+
+      const csvContent = [headers, ...rows]
+        .map(row => row.map(cell => `"${String(cell).replace(/"/g, '""')}"`).join(','))
+        .join('\n');
+
+      const blob = new Blob(['\ufeff' + csvContent], { type: 'text/csv;charset=utf-8;' });
+      const link = document.createElement('a');
+      link.href = URL.createObjectURL(blob);
+      link.download = `reservierungen-${new Date().toISOString().split('T')[0]}.csv`;
+      document.body.appendChild(link);
+      link.click();
+      link.remove();
+      showBanner('CSV Export erstellt.');
+    }
+
+    // Tab switching
+    tabsContainer.addEventListener('click', (e) => {
+      const tab = e.target.closest('.tab');
+      if (!tab) return;
+
+      document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+      document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+
+      tab.classList.add('active');
+      document.getElementById(`${tab.dataset.tab}-tab`).classList.add('active');
+    });
+
     document.getElementById('btn-load').addEventListener('click', loadReservations);
     document.getElementById('btn-load-all').addEventListener('click', loadAllReservations);
+    document.getElementById('btn-export-csv').addEventListener('click', exportAllReservationsCSV);
 
-    document.getElementById('reservation-table').addEventListener('click', async (event) => {
+    // Filter by date
+    document.getElementById('filter-date').addEventListener('change', () => {
+      const date = document.getElementById('filter-date').value;
+      if (date) {
+        const filtered = allReservations.filter(r => r.date === date);
+        renderReservations(filtered, date);
+      } else {
+        renderReservations(allReservations, '');
+      }
+    });
+
+    document.getElementById('clear-filter').addEventListener('click', () => {
+      document.getElementById('filter-date').value = '';
+      renderReservations(allReservations, '');
+    });
+
+    // Calendar navigation
+    document.getElementById('prev-month').addEventListener('click', () => {
+      currentMonth.setMonth(currentMonth.getMonth() - 1);
+      renderCalendar();
+    });
+
+    document.getElementById('next-month').addEventListener('click', () => {
+      currentMonth.setMonth(currentMonth.getMonth() + 1);
+      renderCalendar();
+    });
+
+    document.getElementById('today-btn').addEventListener('click', () => {
+      currentMonth = new Date();
+      renderCalendar();
+      const today = new Date().toISOString().split('T')[0];
+      showDayDetail(today);
+    });
+
+    // Handle actions for both reservation table and day detail
+    document.addEventListener('click', async (event) => {
       const button = event.target.closest('button[data-action]');
       if (!button) return;
 
@@ -422,11 +923,11 @@
 
       try {
         if (action === 'delete') {
-          if (!confirm('Reservierung endgültig löschen?')) return;
+          if (!confirm('Reservierung endgultig loschen?')) return;
           await authenticatedFetch(`/.netlify/functions/manage-reservations?date=${date}&confirmationCode=${confirmationCode}`, {
             method: 'DELETE'
           });
-          showBanner('Reservierung gelöscht.');
+          showBanner('Reservierung geloscht.');
         } else {
           const statusMap = { confirm: 'confirmed', waitlist: 'waitlisted', cancel: 'cancelled' };
           const status = statusMap[action];
@@ -436,13 +937,20 @@
             method: 'PATCH',
             body: JSON.stringify({ confirmationCode, date, status, sendEmail })
           });
-          showBanner(`Reservierung ${status === 'confirmed' ? 'bestätigt' : status === 'waitlisted' ? 'auf Warteliste gesetzt' : 'storniert'}.`);
+          showBanner(`Reservierung ${status === 'confirmed' ? 'bestatigt' : status === 'waitlisted' ? 'auf Warteliste gesetzt' : 'storniert'}.`);
         }
-        // Reload reservations based on current mode
+
+        // Reload reservations
         if (showAllMode) {
           await loadAllReservations();
-        } else {
+        } else if (currentDate) {
           await loadReservations();
+        }
+
+        // Refresh day detail if visible
+        const detail = document.getElementById('day-detail');
+        if (detail.classList.contains('show')) {
+          showDayDetail(date);
         }
       } catch (error) {
         showBanner(error.message, 'error');
@@ -473,7 +981,7 @@
         const date = document.getElementById('export-date').value;
         const format = document.getElementById('export-format').value;
         if (!date) {
-          showBanner('Bitte Datum auswählen.', 'error');
+          showBanner('Bitte Datum auswahlen.', 'error');
           return;
         }
         const response = await authenticatedFetch(`/.netlify/functions/export-reservations?date=${date}&format=${format}`);
@@ -490,8 +998,9 @@
       }
     });
 
-    // Init Netlify Identity
+    // Init Netlify Identity and Calendar
     netlifyIdentity.init();
+    renderCalendar();
   </script>
 </body>
 </html>
