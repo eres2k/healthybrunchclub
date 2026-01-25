@@ -24,6 +24,10 @@ const { writeJSON } = require('./blob-storage');
 
 const FROM_EMAIL = () => process.env.SENDER_EMAIL || 'noreply@healthybrunchclub.at';
 
+// Delay helper to avoid Resend rate limits (2 requests/second)
+const delay = (ms) => new Promise(resolve => setTimeout(resolve, ms));
+const EMAIL_DELAY_MS = 600; // 600ms between emails to stay under 2/sec limit
+
 /**
  * Returns array of admin email addresses for notifications.
  * Reads from ADMIN_NOTIFICATION_EMAILS env var (comma-separated) or falls back to defaults.
@@ -41,24 +45,32 @@ function getAdminEmails() {
 }
 
 /**
- * Sends email to all admin addresses in parallel.
+ * Sends email to all admin addresses sequentially with delays to avoid rate limits.
  */
 async function sendToAllAdmins(emailOptions) {
   const adminEmails = getAdminEmails();
   const from = FROM_EMAIL();
+  const results = [];
 
-  const promises = adminEmails.map(adminEmail =>
-    sendEmail({
-      ...emailOptions,
-      to: adminEmail,
-      from
-    }).catch(err => {
+  for (const adminEmail of adminEmails) {
+    try {
+      const result = await sendEmail({
+        ...emailOptions,
+        to: adminEmail,
+        from
+      });
+      results.push(result);
+    } catch (err) {
       console.error(`Admin-E-Mail an ${adminEmail} fehlgeschlagen:`, err.message);
-      return { success: false, error: err.message, to: adminEmail };
-    })
-  );
+      results.push({ success: false, error: err.message, to: adminEmail });
+    }
+    // Add delay between sends to stay under Resend's rate limit
+    if (adminEmails.indexOf(adminEmail) < adminEmails.length - 1) {
+      await delay(EMAIL_DELAY_MS);
+    }
+  }
 
-  return Promise.all(promises);
+  return results;
 }
 
 function encodeAttachment(content, type, filename) {
@@ -121,6 +133,9 @@ async function sendReservationEmails(reservation) {
     attachments: isWaitlisted ? [] : attachments
   });
 
+  // Delay before admin emails to avoid rate limit
+  await delay(EMAIL_DELAY_MS);
+
   // Extract just the date part for subject line
   const dateOnly = reservation.date.split('T')[0];
 
@@ -154,6 +169,9 @@ async function sendCancellationEmails(reservation, options = {}) {
     text: renderCancellationEmailText(reservation, options),
     html: renderCancellationEmail(reservation, options)
   });
+
+  // Delay before admin emails to avoid rate limit
+  await delay(EMAIL_DELAY_MS);
 
   // Extract just the date part for subject line
   const dateOnly = reservation.date.split('T')[0];
