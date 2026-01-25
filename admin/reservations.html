@@ -14,7 +14,7 @@
     }
 
     .admin-panel {
-      max-width: 960px;
+      max-width: 1200px;
       margin: 0 auto;
       background: #fff;
       border-radius: 24px;
@@ -70,6 +70,192 @@
       transform: translateY(-1px);
     }
 
+    .control-row button.secondary {
+      background: #f1e5dd;
+      color: #6c5242;
+    }
+
+    .control-row button.secondary:hover {
+      background: #e7d6cb;
+    }
+
+    /* Tabs */
+    .tabs {
+      display: flex;
+      gap: 0.5rem;
+      margin-bottom: 1.5rem;
+      border-bottom: 2px solid rgba(210, 180, 160, 0.35);
+      padding-bottom: 0;
+    }
+
+    .tab {
+      padding: 0.8rem 1.5rem;
+      border: none;
+      background: transparent;
+      cursor: pointer;
+      font-size: 0.9rem;
+      text-transform: uppercase;
+      letter-spacing: 0.12em;
+      color: #8b6a58;
+      border-bottom: 3px solid transparent;
+      margin-bottom: -2px;
+      transition: all 0.2s ease;
+    }
+
+    .tab:hover {
+      color: #3f2a1f;
+    }
+
+    .tab.active {
+      color: #e46d8c;
+      border-bottom-color: #e46d8c;
+    }
+
+    .tab-content {
+      display: none;
+    }
+
+    .tab-content.active {
+      display: block;
+    }
+
+    /* Calendar Styles */
+    .calendar-container {
+      margin-top: 1rem;
+    }
+
+    .calendar-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 1rem;
+    }
+
+    .calendar-nav {
+      display: flex;
+      gap: 0.5rem;
+      align-items: center;
+    }
+
+    .calendar-nav button {
+      padding: 0.5rem 1rem;
+      border: 1px solid rgba(210, 180, 160, 0.6);
+      background: #fff;
+      border-radius: 8px;
+      cursor: pointer;
+      font-size: 1rem;
+    }
+
+    .calendar-nav button:hover {
+      background: #f6f1eb;
+    }
+
+    .calendar-month {
+      font-size: 1.1rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+    }
+
+    .calendar-grid {
+      display: grid;
+      grid-template-columns: repeat(7, 1fr);
+      gap: 4px;
+    }
+
+    .calendar-day-header {
+      padding: 0.5rem;
+      text-align: center;
+      font-size: 0.75rem;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      color: #8b6a58;
+      font-weight: 600;
+    }
+
+    .calendar-day {
+      min-height: 80px;
+      padding: 0.5rem;
+      border: 1px solid rgba(210, 180, 160, 0.35);
+      border-radius: 8px;
+      background: #fff;
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+
+    .calendar-day:hover {
+      background: rgba(247, 235, 226, 0.6);
+      border-color: #e46d8c;
+    }
+
+    .calendar-day.other-month {
+      background: #f9f6f3;
+      color: #bba89d;
+    }
+
+    .calendar-day.today {
+      border-color: #e46d8c;
+      border-width: 2px;
+    }
+
+    .calendar-day.selected {
+      background: rgba(228, 109, 140, 0.1);
+      border-color: #e46d8c;
+    }
+
+    .calendar-day-number {
+      font-size: 0.9rem;
+      font-weight: 600;
+      margin-bottom: 0.3rem;
+    }
+
+    .calendar-day-count {
+      font-size: 0.7rem;
+      padding: 0.2rem 0.5rem;
+      border-radius: 999px;
+      display: inline-block;
+    }
+
+    .calendar-day-count.has-reservations {
+      background: rgba(87, 171, 103, 0.18);
+      color: #2f8f74;
+    }
+
+    .calendar-day-count.no-reservations {
+      background: rgba(210, 180, 160, 0.2);
+      color: #8b6a58;
+    }
+
+    /* Stats */
+    .stats-row {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+      gap: 1rem;
+      margin-bottom: 1.5rem;
+    }
+
+    .stat-card {
+      background: linear-gradient(135deg, #f7ebe3, #fff);
+      border-radius: 16px;
+      padding: 1.2rem;
+      text-align: center;
+    }
+
+    .stat-value {
+      font-size: 2rem;
+      font-weight: 700;
+      color: #e46d8c;
+    }
+
+    .stat-label {
+      font-size: 0.75rem;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      color: #8b6a58;
+      margin-top: 0.3rem;
+    }
+
+    /* Table */
     table {
       width: 100%;
       border-collapse: collapse;
@@ -80,6 +266,7 @@
       padding: 0.85rem 0.75rem;
       border-bottom: 1px solid rgba(210, 180, 160, 0.35);
       font-size: 0.9rem;
+      text-align: left;
     }
 
     th {
@@ -109,7 +296,7 @@
       color: #2f8f74;
     }
 
-    .status-waitlist {
+    .status-waitlisted {
       background: rgba(244, 201, 112, 0.18);
       color: #c58532;
     }
@@ -144,6 +331,12 @@
       color: #6c5242;
     }
 
+    .empty-message {
+      text-align: center;
+      padding: 2rem;
+      color: #8b6a58;
+    }
+
     @media (max-width: 768px) {
       body {
         padding: 1.5rem 0.75rem;
@@ -152,6 +345,19 @@
       .control-row {
         flex-direction: column;
         align-items: stretch;
+      }
+
+      .calendar-grid {
+        gap: 2px;
+      }
+
+      .calendar-day {
+        min-height: 60px;
+        padding: 0.3rem;
+      }
+
+      .calendar-day-number {
+        font-size: 0.8rem;
       }
     }
   </style>
@@ -163,51 +369,134 @@
 
     <div class="control-row">
       <div>
-        <label for="admin-date">Datum</label>
-        <input type="date" id="admin-date">
-      </div>
-      <div>
         <label for="admin-token">Admin Token</label>
         <input type="password" id="admin-token" placeholder="Token eingeben">
       </div>
       <div>
-        <button id="load-reservations" type="button">Reservierungen laden</button>
+        <button id="load-all" type="button">Alle Reservierungen laden</button>
       </div>
       <div>
-        <button id="export-reservations" type="button">CSV Export</button>
+        <button id="export-reservations" type="button" class="secondary">CSV Export</button>
       </div>
     </div>
 
     <div class="status-bar" id="admin-status" aria-live="polite"></div>
 
-    <table aria-live="polite">
-      <thead>
-        <tr>
-          <th>Zeit</th>
-          <th>Name</th>
-          <th>Personen</th>
-          <th>Kontakt</th>
-          <th>Status</th>
-          <th>Notizen</th>
-          <th>Aktionen</th>
-        </tr>
-      </thead>
-      <tbody id="reservations-body">
-        <tr>
-          <td colspan="7" style="text-align:center; padding:1.5rem;">Bitte Datum auswählen und laden.</td>
-        </tr>
-      </tbody>
-    </table>
+    <!-- Stats -->
+    <div class="stats-row" id="stats-row" style="display: none;">
+      <div class="stat-card">
+        <div class="stat-value" id="stat-total">0</div>
+        <div class="stat-label">Gesamt</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-value" id="stat-confirmed">0</div>
+        <div class="stat-label">Bestätigt</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-value" id="stat-guests">0</div>
+        <div class="stat-label">Gäste</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-value" id="stat-today">0</div>
+        <div class="stat-label">Heute</div>
+      </div>
+    </div>
+
+    <!-- Tabs -->
+    <div class="tabs" id="tabs" style="display: none;">
+      <button class="tab active" data-tab="calendar">Kalender</button>
+      <button class="tab" data-tab="list">Liste</button>
+    </div>
+
+    <!-- Calendar View -->
+    <div class="tab-content active" id="calendar-tab">
+      <div class="calendar-container">
+        <div class="calendar-header">
+          <div class="calendar-nav">
+            <button id="prev-month">&larr;</button>
+            <span class="calendar-month" id="calendar-month">Januar 2026</span>
+            <button id="next-month">&rarr;</button>
+          </div>
+          <button id="today-btn" class="secondary" style="padding: 0.5rem 1rem; border-radius: 8px; font-size: 0.8rem;">Heute</button>
+        </div>
+        <div class="calendar-grid" id="calendar-grid">
+          <!-- Calendar will be rendered here -->
+        </div>
+      </div>
+    </div>
+
+    <!-- List View -->
+    <div class="tab-content" id="list-tab">
+      <div class="control-row">
+        <div>
+          <label for="filter-date">Datum filtern</label>
+          <input type="date" id="filter-date">
+        </div>
+        <div>
+          <button id="clear-filter" type="button" class="secondary">Filter löschen</button>
+        </div>
+      </div>
+
+      <table aria-live="polite">
+        <thead>
+          <tr>
+            <th>Datum</th>
+            <th>Zeit</th>
+            <th>Name</th>
+            <th>Personen</th>
+            <th>Kontakt</th>
+            <th>Status</th>
+            <th>Notizen</th>
+            <th>Aktionen</th>
+          </tr>
+        </thead>
+        <tbody id="reservations-body">
+          <tr>
+            <td colspan="8" class="empty-message">Bitte zuerst Reservierungen laden.</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <!-- Day Detail Modal -->
+    <div id="day-detail" style="display: none; margin-top: 1.5rem; padding: 1.5rem; background: #f7ebe3; border-radius: 16px;">
+      <h3 id="day-detail-title" style="margin: 0 0 1rem 0; font-size: 1rem; text-transform: uppercase; letter-spacing: 0.1em;"></h3>
+      <table>
+        <thead>
+          <tr>
+            <th>Zeit</th>
+            <th>Name</th>
+            <th>Personen</th>
+            <th>Kontakt</th>
+            <th>Status</th>
+            <th>Notizen</th>
+            <th>Aktionen</th>
+          </tr>
+        </thead>
+        <tbody id="day-detail-body">
+        </tbody>
+      </table>
+    </div>
   </div>
 
   <script>
     const API_BASE = '/.netlify/functions/manage-reservations';
-    const dateField = document.getElementById('admin-date');
     const tokenField = document.getElementById('admin-token');
     const statusBar = document.getElementById('admin-status');
     const tableBody = document.getElementById('reservations-body');
-    const loadButton = document.getElementById('load-reservations');
+    const loadAllButton = document.getElementById('load-all');
     const exportButton = document.getElementById('export-reservations');
+    const statsRow = document.getElementById('stats-row');
+    const tabsContainer = document.getElementById('tabs');
+    const filterDate = document.getElementById('filter-date');
+    const clearFilterBtn = document.getElementById('clear-filter');
+
+    let allReservations = [];
+    let currentMonth = new Date();
+
+    const MONTH_NAMES = ['Januar', 'Februar', 'März', 'April', 'Mai', 'Juni',
+                         'Juli', 'August', 'September', 'Oktober', 'November', 'Dezember'];
+    const DAY_NAMES = ['Mo', 'Di', 'Mi', 'Do', 'Fr', 'Sa', 'So'];
 
     function setStatus(message, tone = 'info') {
       statusBar.textContent = message || '';
@@ -227,6 +516,11 @@
       }
     }
 
+    function formatDate(dateStr) {
+      const [year, month, day] = dateStr.split('-');
+      return `${day}.${month}.${year}`;
+    }
+
     function formatContact(reservation) {
       const parts = [];
       if (reservation.email) {
@@ -240,8 +534,9 @@
 
     function statusClass(status) {
       switch (status) {
+        case 'waitlisted':
         case 'waitlist':
-          return 'status-tag status-waitlist';
+          return 'status-tag status-waitlisted';
         case 'cancelled':
           return 'status-tag status-cancelled';
         default:
@@ -249,22 +544,185 @@
       }
     }
 
-    function renderRows(reservations) {
+    function statusLabel(status) {
+      switch (status) {
+        case 'waitlisted':
+        case 'waitlist':
+          return 'Warteliste';
+        case 'cancelled':
+          return 'Storniert';
+        default:
+          return 'Bestätigt';
+      }
+    }
+
+    function updateStats() {
+      const today = new Date().toISOString().split('T')[0];
+      const confirmed = allReservations.filter(r => r.status === 'confirmed');
+      const todayReservations = allReservations.filter(r => r.date === today && r.status !== 'cancelled');
+      const totalGuests = confirmed.reduce((sum, r) => sum + Number(r.guests || 0), 0);
+
+      document.getElementById('stat-total').textContent = allReservations.length;
+      document.getElementById('stat-confirmed').textContent = confirmed.length;
+      document.getElementById('stat-guests').textContent = totalGuests;
+      document.getElementById('stat-today').textContent = todayReservations.length;
+    }
+
+    function getReservationsForDate(dateStr) {
+      return allReservations.filter(r => r.date === dateStr);
+    }
+
+    function renderCalendar() {
+      const grid = document.getElementById('calendar-grid');
+      const monthLabel = document.getElementById('calendar-month');
+
+      const year = currentMonth.getFullYear();
+      const month = currentMonth.getMonth();
+
+      monthLabel.textContent = `${MONTH_NAMES[month]} ${year}`;
+
+      // Get first day of month and number of days
+      const firstDay = new Date(year, month, 1);
+      const lastDay = new Date(year, month + 1, 0);
+      const daysInMonth = lastDay.getDate();
+
+      // Get the day of week for the first day (0 = Sunday, adjust for Monday start)
+      let startDay = firstDay.getDay() - 1;
+      if (startDay < 0) startDay = 6;
+
+      const today = new Date().toISOString().split('T')[0];
+
+      let html = '';
+
+      // Day headers
+      DAY_NAMES.forEach(day => {
+        html += `<div class="calendar-day-header">${day}</div>`;
+      });
+
+      // Empty cells before first day
+      const prevMonth = new Date(year, month, 0);
+      const prevMonthDays = prevMonth.getDate();
+      for (let i = startDay - 1; i >= 0; i--) {
+        const day = prevMonthDays - i;
+        const prevMonthNum = month === 0 ? 12 : month;
+        const prevYear = month === 0 ? year - 1 : year;
+        const dateStr = `${prevYear}-${String(prevMonthNum).padStart(2, '0')}-${String(day).padStart(2, '0')}`;
+        const reservations = getReservationsForDate(dateStr);
+        const count = reservations.filter(r => r.status !== 'cancelled').length;
+
+        html += `
+          <div class="calendar-day other-month" data-date="${dateStr}">
+            <div class="calendar-day-number">${day}</div>
+            ${count > 0 ? `<div class="calendar-day-count has-reservations">${count} Res.</div>` : ''}
+          </div>
+        `;
+      }
+
+      // Days of current month
+      for (let day = 1; day <= daysInMonth; day++) {
+        const dateStr = `${year}-${String(month + 1).padStart(2, '0')}-${String(day).padStart(2, '0')}`;
+        const reservations = getReservationsForDate(dateStr);
+        const count = reservations.filter(r => r.status !== 'cancelled').length;
+        const isToday = dateStr === today;
+
+        html += `
+          <div class="calendar-day${isToday ? ' today' : ''}" data-date="${dateStr}">
+            <div class="calendar-day-number">${day}</div>
+            ${count > 0
+              ? `<div class="calendar-day-count has-reservations">${count} Res.</div>`
+              : `<div class="calendar-day-count no-reservations">—</div>`}
+          </div>
+        `;
+      }
+
+      // Empty cells after last day
+      const totalCells = startDay + daysInMonth;
+      const remainingCells = (7 - (totalCells % 7)) % 7;
+      for (let i = 1; i <= remainingCells; i++) {
+        const nextMonthNum = month === 11 ? 1 : month + 2;
+        const nextYear = month === 11 ? year + 1 : year;
+        const dateStr = `${nextYear}-${String(nextMonthNum).padStart(2, '0')}-${String(i).padStart(2, '0')}`;
+        const reservations = getReservationsForDate(dateStr);
+        const count = reservations.filter(r => r.status !== 'cancelled').length;
+
+        html += `
+          <div class="calendar-day other-month" data-date="${dateStr}">
+            <div class="calendar-day-number">${i}</div>
+            ${count > 0 ? `<div class="calendar-day-count has-reservations">${count} Res.</div>` : ''}
+          </div>
+        `;
+      }
+
+      grid.innerHTML = html;
+
+      // Add click handlers
+      grid.querySelectorAll('.calendar-day').forEach(dayEl => {
+        dayEl.addEventListener('click', () => {
+          const date = dayEl.dataset.date;
+          showDayDetail(date);
+
+          // Update selection
+          grid.querySelectorAll('.calendar-day').forEach(d => d.classList.remove('selected'));
+          dayEl.classList.add('selected');
+        });
+      });
+    }
+
+    function showDayDetail(dateStr) {
+      const detail = document.getElementById('day-detail');
+      const title = document.getElementById('day-detail-title');
+      const body = document.getElementById('day-detail-body');
+
+      const reservations = getReservationsForDate(dateStr);
+
+      title.textContent = `Reservierungen für ${formatDate(dateStr)}`;
+
+      if (reservations.length === 0) {
+        body.innerHTML = '<tr><td colspan="7" class="empty-message">Keine Reservierungen für diesen Tag.</td></tr>';
+      } else {
+        const rows = reservations
+          .sort((a, b) => a.time.localeCompare(b.time))
+          .map((r) => `
+            <tr data-id="${r.id}" data-code="${r.confirmationCode}" data-date="${r.date}">
+              <td>${r.time}</td>
+              <td>${r.name}</td>
+              <td>${r.guests}</td>
+              <td>${formatContact(r)}</td>
+              <td><span class="${statusClass(r.status)}">${statusLabel(r.status)}</span></td>
+              <td>${r.specialRequests || ''}</td>
+              <td class="actions">
+                <button data-action="cancel">stornieren</button>
+              </td>
+            </tr>
+          `)
+          .join('');
+        body.innerHTML = rows;
+      }
+
+      detail.style.display = 'block';
+    }
+
+    function renderTable(reservations) {
       if (!reservations || reservations.length === 0) {
-        tableBody.innerHTML = '<tr><td colspan="7" style="text-align:center; padding:1.5rem;">Keine Reservierungen gefunden.</td></tr>';
+        tableBody.innerHTML = '<tr><td colspan="8" class="empty-message">Keine Reservierungen gefunden.</td></tr>';
         return;
       }
 
       const rows = reservations
-        .sort((a, b) => a.time.localeCompare(b.time))
-        .map((reservation) => `
-          <tr data-id="${reservation.id}">
-            <td>${reservation.time}</td>
-            <td>${reservation.name}</td>
-            <td>${reservation.guests}</td>
-            <td>${formatContact(reservation)}</td>
-            <td><span class="${statusClass(reservation.status)}">${reservation.status}</span></td>
-            <td>${reservation.notes || ''}</td>
+        .sort((a, b) => {
+          const dateCompare = a.date.localeCompare(b.date);
+          if (dateCompare !== 0) return dateCompare;
+          return a.time.localeCompare(b.time);
+        })
+        .map((r) => `
+          <tr data-id="${r.id}" data-code="${r.confirmationCode}" data-date="${r.date}">
+            <td>${formatDate(r.date)}</td>
+            <td>${r.time}</td>
+            <td>${r.name}</td>
+            <td>${r.guests}</td>
+            <td>${formatContact(r)}</td>
+            <td><span class="${statusClass(r.status)}">${statusLabel(r.status)}</span></td>
+            <td>${r.specialRequests || ''}</td>
             <td class="actions">
               <button data-action="cancel">stornieren</button>
             </td>
@@ -275,12 +733,8 @@
       tableBody.innerHTML = rows;
     }
 
-    async function fetchReservations(date, token, options = {}) {
-      const params = new URLSearchParams({ date });
-      if (options.includeAvailability) {
-        params.set('includeAvailability', 'true');
-      }
-
+    async function fetchAllReservations(token) {
+      const params = new URLSearchParams({ all: 'true' });
       const response = await fetch(`${API_BASE}?${params.toString()}`, {
         headers: { Authorization: `Bearer ${token}` }
       });
@@ -293,10 +747,10 @@
       return response.json();
     }
 
-    async function deleteReservation(date, token, id) {
-      const params = new URLSearchParams({ date, id, action: 'delete' });
+    async function deleteReservation(date, token, confirmationCode) {
+      const params = new URLSearchParams({ date, confirmationCode });
       const response = await fetch(`${API_BASE}?${params.toString()}`, {
-        method: 'POST',
+        method: 'DELETE',
         headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${token}` }
       });
 
@@ -308,53 +762,104 @@
       return response.json();
     }
 
-    async function exportReservations(date, token) {
-      const params = new URLSearchParams({ date, format: 'csv' });
+    async function exportReservations(token) {
+      const today = new Date().toISOString().split('T')[0];
+      const params = new URLSearchParams({ date: today, format: 'csv' });
       const response = await fetch(`${API_BASE}?${params.toString()}`, {
         headers: { Authorization: `Bearer ${token}` }
       });
       if (!response.ok) {
-        const message = await response.text();
-        throw new Error(message || 'Export fehlgeschlagen');
+        throw new Error('Export fehlgeschlagen');
       }
       const blob = await response.blob();
       const link = document.createElement('a');
       link.href = URL.createObjectURL(blob);
-      link.download = `reservierungen-${date}.csv`;
+      link.download = `reservierungen-${today}.csv`;
       document.body.appendChild(link);
       link.click();
       link.remove();
     }
 
-    loadButton.addEventListener('click', async () => {
-      const date = dateField.value;
+    // Tab switching
+    tabsContainer.addEventListener('click', (e) => {
+      const tab = e.target.closest('.tab');
+      if (!tab) return;
+
+      document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+      document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+
+      tab.classList.add('active');
+      document.getElementById(`${tab.dataset.tab}-tab`).classList.add('active');
+    });
+
+    // Load all reservations
+    loadAllButton.addEventListener('click', async () => {
       const token = tokenField.value;
-      if (!date || !token) {
-        setStatus('Bitte Datum und Token angeben.', 'error');
+      if (!token) {
+        setStatus('Bitte Token angeben.', 'error');
         return;
       }
       setStatus('Lade Reservierungen …');
       rememberToken(token);
       try {
-        const data = await fetchReservations(date, token, { includeAvailability: true });
-        renderRows(data.reservations);
-        setStatus(`Gefundene Reservierungen: ${data.reservations.length}`);
+        const data = await fetchAllReservations(token);
+        allReservations = data.reservations || [];
+        renderTable(allReservations);
+        renderCalendar();
+        updateStats();
+        statsRow.style.display = 'grid';
+        tabsContainer.style.display = 'flex';
+        setStatus(`${allReservations.length} Reservierungen geladen`);
       } catch (error) {
         console.error(error);
         setStatus('Fehler beim Laden: ' + error.message, 'error');
       }
     });
 
+    // Filter by date
+    filterDate.addEventListener('change', () => {
+      const date = filterDate.value;
+      if (date) {
+        const filtered = allReservations.filter(r => r.date === date);
+        renderTable(filtered);
+      } else {
+        renderTable(allReservations);
+      }
+    });
+
+    clearFilterBtn.addEventListener('click', () => {
+      filterDate.value = '';
+      renderTable(allReservations);
+    });
+
+    // Calendar navigation
+    document.getElementById('prev-month').addEventListener('click', () => {
+      currentMonth.setMonth(currentMonth.getMonth() - 1);
+      renderCalendar();
+    });
+
+    document.getElementById('next-month').addEventListener('click', () => {
+      currentMonth.setMonth(currentMonth.getMonth() + 1);
+      renderCalendar();
+    });
+
+    document.getElementById('today-btn').addEventListener('click', () => {
+      currentMonth = new Date();
+      renderCalendar();
+      const today = new Date().toISOString().split('T')[0];
+      showDayDetail(today);
+    });
+
+    // Export
     exportButton.addEventListener('click', async () => {
-      const date = dateField.value;
       const token = tokenField.value;
-      if (!date || !token) {
-        setStatus('Bitte Datum und Token angeben.', 'error');
+      if (!token) {
+        setStatus('Bitte Token angeben.', 'error');
         return;
       }
       setStatus('Erstelle Export …');
       try {
-        await exportReservations(date, token);
+        await exportReservations(token);
         setStatus('CSV Export erstellt.');
       } catch (error) {
         console.error(error);
@@ -362,14 +867,17 @@
       }
     });
 
-    tableBody.addEventListener('click', async (event) => {
+    // Handle cancel actions (for both table and day detail)
+    document.addEventListener('click', async (event) => {
       const button = event.target.closest('button[data-action="cancel"]');
       if (!button) return;
+
       const row = button.closest('tr');
-      const id = row?.dataset.id;
-      const date = dateField.value;
+      const confirmationCode = row?.dataset.code;
+      const date = row?.dataset.date;
       const token = tokenField.value;
-      if (!id || !date || !token) {
+
+      if (!confirmationCode || !date || !token) {
         setStatus('Es fehlen Informationen zum Stornieren.', 'error');
         return;
       }
@@ -379,8 +887,24 @@
       }
 
       try {
-        await deleteReservation(date, token, id);
-        row.remove();
+        await deleteReservation(date, token, confirmationCode);
+
+        // Update local data
+        const index = allReservations.findIndex(r => r.confirmationCode === confirmationCode);
+        if (index !== -1) {
+          allReservations.splice(index, 1);
+        }
+
+        renderTable(allReservations);
+        renderCalendar();
+        updateStats();
+
+        // Refresh day detail if visible
+        const detail = document.getElementById('day-detail');
+        if (detail.style.display !== 'none') {
+          showDayDetail(date);
+        }
+
         setStatus('Reservierung wurde gelöscht.');
       } catch (error) {
         console.error(error);
@@ -388,8 +912,9 @@
       }
     });
 
+    // Initialize
     restoreToken();
-    dateField.value = new Date().toISOString().split('T')[0];
+    renderCalendar();
   </script>
 </body>
 </html>
