@@ -28,6 +28,7 @@ items:
     dietary:
       lactoseFree: true
       vegetarian: true
+      glutenFree: true
   - name: omelette creation
     tags:
       - vegetarisch
@@ -49,12 +50,20 @@ items:
       fat: 15g
     price: "18.90"
     image: /content/images/img-20250806-wa0005.jpg
+    dietary:
+      vegetarian: true
+      lactoseFree: true
+      glutenFree: true
   - price: "18.90"
     name: beggs enedict
     allergens:
       - c
       - g
       - h
+    dietary:
+      vegetarian: true
+      lactoseFree: true
+      glutenFree: true
     nutrition:
       calories: 345g
       protein: 19g
