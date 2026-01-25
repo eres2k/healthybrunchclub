@@ -4248,6 +4248,7 @@ body.dark-mode video:hover {
     opacity: 0;
     transition: opacity 0.3s ease;
     z-index: 0;
+    pointer-events: none;
 }
 
 .menu-download-card:hover {
@@ -4272,6 +4273,21 @@ body.dark-mode video:hover {
 
 .menu-download-card:hover .menu-card-download {
     background: rgba(255, 255, 255, 0.2);
+}
+
+/* Active state for touch feedback on mobile */
+.menu-download-card:active {
+    transform: scale(0.98);
+}
+
+.menu-download-card:active::before {
+    opacity: 0.7;
+}
+
+.menu-download-card:active .menu-card-icon,
+.menu-download-card:active .menu-card-content,
+.menu-download-card:active .menu-card-download {
+    color: white;
 }
 
 /* Icon container */
@@ -4392,6 +4408,9 @@ body.dark-mode video:hover {
     .menu-download-card {
         padding: 14px;
         border-radius: 12px;
+        -webkit-tap-highlight-color: rgba(30, 74, 60, 0.2);
+        touch-action: manipulation;
+        cursor: pointer;
     }
 
     .menu-card-icon {
@@ -4758,9 +4777,14 @@ body.dark-mode video:hover {
 
     .chatbot-window {
         width: calc(100vw - 20px);
-        height: 70vh;
-        max-height: 500px;
+        height: auto;
+        max-height: min(70vh, 450px);
         border-radius: 16px;
+    }
+
+    .chatbot-messages {
+        min-height: 200px;
+        max-height: calc(min(70vh, 450px) - 140px);
     }
 
     .chatbot-messages {
