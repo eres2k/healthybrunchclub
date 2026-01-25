@@ -20,18 +20,18 @@ const CONFIG_FILE = path.join(CONTENT_DIR, 'menu-pdf-config.json');
 
 // Standard filenames for each menu type
 const STANDARD_FILENAMES = {
-  menu_pdf: 'menu.pdf',
-  english_menu_pdf: 'menu-english.pdf',
-  kids_menu_pdf: 'kidsmenu.pdf',
-  lasa_english_menu_pdf: 'lasa-english.pdf'
+  menu_pdf: 'HBC_DE_MENU.pdf',
+  english_menu_pdf: 'HBC_EN_MENU.pdf',
+  kids_menu_pdf: 'HBC_KIDS_MENU.pdf',
+  lasa_english_menu_pdf: 'LASA_EN_MENU.pdf'
 };
 
 // Public paths (what gets stored in config)
 const PUBLIC_PATHS = {
-  menu_pdf: '/content/menu.pdf',
-  english_menu_pdf: '/content/menu-english.pdf',
-  kids_menu_pdf: '/content/kidsmenu.pdf',
-  lasa_english_menu_pdf: '/content/lasa-english.pdf'
+  menu_pdf: '/content/HBC_DE_MENU.pdf',
+  english_menu_pdf: '/content/HBC_EN_MENU.pdf',
+  kids_menu_pdf: '/content/HBC_KIDS_MENU.pdf',
+  lasa_english_menu_pdf: '/content/LASA_EN_MENU.pdf'
 };
 
 function log(emoji, message) {

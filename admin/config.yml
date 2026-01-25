@@ -192,27 +192,27 @@ collections:
             required: true
             media_folder: "/content"
             public_folder: "/content"
-            hint: "Deutsche Speisekarte (wird automatisch zu menu.pdf)"
+            hint: "Deutsche Speisekarte (wird automatisch zu HBC_DE_MENU.pdf)"
           - label: "🇬🇧 English Menu"
             name: "english_menu_pdf"
             widget: "file"
             required: false
             media_folder: "/content"
             public_folder: "/content"
-            hint: "English menu (wird automatisch zu menu-english.pdf)"
+            hint: "English menu (wird automatisch zu HBC_EN_MENU.pdf)"
           - label: "👶 Kinderkarte"
             name: "kids_menu_pdf"
             widget: "file"
             required: false
             media_folder: "/content"
             public_folder: "/content"
-            hint: "Für die Kleinen (wird automatisch zu kidsmenu.pdf)"
+            hint: "Für die Kleinen (wird automatisch zu HBC_KIDS_MENU.pdf)"
           - label: "🌿 LASA English Menu"
             name: "lasa_english_menu_pdf"
             widget: "file"
             required: false
             media_folder: "/content"
             public_folder: "/content"
-            hint: "LASA special English menu (wird automatisch zu lasa-english.pdf)"
+            hint: "LASA special English menu (wird automatisch zu LASA_EN_MENU.pdf)"
           - {label: "Version", name: "version", widget: "string", required: false, hint: "z.B. Frühjahr 2026, v3.2"}
           - {label: "Aktiv", name: "active", widget: "boolean", default: true, hint: "Menü auf der Website anzeigen?"}

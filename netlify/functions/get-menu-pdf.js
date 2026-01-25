@@ -17,10 +17,10 @@ const CORS_HEADERS = {
 
 // Standard public paths for all menu PDFs
 const MENU_PATHS = {
-  main: '/content/menu.pdf',
-  english: '/content/menu-english.pdf',
-  kids: '/content/kidsmenu.pdf',
-  lasa: '/content/lasa-english.pdf'
+  main: '/content/HBC_DE_MENU.pdf',
+  english: '/content/HBC_EN_MENU.pdf',
+  kids: '/content/HBC_KIDS_MENU.pdf',
+  lasa: '/content/LASA_EN_MENU.pdf'
 };
 
 function loadConfig() {
