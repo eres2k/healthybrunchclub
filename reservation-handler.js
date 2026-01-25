@@ -343,8 +343,8 @@ class ReservationWizard {
       if (error.name === 'TypeError' || (typeof error.message === 'string' && error.message.includes('Failed to fetch')) || !navigator.onLine) {
         this.showError('Netzwerkfehler: Bitte überprüfen Sie Ihre Internetverbindung und versuchen Sie es erneut.');
       } else {
-        console.log('Form submission handled by Netlify', error);
-        this.displaySuccess(undefined, 'Vielen Dank! Wir melden uns in Kürze.');
+        console.error('Reservation submission error:', error);
+        this.showError(error.message || 'Reservierung fehlgeschlagen. Bitte versuchen Sie es erneut.');
       }
     } finally {
       this.hideLoading();
