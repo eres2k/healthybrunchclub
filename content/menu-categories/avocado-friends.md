@@ -42,7 +42,7 @@ items:
       **G﻿lutenfreie Alternative:** 
 
 
-      1﻿ große Scheibe Süsskartoffel
+      1﻿ große scheibe süsskartoffel
     allergens:
       - a
     nutrition:
@@ -52,6 +52,10 @@ items:
       fat: 16g
     price: "12.90"
     image: /content/images/img-20250806-wa0002.jpg
+    dietary:
+      vegetarian: true
+      vegan: true
+      glutenFree: true
   - name: extras
     tags:
       - optional
