@@ -653,6 +653,26 @@
       }
     });
 
+    function submitToNetlifyForms(formData, confirmationCode) {
+      const netlifyFormData = new FormData();
+      netlifyFormData.append('form-name', 'reservations');
+      netlifyFormData.append('name', formData.name);
+      netlifyFormData.append('email', formData.email);
+      netlifyFormData.append('phone', formData.phone || '');
+      netlifyFormData.append('date', formData.date);
+      netlifyFormData.append('time', formData.time);
+      netlifyFormData.append('guests', formData.guests.toString());
+      netlifyFormData.append('specialRequests', formData.specialRequests || '');
+      netlifyFormData.append('message', 'Bestätigungscode: ' + (confirmationCode || 'N/A'));
+
+      fetch('/', {
+        method: 'POST',
+        body: netlifyFormData
+      }).catch(function(err) {
+        console.warn('Netlify Forms backup submission failed:', err);
+      });
+    }
+
     async function loadAvailableDates() {
       const container = document.getElementById('available-dates-container');
 
@@ -840,9 +860,7 @@
 
         if (response.ok) {
           showReservationSuccess(result);
-        } else if (response.status === 404) {
-          console.warn('Netlify Forms returned 404 but submission was likely successful.');
-          showReservationSuccess();
+          submitToNetlifyForms(formData, result.reservation?.confirmationCode);
         } else if (result.errors) {
           const errorMessages = Object.values(result.errors).join('\n');
           alert(`Fehler bei der Reservierung:\n${errorMessages}`);
@@ -856,8 +874,7 @@
         if (error.name === 'TypeError' || (typeof error.message === 'string' && error.message.includes('Failed to fetch')) || !navigator.onLine) {
           alert('Netzwerkfehler: Bitte überprüfen Sie Ihre Internetverbindung und versuchen Sie es erneut.');
         } else {
-          console.log('Form submission handled by Netlify');
-          showReservationSuccess();
+          alert(error.message || 'Reservierung fehlgeschlagen. Bitte versuchen Sie es erneut.');
         }
       } finally {
         if (submitButton) {
@@ -933,6 +950,19 @@
     window.goBackToTimeSelection = goBackToTimeSelection;
     window.resetReservation = resetReservation;
     </script>
+
+    <!-- Hidden form for Netlify Forms detection -->
+    <form name="reservations" data-netlify="true" netlify-honeypot="website" hidden>
+      <input type="text" name="name" />
+      <input type="email" name="email" />
+      <input type="tel" name="phone" />
+      <input type="date" name="date" />
+      <input type="time" name="time" />
+      <input type="number" name="guests" />
+      <textarea name="message"></textarea>
+      <textarea name="specialRequests"></textarea>
+      <input type="text" name="website" />
+    </form>
 
 </body>
 </html>
