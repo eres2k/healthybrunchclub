@@ -64,12 +64,25 @@ async function loadAllReservations() {
   const allReservations = [];
   const existingKeys = new Set();
   const datesToLoad = new Set();
+  let blobStorageWorking = false;
+  let reservationsFromBlob = 0;
+  let reservationsFromLocal = 0;
+
+  console.log('[loadAllReservations] Starting to load all reservations...');
 
   // Step 1: Get dates from the reservation index (most reliable source)
   try {
     const reservationIndex = await readJSON('reservations', 'reservation-index.json', {});
+    const indexKeys = Object.keys(reservationIndex);
     const indexDates = new Set(Object.values(reservationIndex));
-    console.log(`[loadAllReservations] Found ${indexDates.size} unique dates from reservation index`);
+
+    if (indexKeys.length > 0) {
+      blobStorageWorking = true;
+      console.log(`[loadAllReservations] ✓ Blob storage working. Found ${indexKeys.length} reservations in index, ${indexDates.size} unique dates`);
+    } else {
+      console.log(`[loadAllReservations] Reservation index is empty or not accessible`);
+    }
+
     indexDates.forEach(date => {
       if (date && typeof date === 'string') {
         // Handle both "YYYY-MM-DD" and "YYYY-MM-DDT..." formats
@@ -78,7 +91,7 @@ async function loadAllReservations() {
       }
     });
   } catch (indexErr) {
-    console.error('[loadAllReservations] Error reading reservation index:', indexErr);
+    console.error('[loadAllReservations] ✗ Error reading reservation index:', indexErr.message);
   }
 
   // Step 2: Also try listing blob keys to find any dates not in the index
@@ -91,6 +104,10 @@ async function loadAllReservations() {
     if (keys.length === 0) {
       keys = await listKeys('reservations', '');
       console.log(`[loadAllReservations] Found ${keys.length} keys without prefix`);
+    }
+
+    if (keys.length > 0) {
+      blobStorageWorking = true;
     }
 
     for (const key of keys) {
@@ -110,11 +127,11 @@ async function loadAllReservations() {
       }
     }
   } catch (listErr) {
-    console.error('[loadAllReservations] Error listing blob keys:', listErr);
+    console.error('[loadAllReservations] ✗ Error listing blob keys:', listErr.message);
   }
 
   // Step 3: Load reservations for each discovered date
-  console.log(`[loadAllReservations] Loading reservations for ${datesToLoad.size} dates`);
+  console.log(`[loadAllReservations] Loading reservations for ${datesToLoad.size} dates from blob storage`);
 
   for (const date of datesToLoad) {
     try {
@@ -130,31 +147,40 @@ async function loadAllReservations() {
         reservations = [];
       }
 
-      console.log(`[loadAllReservations] Loaded ${Array.isArray(reservations) ? reservations.length : 0} reservations for ${date}`);
+      const count = Array.isArray(reservations) ? reservations.length : 0;
+      if (count > 0) {
+        blobStorageWorking = true;
+        console.log(`[loadAllReservations] ✓ Blob: Loaded ${count} reservations for ${date}`);
+      }
 
       if (Array.isArray(reservations)) {
         reservations.forEach(r => {
           const uniqueKey = `${r.date || date}-${r.confirmationCode}`;
           if (!existingKeys.has(uniqueKey)) {
-            allReservations.push({ ...r, date: r.date || date });
+            allReservations.push({ ...r, date: r.date || date, source: 'blob' });
             existingKeys.add(uniqueKey);
+            reservationsFromBlob++;
           }
         });
       }
     } catch (readErr) {
-      console.error(`[loadAllReservations] Error reading reservations for ${date}:`, readErr);
+      console.error(`[loadAllReservations] ✗ Error reading reservations for ${date}:`, readErr.message);
     }
   }
 
   // Step 4: Also check local filesystem (for development and as fallback data source)
   // This works locally and when files are bundled via netlify.toml included_files
+  // WARNING: Local files are only updated on deployment, so they may contain stale data
   const localReservationsDir = path.resolve(__dirname, '../../../reservations');
-  console.log(`[loadAllReservations] Checking local dir: ${localReservationsDir}`);
+
+  if (!blobStorageWorking) {
+    console.warn(`[loadAllReservations] ⚠️ WARNING: Blob storage appears to be unavailable, using local fallback (may contain stale data)`);
+  }
 
   if (fs.existsSync(localReservationsDir)) {
     try {
       const files = fs.readdirSync(localReservationsDir);
-      console.log(`[loadAllReservations] Found ${files.length} local files`);
+      console.log(`[loadAllReservations] Checking ${files.length} local files as fallback`);
 
       for (const file of files) {
         const match = file.match(/^(\d{4}-\d{2}-\d{2})\.json$/);
@@ -166,27 +192,37 @@ async function loadAllReservations() {
           const content = fs.readFileSync(filePath, 'utf-8');
           const reservations = JSON.parse(content);
           if (Array.isArray(reservations)) {
+            let localAdded = 0;
             reservations.forEach(r => {
               const uniqueKey = `${r.date || date}-${r.confirmationCode}`;
               // Avoid duplicates if already loaded from blobs
               if (!existingKeys.has(uniqueKey)) {
-                allReservations.push({ ...r, date: r.date || date });
+                allReservations.push({ ...r, date: r.date || date, source: 'local' });
                 existingKeys.add(uniqueKey);
+                reservationsFromLocal++;
+                localAdded++;
               }
             });
+            if (localAdded > 0) {
+              console.log(`[loadAllReservations] Local fallback: Added ${localAdded} reservations from ${file}`);
+            }
           }
         } catch (err) {
-          console.error(`[loadAllReservations] Error reading local file ${file}:`, err);
+          console.error(`[loadAllReservations] Error reading local file ${file}:`, err.message);
         }
       }
     } catch (dirErr) {
-      console.error(`[loadAllReservations] Error reading local directory:`, dirErr);
+      console.error(`[loadAllReservations] Error reading local directory:`, dirErr.message);
     }
   } else {
     console.log(`[loadAllReservations] Local reservations directory not found`);
   }
 
-  console.log(`[loadAllReservations] Total reservations loaded: ${allReservations.length}`);
+  console.log(`[loadAllReservations] Summary: ${allReservations.length} total (${reservationsFromBlob} from blob, ${reservationsFromLocal} from local fallback)`);
+
+  if (!blobStorageWorking && reservationsFromLocal > 0) {
+    console.warn(`[loadAllReservations] ⚠️ All ${reservationsFromLocal} reservations came from local fallback - new reservations may be missing!`);
+  }
 
   // Sort by date (newest first), then by time
   allReservations.sort((a, b) => {

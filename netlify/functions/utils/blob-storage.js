@@ -16,8 +16,48 @@ const STORE_NAMES = {
 
 const DEFAULT_TIMEOUT_MS = 5000;
 const DEFAULT_RETRY_MS = 150;
+const MAX_RETRIES = 3;
+const RETRY_DELAY_MS = 500;
 
 const storeCache = new Map();
+
+/**
+ * Retry wrapper for blob operations with exponential backoff
+ */
+async function withRetry(operation, operationName, maxRetries = MAX_RETRIES) {
+  let lastError = null;
+
+  for (let attempt = 1; attempt <= maxRetries; attempt++) {
+    try {
+      return await operation();
+    } catch (error) {
+      lastError = error;
+
+      // Don't retry on 404 errors - these are expected "not found" responses
+      if (error?.status === 404) {
+        throw error;
+      }
+
+      // Don't retry on 401/403 - authentication issues won't resolve with retry
+      if (error?.status === 401 || error?.status === 403) {
+        throw error;
+      }
+
+      const isLastAttempt = attempt === maxRetries;
+      const delayMs = RETRY_DELAY_MS * Math.pow(2, attempt - 1); // exponential backoff
+
+      console.warn(`[${operationName}] Attempt ${attempt}/${maxRetries} failed: ${error.message}`);
+
+      if (!isLastAttempt) {
+        console.log(`[${operationName}] Retrying in ${delayMs}ms...`);
+        await new Promise(resolve => setTimeout(resolve, delayMs));
+      }
+    }
+  }
+
+  console.error(`[${operationName}] All ${maxRetries} attempts failed`);
+  throw lastError;
+}
 
 function getBlobStore(name) {
   if (!STORE_NAMES[name]) {
@@ -43,7 +83,10 @@ function getBlobStore(name) {
 async function readJSON(storeName, key, fallback = null) {
   const store = getBlobStore(storeName);
   try {
-    const payload = await store.get(key, { type: 'json' });
+    const payload = await withRetry(
+      () => store.get(key, { type: 'json' }),
+      `readJSON(${storeName}/${key})`
+    );
     if (payload === null || payload === undefined) {
       return fallback;
     }
@@ -52,15 +95,21 @@ async function readJSON(storeName, key, fallback = null) {
     if (error?.status === 404) {
       return fallback;
     }
-    throw error;
+    // Log the error for debugging but don't throw - return fallback instead
+    // This ensures the dashboard still loads even if blob storage is unavailable
+    console.error(`[readJSON] Error reading ${storeName}/${key} after retries:`, error.message);
+    return fallback;
   }
 }
 
 async function writeJSON(storeName, key, value, metadata = {}) {
   const store = getBlobStore(storeName);
-  await store.set(key, JSON.stringify(value), {
-    metadata: { contentType: 'application/json', ...metadata }
-  });
+  await withRetry(
+    () => store.set(key, JSON.stringify(value), {
+      metadata: { contentType: 'application/json', ...metadata }
+    }),
+    `writeJSON(${storeName}/${key})`
+  );
 }
 
 async function deleteKey(storeName, key) {
@@ -71,12 +120,15 @@ async function deleteKey(storeName, key) {
 async function listKeys(storeName, prefix = '') {
   try {
     const store = getBlobStore(storeName);
-    const result = await store.list({ prefix });
+    const result = await withRetry(
+      () => store.list({ prefix }),
+      `listKeys(${storeName}, prefix=${prefix})`
+    );
     const keys = result.blobs ? result.blobs.map(blob => blob.key) : [];
     console.log(`[listKeys] Store: ${storeName}, prefix: ${prefix}, found ${keys.length} keys`);
     return keys;
   } catch (error) {
-    console.error(`[listKeys] Error listing keys in store ${storeName} with prefix ${prefix}:`, error);
+    console.error(`[listKeys] Error listing keys in store ${storeName} with prefix ${prefix} after retries:`, error.message);
     return [];
   }
 }
