@@ -96,8 +96,8 @@ items:
       - d
       - a
     nutrition:
-      calories: "345"
-      protein: 20g
-      carbs: 31,1g
-      fat: 15,5g
+      calories: ""
+      protein: ""
+      carbs: ""
+      fat: ""
 ---
