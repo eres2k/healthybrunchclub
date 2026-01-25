@@ -322,8 +322,6 @@ function renderGuestEmail(reservation, options = {}) {
         <div class="content">
           <div class="section" style="text-align: center;">
             <span class="badge badge-confirmed">Bestätigt</span>
-            <div class="code-display">${reservation.confirmationCode}</div>
-            <p style="font-size: 13px; color: #484848;">Ihr Bestätigungscode</p>
           </div>
 
           <div class="section">
@@ -514,7 +512,6 @@ function renderReminderEmail(reservation, options = {}) {
         <div class="content">
           <div class="section" style="text-align: center;">
             <span class="badge badge-reminder">Morgen</span>
-            <div class="code-display">${reservation.confirmationCode}</div>
           </div>
 
           <div class="highlight-box" style="background: #1a1a1a; border-left-color: #c9a961;">
@@ -531,7 +528,6 @@ function renderReminderEmail(reservation, options = {}) {
             <h3>Gut zu wissen</h3>
             <ul style="line-height: 2; padding-left: 20px; color: #484848;">
               <li>Bitte kommen Sie pünktlich zum reservierten Zeitpunkt</li>
-              <li>Bringen Sie Ihren Bestätigungscode mit</li>
               <li>Bei Verspätung über 15 Minuten kann Ihre Reservierung verfallen</li>
             </ul>
           </div>
@@ -576,7 +572,6 @@ function renderWaitlistEmail(reservation) {
         <div class="content">
           <div class="section" style="text-align: center;">
             <span class="badge badge-waitlist">Warteliste</span>
-            <div class="code-display" style="background: #8b7355;">${reservation.confirmationCode}</div>
           </div>
 
           <div class="highlight-box" style="border-left-color: #8b7355;">
@@ -633,7 +628,6 @@ function renderWaitlistPromotedEmail(reservation, options = {}) {
         <div class="content">
           <div class="section" style="text-align: center;">
             <span class="badge badge-confirmed">Bestätigt</span>
-            <div class="code-display">${reservation.confirmationCode}</div>
           </div>
 
           <div class="highlight-box">
@@ -650,7 +644,7 @@ function renderWaitlistPromotedEmail(reservation, options = {}) {
           <div class="section" style="text-align: center; background: #fafaf8; padding: 24px; margin: 0 -32px;">
             <p style="margin-bottom: 8px;"><strong>Können Sie den Termin nicht wahrnehmen?</strong></p>
             <p style="font-size: 14px; color: #484848;">Bitte stornieren Sie rechtzeitig, damit andere Gäste nachrücken können.</p>
-            <a href="mailto:info@healthybrunchclub.at?subject=Stornierung ${reservation.confirmationCode}" class="button button-outline">Stornieren</a>
+            <a href="mailto:info@healthybrunchclub.at?subject=Stornierung" class="button button-outline">Stornieren</a>
           </div>
         </div>
         ${renderFooter()}
@@ -869,8 +863,6 @@ function renderGuestEmailText(reservation) {
 
 Ihre Reservierung ist bestätigt!
 
-Bestätigungscode: ${reservation.confirmationCode}
-
 ${renderPlainTextReservation(reservation)}
 
 Adresse: Gumpendorfer Straße 65, 1060 Wien
@@ -923,8 +915,6 @@ function renderWaitlistEmailText(reservation) {
 
 Sie sind auf der Warteliste
 
-Bestätigungscode: ${reservation.confirmationCode}
-
 ${renderPlainTextReservation(reservation)}
 
 Was passiert jetzt?
@@ -947,8 +937,6 @@ function renderCancellationEmailText(reservation, options = {}) {
 ========================
 
 Ihre Reservierung wurde storniert
-
-Code: ${reservation.confirmationCode}
 
 ${renderPlainTextReservation(reservation)}`;
 
@@ -987,11 +975,9 @@ Ihre Reservierung:
 - Datum: ${date}
 - Uhrzeit: ${reservation.time} Uhr
 - Personen: ${reservation.guests}
-- Code: ${reservation.confirmationCode}
 
 Gut zu wissen:
 - Bitte kommen Sie pünktlich zum reservierten Zeitpunkt
-- Bringen Sie Ihren Bestätigungscode mit
 - Bei Verspätung über 15 Minuten kann Ihre Reservierung verfallen
 
 Adresse: Gumpendorfer Straße 65, 1060 Wien
@@ -1012,8 +998,6 @@ function renderWaitlistPromotedEmailText(reservation) {
 ========================
 
 Platz frei geworden - Ihre Reservierung ist bestätigt!
-
-Bestätigungscode: ${reservation.confirmationCode}
 
 ${renderPlainTextReservation(reservation)}
 
