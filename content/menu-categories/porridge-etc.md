@@ -10,9 +10,10 @@ items:
       - glutenfrei
       - proteinreich
       - sättigend
-    description: ein wärmender genuss aus zarten haferflocken, verfeinert mit hanf-
-      und chiasamen, kokosflocken und geriebenem apfel. ein hauch zimt rundet
-      ab, getoppt mit gehobelten mandeln sowie heidel- und himbeeren.
+    description: ein wärmender genuss aus zarten, glutenfreien haferflocken,
+      verfeinert mit hanf- und chiasamen, kokosraspeln und geriebenem apfel. ein
+      hauch zimt rundet das ganze ab. getoppt mit gehobelten mandeln sowie
+      heidel- und himbeeren.
     allergens:
       - a
     price: "10.90"
