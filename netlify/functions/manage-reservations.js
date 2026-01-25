@@ -1,6 +1,6 @@
 'use strict';
 
-const { getAvailability, loadReservations, saveBlocked, loadBlocked, updateReservationStatus, deleteReservation } = require('./utils/reservation-utils');
+const { getAvailability, loadReservations, loadAllReservations, saveBlocked, loadBlocked, updateReservationStatus, deleteReservation } = require('./utils/reservation-utils');
 const { sendReservationEmails } = require('./utils/email-service');
 
 const DEFAULT_HEADERS = {
@@ -28,7 +28,14 @@ function authenticate(context) {
 }
 
 async function handleGet(event) {
-  const { date } = event.queryStringParameters || {};
+  const { date, all } = event.queryStringParameters || {};
+
+  // Load all reservations if 'all' parameter is provided
+  if (all === 'true') {
+    const reservations = await loadAllReservations();
+    return response(200, { reservations, mode: 'all' });
+  }
+
   if (!date) {
     return response(400, { message: 'Bitte Datum angeben.' });
   }

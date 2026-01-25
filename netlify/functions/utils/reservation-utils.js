@@ -2,7 +2,7 @@
 
 const { randomUUID } = require('crypto');
 const { DateTime } = require('luxon');
-const { readJSON, writeJSON, withLock } = require('./blob-storage');
+const { readJSON, writeJSON, withLock, listKeys } = require('./blob-storage');
 const { sanitizeText } = require('./validation');
 
 const MAX_CAPACITY_PER_SLOT = Number(process.env.MAX_CAPACITY_PER_SLOT || 40);
@@ -56,6 +56,38 @@ async function loadReservations(date) {
   const key = `reservations/${date}.json`;
   const reservations = await readJSON('reservations', key, []);
   return Array.isArray(reservations) ? reservations : [];
+}
+
+async function loadAllReservations() {
+  const keys = await listKeys('reservations', 'reservations/');
+  const allReservations = [];
+
+  for (const key of keys) {
+    // Skip the index file
+    if (key === 'reservation-index.json') continue;
+
+    // Extract date from key (format: reservations/YYYY-MM-DD.json)
+    const match = key.match(/reservations\/(\d{4}-\d{2}-\d{2})\.json/);
+    if (!match) continue;
+
+    const date = match[1];
+    const reservations = await readJSON('reservations', key, []);
+
+    if (Array.isArray(reservations)) {
+      reservations.forEach(r => {
+        allReservations.push({ ...r, date: r.date || date });
+      });
+    }
+  }
+
+  // Sort by date (newest first), then by time
+  allReservations.sort((a, b) => {
+    const dateCompare = b.date.localeCompare(a.date);
+    if (dateCompare !== 0) return dateCompare;
+    return a.time.localeCompare(b.time);
+  });
+
+  return allReservations;
 }
 
 async function saveReservations(date, reservations) {
@@ -241,6 +273,7 @@ module.exports = {
   createReservation,
   getAvailability,
   loadReservations,
+  loadAllReservations,
   saveReservations,
   loadBlocked,
   saveBlocked,
