@@ -84,28 +84,32 @@ async function loadAllReservations() {
     }
   }
 
-  // Fallback: If no reservations found in blobs, try local filesystem
-  if (allReservations.length === 0) {
-    const localReservationsDir = path.join(process.cwd(), 'reservations');
-    if (fs.existsSync(localReservationsDir)) {
-      const files = fs.readdirSync(localReservationsDir);
-      for (const file of files) {
-        const match = file.match(/^(\d{4}-\d{2}-\d{2})\.json$/);
-        if (!match) continue;
+  // Also check local filesystem (for development and as data source)
+  const localReservationsDir = path.resolve(__dirname, '../../../reservations');
+  if (fs.existsSync(localReservationsDir)) {
+    const existingDates = new Set(allReservations.map(r => `${r.date}-${r.confirmationCode}`));
+    const files = fs.readdirSync(localReservationsDir);
+    for (const file of files) {
+      const match = file.match(/^(\d{4}-\d{2}-\d{2})\.json$/);
+      if (!match) continue;
 
-        const date = match[1];
-        const filePath = path.join(localReservationsDir, file);
-        try {
-          const content = fs.readFileSync(filePath, 'utf-8');
-          const reservations = JSON.parse(content);
-          if (Array.isArray(reservations)) {
-            reservations.forEach(r => {
+      const date = match[1];
+      const filePath = path.join(localReservationsDir, file);
+      try {
+        const content = fs.readFileSync(filePath, 'utf-8');
+        const reservations = JSON.parse(content);
+        if (Array.isArray(reservations)) {
+          reservations.forEach(r => {
+            const key = `${r.date || date}-${r.confirmationCode}`;
+            // Avoid duplicates if already loaded from blobs
+            if (!existingDates.has(key)) {
               allReservations.push({ ...r, date: r.date || date });
-            });
-          }
-        } catch (err) {
-          console.error(`Error reading local file ${file}:`, err);
+              existingDates.add(key);
+            }
+          });
         }
+      } catch (err) {
+        console.error(`Error reading local file ${file}:`, err);
       }
     }
   }
