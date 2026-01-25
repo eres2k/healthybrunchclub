@@ -13,6 +13,10 @@ items:
     allergens: []
     price: "6.90"
     image: /content/images/whatsapp-image-2025-09-17-at-14.16.58.jpeg
+    dietary:
+      vegan: true
+      glutenFree: true
+      lactoseFree: true
   - name: beet boost
     tags:
       - belebend
@@ -21,14 +25,23 @@ items:
     allergens: []
     price: "6.90"
     image: /content/images/dsc00362_ergebnis.jpg
+    dietary:
+      vegan: true
+      glutenFree: true
+      lactoseFree: true
   - name: clean green kick
     tags:
       - detox
       - belebend
-    description: gurke, sellerie, zitrone und ingwer.
+    description: gurke, sellerie, zitrone und ingwer & chlorella od. spirulina
     allergens: []
     price: "6.90"
     image: /content/images/whatsapp-image-2025-09-17-at-14.17.35.jpeg
+    dietary:
+      vegetarian: true
+      vegan: true
+      glutenFree: true
+      lactoseFree: true
   - name: pure celery
     tags:
       - detox
@@ -37,6 +50,11 @@ items:
     allergens: []
     price: "6.90"
     image: /content/images/whatsapp-image-2025-09-17-at-14.18.11.jpeg
+    dietary:
+      vegetarian: false
+      vegan: true
+      glutenFree: true
+      lactoseFree: true
   - name: ingwer shot
     tags:
       - immunstärkend
@@ -45,6 +63,10 @@ items:
     allergens: []
     price: "2.40"
     image: /content/images/whatsapp-image-2025-09-18-at-11.27.03.jpeg
+    dietary:
+      vegan: true
+      glutenFree: true
+      lactoseFree: true
   - name: ingwer–kurkuma shot
     tags:
       - entzündungshemmend
@@ -53,6 +75,10 @@ items:
     allergens: []
     price: "2.40"
     image: /content/images/whatsapp-image-2025-09-18-at-11.27.03.jpeg
+    dietary:
+      vegan: true
+      glutenFree: true
+      lactoseFree: true
   - name: sellerie–zitrone shot
     tags:
       - detox
@@ -61,4 +87,8 @@ items:
     allergens: []
     price: "2.40"
     image: /content/images/whatsapp-image-2025-09-18-at-11.27.03.jpeg
+    dietary:
+      vegan: true
+      glutenFree: true
+      lactoseFree: true
 ---
