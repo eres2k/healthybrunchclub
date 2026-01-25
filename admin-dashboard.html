@@ -65,6 +65,18 @@
     .btn-primary:hover { background: #243f2c; }
     .btn-secondary { background: #edf3eb; color: #2f5138; }
     .btn-secondary:hover { background: #dfe8dd; }
+    .btn-danger { background: #dc3545; color: #fff; }
+    .btn-danger:hover { background: #bb2d3b; }
+    .btn-warning { background: #ffc107; color: #212529; }
+    .btn-warning:hover { background: #ffca2c; }
+    .btn-sm { padding: .4rem .8rem; font-size: .8rem; }
+    .btn-group { display: flex; gap: .5rem; flex-wrap: wrap; }
+    .status-badge { display: inline-block; padding: .25rem .6rem; border-radius: 4px; font-size: .8rem; font-weight: 600; }
+    .status-confirmed { background: #d4edda; color: #155724; }
+    .status-waitlisted { background: #fff3cd; color: #856404; }
+    .status-cancelled { background: #f8d7da; color: #721c24; }
+    .reservation-details { font-size: .85rem; color: #666; }
+    .reservation-email { font-size: .8rem; color: #888; }
     .banner { padding: 1rem; border-radius: 8px; margin-bottom: 1rem; display: none; }
     .banner.show { display: block; }
     .banner.error { background: #fdecea; color: #842029; }
@@ -156,13 +168,13 @@
       </div>
 
       <div class="card">
-        <h2>Reservierungen</h2>
+        <h2 class="card-title">Reservierungen</h2>
+        <div id="reservation-count" style="margin-bottom: 1rem; color: #6b7a6c;"></div>
         <table>
           <thead>
             <tr>
-              <th>Datum</th>
               <th>Zeit</th>
-              <th>Name</th>
+              <th>Name / Kontakt</th>
               <th>Gäste</th>
               <th>Status</th>
               <th>Aktionen</th>
@@ -292,47 +304,112 @@
       netlifyIdentity.logout();
     });
 
-    document.getElementById('btn-load').addEventListener('click', async () => {
-      try {
-        const date = document.getElementById('admin-date').value;
-        if (!date) {
-          showBanner('Bitte Datum auswählen.', 'error');
-          return;
+    let currentDate = '';
+
+    function getStatusBadge(status) {
+      const labels = {
+        confirmed: 'Bestätigt',
+        waitlisted: 'Warteliste',
+        cancelled: 'Storniert'
+      };
+      return `<span class="status-badge status-${status}">${labels[status] || status}</span>`;
+    }
+
+    function renderReservations(reservations, date) {
+      const tbody = document.getElementById('reservation-table');
+      const countDiv = document.getElementById('reservation-count');
+      tbody.innerHTML = '';
+
+      const active = reservations.filter(r => r.status !== 'cancelled');
+      const cancelled = reservations.filter(r => r.status === 'cancelled');
+      countDiv.textContent = `${active.length} aktive Reservierungen, ${cancelled.length} storniert`;
+
+      if (reservations.length === 0) {
+        tbody.innerHTML = '<tr><td colspan="5" style="text-align: center; color: #999; padding: 2rem;">Keine Reservierungen für dieses Datum</td></tr>';
+        return;
+      }
+
+      // Sort by time
+      reservations.sort((a, b) => a.time.localeCompare(b.time));
+
+      reservations.forEach((entry) => {
+        const row = document.createElement('tr');
+        row.style.opacity = entry.status === 'cancelled' ? '0.5' : '1';
+
+        const actions = [];
+        if (entry.status !== 'confirmed') {
+          actions.push(`<button class="btn btn-primary btn-sm" data-action="confirm" data-code="${entry.confirmationCode}" data-date="${date}">Bestätigen</button>`);
         }
+        if (entry.status !== 'waitlisted') {
+          actions.push(`<button class="btn btn-warning btn-sm" data-action="waitlist" data-code="${entry.confirmationCode}" data-date="${date}">Warteliste</button>`);
+        }
+        if (entry.status !== 'cancelled') {
+          actions.push(`<button class="btn btn-secondary btn-sm" data-action="cancel" data-code="${entry.confirmationCode}" data-date="${date}">Stornieren</button>`);
+        }
+        actions.push(`<button class="btn btn-danger btn-sm" data-action="delete" data-code="${entry.confirmationCode}" data-date="${date}">Löschen</button>`);
+
+        row.innerHTML = `
+          <td><strong>${entry.time}</strong></td>
+          <td>
+            <div>${entry.name}</div>
+            <div class="reservation-email">${entry.email}</div>
+            <div class="reservation-details">${entry.phone || ''} ${entry.specialRequests ? '• ' + entry.specialRequests : ''}</div>
+          </td>
+          <td>${entry.guests}</td>
+          <td>${getStatusBadge(entry.status)}</td>
+          <td><div class="btn-group">${actions.join('')}</div></td>
+        `;
+        tbody.appendChild(row);
+      });
+    }
+
+    async function loadReservations() {
+      const date = document.getElementById('admin-date').value;
+      if (!date) {
+        showBanner('Bitte Datum auswählen.', 'error');
+        return;
+      }
+      currentDate = date;
+      try {
         const response = await authenticatedFetch(`/.netlify/functions/manage-reservations?date=${date}`);
         const data = await response.json();
         document.getElementById('availability-result').textContent = `${data.availability.slots.length} Slots gefunden.`;
-        const tbody = document.getElementById('reservation-table');
-        tbody.innerHTML = '';
-        data.reservations.forEach((entry) => {
-          const row = document.createElement('tr');
-          row.innerHTML = `
-            <td>${entry.date}</td>
-            <td>${entry.time}</td>
-            <td>${entry.name}</td>
-            <td>${entry.guests}</td>
-            <td>${entry.status}</td>
-            <td><button class="btn btn-secondary" data-code="${entry.confirmationCode}" data-date="${entry.date}">Bestätigen</button></td>
-          `;
-          tbody.appendChild(row);
-        });
+        renderReservations(data.reservations, date);
       } catch (error) {
         showBanner(error.message, 'error');
       }
-    });
+    }
+
+    document.getElementById('btn-load').addEventListener('click', loadReservations);
 
     document.getElementById('reservation-table').addEventListener('click', async (event) => {
-      const button = event.target.closest('button[data-code]');
+      const button = event.target.closest('button[data-action]');
       if (!button) return;
+
+      const action = button.dataset.action;
+      const confirmationCode = button.dataset.code;
+      const date = button.dataset.date;
+
       try {
-        const confirmationCode = button.dataset.code;
-        const date = button.dataset.date;
-        const response = await authenticatedFetch('/.netlify/functions/manage-reservations', {
-          method: 'PATCH',
-          body: JSON.stringify({ confirmationCode, date, status: 'confirmed' })
-        });
-        const data = await response.json();
-        showBanner('Reservierung aktualisiert.');
+        if (action === 'delete') {
+          if (!confirm('Reservierung endgültig löschen?')) return;
+          await authenticatedFetch(`/.netlify/functions/manage-reservations?date=${date}&confirmationCode=${confirmationCode}`, {
+            method: 'DELETE'
+          });
+          showBanner('Reservierung gelöscht.');
+        } else {
+          const statusMap = { confirm: 'confirmed', waitlist: 'waitlisted', cancel: 'cancelled' };
+          const status = statusMap[action];
+          const sendEmail = action !== 'cancel' && confirm('E-Mail an Gast senden?');
+
+          await authenticatedFetch('/.netlify/functions/manage-reservations', {
+            method: 'PATCH',
+            body: JSON.stringify({ confirmationCode, date, status, sendEmail })
+          });
+          showBanner(`Reservierung ${status === 'confirmed' ? 'bestätigt' : status === 'waitlisted' ? 'auf Warteliste gesetzt' : 'storniert'}.`);
+        }
+        // Reload reservations
+        await loadReservations();
       } catch (error) {
         showBanner(error.message, 'error');
       }

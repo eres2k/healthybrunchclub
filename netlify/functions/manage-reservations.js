@@ -1,12 +1,12 @@
 'use strict';
 
-const { getAvailability, loadReservations, saveBlocked, loadBlocked, updateReservationStatus } = require('./utils/reservation-utils');
+const { getAvailability, loadReservations, saveBlocked, loadBlocked, updateReservationStatus, deleteReservation } = require('./utils/reservation-utils');
 const { sendReservationEmails } = require('./utils/email-service');
 
 const DEFAULT_HEADERS = {
   'Access-Control-Allow-Origin': '*',
   'Access-Control-Allow-Headers': 'Content-Type, Authorization',
-  'Access-Control-Allow-Methods': 'GET, POST, PATCH, OPTIONS',
+  'Access-Control-Allow-Methods': 'GET, POST, PATCH, DELETE, OPTIONS',
   'Content-Type': 'application/json'
 };
 
@@ -44,7 +44,7 @@ async function handleGet(event) {
 
 async function handlePatch(event) {
   const body = JSON.parse(event.body || '{}');
-  const { confirmationCode, status, date } = body;
+  const { confirmationCode, status, date, sendEmail = true } = body;
 
   if (!confirmationCode || !status || !date) {
     return response(400, { message: 'Bestätigungscode, Datum und Status sind erforderlich.' });
@@ -52,15 +52,29 @@ async function handlePatch(event) {
 
   const reservation = await updateReservationStatus({ date, confirmationCode, status });
 
-  if (status !== 'cancelled') {
+  let emailSent = false;
+  if (sendEmail) {
     try {
       await sendReservationEmails(reservation);
+      emailSent = true;
     } catch (error) {
       console.error('E-Mail Versand nach Update fehlgeschlagen:', error);
     }
   }
 
-  return response(200, { message: 'Reservierung aktualisiert.', reservation });
+  return response(200, { message: 'Reservierung aktualisiert.', reservation, emailSent });
+}
+
+async function handleDelete(event) {
+  const { date, confirmationCode } = event.queryStringParameters || {};
+
+  if (!confirmationCode || !date) {
+    return response(400, { message: 'Bestätigungscode und Datum sind erforderlich.' });
+  }
+
+  const deleted = await deleteReservation({ date, confirmationCode });
+
+  return response(200, { message: 'Reservierung gelöscht.', reservation: deleted });
 }
 
 async function handlePost(event) {
@@ -110,6 +124,10 @@ exports.handler = async (event, context) => {
 
     if (event.httpMethod === 'POST') {
       return await handlePost(event);
+    }
+
+    if (event.httpMethod === 'DELETE') {
+      return await handleDelete(event);
     }
 
     return response(405, { message: 'Methode nicht erlaubt.' });

@@ -2,7 +2,7 @@
   {
     "id": "550e8400-e29b-41d4-a716-446655440001",
     "confirmationCode": "HBC-TEST-0001",
-    "date": "2024-01-15",
+    "date": "2026-01-27",
     "time": "10:00",
     "guests": 4,
     "name": "Max Mustermann",
@@ -17,7 +17,7 @@
   {
     "id": "550e8400-e29b-41d4-a716-446655440002",
     "confirmationCode": "HBC-TEST-0002",
-    "date": "2024-01-15",
+    "date": "2026-01-27",
     "time": "11:30",
     "guests": 2,
     "name": "Anna Schmidt",
@@ -32,7 +32,7 @@
   {
     "id": "550e8400-e29b-41d4-a716-446655440003",
     "confirmationCode": "HBC-TEST-0003",
-    "date": "2024-01-15",
+    "date": "2026-01-27",
     "time": "12:00",
     "guests": 6,
     "name": "Thomas Müller",
