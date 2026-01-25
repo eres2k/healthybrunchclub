@@ -64,6 +64,74 @@
         body.no-transition * {
             transition: none !important;
         }
+
+        /* Mobile menu download cards - critical for iOS/Android */
+        .menu-downloads-grid {
+            display: grid !important;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 16px;
+        }
+        .menu-download-card {
+            display: flex !important;
+            flex-direction: row !important;
+            align-items: center !important;
+            gap: 12px;
+            padding: 16px;
+            background: linear-gradient(145deg, #ffffff 0%, #f8f9fa 100%);
+            border: 1px solid rgba(30, 74, 60, 0.1);
+            border-radius: 16px;
+            text-decoration: none;
+        }
+        .menu-card-icon {
+            display: flex !important;
+            align-items: center;
+            justify-content: center;
+            width: 48px;
+            height: 48px;
+            min-width: 48px;
+            background: rgba(30, 74, 60, 0.08);
+            border-radius: 12px;
+            color: #1e4a3c;
+        }
+        .menu-card-content {
+            display: flex !important;
+            flex-direction: column !important;
+            flex: 1;
+            min-width: 0;
+        }
+        .menu-card-download {
+            display: flex !important;
+            align-items: center;
+            justify-content: center;
+            width: 36px;
+            height: 36px;
+            min-width: 36px;
+            background: rgba(30, 74, 60, 0.08);
+            border-radius: 10px;
+            color: #1e4a3c;
+        }
+        @media (max-width: 992px) {
+            .menu-downloads-grid {
+                grid-template-columns: repeat(2, 1fr) !important;
+            }
+        }
+        @media (max-width: 576px) {
+            .menu-downloads-grid {
+                grid-template-columns: 1fr !important;
+                gap: 10px;
+            }
+            .menu-download-card {
+                padding: 14px;
+            }
+        }
+
+        /* Chatbot mobile height fix */
+        @media (max-width: 480px) {
+            .chatbot-window {
+                height: 60vh !important;
+                max-height: 400px !important;
+            }
+        }
     </style>
     
     <!-- Netlify Identity - defer non-critical -->
