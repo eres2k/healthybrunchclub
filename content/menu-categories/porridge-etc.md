@@ -37,7 +37,7 @@ items:
       protein: 16g
       carbs: 60g
       fat: 12g
-    image: /content/images/whatsapp-image-2025-09-17-at-09.54.13.jpeg
+    image: /content/images/img_5251.jpg
   - special: false
     name: extra
     description: mit 15g protein geschmacksneutral +2,50
