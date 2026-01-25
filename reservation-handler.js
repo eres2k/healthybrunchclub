@@ -328,6 +328,7 @@ class ReservationWizard {
 
       if (response.ok) {
         this.displaySuccess(result.reservation, result.message);
+        this.submitToNetlifyForms(result.reservation?.confirmationCode);
       } else if (response.status === 404) {
         console.warn('Netlify Forms returned 404 but submission was likely successful.');
         this.displaySuccess(undefined, 'Vielen Dank! Wir melden uns in Kürze.');
@@ -343,8 +344,8 @@ class ReservationWizard {
       if (error.name === 'TypeError' || (typeof error.message === 'string' && error.message.includes('Failed to fetch')) || !navigator.onLine) {
         this.showError('Netzwerkfehler: Bitte überprüfen Sie Ihre Internetverbindung und versuchen Sie es erneut.');
       } else {
-        console.log('Form submission handled by Netlify', error);
-        this.displaySuccess(undefined, 'Vielen Dank! Wir melden uns in Kürze.');
+        console.error('Reservation submission error:', error);
+        this.showError(error.message || 'Reservierung fehlgeschlagen. Bitte versuchen Sie es erneut.');
       }
     } finally {
       this.hideLoading();
@@ -393,6 +394,27 @@ class ReservationWizard {
         submitButton.disabled = !this.form.checkValidity();
       }
     }
+  }
+
+  submitToNetlifyForms(confirmationCode) {
+    const formData = new FormData();
+    formData.append('form-name', 'reservations');
+    formData.append('name', this.state.name);
+    formData.append('email', this.state.email);
+    formData.append('phone', this.state.phone || '');
+    formData.append('date', this.state.date);
+    formData.append('time', this.state.time);
+    formData.append('guests', this.state.guests.toString());
+    formData.append('specialRequests', this.state.specialRequests || '');
+    formData.append('message', `Bestätigungscode: ${confirmationCode || 'N/A'}`);
+    if (this.state.honeypot) {
+      formData.append('website', this.state.honeypot);
+    }
+
+    fetch('/', {
+      method: 'POST',
+      body: formData
+    }).catch(err => console.warn('Netlify Forms backup submission failed:', err));
   }
 }
 
