@@ -41,17 +41,14 @@
         .hero-overlay{position:absolute;inset:0;background:linear-gradient(to bottom,rgba(0,0,0,.4),rgba(0,0,0,.7))}
     </style>
 
-    <!-- Main stylesheet - non-blocking -->
-    <link rel="preload" href="mystyle-premium.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
-    <noscript><link rel="stylesheet" href="mystyle-premium.css"></noscript>
+    <!-- Main stylesheet -->
+    <link rel="stylesheet" href="mystyle-premium.css">
 
     <!-- Fonts - with display swap for better performance -->
-    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,300;0,400;0,500;0,700;1,400&family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,400&family=Montserrat:wght@300;400;500;600&family=Lato:wght@300;400&display=swap" rel="stylesheet" media="print" onload="this.media='all'">
-    <noscript><link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,300;0,400;0,500;0,700;1,400&family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,400&family=Montserrat:wght@300;400;500;600&family=Lato:wght@300;400&display=swap" rel="stylesheet"></noscript>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,300;0,400;0,500;0,700;1,400&family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,400&family=Montserrat:wght@300;400;500;600&family=Lato:wght@300;400&display=swap" rel="stylesheet">
 
-    <!-- Icons - defer loading -->
-    <link rel="preload" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
-    <noscript><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"></noscript>
+    <!-- Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     
     <!-- Mobile Specific Inline Styles -->
     <style>
@@ -653,6 +650,26 @@
       }
     });
 
+    function submitToNetlifyForms(formData, confirmationCode) {
+      const netlifyFormData = new FormData();
+      netlifyFormData.append('form-name', 'reservations');
+      netlifyFormData.append('name', formData.name);
+      netlifyFormData.append('email', formData.email);
+      netlifyFormData.append('phone', formData.phone || '');
+      netlifyFormData.append('date', formData.date);
+      netlifyFormData.append('time', formData.time);
+      netlifyFormData.append('guests', formData.guests.toString());
+      netlifyFormData.append('specialRequests', formData.specialRequests || '');
+      netlifyFormData.append('message', 'Bestätigungscode: ' + (confirmationCode || 'N/A'));
+
+      fetch('/', {
+        method: 'POST',
+        body: netlifyFormData
+      }).catch(function(err) {
+        console.warn('Netlify Forms backup submission failed:', err);
+      });
+    }
+
     async function loadAvailableDates() {
       const container = document.getElementById('available-dates-container');
 
@@ -840,9 +857,7 @@
 
         if (response.ok) {
           showReservationSuccess(result);
-        } else if (response.status === 404) {
-          console.warn('Netlify Forms returned 404 but submission was likely successful.');
-          showReservationSuccess();
+          submitToNetlifyForms(formData, result.reservation?.confirmationCode);
         } else if (result.errors) {
           const errorMessages = Object.values(result.errors).join('\n');
           alert(`Fehler bei der Reservierung:\n${errorMessages}`);
@@ -856,8 +871,7 @@
         if (error.name === 'TypeError' || (typeof error.message === 'string' && error.message.includes('Failed to fetch')) || !navigator.onLine) {
           alert('Netzwerkfehler: Bitte überprüfen Sie Ihre Internetverbindung und versuchen Sie es erneut.');
         } else {
-          console.log('Form submission handled by Netlify');
-          showReservationSuccess();
+          alert(error.message || 'Reservierung fehlgeschlagen. Bitte versuchen Sie es erneut.');
         }
       } finally {
         if (submitButton) {
@@ -933,6 +947,19 @@
     window.goBackToTimeSelection = goBackToTimeSelection;
     window.resetReservation = resetReservation;
     </script>
+
+    <!-- Hidden form for Netlify Forms detection -->
+    <form name="reservations" data-netlify="true" netlify-honeypot="website" hidden>
+      <input type="text" name="name" />
+      <input type="email" name="email" />
+      <input type="tel" name="phone" />
+      <input type="date" name="date" />
+      <input type="time" name="time" />
+      <input type="number" name="guests" />
+      <textarea name="message"></textarea>
+      <textarea name="specialRequests"></textarea>
+      <input type="text" name="website" />
+    </form>
 
 </body>
 </html>
