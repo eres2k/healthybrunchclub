@@ -5,7 +5,6 @@ const {
   renderGuestEmail,
   renderAdminEmail,
   renderIcs,
-  createQrCode,
   renderCancellationEmail,
   renderReminderEmail,
   renderWaitlistPromotedEmail,
@@ -96,7 +95,6 @@ async function sendReservationEmails(reservation) {
 
   const from = FROM_EMAIL();
   const adminEmails = getAdminEmails();
-  const qrCode = await createQrCode(reservation.confirmationCode);
   const icsContent = renderIcs(reservation);
   const attachments = [encodeAttachment(icsContent, 'text/calendar', `reservation-${reservation.confirmationCode}.ics`)];
 
@@ -104,7 +102,7 @@ async function sendReservationEmails(reservation) {
   const isWaitlisted = reservation.status === 'waitlisted';
   const guestHtml = isWaitlisted
     ? renderWaitlistEmail(reservation)
-    : renderGuestEmail(reservation, { qrCode });
+    : renderGuestEmail(reservation);
   const guestText = isWaitlisted
     ? renderWaitlistEmailText(reservation)
     : renderGuestEmailText(reservation);
@@ -178,7 +176,6 @@ async function sendReminderEmail(reservation) {
   }
 
   const from = FROM_EMAIL();
-  const qrCode = await createQrCode(reservation.confirmationCode);
   const icsContent = renderIcs(reservation);
   const attachments = [encodeAttachment(icsContent, 'text/calendar', `reservation-${reservation.confirmationCode}.ics`)];
 
@@ -187,7 +184,7 @@ async function sendReminderEmail(reservation) {
     from,
     subject: 'Erinnerung: Ihre Reservierung morgen im Healthy Brunch Club',
     text: renderReminderEmailText(reservation),
-    html: renderReminderEmail(reservation, { qrCode }),
+    html: renderReminderEmail(reservation),
     attachments
   });
 
@@ -203,7 +200,6 @@ async function sendWaitlistPromotedEmail(reservation) {
   }
 
   const from = FROM_EMAIL();
-  const qrCode = await createQrCode(reservation.confirmationCode);
   const icsContent = renderIcs(reservation);
   const attachments = [encodeAttachment(icsContent, 'text/calendar', `reservation-${reservation.confirmationCode}.ics`)];
 
@@ -212,7 +208,7 @@ async function sendWaitlistPromotedEmail(reservation) {
     from,
     subject: '🎉 Gute Nachrichten! Ihre Reservierung wurde bestätigt',
     text: renderWaitlistPromotedEmailText(reservation),
-    html: renderWaitlistPromotedEmail(reservation, { qrCode }),
+    html: renderWaitlistPromotedEmail(reservation),
     attachments
   });
 

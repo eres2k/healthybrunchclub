@@ -1,6 +1,5 @@
 'use strict';
 
-const QRCode = require('qrcode');
 const { DateTime } = require('luxon');
 
 /**
@@ -327,13 +326,6 @@ function renderGuestEmail(reservation, options = {}) {
             <p style="font-size: 13px; color: #484848;">Ihr Bestätigungscode</p>
           </div>
 
-          ${options.qrCode ? `
-          <div class="section" style="text-align: center;">
-            <img src="${options.qrCode}" alt="QR-Code" style="max-width: 160px; width: 100%; padding: 16px; background: #fff; border: 1px solid #e8e8e8;" />
-            <p style="font-size: 12px; color: #484848; margin-top: 8px;">Scannen für schnellen Check-in</p>
-          </div>
-          ` : ''}
-
           <div class="section">
             <h3>Ihre Reservierung</h3>
             <div class="gold-line" style="margin: 12px 0 20px 0; margin-left: 0;"></div>
@@ -525,13 +517,6 @@ function renderReminderEmail(reservation, options = {}) {
             <div class="code-display">${reservation.confirmationCode}</div>
           </div>
 
-          ${options.qrCode ? `
-          <div class="section" style="text-align: center;">
-            <img src="${options.qrCode}" alt="QR-Code" style="max-width: 160px; width: 100%; padding: 16px; background: #fff; border: 1px solid #e8e8e8;" />
-            <p style="font-size: 12px; color: #484848;">Zeigen Sie diesen Code bei Ankunft</p>
-          </div>
-          ` : ''}
-
           <div class="highlight-box" style="background: #1a1a1a; border-left-color: #c9a961;">
             <p style="margin: 0; color: #fff; text-align: center;">
               <span style="color: #c9a961; font-size: 14px;">📅</span> <strong style="color: #fff;">${date}</strong><br>
@@ -546,7 +531,7 @@ function renderReminderEmail(reservation, options = {}) {
             <h3>Gut zu wissen</h3>
             <ul style="line-height: 2; padding-left: 20px; color: #484848;">
               <li>Bitte kommen Sie pünktlich zum reservierten Zeitpunkt</li>
-              <li>Bringen Sie Ihren Bestätigungscode oder QR-Code mit</li>
+              <li>Bringen Sie Ihren Bestätigungscode mit</li>
               <li>Bei Verspätung über 15 Minuten kann Ihre Reservierung verfallen</li>
             </ul>
           </div>
@@ -650,12 +635,6 @@ function renderWaitlistPromotedEmail(reservation, options = {}) {
             <span class="badge badge-confirmed">Bestätigt</span>
             <div class="code-display">${reservation.confirmationCode}</div>
           </div>
-
-          ${options.qrCode ? `
-          <div class="section" style="text-align: center;">
-            <img src="${options.qrCode}" alt="QR-Code" style="max-width: 160px; width: 100%; padding: 16px; background: #fff; border: 1px solid #e8e8e8;" />
-          </div>
-          ` : ''}
 
           <div class="highlight-box">
             <p style="margin: 0;"><strong>Tolle Neuigkeiten!</strong> Ein Platz ist frei geworden und Ihre Reservierung wurde von der Warteliste bestätigt.</p>
@@ -855,21 +834,6 @@ function renderIcs(reservation) {
     'END:VEVENT',
     'END:VCALENDAR'
   ].join('\r\n');
-}
-
-/**
- * Creates QR code for confirmation code
- */
-async function createQrCode(confirmationCode) {
-  return QRCode.toDataURL(confirmationCode, {
-    margin: 1,
-    scale: 6,
-    errorCorrectionLevel: 'H',
-    color: {
-      dark: '#1a1a1a',
-      light: '#ffffff'
-    }
-  });
 }
 
 /**
@@ -1122,7 +1086,6 @@ module.exports = {
   renderFeedbackRequestEmailText,
   // Utilities
   renderIcs,
-  createQrCode,
   translateStatus,
   // Helpers (exported for potential reuse)
   getBaseStyles,
