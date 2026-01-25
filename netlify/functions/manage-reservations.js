@@ -89,9 +89,13 @@ async function handleDelete(event) {
     return response(400, { message: 'Bestätigungscode und Datum sind erforderlich.' });
   }
 
-  const deleted = await deleteReservation({ date, confirmationCode });
-
-  return response(200, { message: 'Reservierung gelöscht.', reservation: deleted });
+  try {
+    const deleted = await deleteReservation({ date, confirmationCode });
+    return response(200, { message: 'Reservierung gelöscht.', reservation: deleted });
+  } catch (error) {
+    console.error('Fehler beim Löschen:', error);
+    return response(404, { message: error.message || 'Reservierung nicht gefunden.' });
+  }
 }
 
 async function handlePost(event) {
