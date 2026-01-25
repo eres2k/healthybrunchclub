@@ -450,16 +450,38 @@ async function cancelReservation({ confirmationCode, email }) {
 }
 
 async function deleteReservation({ date, confirmationCode }) {
-  const normalizedDeleteDate = normalizeDate(date);
-  return withLock(`reservation:${normalizedDeleteDate}`, async () => {
-    const reservations = await loadReservations(normalizedDeleteDate);
-    const index = reservations.findIndex((entry) => entry.confirmationCode === confirmationCode);
-    if (index === -1) {
+  // Versuche zuerst das übergebene Datum, dann den Index
+  let targetDate = normalizeDate(date);
+
+  // Prüfe ob die Reservierung unter diesem Datum existiert
+  let reservations = await loadReservations(targetDate);
+  let index = reservations.findIndex((entry) => entry.confirmationCode === confirmationCode);
+
+  // Falls nicht gefunden, versuche das Datum aus dem Index zu holen
+  if (index === -1) {
+    const indexedDate = await findReservationDateByCode(confirmationCode);
+    if (indexedDate && indexedDate !== targetDate) {
+      targetDate = indexedDate;
+      reservations = await loadReservations(targetDate);
+      index = reservations.findIndex((entry) => entry.confirmationCode === confirmationCode);
+    }
+  }
+
+  if (index === -1) {
+    throw new Error('Reservierung wurde nicht gefunden.');
+  }
+
+  return withLock(`reservation:${targetDate}`, async () => {
+    // Lade nochmal innerhalb des Locks um Race Conditions zu vermeiden
+    const currentReservations = await loadReservations(targetDate);
+    const currentIndex = currentReservations.findIndex((entry) => entry.confirmationCode === confirmationCode);
+
+    if (currentIndex === -1) {
       throw new Error('Reservierung wurde nicht gefunden.');
     }
 
-    const deleted = reservations.splice(index, 1)[0];
-    await saveReservations(normalizedDeleteDate, reservations);
+    const deleted = currentReservations.splice(currentIndex, 1)[0];
+    await saveReservations(targetDate, currentReservations);
 
     // Remove from index
     const reservationIndex = await readJSON('reservations', 'reservation-index.json', {});

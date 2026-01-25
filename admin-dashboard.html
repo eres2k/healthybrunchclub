@@ -352,7 +352,6 @@
         </div>
         <div style="margin-top: 1rem;">
           <button class="btn btn-primary" id="btn-load">Verfugbarkeit laden</button>
-          <button class="btn btn-secondary" id="btn-load-all" style="margin-left: .5rem;">Alle Reservierungen laden</button>
           <button class="btn btn-secondary" id="btn-export-csv" style="margin-left: .5rem;">CSV Export</button>
         </div>
         <div id="availability-result" style="margin-top: 1rem; color: #6b7a6c;"></div>
@@ -875,8 +874,10 @@
     });
 
     document.getElementById('btn-load').addEventListener('click', loadReservations);
-    document.getElementById('btn-load-all').addEventListener('click', loadAllReservations);
     document.getElementById('btn-export-csv').addEventListener('click', exportAllReservationsCSV);
+
+    // Automatisch alle Reservierungen laden beim Start
+    loadAllReservations();
 
     // Filter by date
     document.getElementById('filter-date').addEventListener('change', () => {
