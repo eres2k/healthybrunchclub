@@ -57,10 +57,10 @@ module.exports = async function sendEmail(options) {
 async function sendWithResend(options, from) {
   const resend = new Resend(process.env.RESEND_API_KEY);
 
-  // Convert attachments from SendGrid format to Resend format
+  // Convert attachments - keep as base64 string for Resend
   const attachments = (options.attachments || []).map(att => ({
     filename: att.filename,
-    content: Buffer.from(att.content, 'base64')
+    content: att.content // Keep as base64 string, Resend handles it
   }));
 
   const emailData = {
