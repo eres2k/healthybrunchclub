@@ -1,233 +1,120 @@
+/**
+ * Get Menu PDF API
+ *
+ * Returns information about available menu PDFs.
+ * PDF standardization happens at build time via scripts/process-menu-pdfs.js
+ */
+
 const fs = require('fs');
-const fsPromises = require('fs/promises');
 const path = require('path');
-const matter = require('gray-matter');
 
-const MENU_PUBLIC_PATH = '/content/menu.pdf';
-const MENU_ENGLISH_PUBLIC_PATH = '/content/menu-english.pdf';
+const CORS_HEADERS = {
+  'Content-Type': 'application/json',
+  'Access-Control-Allow-Origin': '*',
+  'Access-Control-Allow-Methods': 'GET, OPTIONS',
+  'Access-Control-Allow-Headers': 'Content-Type'
+};
 
-async function backupExistingMenuPdf(menuPdfPath, contentDir) {
-  if (!fs.existsSync(menuPdfPath)) {
-    return null;
-  }
+// Standard public paths for all menu PDFs
+const MENU_PATHS = {
+  main: '/content/menu.pdf',
+  english: '/content/menu-english.pdf',
+  kids: '/content/kidsmenu.pdf',
+  lasa: '/content/lasa-english.pdf'
+};
 
-  const timestamp = new Date()
-    .toISOString()
-    .replace(/[:.]/g, '')
-    .replace('T', '-')
-    .replace('Z', '');
-  const backupName = `menu-backup-${timestamp}.pdf`;
-  const backupPath = path.join(contentDir, backupName);
-
-  await fsPromises.rename(menuPdfPath, backupPath);
-  await fsPromises.chmod(backupPath, 0o644);
-  console.log(`Backed up existing menu.pdf to ${backupName}`);
-
-  return backupPath;
-}
-
-async function rotateBackups(contentDir) {
-  try {
-    const backups = (await fsPromises.readdir(contentDir))
-      .filter(name => name.startsWith('menu-backup-') && name.endsWith('.pdf'))
-      .sort((a, b) => fs.statSync(path.join(contentDir, b)).mtimeMs - fs.statSync(path.join(contentDir, a)).mtimeMs);
-
-    const MAX_BACKUPS = 3;
-    if (backups.length <= MAX_BACKUPS) {
-      return;
-    }
-
-    const toRemove = backups.slice(MAX_BACKUPS);
-    await Promise.allSettled(
-      toRemove.map(file => fsPromises.unlink(path.join(contentDir, file)))
-    );
-    if (toRemove.length) {
-      console.log(`Removed ${toRemove.length} old menu.pdf backups`);
-    }
-  } catch (error) {
-    console.warn('Unable to rotate menu.pdf backups:', error.message);
-  }
-}
-
-async function ensureMenuPdfFromConfig() {
-  const contentDir = path.join(process.cwd(), 'content');
-  const configPath = path.join(contentDir, 'menu-pdf-config.json');
+function loadConfig() {
+  const configPath = path.join(process.cwd(), 'content', 'menu-pdf-config.json');
 
   if (!fs.existsSync(configPath)) {
     return null;
   }
 
   try {
-    const rawConfig = await fsPromises.readFile(configPath, 'utf8');
-    const config = rawConfig.trim() ? JSON.parse(rawConfig) : {};
-
-    const menuPdfPath = path.join(contentDir, 'menu.pdf');
-    const configuredPath = config.menu_pdf || config.pdf_file;
-    const hasCustomSource = configuredPath && configuredPath !== MENU_PUBLIC_PATH;
-
-    let sourcePath = menuPdfPath;
-    if (hasCustomSource) {
-      if (configuredPath.startsWith('/')) {
-        const cleaned = configuredPath.replace(/^\/+/, '');
-        sourcePath = path.join(process.cwd(), cleaned);
-      } else if (configuredPath.startsWith('content/')) {
-        sourcePath = path.join(process.cwd(), configuredPath);
-      } else {
-        sourcePath = path.join(contentDir, configuredPath);
-      }
-    }
-
-    let renamed = false;
-
-    if (hasCustomSource && fs.existsSync(sourcePath)) {
-      await backupExistingMenuPdf(menuPdfPath, contentDir);
-      await fsPromises.rename(sourcePath, menuPdfPath);
-      await fsPromises.chmod(menuPdfPath, 0o644);
-      console.log(`Renamed ${configuredPath} to ${MENU_PUBLIC_PATH}`);
-      renamed = true;
-      await rotateBackups(contentDir);
-    } else if (!fs.existsSync(menuPdfPath) && fs.existsSync(sourcePath) && sourcePath !== menuPdfPath) {
-      await fsPromises.rename(sourcePath, menuPdfPath);
-      await fsPromises.chmod(menuPdfPath, 0o644);
-      console.log(`Standardised menu PDF name at ${MENU_PUBLIC_PATH}`);
-      renamed = true;
-    } else if (hasCustomSource && !fs.existsSync(sourcePath)) {
-      console.warn(`Configured menu PDF not found: ${configuredPath}`);
-    }
-
-    let configChanged = false;
-
-    if (config.menu_pdf !== MENU_PUBLIC_PATH) {
-      config.menu_pdf = MENU_PUBLIC_PATH;
-      configChanged = true;
-    }
-
-    if (config.pdf_file !== MENU_PUBLIC_PATH) {
-      config.pdf_file = MENU_PUBLIC_PATH;
-      configChanged = true;
-    }
-
-    if (!config.last_updated || renamed) {
-      config.last_updated = new Date().toISOString();
-      configChanged = true;
-    }
-
-    // Handle English menu PDF renaming
-    const englishMenuPdfPath = path.join(contentDir, 'menu-english.pdf');
-    const englishConfiguredPath = config.english_menu_pdf;
-    const hasEnglishCustomSource = englishConfiguredPath && englishConfiguredPath !== MENU_ENGLISH_PUBLIC_PATH && englishConfiguredPath !== '';
-
-    if (hasEnglishCustomSource) {
-      let englishSourcePath;
-      if (englishConfiguredPath.startsWith('/')) {
-        const cleaned = englishConfiguredPath.replace(/^\/+/, '');
-        englishSourcePath = path.join(process.cwd(), cleaned);
-      } else if (englishConfiguredPath.startsWith('content/')) {
-        englishSourcePath = path.join(process.cwd(), englishConfiguredPath);
-      } else {
-        englishSourcePath = path.join(contentDir, englishConfiguredPath);
-      }
-
-      if (fs.existsSync(englishSourcePath) && englishSourcePath !== englishMenuPdfPath) {
-        if (fs.existsSync(englishMenuPdfPath)) {
-          await fsPromises.unlink(englishMenuPdfPath);
-        }
-        await fsPromises.rename(englishSourcePath, englishMenuPdfPath);
-        await fsPromises.chmod(englishMenuPdfPath, 0o644);
-        console.log(`Renamed ${englishConfiguredPath} to ${MENU_ENGLISH_PUBLIC_PATH}`);
-        config.english_menu_pdf = MENU_ENGLISH_PUBLIC_PATH;
-        configChanged = true;
-      }
-    }
-
-    if (configChanged) {
-      await fsPromises.writeFile(configPath, JSON.stringify(config, null, 2) + '\n', 'utf8');
-    }
-
-    return config;
+    const raw = fs.readFileSync(configPath, 'utf8');
+    return raw.trim() ? JSON.parse(raw) : null;
   } catch (error) {
-    console.error('Failed to process menu PDF config:', error);
+    console.error('Failed to parse menu-pdf-config.json:', error.message);
     return null;
   }
 }
 
-function buildSuccessResponse(menu) {
-  return {
-    statusCode: 200,
-    headers: {
-      'Content-Type': 'application/json',
-      'Access-Control-Allow-Origin': '*'
-    },
-    body: JSON.stringify(menu)
-  };
+function checkPdfExists(relativePath) {
+  const fullPath = path.join(process.cwd(), relativePath.replace(/^\//, ''));
+  if (!fs.existsSync(fullPath)) return false;
+
+  const stats = fs.statSync(fullPath);
+  return stats.size > 100; // Must be more than 100 bytes to be valid
 }
 
-function buildNotFoundResponse(message) {
-  return {
-    statusCode: 404,
-    body: JSON.stringify({
-      error: message,
-      pdf: null
-    })
-  };
-}
+exports.handler = async (event) => {
+  // Handle CORS preflight
+  if (event.httpMethod === 'OPTIONS') {
+    return { statusCode: 204, headers: CORS_HEADERS, body: '' };
+  }
 
+  // Only allow GET requests
+  if (event.httpMethod !== 'GET') {
+    return {
+      statusCode: 405,
+      headers: CORS_HEADERS,
+      body: JSON.stringify({ error: 'Method not allowed' })
+    };
+  }
 
-exports.handler = async () => {
   try {
-    const config = await ensureMenuPdfFromConfig();
+    const config = loadConfig();
 
-    if (config && config.active !== false) {
-      return buildSuccessResponse({
-        name: config.title || config.name || 'Speisekarte PDF',
-        description: config.description || '',
-        pdf_url: MENU_PUBLIC_PATH, // Always use menu.pdf for QR codes
-        upload_date: config.last_updated || new Date().toISOString(),
-        version: config.version || undefined
-      });
+    if (!config || config.active === false) {
+      return {
+        statusCode: 404,
+        headers: CORS_HEADERS,
+        body: JSON.stringify({
+          error: 'Kein aktives PDF-Menü verfügbar',
+          menus: null
+        })
+      };
     }
 
-    const menuPdfDir = path.join(process.cwd(), 'content', 'menu-pdf');
+    // Build response with available menus
+    const menus = {
+      main: checkPdfExists(MENU_PATHS.main)
+        ? { url: MENU_PATHS.main, label: 'Speisekarte' }
+        : null,
+      english: checkPdfExists(MENU_PATHS.english)
+        ? { url: MENU_PATHS.english, label: 'English Menu' }
+        : null,
+      kids: checkPdfExists(MENU_PATHS.kids)
+        ? { url: MENU_PATHS.kids, label: 'Kinderkarte' }
+        : null,
+      lasa: checkPdfExists(MENU_PATHS.lasa)
+        ? { url: MENU_PATHS.lasa, label: 'LASA English' }
+        : null
+    };
 
-    if (!fs.existsSync(menuPdfDir)) {
-      return buildNotFoundResponse('Kein PDF-Menü verfügbar');
-    }
+    // Main response (for backward compatibility)
+    const response = {
+      name: config.title || 'Speisekarte PDF',
+      description: config.description || '',
+      pdf_url: MENU_PATHS.main,
+      upload_date: config.last_updated || null,
+      version: config.version || null,
+      active: config.active !== false,
+      menus
+    };
 
-    const files = fs.readdirSync(menuPdfDir).filter(file => file.endsWith('.md'));
-
-    if (files.length === 0) {
-      return buildNotFoundResponse('Kein PDF-Menü verfügbar');
-    }
-
-    const menus = files
-      .map(file => {
-        const filePath = path.join(menuPdfDir, file);
-        const fileContent = fs.readFileSync(filePath, 'utf8');
-        const { data } = matter(fileContent);
-        return data;
-      })
-      .filter(menu => menu.active);
-
-    if (menus.length === 0) {
-      return buildNotFoundResponse('Kein aktives PDF-Menü verfügbar');
-    }
-
-    const latestMenu = menus.sort(
-      (a, b) => new Date(b.upload_date) - new Date(a.upload_date)
-    )[0];
-
-    return buildSuccessResponse({
-      name: latestMenu.name,
-      description: latestMenu.description,
-      pdf_url: latestMenu.pdf_file,
-      upload_date: latestMenu.upload_date
-    });
+    return {
+      statusCode: 200,
+      headers: CORS_HEADERS,
+      body: JSON.stringify(response)
+    };
   } catch (error) {
-    console.error('Error fetching PDF menu:', error);
+    console.error('Error in get-menu-pdf:', error);
     return {
       statusCode: 500,
+      headers: CORS_HEADERS,
       body: JSON.stringify({
-        error: 'Fehler beim Laden des PDF-Menüs',
+        error: 'Fehler beim Laden der Menü-Informationen',
         details: error.message
       })
     };

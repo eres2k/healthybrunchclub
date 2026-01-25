@@ -5,8 +5,9 @@
   "scripts": {
     "dev": "netlify dev",
     "optimize-images": "node scripts/optimize-images.js",
-    "build": "npm run optimize-images && bash scripts/rename-menu-pdf.sh",
-    "postbuild": "bash scripts/rename-menu-pdf.sh",
+    "process-pdfs": "node scripts/process-menu-pdfs.js",
+    "build": "npm run optimize-images && npm run process-pdfs",
+    "postbuild": "npm run process-pdfs",
     "serve": "netlify dev"
   },
   "dependencies": {
