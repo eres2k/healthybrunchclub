@@ -8,8 +8,8 @@
 
 [functions]
   directory = "netlify/functions"
-  # Include content files in the function bundle
-  included_files = ["content/**/*.md", "content/**/*.yml", "content/**/*.json", "content/**/*.pdf"]
+  # Include content files and reservations data in the function bundle
+  included_files = ["content/**/*.md", "content/**/*.yml", "content/**/*.json", "content/**/*.pdf", "reservations/**/*.json"]
   node_bundler = "esbuild"
 
 [[headers]]
