@@ -4,70 +4,434 @@ const QRCode = require('qrcode');
 const { DateTime } = require('luxon');
 
 /**
- * Erzeugt das HTML für die Gästebestätigung.
- * @param {object} reservation
- * @param {{ qrCode?: string }} [options]
- * @returns {string}
+ * Featured dishes to promote in guest emails
+ */
+const FEATURED_DISHES = [
+  {
+    name: 'Avocado Bowl',
+    description: 'Cremige Avocado mit pochierten Eiern, Quinoa & Microgreens',
+    icon: '🥑'
+  },
+  {
+    name: 'Açaí Energy Bowl',
+    description: 'Açaí, Banane, Beeren, hausgemachtes Granola & Kokosflocken',
+    icon: '🥣'
+  },
+  {
+    name: 'Eggs Any Style',
+    description: 'Bio-Eier nach Wahl auf Süßkartoffel & Avocado',
+    icon: '🍳'
+  }
+];
+
+/**
+ * Premium base styles matching the website design
+ * Colors: black #1a1a1a, gold #c9a961, sage #7a8b68, cream #f5f0e8
+ */
+function getBaseStyles() {
+  return `
+    @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600&family=Montserrat:wght@300;400;500&display=swap');
+
+    body {
+      font-family: 'Montserrat', Arial, sans-serif;
+      font-weight: 300;
+      background-color: #f5f0e8;
+      color: #2d2d2d;
+      margin: 0;
+      padding: 20px;
+      line-height: 1.6;
+    }
+    .container {
+      max-width: 640px;
+      margin: 0 auto;
+      background: #ffffff;
+      border-radius: 0;
+      overflow: hidden;
+      box-shadow: 0 4px 24px rgba(0,0,0,0.08);
+    }
+    .header {
+      padding: 48px 32px;
+      text-align: center;
+      color: #fff;
+      background: #1a1a1a;
+    }
+    .header-confirmed { background: linear-gradient(135deg, #1a1a1a 0%, #2d2d2d 100%); }
+    .header-cancelled { background: linear-gradient(135deg, #8b4049 0%, #6b2d35 100%); }
+    .header-reminder { background: linear-gradient(135deg, #1e4a3c 0%, #2d5a4a 100%); }
+    .header-waitlist { background: linear-gradient(135deg, #8b7355 0%, #6b5a45 100%); }
+    .header-feedback { background: linear-gradient(135deg, #7a8b68 0%, #5a6b48 100%); }
+    .logo-text {
+      font-family: 'Playfair Display', Georgia, serif;
+      font-size: 12px;
+      letter-spacing: 3px;
+      text-transform: uppercase;
+      color: #c9a961;
+      margin-bottom: 24px;
+    }
+    .content { padding: 40px 32px; }
+    .section { margin-bottom: 32px; }
+    .gold-line {
+      width: 60px;
+      height: 1px;
+      background: #c9a961;
+      margin: 16px auto;
+    }
+    .details {
+      border: 1px solid #e8e8e8;
+      padding: 24px;
+      margin: 16px 0;
+    }
+    .details-row {
+      display: flex;
+      justify-content: space-between;
+      padding: 8px 0;
+      border-bottom: 1px solid #f5f0e8;
+    }
+    .details-row:last-child { border-bottom: none; }
+    .details-label {
+      color: #484848;
+      font-size: 12px;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+    }
+    .details-value {
+      color: #1a1a1a;
+      font-weight: 500;
+    }
+    .badge {
+      display: inline-block;
+      padding: 8px 16px;
+      font-size: 11px;
+      text-transform: uppercase;
+      letter-spacing: 2px;
+      font-weight: 500;
+    }
+    .badge-confirmed { background: #f5f0e8; color: #1e4a3c; }
+    .badge-cancelled { background: #fdf2f2; color: #8b4049; }
+    .badge-waitlist { background: #faf6f1; color: #8b7355; }
+    .badge-reminder { background: #f0f5f3; color: #1e4a3c; }
+    .footer {
+      text-align: center;
+      padding: 32px;
+      background: #fafaf8;
+      color: #484848;
+      font-size: 13px;
+    }
+    .footer-brand {
+      font-family: 'Playfair Display', Georgia, serif;
+      font-size: 14px;
+      color: #1a1a1a;
+      margin-bottom: 8px;
+    }
+    .button {
+      display: inline-block;
+      padding: 16px 32px;
+      background: #1a1a1a;
+      color: #fff !important;
+      text-decoration: none;
+      font-size: 12px;
+      text-transform: uppercase;
+      letter-spacing: 2px;
+      font-weight: 500;
+      margin: 8px 4px;
+      transition: all 0.3s ease;
+    }
+    .button:hover { background: #2d2d2d; }
+    .button-gold {
+      background: #c9a961;
+      color: #1a1a1a !important;
+    }
+    .button-outline {
+      background: transparent;
+      border: 1px solid #1a1a1a;
+      color: #1a1a1a !important;
+    }
+    h1 {
+      font-family: 'Playfair Display', Georgia, serif;
+      margin: 0 0 8px 0;
+      font-size: 32px;
+      font-weight: 400;
+      letter-spacing: -0.5px;
+    }
+    h2 {
+      font-family: 'Playfair Display', Georgia, serif;
+      margin: 0 0 16px 0;
+      color: #1a1a1a;
+      font-size: 24px;
+      font-weight: 400;
+    }
+    h3 {
+      font-family: 'Playfair Display', Georgia, serif;
+      margin: 0 0 12px 0;
+      color: #1a1a1a;
+      font-size: 18px;
+      font-weight: 400;
+    }
+    p { line-height: 1.7; margin: 0 0 16px 0; }
+    .highlight-box {
+      background: #fafaf8;
+      border-left: 3px solid #c9a961;
+      padding: 20px 24px;
+      margin: 24px 0;
+    }
+    .code-display {
+      font-family: 'Playfair Display', Georgia, serif;
+      font-size: 28px;
+      letter-spacing: 4px;
+      color: #c9a961;
+      text-align: center;
+      padding: 24px;
+      background: #1a1a1a;
+      margin: 16px 0;
+    }
+    .dish-card {
+      display: flex;
+      align-items: center;
+      padding: 16px;
+      background: #fafaf8;
+      margin-bottom: 12px;
+      border-left: 3px solid #c9a961;
+    }
+    .dish-icon {
+      font-size: 32px;
+      margin-right: 16px;
+    }
+    .dish-name {
+      font-family: 'Playfair Display', Georgia, serif;
+      font-size: 16px;
+      color: #1a1a1a;
+      margin-bottom: 4px;
+    }
+    .dish-desc {
+      font-size: 13px;
+      color: #484848;
+    }
+  `;
+}
+
+/**
+ * Renders the premium footer for all emails
+ */
+function renderFooter() {
+  return `
+    <div class="footer">
+      <div class="footer-brand">Healthy Brunch Club Wien</div>
+      <p style="margin: 8px 0;">Gumpendorfer Straße 65 · 1060 Wien</p>
+      <p style="margin: 8px 0; color: #c9a961;">info@healthybrunchclub.at</p>
+      <div class="gold-line" style="margin: 16px auto;"></div>
+      <p style="font-size: 11px; color: #888; margin-top: 16px;">
+        Eat well. Feel better.
+      </p>
+    </div>
+  `;
+}
+
+/**
+ * Renders the featured dishes section for guest emails
+ */
+function renderFeaturedDishes() {
+  return `
+    <div class="section">
+      <h3 style="text-align: center;">Was Sie bei uns erwartet</h3>
+      <div class="gold-line"></div>
+      <div style="margin-top: 24px;">
+        ${FEATURED_DISHES.map(dish => `
+          <div class="dish-card">
+            <span class="dish-icon">${dish.icon}</span>
+            <div>
+              <div class="dish-name">${dish.name}</div>
+              <div class="dish-desc">${dish.description}</div>
+            </div>
+          </div>
+        `).join('')}
+      </div>
+      <p style="text-align: center; margin-top: 20px;">
+        <a href="https://healthybrunchclub.at/menu" class="button button-outline">Menü ansehen</a>
+      </p>
+    </div>
+  `;
+}
+
+/**
+ * Renders reservation details in premium style
+ */
+function renderReservationDetails(reservation) {
+  const date = DateTime.fromISO(reservation.date, { zone: reservation.timezone || 'Europe/Vienna' })
+    .toFormat('EEEE, dd. MMMM yyyy', { locale: 'de' });
+
+  return `
+    <div class="details">
+      <div class="details-row">
+        <span class="details-label">Datum</span>
+        <span class="details-value">${date}</span>
+      </div>
+      <div class="details-row">
+        <span class="details-label">Uhrzeit</span>
+        <span class="details-value">${reservation.time} Uhr</span>
+      </div>
+      <div class="details-row">
+        <span class="details-label">Personen</span>
+        <span class="details-value">${reservation.guests} ${reservation.guests === 1 ? 'Gast' : 'Gäste'}</span>
+      </div>
+      <div class="details-row">
+        <span class="details-label">Name</span>
+        <span class="details-value">${reservation.name}</span>
+      </div>
+      ${reservation.specialRequests ? `
+      <div class="details-row">
+        <span class="details-label">Wünsche</span>
+        <span class="details-value">${reservation.specialRequests}</span>
+      </div>
+      ` : ''}
+    </div>
+  `;
+}
+
+/**
+ * Translates status to German
+ */
+function translateStatus(status) {
+  switch (status) {
+    case 'waitlisted': return 'Warteliste';
+    case 'cancelled': return 'Storniert';
+    default: return 'Bestätigt';
+  }
+}
+
+/**
+ * Guest confirmation email with premium styling and dish promotions
  */
 function renderGuestEmail(reservation, options = {}) {
+  return `<!DOCTYPE html>
+  <html lang="de">
+    <head>
+      <meta charset="utf-8" />
+      <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+      <title>Reservierungsbestätigung</title>
+      <style>${getBaseStyles()}</style>
+    </head>
+    <body>
+      <div class="container">
+        <div class="header header-confirmed">
+          <div class="logo-text">Healthy Brunch Club</div>
+          <h1>Reservierung bestätigt</h1>
+          <div class="gold-line"></div>
+          <p style="margin: 0; opacity: 0.9;">Wir freuen uns auf Ihren Besuch</p>
+        </div>
+        <div class="content">
+          <div class="section" style="text-align: center;">
+            <span class="badge badge-confirmed">Bestätigt</span>
+            <div class="code-display">${reservation.confirmationCode}</div>
+            <p style="font-size: 13px; color: #484848;">Ihr Bestätigungscode</p>
+          </div>
+
+          ${options.qrCode ? `
+          <div class="section" style="text-align: center;">
+            <img src="${options.qrCode}" alt="QR-Code" style="max-width: 160px; width: 100%; padding: 16px; background: #fff; border: 1px solid #e8e8e8;" />
+            <p style="font-size: 12px; color: #484848; margin-top: 8px;">Scannen für schnellen Check-in</p>
+          </div>
+          ` : ''}
+
+          <div class="section">
+            <h3>Ihre Reservierung</h3>
+            <div class="gold-line" style="margin: 12px 0 20px 0; margin-left: 0;"></div>
+            ${renderReservationDetails(reservation)}
+          </div>
+
+          ${renderFeaturedDishes()}
+
+          <div class="highlight-box">
+            <p style="margin: 0;"><strong>Gut zu wissen:</strong> Bitte kommen Sie pünktlich. Bei Verspätungen über 15 Minuten kann Ihre Reservierung an wartende Gäste vergeben werden.</p>
+          </div>
+
+          <div class="section" style="text-align: center;">
+            <h3>So finden Sie uns</h3>
+            <p>Gumpendorfer Straße 65, 1060 Wien</p>
+            <a href="https://maps.google.com/?q=Gumpendorfer+Straße+65+1060+Wien" class="button button-outline">Route planen</a>
+          </div>
+        </div>
+        ${renderFooter()}
+      </div>
+    </body>
+  </html>`;
+}
+
+/**
+ * Admin email for new reservations (styled)
+ */
+function renderAdminEmail(reservation) {
   const date = DateTime.fromISO(reservation.date, { zone: reservation.timezone || 'Europe/Vienna' })
-    .toFormat('dd.MM.yyyy');
-  const time = reservation.time;
+    .toFormat('EEEE, dd. MMMM yyyy', { locale: 'de' });
 
   return `<!DOCTYPE html>
   <html lang="de">
     <head>
       <meta charset="utf-8" />
-      <title>Reservierungsbestätigung</title>
-      <style>
-        body { font-family: 'Lato', Arial, sans-serif; background-color: #f9f7f3; color: #24301d; }
-        .container { max-width: 640px; margin: 0 auto; background: #fff; border-radius: 16px; overflow: hidden; box-shadow: 0 12px 40px rgba(0,0,0,0.08); }
-        .header { background: linear-gradient(135deg, #8bc34a, #558b2f); color: #fff; padding: 32px; text-align: center; }
-        .content { padding: 32px; }
-        .section { margin-bottom: 24px; }
-        .details { display: grid; grid-template-columns: 140px 1fr; row-gap: 12px; column-gap: 16px; }
-        .badge { display: inline-block; padding: 6px 12px; border-radius: 999px; background: #ecf8e3; color: #2c5923; font-weight: 600; }
-        .footer { text-align: center; padding: 24px; color: #6b7a62; font-size: 13px; }
-      </style>
+      <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+      <title>Neue Reservierung</title>
+      <style>${getBaseStyles()}</style>
     </head>
     <body>
       <div class="container">
-        <div class="header">
-          <h1>Healthy Brunch Club Wien</h1>
-          <p>Ihre Reservierung wurde erfolgreich bestätigt.</p>
+        <div class="header header-confirmed">
+          <div class="logo-text">Admin Benachrichtigung</div>
+          <h1>Neue Reservierung</h1>
+          <div class="gold-line"></div>
         </div>
         <div class="content">
-          <div class="section">
-            <span class="badge">Bestätigungscode</span>
-            <h2>${reservation.confirmationCode}</h2>
+          <div class="section" style="text-align: center;">
+            <span class="badge badge-confirmed">${translateStatus(reservation.status)}</span>
+            <div class="code-display">${reservation.confirmationCode}</div>
           </div>
-          ${options.qrCode ? `
-          <div class="section" style="text-align:center;">
-            <img src="${options.qrCode}" alt="QR-Code Reservierung" style="max-width:180px; width:100%;" />
-          </div>` : ''}
+
           <div class="section">
-            <h3>Ihre Reservierungsdetails</h3>
+            <h3>Reservierungsdetails</h3>
             <div class="details">
-              <span>Datum</span>
-              <span>${date}</span>
-              <span>Uhrzeit</span>
-              <span>${time} Uhr</span>
-              <span>Anzahl Gäste</span>
-              <span>${reservation.guests}</span>
-              <span>Name</span>
-              <span>${reservation.name}</span>
-              <span>Status</span>
-              <span>${translateStatus(reservation.status)}</span>
-              ${reservation.specialRequests ? `<span>Besondere Wünsche</span><span>${reservation.specialRequests}</span>` : ''}
+              <div class="details-row">
+                <span class="details-label">Datum</span>
+                <span class="details-value">${date}</span>
+              </div>
+              <div class="details-row">
+                <span class="details-label">Uhrzeit</span>
+                <span class="details-value">${reservation.time} Uhr</span>
+              </div>
+              <div class="details-row">
+                <span class="details-label">Personen</span>
+                <span class="details-value">${reservation.guests}</span>
+              </div>
             </div>
           </div>
+
           <div class="section">
-            <p>Wir freuen uns auf Ihren Besuch im Healthy Brunch Club Wien! Bitte bringen Sie diesen Code oder den beigefügten QR-Code zur schnelleren Abwicklung mit.</p>
+            <h3>Gast-Informationen</h3>
+            <div class="details">
+              <div class="details-row">
+                <span class="details-label">Name</span>
+                <span class="details-value">${reservation.name}</span>
+              </div>
+              <div class="details-row">
+                <span class="details-label">E-Mail</span>
+                <span class="details-value"><a href="mailto:${reservation.email}" style="color: #c9a961;">${reservation.email}</a></span>
+              </div>
+              <div class="details-row">
+                <span class="details-label">Telefon</span>
+                <span class="details-value"><a href="tel:${reservation.phone}" style="color: #c9a961;">${reservation.phone}</a></span>
+              </div>
+              ${reservation.specialRequests ? `
+              <div class="details-row">
+                <span class="details-label">Wünsche</span>
+                <span class="details-value">${reservation.specialRequests}</span>
+              </div>
+              ` : ''}
+            </div>
+          </div>
+
+          <div class="section" style="text-align: center;">
+            <a href="https://healthybrunchclub.at/admin/reservations.html" class="button button-gold">Reservierungen verwalten</a>
           </div>
         </div>
         <div class="footer">
-          <p>Healthy Brunch Club Wien · Neubaugasse 1 · 1070 Wien · +43 1 234 56 78</p>
-          <p>Sollten Sie Fragen haben oder Ihre Reservierung ändern wollen, antworten Sie einfach auf diese E-Mail.</p>
+          <p style="font-size: 12px; color: #888;">Diese E-Mail wurde automatisch generiert am ${DateTime.now().setZone('Europe/Vienna').toFormat('dd.MM.yyyy HH:mm')} Uhr</p>
         </div>
       </div>
     </body>
@@ -75,165 +439,7 @@ function renderGuestEmail(reservation, options = {}) {
 }
 
 /**
- * Übersetzt den internen Status in eine benutzerfreundliche Beschreibung.
- * @param {string} status
- * @returns {string}
- */
-function translateStatus(status) {
-  switch (status) {
-    case 'waitlisted':
-      return 'Warteliste';
-    case 'cancelled':
-      return 'Storniert';
-    default:
-      return 'Bestätigt';
-  }
-}
-
-/**
- * Erzeugt den HTML-Report für das Team.
- * @param {object} reservation
- * @returns {string}
- */
-function renderAdminEmail(reservation) {
-  return `<!DOCTYPE html>
-  <html lang="de">
-    <head><meta charset="utf-8" /></head>
-    <body>
-      <h2>Neue Reservierung</h2>
-      <ul>
-        <li>Bestätigungscode: ${reservation.confirmationCode}</li>
-        <li>Name: ${reservation.name}</li>
-        <li>Datum: ${DateTime.fromISO(reservation.date).toFormat('dd.MM.yyyy')}</li>
-        <li>Zeit: ${reservation.time} Uhr</li>
-        <li>Gäste: ${reservation.guests}</li>
-        <li>Status: ${translateStatus(reservation.status)}</li>
-        <li>Telefon: ${reservation.phone}</li>
-        <li>E-Mail: ${reservation.email}</li>
-        ${reservation.specialRequests ? `<li>Besondere Wünsche: ${reservation.specialRequests}</li>` : ''}
-      </ul>
-    </body>
-  </html>`;
-}
-
-/**
- * Erstellt den ICS-Kalendereintrag.
- * @param {object} reservation
- * @returns {string}
- */
-function renderIcs(reservation) {
-  const start = DateTime.fromISO(`${reservation.date}T${reservation.time}`, {
-    zone: reservation.timezone || 'Europe/Vienna'
-  });
-  const end = start.plus({ hours: 2 });
-
-  const format = (dt) => dt.toUTC().toFormat("yyyyMMdd'T'HHmmss'Z'");
-
-  return [
-    'BEGIN:VCALENDAR',
-    'VERSION:2.0',
-    'PRODID:-//Healthy Brunch Club Wien//Reservierung//DE',
-    'BEGIN:VEVENT',
-    `UID:${reservation.confirmationCode}@healthybrunchclub.at`,
-    `DTSTAMP:${format(DateTime.utc())}`,
-    `DTSTART:${format(start)}`,
-    `DTEND:${format(end)}`,
-    `SUMMARY:Reservierung Healthy Brunch Club Wien`,
-    `DESCRIPTION:Reservierung für ${reservation.guests} Personen`,
-    'LOCATION:Healthy Brunch Club Wien, Neubaugasse 1, 1070 Wien',
-    'END:VEVENT',
-    'END:VCALENDAR'
-  ].join('\r\n');
-}
-
-/**
- * Erstellt eine QR-Code-Grafik mit dem Bestätigungscode.
- * @param {string} confirmationCode
- * @returns {Promise<string>}
- */
-async function createQrCode(confirmationCode) {
-  return QRCode.toDataURL(confirmationCode, { margin: 1, scale: 6, errorCorrectionLevel: 'H' });
-}
-
-/**
- * Basis-Styles für alle E-Mail-Templates.
- * @returns {string}
- */
-function getBaseStyles() {
-  return `
-    body { font-family: 'Lato', Arial, sans-serif; background-color: #f9f7f3; color: #24301d; margin: 0; padding: 20px; }
-    .container { max-width: 640px; margin: 0 auto; background: #fff; border-radius: 16px; overflow: hidden; box-shadow: 0 12px 40px rgba(0,0,0,0.08); }
-    .header { padding: 32px; text-align: center; color: #fff; }
-    .header-confirmed { background: linear-gradient(135deg, #8bc34a, #558b2f); }
-    .header-cancelled { background: linear-gradient(135deg, #e57373, #c62828); }
-    .header-reminder { background: linear-gradient(135deg, #64b5f6, #1976d2); }
-    .header-waitlist { background: linear-gradient(135deg, #ffb74d, #f57c00); }
-    .header-feedback { background: linear-gradient(135deg, #ba68c8, #7b1fa2); }
-    .content { padding: 32px; }
-    .section { margin-bottom: 24px; }
-    .details { display: grid; grid-template-columns: 140px 1fr; row-gap: 12px; column-gap: 16px; }
-    .badge { display: inline-block; padding: 6px 12px; border-radius: 999px; font-weight: 600; }
-    .badge-green { background: #ecf8e3; color: #2c5923; }
-    .badge-red { background: #ffebee; color: #c62828; }
-    .badge-blue { background: #e3f2fd; color: #1565c0; }
-    .badge-orange { background: #fff3e0; color: #e65100; }
-    .footer { text-align: center; padding: 24px; color: #6b7a62; font-size: 13px; border-top: 1px solid #eee; }
-    .button { display: inline-block; padding: 14px 28px; background: linear-gradient(135deg, #8bc34a, #558b2f); color: #fff; text-decoration: none; border-radius: 8px; font-weight: 600; margin: 8px 4px; }
-    .button-secondary { background: linear-gradient(135deg, #64b5f6, #1976d2); }
-    h1 { margin: 0 0 8px 0; font-size: 28px; }
-    h2 { margin: 0 0 16px 0; color: #2c5923; }
-    h3 { margin: 0 0 12px 0; color: #558b2f; }
-    p { line-height: 1.6; margin: 0 0 16px 0; }
-    .highlight-box { background: #f9f7f3; border-left: 4px solid #8bc34a; padding: 16px; margin: 16px 0; border-radius: 0 8px 8px 0; }
-  `;
-}
-
-/**
- * Erzeugt den gemeinsamen Footer für alle E-Mails.
- * @returns {string}
- */
-function renderFooter() {
-  return `
-    <div class="footer">
-      <p><strong>Healthy Brunch Club Wien</strong></p>
-      <p>Gumpendorfer Straße 65 · 1060 Wien</p>
-      <p>Tel: +43 1 234 56 78 · info@healthybrunchclub.at</p>
-      <p style="margin-top: 16px; font-size: 12px;">
-        Sollten Sie Fragen haben oder Ihre Reservierung ändern wollen, antworten Sie einfach auf diese E-Mail.
-      </p>
-    </div>
-  `;
-}
-
-/**
- * Erzeugt die Reservierungsdetails-Sektion.
- * @param {object} reservation
- * @returns {string}
- */
-function renderReservationDetails(reservation) {
-  const date = DateTime.fromISO(reservation.date, { zone: reservation.timezone || 'Europe/Vienna' })
-    .toFormat('dd.MM.yyyy');
-
-  return `
-    <div class="details">
-      <span><strong>Datum</strong></span>
-      <span>${date}</span>
-      <span><strong>Uhrzeit</strong></span>
-      <span>${reservation.time} Uhr</span>
-      <span><strong>Anzahl Gäste</strong></span>
-      <span>${reservation.guests} ${reservation.guests === 1 ? 'Person' : 'Personen'}</span>
-      <span><strong>Name</strong></span>
-      <span>${reservation.name}</span>
-      ${reservation.specialRequests ? `<span><strong>Besondere Wünsche</strong></span><span>${reservation.specialRequests}</span>` : ''}
-    </div>
-  `;
-}
-
-/**
- * Erzeugt das HTML für die Stornierungsbestätigung.
- * @param {object} reservation
- * @param {{ reason?: string }} [options]
- * @returns {string}
+ * Cancellation email for guests
  */
 function renderCancellationEmail(reservation, options = {}) {
   return `<!DOCTYPE html>
@@ -247,13 +453,14 @@ function renderCancellationEmail(reservation, options = {}) {
     <body>
       <div class="container">
         <div class="header header-cancelled">
+          <div class="logo-text">Healthy Brunch Club</div>
           <h1>Reservierung storniert</h1>
-          <p>Ihre Reservierung wurde erfolgreich storniert.</p>
+          <div class="gold-line"></div>
         </div>
         <div class="content">
-          <div class="section">
-            <span class="badge badge-red">Storniert</span>
-            <h2 style="color: #c62828;">Bestätigungscode: ${reservation.confirmationCode}</h2>
+          <div class="section" style="text-align: center;">
+            <span class="badge badge-cancelled">Storniert</span>
+            <div class="code-display" style="background: #8b4049;">${reservation.confirmationCode}</div>
           </div>
 
           <div class="section">
@@ -262,17 +469,19 @@ function renderCancellationEmail(reservation, options = {}) {
           </div>
 
           ${options.reason ? `
-          <div class="highlight-box" style="border-left-color: #e57373;">
-            <strong>Stornierungsgrund:</strong><br>
-            ${options.reason}
+          <div class="highlight-box" style="border-left-color: #8b4049;">
+            <p style="margin: 0;"><strong>Stornierungsgrund:</strong><br>${options.reason}</p>
           </div>
           ` : ''}
 
           <div class="section">
-            <p>Wir bedauern, dass Sie uns diesmal nicht besuchen können. Wir würden uns freuen, Sie bald wieder bei uns begrüßen zu dürfen!</p>
-            <p style="text-align: center; margin-top: 24px;">
-              <a href="https://healthybrunchclub.at/#reservation" class="button">Neue Reservierung</a>
-            </p>
+            <p>Schade, dass Sie uns diesmal nicht besuchen können. Wir würden uns freuen, Sie bald bei uns begrüßen zu dürfen!</p>
+          </div>
+
+          ${renderFeaturedDishes()}
+
+          <div class="section" style="text-align: center;">
+            <a href="https://healthybrunchclub.at/#reservation" class="button">Neue Reservierung</a>
           </div>
         </div>
         ${renderFooter()}
@@ -282,10 +491,7 @@ function renderCancellationEmail(reservation, options = {}) {
 }
 
 /**
- * Erzeugt das HTML für die Erinnerungs-E-Mail (1 Tag vorher).
- * @param {object} reservation
- * @param {{ qrCode?: string }} [options]
- * @returns {string}
+ * Reminder email (day before)
  */
 function renderReminderEmail(reservation, options = {}) {
   const date = DateTime.fromISO(reservation.date, { zone: reservation.timezone || 'Europe/Vienna' })
@@ -302,48 +508,52 @@ function renderReminderEmail(reservation, options = {}) {
     <body>
       <div class="container">
         <div class="header header-reminder">
-          <h1>Wir freuen uns auf Sie!</h1>
-          <p>Erinnerung an Ihre Reservierung morgen</p>
+          <div class="logo-text">Healthy Brunch Club</div>
+          <h1>Bis morgen!</h1>
+          <div class="gold-line"></div>
+          <p style="margin: 0; opacity: 0.9;">Wir freuen uns auf Ihren Besuch</p>
         </div>
         <div class="content">
-          <div class="section">
-            <span class="badge badge-blue">Morgen</span>
-            <h2>Bestätigungscode: ${reservation.confirmationCode}</h2>
+          <div class="section" style="text-align: center;">
+            <span class="badge badge-reminder">Morgen</span>
+            <div class="code-display">${reservation.confirmationCode}</div>
           </div>
 
           ${options.qrCode ? `
-          <div class="section" style="text-align:center;">
-            <img src="${options.qrCode}" alt="QR-Code Reservierung" style="max-width:180px; width:100%;" />
-            <p style="font-size: 13px; color: #6b7a62;">Zeigen Sie diesen Code bei Ankunft</p>
-          </div>` : ''}
+          <div class="section" style="text-align: center;">
+            <img src="${options.qrCode}" alt="QR-Code" style="max-width: 160px; width: 100%; padding: 16px; background: #fff; border: 1px solid #e8e8e8;" />
+            <p style="font-size: 12px; color: #484848;">Zeigen Sie diesen Code bei Ankunft</p>
+          </div>
+          ` : ''}
 
-          <div class="highlight-box">
-            <strong>📅 ${date}</strong><br>
-            <strong>🕐 ${reservation.time} Uhr</strong><br>
-            <strong>👥 ${reservation.guests} ${reservation.guests === 1 ? 'Person' : 'Personen'}</strong>
+          <div class="highlight-box" style="background: #1a1a1a; border-left-color: #c9a961;">
+            <p style="margin: 0; color: #fff; text-align: center;">
+              <span style="color: #c9a961; font-size: 14px;">📅</span> <strong style="color: #fff;">${date}</strong><br>
+              <span style="color: #c9a961; font-size: 14px;">🕐</span> <strong style="color: #fff;">${reservation.time} Uhr</strong><br>
+              <span style="color: #c9a961; font-size: 14px;">👥</span> <strong style="color: #fff;">${reservation.guests} ${reservation.guests === 1 ? 'Person' : 'Personen'}</strong>
+            </p>
           </div>
 
+          ${renderFeaturedDishes()}
+
           <div class="section">
-            <h3>Wichtige Informationen</h3>
-            <ul style="line-height: 1.8;">
+            <h3>Gut zu wissen</h3>
+            <ul style="line-height: 2; padding-left: 20px; color: #484848;">
               <li>Bitte kommen Sie pünktlich zum reservierten Zeitpunkt</li>
               <li>Bringen Sie Ihren Bestätigungscode oder QR-Code mit</li>
-              <li>Bei Verspätung von mehr als 15 Minuten kann Ihre Reservierung verfallen</li>
+              <li>Bei Verspätung über 15 Minuten kann Ihre Reservierung verfallen</li>
             </ul>
           </div>
 
-          <div class="section">
+          <div class="section" style="text-align: center; background: #fafaf8; padding: 24px; margin: 0 -32px;">
             <h3>So finden Sie uns</h3>
-            <p>
-              <strong>Healthy Brunch Club Wien</strong><br>
-              Gumpendorfer Straße 65, 1060 Wien<br>
-              <a href="https://maps.google.com/?q=Gumpendorfer+Straße+65+1060+Wien" style="color: #558b2f;">📍 Route anzeigen</a>
-            </p>
+            <p style="margin-bottom: 16px;">Gumpendorfer Straße 65, 1060 Wien</p>
+            <a href="https://maps.google.com/?q=Gumpendorfer+Straße+65+1060+Wien" class="button button-gold">Route planen</a>
           </div>
 
-          <div class="section" style="text-align: center;">
-            <p>Müssen Sie Ihre Reservierung ändern oder stornieren?</p>
-            <a href="mailto:info@healthybrunchclub.at?subject=Reservierung ${reservation.confirmationCode}" class="button button-secondary">Kontakt aufnehmen</a>
+          <div class="section" style="text-align: center; margin-top: 32px;">
+            <p style="color: #484848;">Müssen Sie Ihre Reservierung ändern?</p>
+            <a href="mailto:info@healthybrunchclub.at?subject=Reservierung ${reservation.confirmationCode}" class="button button-outline">Kontakt aufnehmen</a>
           </div>
         </div>
         ${renderFooter()}
@@ -353,76 +563,9 @@ function renderReminderEmail(reservation, options = {}) {
 }
 
 /**
- * Erzeugt das HTML wenn jemand von der Warteliste bestätigt wird.
- * @param {object} reservation
- * @param {{ qrCode?: string }} [options]
- * @returns {string}
- */
-function renderWaitlistPromotedEmail(reservation, options = {}) {
-  const date = DateTime.fromISO(reservation.date, { zone: reservation.timezone || 'Europe/Vienna' })
-    .toFormat('dd.MM.yyyy');
-
-  return `<!DOCTYPE html>
-  <html lang="de">
-    <head>
-      <meta charset="utf-8" />
-      <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-      <title>Gute Nachrichten! Ihre Reservierung ist bestätigt</title>
-      <style>${getBaseStyles()}</style>
-    </head>
-    <body>
-      <div class="container">
-        <div class="header header-confirmed">
-          <h1>🎉 Platz frei geworden!</h1>
-          <p>Ihre Reservierung von der Warteliste wurde bestätigt</p>
-        </div>
-        <div class="content">
-          <div class="section">
-            <span class="badge badge-green">Bestätigt</span>
-            <h2>Bestätigungscode: ${reservation.confirmationCode}</h2>
-          </div>
-
-          ${options.qrCode ? `
-          <div class="section" style="text-align:center;">
-            <img src="${options.qrCode}" alt="QR-Code Reservierung" style="max-width:180px; width:100%;" />
-          </div>` : ''}
-
-          <div class="highlight-box">
-            <p style="margin: 0;"><strong>Tolle Neuigkeiten!</strong> Ein Platz ist frei geworden und Ihre Reservierung wurde von der Warteliste bestätigt.</p>
-          </div>
-
-          <div class="section">
-            <h3>Ihre Reservierungsdetails</h3>
-            ${renderReservationDetails(reservation)}
-          </div>
-
-          <div class="section">
-            <p>Wir freuen uns sehr, Sie bei uns begrüßen zu dürfen! Bitte bringen Sie diesen Bestätigungscode oder den QR-Code zu Ihrem Besuch mit.</p>
-          </div>
-
-          <div class="section" style="text-align: center; background: #ecf8e3; padding: 20px; border-radius: 8px;">
-            <p style="margin: 0; font-size: 14px;">
-              <strong>Können Sie den Termin nicht wahrnehmen?</strong><br>
-              Bitte stornieren Sie rechtzeitig, damit andere Gäste nachrücken können.
-            </p>
-            <a href="mailto:info@healthybrunchclub.at?subject=Stornierung ${reservation.confirmationCode}" style="color: #c62828; font-weight: 600;">Reservierung stornieren</a>
-          </div>
-        </div>
-        ${renderFooter()}
-      </div>
-    </body>
-  </html>`;
-}
-
-/**
- * Erzeugt das HTML für die Wartelisten-Bestätigung.
- * @param {object} reservation
- * @returns {string}
+ * Waitlist email
  */
 function renderWaitlistEmail(reservation) {
-  const date = DateTime.fromISO(reservation.date, { zone: reservation.timezone || 'Europe/Vienna' })
-    .toFormat('dd.MM.yyyy');
-
   return `<!DOCTYPE html>
   <html lang="de">
     <head>
@@ -434,17 +577,19 @@ function renderWaitlistEmail(reservation) {
     <body>
       <div class="container">
         <div class="header header-waitlist">
+          <div class="logo-text">Healthy Brunch Club</div>
           <h1>Warteliste</h1>
-          <p>Sie wurden auf die Warteliste gesetzt</p>
+          <div class="gold-line"></div>
+          <p style="margin: 0; opacity: 0.9;">Wir benachrichtigen Sie, sobald ein Platz frei wird</p>
         </div>
         <div class="content">
-          <div class="section">
-            <span class="badge badge-orange">Warteliste</span>
-            <h2>Bestätigungscode: ${reservation.confirmationCode}</h2>
+          <div class="section" style="text-align: center;">
+            <span class="badge badge-waitlist">Warteliste</span>
+            <div class="code-display" style="background: #8b7355;">${reservation.confirmationCode}</div>
           </div>
 
-          <div class="highlight-box" style="border-left-color: #ffb74d;">
-            <p style="margin: 0;">Leider sind zum gewünschten Zeitpunkt alle Plätze belegt. Wir haben Sie auf unsere Warteliste gesetzt und benachrichtigen Sie sofort, wenn ein Platz frei wird.</p>
+          <div class="highlight-box" style="border-left-color: #8b7355;">
+            <p style="margin: 0;">Leider sind zum gewünschten Zeitpunkt alle Plätze belegt. Wir haben Sie auf unsere Warteliste gesetzt und benachrichtigen Sie sofort per E-Mail, wenn ein Platz frei wird.</p>
           </div>
 
           <div class="section">
@@ -454,12 +599,14 @@ function renderWaitlistEmail(reservation) {
 
           <div class="section">
             <h3>Wie geht es weiter?</h3>
-            <ul style="line-height: 1.8;">
-              <li>Wir benachrichtigen Sie per E-Mail, sobald ein Platz frei wird</li>
-              <li>Ihre Position auf der Warteliste hängt vom Zeitpunkt Ihrer Anfrage ab</li>
-              <li>Sie können jederzeit eine alternative Zeit buchen</li>
+            <ul style="line-height: 2; padding-left: 20px; color: #484848;">
+              <li>Sie erhalten sofort eine E-Mail, wenn ein Platz frei wird</li>
+              <li>Ihre Position hängt vom Zeitpunkt Ihrer Anfrage ab</li>
+              <li>Alternativ können Sie einen anderen Termin buchen</li>
             </ul>
           </div>
+
+          ${renderFeaturedDishes()}
 
           <div class="section" style="text-align: center;">
             <p>Möchten Sie einen anderen Termin wählen?</p>
@@ -473,13 +620,65 @@ function renderWaitlistEmail(reservation) {
 }
 
 /**
- * Erzeugt das HTML für die Feedback-Anfrage nach dem Besuch.
- * @param {object} reservation
- * @param {{ feedbackUrl?: string }} [options]
- * @returns {string}
+ * Waitlist promoted email (spot became available)
+ */
+function renderWaitlistPromotedEmail(reservation, options = {}) {
+  return `<!DOCTYPE html>
+  <html lang="de">
+    <head>
+      <meta charset="utf-8" />
+      <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+      <title>Platz frei geworden!</title>
+      <style>${getBaseStyles()}</style>
+    </head>
+    <body>
+      <div class="container">
+        <div class="header header-confirmed">
+          <div class="logo-text">Healthy Brunch Club</div>
+          <h1>Platz frei geworden!</h1>
+          <div class="gold-line"></div>
+          <p style="margin: 0; opacity: 0.9;">Ihre Reservierung wurde bestätigt</p>
+        </div>
+        <div class="content">
+          <div class="section" style="text-align: center;">
+            <span class="badge badge-confirmed">Bestätigt</span>
+            <div class="code-display">${reservation.confirmationCode}</div>
+          </div>
+
+          ${options.qrCode ? `
+          <div class="section" style="text-align: center;">
+            <img src="${options.qrCode}" alt="QR-Code" style="max-width: 160px; width: 100%; padding: 16px; background: #fff; border: 1px solid #e8e8e8;" />
+          </div>
+          ` : ''}
+
+          <div class="highlight-box">
+            <p style="margin: 0;"><strong>Tolle Neuigkeiten!</strong> Ein Platz ist frei geworden und Ihre Reservierung wurde von der Warteliste bestätigt.</p>
+          </div>
+
+          <div class="section">
+            <h3>Ihre Reservierung</h3>
+            ${renderReservationDetails(reservation)}
+          </div>
+
+          ${renderFeaturedDishes()}
+
+          <div class="section" style="text-align: center; background: #fafaf8; padding: 24px; margin: 0 -32px;">
+            <p style="margin-bottom: 8px;"><strong>Können Sie den Termin nicht wahrnehmen?</strong></p>
+            <p style="font-size: 14px; color: #484848;">Bitte stornieren Sie rechtzeitig, damit andere Gäste nachrücken können.</p>
+            <a href="mailto:info@healthybrunchclub.at?subject=Stornierung ${reservation.confirmationCode}" class="button button-outline">Stornieren</a>
+          </div>
+        </div>
+        ${renderFooter()}
+      </div>
+    </body>
+  </html>`;
+}
+
+/**
+ * Feedback request email (after visit)
  */
 function renderFeedbackRequestEmail(reservation, options = {}) {
-  const feedbackUrl = options.feedbackUrl || 'https://g.page/r/healthybrunchclub/review';
+  const feedbackUrl = options.feedbackUrl || 'https://g.page/r/CQiDEMSRXhHbEBM/review';
 
   return `<!DOCTYPE html>
   <html lang="de">
@@ -492,38 +691,40 @@ function renderFeedbackRequestEmail(reservation, options = {}) {
     <body>
       <div class="container">
         <div class="header header-feedback">
+          <div class="logo-text">Healthy Brunch Club</div>
           <h1>Danke für Ihren Besuch!</h1>
-          <p>Wir hoffen, es hat Ihnen geschmeckt</p>
+          <div class="gold-line"></div>
         </div>
         <div class="content">
           <div class="section" style="text-align: center;">
-            <p style="font-size: 48px; margin: 0;">🥗🥑🍳</p>
+            <p style="font-size: 48px; margin: 0 0 16px 0;">🥑</p>
           </div>
 
           <div class="section">
             <p>Liebe/r ${reservation.name.split(' ')[0]},</p>
-            <p>vielen Dank, dass Sie uns im Healthy Brunch Club Wien besucht haben! Wir hoffen, Sie hatten eine wunderbare Zeit und unser gesundes Brunch hat Ihnen geschmeckt.</p>
+            <p>vielen Dank, dass Sie uns im Healthy Brunch Club Wien besucht haben! Wir hoffen, Sie hatten eine wunderbare Zeit und es hat Ihnen geschmeckt.</p>
           </div>
 
-          <div class="highlight-box" style="border-left-color: #ba68c8;">
+          <div class="highlight-box">
             <p style="margin: 0;"><strong>Ihre Meinung ist uns wichtig!</strong><br>
-            Würden Sie sich einen Moment Zeit nehmen, um uns eine Bewertung zu hinterlassen? Das hilft uns, unseren Service zu verbessern und anderen Gästen bei ihrer Entscheidung.</p>
+            Eine kurze Bewertung hilft uns, noch besser zu werden – und anderen Gästen bei ihrer Entscheidung.</p>
           </div>
 
           <div class="section" style="text-align: center;">
-            <a href="${feedbackUrl}" class="button" style="background: linear-gradient(135deg, #ba68c8, #7b1fa2);">⭐ Bewertung abgeben</a>
+            <a href="${feedbackUrl}" class="button button-gold">Bewertung abgeben</a>
           </div>
 
-          <div class="section">
-            <h3>Kommen Sie wieder!</h3>
-            <p>Als Dankeschön für Ihre Treue erhalten Sie bei Ihrer nächsten Reservierung eine kleine Überraschung. Erwähnen Sie einfach diesen Code bei Ihrem nächsten Besuch:</p>
-            <div style="text-align: center; background: #f3e5f5; padding: 16px; border-radius: 8px; margin: 16px 0;">
-              <span style="font-size: 24px; font-weight: bold; color: #7b1fa2; letter-spacing: 2px;">DANKE10</span>
+          <div class="section" style="text-align: center; background: #1a1a1a; padding: 32px; margin: 24px -32px;">
+            <h3 style="color: #fff;">Kommen Sie wieder!</h3>
+            <p style="color: #e8e8e8;">Als Dankeschön erhalten Sie bei Ihrem nächsten Besuch eine kleine Überraschung.</p>
+            <div style="background: #2d2d2d; padding: 16px; margin: 16px auto; max-width: 200px;">
+              <span style="font-family: 'Playfair Display', serif; font-size: 24px; color: #c9a961; letter-spacing: 4px;">DANKE10</span>
             </div>
+            <p style="font-size: 12px; color: #888;">Erwähnen Sie diesen Code bei Ihrer nächsten Reservierung</p>
           </div>
 
           <div class="section" style="text-align: center;">
-            <a href="https://healthybrunchclub.at/#reservation" class="button button-secondary">Nächste Reservierung</a>
+            <a href="https://healthybrunchclub.at/#reservation" class="button">Nächste Reservierung</a>
           </div>
         </div>
         ${renderFooter()}
@@ -533,49 +734,155 @@ function renderFeedbackRequestEmail(reservation, options = {}) {
 }
 
 /**
- * Erzeugt eine Admin-Benachrichtigung für Stornierungen.
- * @param {object} reservation
- * @param {{ reason?: string, cancelledBy?: string }} [options]
- * @returns {string}
+ * Admin cancellation notification
  */
 function renderAdminCancellationEmail(reservation, options = {}) {
   return `<!DOCTYPE html>
   <html lang="de">
-    <head><meta charset="utf-8" /></head>
+    <head>
+      <meta charset="utf-8" />
+      <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+      <title>Reservierung storniert</title>
+      <style>${getBaseStyles()}</style>
+    </head>
     <body>
-      <h2 style="color: #c62828;">⚠️ Reservierung storniert</h2>
-      <ul>
-        <li><strong>Bestätigungscode:</strong> ${reservation.confirmationCode}</li>
-        <li><strong>Name:</strong> ${reservation.name}</li>
-        <li><strong>Datum:</strong> ${DateTime.fromISO(reservation.date).toFormat('dd.MM.yyyy')}</li>
-        <li><strong>Zeit:</strong> ${reservation.time} Uhr</li>
-        <li><strong>Gäste:</strong> ${reservation.guests}</li>
-        <li><strong>Telefon:</strong> ${reservation.phone}</li>
-        <li><strong>E-Mail:</strong> ${reservation.email}</li>
-        ${options.reason ? `<li><strong>Stornierungsgrund:</strong> ${options.reason}</li>` : ''}
-        ${options.cancelledBy ? `<li><strong>Storniert von:</strong> ${options.cancelledBy}</li>` : ''}
-        <li><strong>Storniert am:</strong> ${DateTime.now().setZone('Europe/Vienna').toFormat('dd.MM.yyyy HH:mm')} Uhr</li>
-      </ul>
-      <p style="color: #666;">Der Platz ist nun wieder verfügbar. Prüfen Sie die Warteliste für mögliche Nachrücker.</p>
+      <div class="container">
+        <div class="header header-cancelled">
+          <div class="logo-text">Admin Benachrichtigung</div>
+          <h1>Stornierung</h1>
+          <div class="gold-line"></div>
+        </div>
+        <div class="content">
+          <div class="section" style="text-align: center;">
+            <span class="badge badge-cancelled">Storniert</span>
+            <div class="code-display" style="background: #8b4049;">${reservation.confirmationCode}</div>
+          </div>
+
+          <div class="section">
+            <h3>Stornierte Reservierung</h3>
+            <div class="details">
+              <div class="details-row">
+                <span class="details-label">Datum</span>
+                <span class="details-value">${DateTime.fromISO(reservation.date).toFormat('dd.MM.yyyy')}</span>
+              </div>
+              <div class="details-row">
+                <span class="details-label">Uhrzeit</span>
+                <span class="details-value">${reservation.time} Uhr</span>
+              </div>
+              <div class="details-row">
+                <span class="details-label">Personen</span>
+                <span class="details-value">${reservation.guests}</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="section">
+            <h3>Gast-Informationen</h3>
+            <div class="details">
+              <div class="details-row">
+                <span class="details-label">Name</span>
+                <span class="details-value">${reservation.name}</span>
+              </div>
+              <div class="details-row">
+                <span class="details-label">E-Mail</span>
+                <span class="details-value">${reservation.email}</span>
+              </div>
+              <div class="details-row">
+                <span class="details-label">Telefon</span>
+                <span class="details-value">${reservation.phone}</span>
+              </div>
+              ${options.reason ? `
+              <div class="details-row">
+                <span class="details-label">Grund</span>
+                <span class="details-value">${options.reason}</span>
+              </div>
+              ` : ''}
+              ${options.cancelledBy ? `
+              <div class="details-row">
+                <span class="details-label">Storniert von</span>
+                <span class="details-value">${options.cancelledBy}</span>
+              </div>
+              ` : ''}
+            </div>
+          </div>
+
+          <div class="highlight-box" style="border-left-color: #c9a961;">
+            <p style="margin: 0;"><strong>Hinweis:</strong> Der Platz ist nun wieder verfügbar. Prüfen Sie die Warteliste für mögliche Nachrücker.</p>
+          </div>
+
+          <div class="section" style="text-align: center;">
+            <a href="https://healthybrunchclub.at/admin/reservations.html" class="button button-gold">Reservierungen verwalten</a>
+          </div>
+        </div>
+        <div class="footer">
+          <p style="font-size: 12px; color: #888;">Storniert am ${DateTime.now().setZone('Europe/Vienna').toFormat('dd.MM.yyyy HH:mm')} Uhr</p>
+        </div>
+      </div>
     </body>
   </html>`;
 }
 
+/**
+ * ICS calendar file
+ */
+function renderIcs(reservation) {
+  const start = DateTime.fromISO(`${reservation.date}T${reservation.time}`, {
+    zone: reservation.timezone || 'Europe/Vienna'
+  });
+  const end = start.plus({ hours: 2 });
+  const format = (dt) => dt.toUTC().toFormat("yyyyMMdd'T'HHmmss'Z'");
+
+  return [
+    'BEGIN:VCALENDAR',
+    'VERSION:2.0',
+    'PRODID:-//Healthy Brunch Club Wien//Reservierung//DE',
+    'BEGIN:VEVENT',
+    `UID:${reservation.confirmationCode}@healthybrunchclub.at`,
+    `DTSTAMP:${format(DateTime.utc())}`,
+    `DTSTART:${format(start)}`,
+    `DTEND:${format(end)}`,
+    'SUMMARY:Brunch im Healthy Brunch Club Wien',
+    `DESCRIPTION:Reservierung für ${reservation.guests} Personen\\nBestätigungscode: ${reservation.confirmationCode}`,
+    'LOCATION:Healthy Brunch Club Wien\\, Gumpendorfer Straße 65\\, 1060 Wien',
+    'END:VEVENT',
+    'END:VCALENDAR'
+  ].join('\r\n');
+}
+
+/**
+ * Creates QR code for confirmation code
+ */
+async function createQrCode(confirmationCode) {
+  return QRCode.toDataURL(confirmationCode, {
+    margin: 1,
+    scale: 6,
+    errorCorrectionLevel: 'H',
+    color: {
+      dark: '#1a1a1a',
+      light: '#ffffff'
+    }
+  });
+}
+
 module.exports = {
+  // Guest templates
   renderGuestEmail,
+  renderCancellationEmail,
+  renderReminderEmail,
+  renderWaitlistEmail,
+  renderWaitlistPromotedEmail,
+  renderFeedbackRequestEmail,
+  // Admin templates
   renderAdminEmail,
+  renderAdminCancellationEmail,
+  // Utilities
   renderIcs,
   createQrCode,
   translateStatus,
-  // New templates
-  renderCancellationEmail,
-  renderReminderEmail,
-  renderWaitlistPromotedEmail,
-  renderWaitlistEmail,
-  renderFeedbackRequestEmail,
-  renderAdminCancellationEmail,
-  // Helper functions
+  // Helpers (exported for potential reuse)
   getBaseStyles,
   renderFooter,
-  renderReservationDetails
+  renderReservationDetails,
+  renderFeaturedDishes,
+  FEATURED_DISHES
 };

@@ -16,7 +16,43 @@ const {
 const { writeJSON } = require('./blob-storage');
 
 const FROM_EMAIL = () => process.env.SENDER_EMAIL || 'noreply@healthybrunchclub.at';
-const ADMIN_EMAIL = () => process.env.RESTAURANT_EMAIL || 'info@healthybrunchclub.at';
+
+/**
+ * Returns array of admin email addresses for notifications.
+ * Reads from ADMIN_NOTIFICATION_EMAILS env var (comma-separated) or falls back to defaults.
+ */
+function getAdminEmails() {
+  const envEmails = process.env.ADMIN_NOTIFICATION_EMAILS;
+  if (envEmails) {
+    return envEmails.split(',').map(e => e.trim()).filter(Boolean);
+  }
+  // Default admin emails for reservation notifications
+  return [
+    'hello@healthybrunchclub.at',
+    'erwin.esener@gmail.com'
+  ];
+}
+
+/**
+ * Sends email to all admin addresses in parallel.
+ */
+async function sendToAllAdmins(emailOptions) {
+  const adminEmails = getAdminEmails();
+  const from = FROM_EMAIL();
+
+  const promises = adminEmails.map(adminEmail =>
+    sendEmail({
+      ...emailOptions,
+      to: adminEmail,
+      from
+    }).catch(err => {
+      console.error(`Admin-E-Mail an ${adminEmail} fehlgeschlagen:`, err.message);
+      return { success: false, error: err.message, to: adminEmail };
+    })
+  );
+
+  return Promise.all(promises);
+}
 
 function encodeAttachment(content, type, filename) {
   return {
@@ -43,7 +79,7 @@ async function logEmail(confirmationCode, type, recipients) {
 }
 
 /**
- * Sends confirmation emails for new reservations (guest + admin).
+ * Sends confirmation emails for new reservations (guest + all admins).
  */
 async function sendReservationEmails(reservation) {
   if (!reservation?.email) {
@@ -51,7 +87,7 @@ async function sendReservationEmails(reservation) {
   }
 
   const from = FROM_EMAIL();
-  const adminEmail = ADMIN_EMAIL();
+  const adminEmails = getAdminEmails();
   const qrCode = await createQrCode(reservation.confirmationCode);
   const icsContent = renderIcs(reservation);
   const attachments = [encodeAttachment(icsContent, 'text/calendar', `reservation-${reservation.confirmationCode}.ics`)];
@@ -66,28 +102,27 @@ async function sendReservationEmails(reservation) {
     ? 'Healthy Brunch Club Wien – Warteliste'
     : 'Healthy Brunch Club Wien – Reservierungsbestätigung';
 
-  await Promise.all([
-    sendEmail({
-      to: reservation.email,
-      from,
-      subject,
-      html: guestHtml,
-      attachments: isWaitlisted ? [] : attachments
-    }),
-    sendEmail({
-      to: adminEmail,
-      from,
-      subject: `Neue Reservierung ${reservation.date} ${reservation.time}`,
-      html: renderAdminEmail(reservation),
-      attachments
-    })
-  ]);
+  // Send guest email
+  await sendEmail({
+    to: reservation.email,
+    from,
+    subject,
+    html: guestHtml,
+    attachments: isWaitlisted ? [] : attachments
+  });
 
-  await logEmail(reservation.confirmationCode, 'confirmation', [reservation.email, adminEmail]);
+  // Send admin notifications to all configured admins
+  await sendToAllAdmins({
+    subject: `Neue Reservierung: ${reservation.name} - ${reservation.date} ${reservation.time}`,
+    html: renderAdminEmail(reservation),
+    attachments
+  });
+
+  await logEmail(reservation.confirmationCode, 'confirmation', [reservation.email, ...adminEmails]);
 }
 
 /**
- * Sends cancellation confirmation emails (guest + admin).
+ * Sends cancellation confirmation emails (guest + all admins).
  */
 async function sendCancellationEmails(reservation, options = {}) {
   if (!reservation?.email) {
@@ -95,24 +130,23 @@ async function sendCancellationEmails(reservation, options = {}) {
   }
 
   const from = FROM_EMAIL();
-  const adminEmail = ADMIN_EMAIL();
+  const adminEmails = getAdminEmails();
 
-  await Promise.all([
-    sendEmail({
-      to: reservation.email,
-      from,
-      subject: 'Healthy Brunch Club Wien – Stornierungsbestätigung',
-      html: renderCancellationEmail(reservation, options)
-    }),
-    sendEmail({
-      to: adminEmail,
-      from,
-      subject: `Stornierung: ${reservation.name} - ${reservation.date} ${reservation.time}`,
-      html: renderAdminCancellationEmail(reservation, options)
-    })
-  ]);
+  // Send guest cancellation confirmation
+  await sendEmail({
+    to: reservation.email,
+    from,
+    subject: 'Healthy Brunch Club Wien – Stornierungsbestätigung',
+    html: renderCancellationEmail(reservation, options)
+  });
 
-  await logEmail(reservation.confirmationCode, 'cancellation', [reservation.email, adminEmail]);
+  // Send admin notifications to all configured admins
+  await sendToAllAdmins({
+    subject: `Stornierung: ${reservation.name} - ${reservation.date} ${reservation.time}`,
+    html: renderAdminCancellationEmail(reservation, options)
+  });
+
+  await logEmail(reservation.confirmationCode, 'cancellation', [reservation.email, ...adminEmails]);
 }
 
 /**
