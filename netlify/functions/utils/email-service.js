@@ -11,7 +11,15 @@ const {
   renderWaitlistPromotedEmail,
   renderWaitlistEmail,
   renderFeedbackRequestEmail,
-  renderAdminCancellationEmail
+  renderAdminCancellationEmail,
+  // Plain text versions
+  renderGuestEmailText,
+  renderAdminEmailText,
+  renderWaitlistEmailText,
+  renderCancellationEmailText,
+  renderReminderEmailText,
+  renderWaitlistPromotedEmailText,
+  renderFeedbackRequestEmailText
 } = require('./email-templates');
 const { writeJSON } = require('./blob-storage');
 
@@ -97,6 +105,9 @@ async function sendReservationEmails(reservation) {
   const guestHtml = isWaitlisted
     ? renderWaitlistEmail(reservation)
     : renderGuestEmail(reservation, { qrCode });
+  const guestText = isWaitlisted
+    ? renderWaitlistEmailText(reservation)
+    : renderGuestEmailText(reservation);
 
   const subject = isWaitlisted
     ? 'Healthy Brunch Club Wien – Warteliste'
@@ -107,13 +118,18 @@ async function sendReservationEmails(reservation) {
     to: reservation.email,
     from,
     subject,
+    text: guestText,
     html: guestHtml,
     attachments: isWaitlisted ? [] : attachments
   });
 
+  // Extract just the date part for subject line
+  const dateOnly = reservation.date.split('T')[0];
+
   // Send admin notifications to all configured admins
   await sendToAllAdmins({
-    subject: `Neue Reservierung: ${reservation.name} - ${reservation.date} ${reservation.time}`,
+    subject: `Neue Reservierung: ${reservation.name} - ${dateOnly} ${reservation.time}`,
+    text: renderAdminEmailText(reservation),
     html: renderAdminEmail(reservation),
     attachments
   });
@@ -137,12 +153,16 @@ async function sendCancellationEmails(reservation, options = {}) {
     to: reservation.email,
     from,
     subject: 'Healthy Brunch Club Wien – Stornierungsbestätigung',
+    text: renderCancellationEmailText(reservation, options),
     html: renderCancellationEmail(reservation, options)
   });
 
+  // Extract just the date part for subject line
+  const dateOnly = reservation.date.split('T')[0];
+
   // Send admin notifications to all configured admins
   await sendToAllAdmins({
-    subject: `Stornierung: ${reservation.name} - ${reservation.date} ${reservation.time}`,
+    subject: `Stornierung: ${reservation.name} - ${dateOnly} ${reservation.time}`,
     html: renderAdminCancellationEmail(reservation, options)
   });
 
@@ -166,6 +186,7 @@ async function sendReminderEmail(reservation) {
     to: reservation.email,
     from,
     subject: 'Erinnerung: Ihre Reservierung morgen im Healthy Brunch Club',
+    text: renderReminderEmailText(reservation),
     html: renderReminderEmail(reservation, { qrCode }),
     attachments
   });
@@ -190,6 +211,7 @@ async function sendWaitlistPromotedEmail(reservation) {
     to: reservation.email,
     from,
     subject: '🎉 Gute Nachrichten! Ihre Reservierung wurde bestätigt',
+    text: renderWaitlistPromotedEmailText(reservation),
     html: renderWaitlistPromotedEmail(reservation, { qrCode }),
     attachments
   });
@@ -211,6 +233,7 @@ async function sendFeedbackRequestEmail(reservation, options = {}) {
     to: reservation.email,
     from,
     subject: 'Wie war Ihr Besuch im Healthy Brunch Club? 🥗',
+    text: renderFeedbackRequestEmailText(reservation, options),
     html: renderFeedbackRequestEmail(reservation, options)
   });
 

@@ -256,7 +256,9 @@ function renderFeaturedDishes() {
  * Renders reservation details in premium style
  */
 function renderReservationDetails(reservation) {
-  const date = DateTime.fromISO(reservation.date, { zone: reservation.timezone || 'Europe/Vienna' })
+  // Extract just the date part if it's a full ISO timestamp
+  const dateOnly = reservation.date.split('T')[0];
+  const date = DateTime.fromISO(dateOnly, { zone: reservation.timezone || 'Europe/Vienna' })
     .toFormat('EEEE, dd. MMMM yyyy', { locale: 'de' });
 
   return `
@@ -360,7 +362,9 @@ function renderGuestEmail(reservation, options = {}) {
  * Admin email for new reservations (styled)
  */
 function renderAdminEmail(reservation) {
-  const date = DateTime.fromISO(reservation.date, { zone: reservation.timezone || 'Europe/Vienna' })
+  // Extract just the date part if it's a full ISO timestamp
+  const dateOnly = reservation.date.split('T')[0];
+  const date = DateTime.fromISO(dateOnly, { zone: reservation.timezone || 'Europe/Vienna' })
     .toFormat('EEEE, dd. MMMM yyyy', { locale: 'de' });
 
   return `<!DOCTYPE html>
@@ -494,7 +498,9 @@ function renderCancellationEmail(reservation, options = {}) {
  * Reminder email (day before)
  */
 function renderReminderEmail(reservation, options = {}) {
-  const date = DateTime.fromISO(reservation.date, { zone: reservation.timezone || 'Europe/Vienna' })
+  // Extract just the date part if it's a full ISO timestamp
+  const dateOnly = reservation.date.split('T')[0];
+  const date = DateTime.fromISO(dateOnly, { zone: reservation.timezone || 'Europe/Vienna' })
     .toFormat('EEEE, dd. MMMM yyyy', { locale: 'de' });
 
   return `<!DOCTYPE html>
@@ -763,7 +769,7 @@ function renderAdminCancellationEmail(reservation, options = {}) {
             <div class="details">
               <div class="details-row">
                 <span class="details-label">Datum</span>
-                <span class="details-value">${DateTime.fromISO(reservation.date).toFormat('dd.MM.yyyy')}</span>
+                <span class="details-value">${DateTime.fromISO(reservation.date.split('T')[0]).toFormat('dd.MM.yyyy')}</span>
               </div>
               <div class="details-row">
                 <span class="details-label">Uhrzeit</span>
@@ -826,7 +832,9 @@ function renderAdminCancellationEmail(reservation, options = {}) {
  * ICS calendar file
  */
 function renderIcs(reservation) {
-  const start = DateTime.fromISO(`${reservation.date}T${reservation.time}`, {
+  // Extract just the date part if it's a full ISO timestamp (e.g., "2026-01-29T00:00:00.000Z" -> "2026-01-29")
+  const dateOnly = reservation.date.split('T')[0];
+  const start = DateTime.fromISO(`${dateOnly}T${reservation.time}`, {
     zone: reservation.timezone || 'Europe/Vienna'
   });
   const end = start.plus({ hours: 2 });
@@ -864,6 +872,235 @@ async function createQrCode(confirmationCode) {
   });
 }
 
+/**
+ * Generates plain text version of reservation details
+ */
+function renderPlainTextReservation(reservation) {
+  // Extract just the date part if it's a full ISO timestamp
+  const dateOnly = reservation.date.split('T')[0];
+  const date = DateTime.fromISO(dateOnly, { zone: reservation.timezone || 'Europe/Vienna' })
+    .toFormat('EEEE, dd. MMMM yyyy', { locale: 'de' });
+
+  let text = `
+Reservierungsdetails
+--------------------
+Datum: ${date}
+Uhrzeit: ${reservation.time} Uhr
+Personen: ${reservation.guests}
+Name: ${reservation.name}`;
+
+  if (reservation.specialRequests) {
+    text += `\nWünsche: ${reservation.specialRequests}`;
+  }
+
+  return text;
+}
+
+/**
+ * Plain text guest confirmation email
+ */
+function renderGuestEmailText(reservation) {
+  return `Healthy Brunch Club Wien
+========================
+
+Ihre Reservierung ist bestätigt!
+
+Bestätigungscode: ${reservation.confirmationCode}
+
+${renderPlainTextReservation(reservation)}
+
+Adresse: Gumpendorfer Straße 65, 1060 Wien
+Google Maps: https://maps.google.com/?q=Gumpendorfer+Straße+65+1060+Wien
+
+Wichtig: Bitte kommen Sie pünktlich. Bei Verspätungen über 15 Minuten kann Ihre Reservierung an wartende Gäste vergeben werden.
+
+Wir freuen uns auf Ihren Besuch!
+
+--
+Healthy Brunch Club Wien
+info@healthybrunchclub.at
+Eat well. Feel better.`;
+}
+
+/**
+ * Plain text admin notification email
+ */
+function renderAdminEmailText(reservation) {
+  // Extract just the date part if it's a full ISO timestamp
+  const dateOnly = reservation.date.split('T')[0];
+  const date = DateTime.fromISO(dateOnly, { zone: reservation.timezone || 'Europe/Vienna' })
+    .toFormat('EEEE, dd. MMMM yyyy', { locale: 'de' });
+
+  return `Neue Reservierung
+=================
+
+Code: ${reservation.confirmationCode}
+Status: ${translateStatus(reservation.status)}
+
+Reservierungsdetails:
+- Datum: ${date}
+- Uhrzeit: ${reservation.time} Uhr
+- Personen: ${reservation.guests}
+
+Gast-Informationen:
+- Name: ${reservation.name}
+- E-Mail: ${reservation.email}
+- Telefon: ${reservation.phone}${reservation.specialRequests ? `\n- Wünsche: ${reservation.specialRequests}` : ''}
+
+Verwalten: https://healthybrunchclub.at/admin/reservations.html`;
+}
+
+/**
+ * Plain text waitlist email
+ */
+function renderWaitlistEmailText(reservation) {
+  return `Healthy Brunch Club Wien
+========================
+
+Sie sind auf der Warteliste
+
+Bestätigungscode: ${reservation.confirmationCode}
+
+${renderPlainTextReservation(reservation)}
+
+Was passiert jetzt?
+- Sie erhalten sofort eine E-Mail, wenn ein Platz frei wird
+- Ihre Position hängt vom Zeitpunkt Ihrer Anfrage ab
+- Alternativ können Sie einen anderen Termin buchen
+
+Neue Reservierung: https://healthybrunchclub.at/#reservation
+
+--
+Healthy Brunch Club Wien
+info@healthybrunchclub.at`;
+}
+
+/**
+ * Plain text cancellation email
+ */
+function renderCancellationEmailText(reservation, options = {}) {
+  let text = `Healthy Brunch Club Wien
+========================
+
+Ihre Reservierung wurde storniert
+
+Code: ${reservation.confirmationCode}
+
+${renderPlainTextReservation(reservation)}`;
+
+  if (options.reason) {
+    text += `\n\nStornierungsgrund: ${options.reason}`;
+  }
+
+  text += `
+
+Wir würden uns freuen, Sie bald bei uns begrüßen zu dürfen!
+
+Neue Reservierung: https://healthybrunchclub.at/#reservation
+
+--
+Healthy Brunch Club Wien
+info@healthybrunchclub.at`;
+
+  return text;
+}
+
+/**
+ * Plain text reminder email
+ */
+function renderReminderEmailText(reservation) {
+  // Extract just the date part if it's a full ISO timestamp
+  const dateOnly = reservation.date.split('T')[0];
+  const date = DateTime.fromISO(dateOnly, { zone: reservation.timezone || 'Europe/Vienna' })
+    .toFormat('EEEE, dd. MMMM yyyy', { locale: 'de' });
+
+  return `Healthy Brunch Club Wien
+========================
+
+Bis morgen!
+
+Ihre Reservierung:
+- Datum: ${date}
+- Uhrzeit: ${reservation.time} Uhr
+- Personen: ${reservation.guests}
+- Code: ${reservation.confirmationCode}
+
+Gut zu wissen:
+- Bitte kommen Sie pünktlich zum reservierten Zeitpunkt
+- Bringen Sie Ihren Bestätigungscode mit
+- Bei Verspätung über 15 Minuten kann Ihre Reservierung verfallen
+
+Adresse: Gumpendorfer Straße 65, 1060 Wien
+Route planen: https://maps.google.com/?q=Gumpendorfer+Straße+65+1060+Wien
+
+Wir freuen uns auf Sie!
+
+--
+Healthy Brunch Club Wien
+info@healthybrunchclub.at`;
+}
+
+/**
+ * Plain text waitlist promoted email
+ */
+function renderWaitlistPromotedEmailText(reservation) {
+  return `Healthy Brunch Club Wien
+========================
+
+Platz frei geworden - Ihre Reservierung ist bestätigt!
+
+Bestätigungscode: ${reservation.confirmationCode}
+
+${renderPlainTextReservation(reservation)}
+
+Tolle Neuigkeiten! Ein Platz ist frei geworden und Ihre Reservierung wurde von der Warteliste bestätigt.
+
+Adresse: Gumpendorfer Straße 65, 1060 Wien
+Route planen: https://maps.google.com/?q=Gumpendorfer+Straße+65+1060+Wien
+
+Können Sie den Termin nicht wahrnehmen?
+Bitte stornieren Sie rechtzeitig, damit andere Gäste nachrücken können.
+Kontakt: info@healthybrunchclub.at
+
+--
+Healthy Brunch Club Wien
+info@healthybrunchclub.at
+Eat well. Feel better.`;
+}
+
+/**
+ * Plain text feedback request email
+ */
+function renderFeedbackRequestEmailText(reservation, options = {}) {
+  const feedbackUrl = options.feedbackUrl || 'https://g.page/r/CQiDEMSRXhHbEBM/review';
+
+  return `Healthy Brunch Club Wien
+========================
+
+Danke für Ihren Besuch!
+
+Liebe/r ${reservation.name.split(' ')[0]},
+
+vielen Dank, dass Sie uns im Healthy Brunch Club Wien besucht haben! Wir hoffen, Sie hatten eine wunderbare Zeit und es hat Ihnen geschmeckt.
+
+Ihre Meinung ist uns wichtig!
+Eine kurze Bewertung hilft uns, noch besser zu werden – und anderen Gästen bei ihrer Entscheidung.
+
+Bewertung abgeben: ${feedbackUrl}
+
+Kommen Sie wieder!
+Als Dankeschön erhalten Sie bei Ihrem nächsten Besuch eine kleine Überraschung.
+Code: DANKE10
+(Erwähnen Sie diesen Code bei Ihrer nächsten Reservierung)
+
+Neue Reservierung: https://healthybrunchclub.at/#reservation
+
+--
+Healthy Brunch Club Wien
+info@healthybrunchclub.at
+Eat well. Feel better.`;
+}
+
 module.exports = {
   // Guest templates
   renderGuestEmail,
@@ -875,6 +1112,14 @@ module.exports = {
   // Admin templates
   renderAdminEmail,
   renderAdminCancellationEmail,
+  // Plain text templates
+  renderGuestEmailText,
+  renderAdminEmailText,
+  renderWaitlistEmailText,
+  renderCancellationEmailText,
+  renderReminderEmailText,
+  renderWaitlistPromotedEmailText,
+  renderFeedbackRequestEmailText,
   // Utilities
   renderIcs,
   createQrCode,
