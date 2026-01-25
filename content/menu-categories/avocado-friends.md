@@ -29,17 +29,17 @@ items:
       - sättigend
       - proteinreich
     description: >-
-      knuspriges sauerteigbrot vom öfferl, handwerklich gebacken, großzügig
-      bestrichen mit cremiger, zerdrückter avocado, verfeinert mit frischen
-      sprossen und kresse für eine lebendige, grüne frische.
+      knuspriges sauerteigbrot vom joseph, großzügig bestrichen mit cremiger,
+      zerdrückter avocado, verfeinert mit frischen sprossen und kresse für eine
+      lebendige, grüne frische.
 
       **your style:**
 
 
-      ei (nach wunsch zubereitet)/biospeck/biolachs/shiitake und champignons pilze
+      ei - nach wunsch zubereitet / biospeck / biolachs / shiitake und champignons pilze 
 
 
-      **G﻿lutenfreie Alternative:**
+      **G﻿lutenfreie Alternative:** 
 
 
       1﻿ große Scheibe Süsskartoffel
@@ -62,11 +62,11 @@ items:
 
       * ei nach wunsch: 1.90
       * käse: 1.50
-      * halbe avocado: 2.90
-      * biospeck: 2.50
-      * biolachs: 2.30
-      * pilzmix: 1.90
-      * zwei scheiben sauerteigbrot vom öferl: 2.40
+      * halbe avocado: 1.50
+      * biospeck (3 streifen) : 2.50
+      * biolachs (2 scheiben): 2.50
+      * pilzmix (champignons & shiitake): 1.90
+      * zwei scheiben sauerteigbrot vom joseph: 2.50
     allergens:
       - c
       - g
