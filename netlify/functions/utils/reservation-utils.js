@@ -206,6 +206,26 @@ async function cancelReservation({ confirmationCode, email }) {
   });
 }
 
+async function deleteReservation({ date, confirmationCode }) {
+  return withLock(`reservation:${date}`, async () => {
+    const reservations = await loadReservations(date);
+    const index = reservations.findIndex((entry) => entry.confirmationCode === confirmationCode);
+    if (index === -1) {
+      throw new Error('Reservierung wurde nicht gefunden.');
+    }
+
+    const deleted = reservations.splice(index, 1)[0];
+    await saveReservations(date, reservations);
+
+    // Remove from index
+    const reservationIndex = await readJSON('reservations', 'reservation-index.json', {});
+    delete reservationIndex[confirmationCode];
+    await writeJSON('reservations', 'reservation-index.json', reservationIndex);
+
+    return deleted;
+  });
+}
+
 async function findReservationDateByCode(confirmationCode) {
   const list = await readJSON('reservations', 'reservation-index.json', {});
   return list[confirmationCode] || null;
@@ -227,6 +247,7 @@ module.exports = {
   loadSettings,
   updateReservationStatus,
   cancelReservation,
+  deleteReservation,
   indexReservation,
   findReservationDateByCode
 };
