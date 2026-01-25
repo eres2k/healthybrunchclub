@@ -62,57 +62,87 @@ async function loadReservations(date) {
 
 async function loadAllReservations() {
   const allReservations = [];
+  const existingKeys = new Set();
 
   // First try to load from blob storage
-  const keys = await listKeys('reservations', 'reservations/');
+  try {
+    const keys = await listKeys('reservations', 'reservations/');
+    console.log(`[loadAllReservations] Found ${keys.length} keys in blob storage`);
 
-  for (const key of keys) {
-    // Skip the index file
-    if (key === 'reservation-index.json') continue;
+    for (const key of keys) {
+      // Skip the index file
+      if (key === 'reservation-index.json' || key.includes('index')) continue;
 
-    // Extract date from key (format: reservations/YYYY-MM-DD.json)
-    const match = key.match(/reservations\/(\d{4}-\d{2}-\d{2})\.json/);
-    if (!match) continue;
-
-    const date = match[1];
-    const reservations = await readJSON('reservations', key, []);
-
-    if (Array.isArray(reservations)) {
-      reservations.forEach(r => {
-        allReservations.push({ ...r, date: r.date || date });
-      });
-    }
-  }
-
-  // Also check local filesystem (for development and as data source)
-  const localReservationsDir = path.resolve(__dirname, '../../../reservations');
-  if (fs.existsSync(localReservationsDir)) {
-    const existingDates = new Set(allReservations.map(r => `${r.date}-${r.confirmationCode}`));
-    const files = fs.readdirSync(localReservationsDir);
-    for (const file of files) {
-      const match = file.match(/^(\d{4}-\d{2}-\d{2})\.json$/);
-      if (!match) continue;
+      // Extract date from key (format: reservations/YYYY-MM-DD.json)
+      const match = key.match(/reservations\/(\d{4}-\d{2}-\d{2})\.json/);
+      if (!match) {
+        console.log(`[loadAllReservations] Skipping non-matching key: ${key}`);
+        continue;
+      }
 
       const date = match[1];
-      const filePath = path.join(localReservationsDir, file);
       try {
-        const content = fs.readFileSync(filePath, 'utf-8');
-        const reservations = JSON.parse(content);
+        const reservations = await readJSON('reservations', key, []);
+        console.log(`[loadAllReservations] Loaded ${Array.isArray(reservations) ? reservations.length : 0} reservations for ${date}`);
+
         if (Array.isArray(reservations)) {
           reservations.forEach(r => {
-            const key = `${r.date || date}-${r.confirmationCode}`;
-            // Avoid duplicates if already loaded from blobs
-            if (!existingDates.has(key)) {
+            const uniqueKey = `${r.date || date}-${r.confirmationCode}`;
+            if (!existingKeys.has(uniqueKey)) {
               allReservations.push({ ...r, date: r.date || date });
-              existingDates.add(key);
+              existingKeys.add(uniqueKey);
             }
           });
         }
-      } catch (err) {
-        console.error(`Error reading local file ${file}:`, err);
+      } catch (readErr) {
+        console.error(`[loadAllReservations] Error reading blob ${key}:`, readErr);
       }
     }
+  } catch (listErr) {
+    console.error('[loadAllReservations] Error listing blob keys:', listErr);
   }
+
+  // Also check local filesystem (for development and as fallback data source)
+  // This works locally and when files are bundled via netlify.toml included_files
+  const localReservationsDir = path.resolve(__dirname, '../../../reservations');
+  console.log(`[loadAllReservations] Checking local dir: ${localReservationsDir}`);
+
+  if (fs.existsSync(localReservationsDir)) {
+    try {
+      const files = fs.readdirSync(localReservationsDir);
+      console.log(`[loadAllReservations] Found ${files.length} local files`);
+
+      for (const file of files) {
+        const match = file.match(/^(\d{4}-\d{2}-\d{2})\.json$/);
+        if (!match) continue;
+
+        const date = match[1];
+        const filePath = path.join(localReservationsDir, file);
+        try {
+          const content = fs.readFileSync(filePath, 'utf-8');
+          const reservations = JSON.parse(content);
+          if (Array.isArray(reservations)) {
+            reservations.forEach(r => {
+              const uniqueKey = `${r.date || date}-${r.confirmationCode}`;
+              // Avoid duplicates if already loaded from blobs
+              if (!existingKeys.has(uniqueKey)) {
+                allReservations.push({ ...r, date: r.date || date });
+                existingKeys.add(uniqueKey);
+              }
+            });
+          }
+        } catch (err) {
+          console.error(`[loadAllReservations] Error reading local file ${file}:`, err);
+        }
+      }
+    } catch (dirErr) {
+      console.error(`[loadAllReservations] Error reading local directory:`, dirErr);
+    }
+  } else {
+    console.log(`[loadAllReservations] Local reservations directory not found`);
+  }
+
+  console.log(`[loadAllReservations] Total reservations loaded: ${allReservations.length}`);
 
   // Sort by date (newest first), then by time
   allReservations.sort((a, b) => {

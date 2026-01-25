@@ -69,9 +69,16 @@ async function deleteKey(storeName, key) {
 }
 
 async function listKeys(storeName, prefix = '') {
-  const store = getBlobStore(storeName);
-  const result = await store.list({ prefix });
-  return result.blobs.map(blob => blob.key);
+  try {
+    const store = getBlobStore(storeName);
+    const result = await store.list({ prefix });
+    const keys = result.blobs ? result.blobs.map(blob => blob.key) : [];
+    console.log(`[listKeys] Store: ${storeName}, prefix: ${prefix}, found ${keys.length} keys`);
+    return keys;
+  } catch (error) {
+    console.error(`[listKeys] Error listing keys in store ${storeName} with prefix ${prefix}:`, error);
+    return [];
+  }
 }
 
 function delay(ms) {
