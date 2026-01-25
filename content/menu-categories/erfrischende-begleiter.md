@@ -1,7 +1,7 @@
 ---
 title: sip happens - make it healthy
 order: 6
-image: /content/images/dscf2517.jpg
+image: /content/images/dsc00348.jpg
 description: prickelnde sodas mit natürlichen aromen – erfrischend & natürlich gesüßt
 items:
   - name: honey-cider soda von myHoney himbeer/zitrone/salbei
@@ -20,6 +20,7 @@ items:
       protein: 8g
       carbs: 30g
       fat: 10g
+    image: /content/images/dscf2517-400w.webp
   - name: golden kurkuma
     tags:
       - immunstärkend
