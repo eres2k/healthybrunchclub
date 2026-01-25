@@ -21,6 +21,16 @@ function normalizeTime(timeString) {
   return `${hour}:${minute}`;
 }
 
+/**
+ * Normalize date to YYYY-MM-DD format
+ * Handles both "2026-01-29" and "2026-01-29T00:00:00.000Z" formats
+ */
+function normalizeDate(date) {
+  if (!date || typeof date !== 'string') return date;
+  // Split at 'T' to get just the date part
+  return date.split('T')[0];
+}
+
 function createTimeSlots(openingHours = DEFAULT_OPENING) {
   const slots = [];
   const start = DateTime.fromFormat(openingHours.start, 'HH:mm', { zone: TIMEZONE });
@@ -45,17 +55,20 @@ async function loadSettings() {
 }
 
 async function loadBlocked(date) {
-  const key = `blocked/${date}.json`;
+  const normalizedDate = normalizeDate(date);
+  const key = `blocked/${normalizedDate}.json`;
   return readJSON('blockedDates', key, []);
 }
 
 async function saveBlocked(date, blocked) {
-  const key = `blocked/${date}.json`;
+  const normalizedDate = normalizeDate(date);
+  const key = `blocked/${normalizedDate}.json`;
   await writeJSON('blockedDates', key, blocked);
 }
 
 async function loadReservations(date) {
-  const key = `reservations/${date}.json`;
+  const normalizedDate = normalizeDate(date);
+  const key = `reservations/${normalizedDate}.json`;
   const reservations = await readJSON('reservations', key, []);
   return Array.isArray(reservations) ? reservations : [];
 }
@@ -114,16 +127,26 @@ async function loadAllReservations() {
       // Skip the index file
       if (key === 'reservation-index.json' || key.includes('index')) continue;
 
-      // Extract date from key - support both formats:
-      // - reservations/YYYY-MM-DD.json (with prefix)
+      // Extract date from key - support multiple formats:
+      // - reservations/YYYY-MM-DD.json (normalized)
+      // - reservations/YYYY-MM-DDTHH:MM:SS.sssZ.json (legacy ISO format)
       // - YYYY-MM-DD.json (without prefix)
-      let match = key.match(/reservations\/(\d{4}-\d{2}-\d{2})\.json/);
+      // - YYYY-MM-DDTHH:MM:SS.sssZ.json (legacy without prefix)
+      let match = key.match(/reservations\/(\d{4}-\d{2}-\d{2}(?:T[^.]+\.\d+Z)?)\.json/);
       if (!match) {
-        match = key.match(/^(\d{4}-\d{2}-\d{2})\.json$/);
+        match = key.match(/^(\d{4}-\d{2}-\d{2}(?:T[^.]+\.\d+Z)?)\.json$/);
       }
 
       if (match) {
-        datesToLoad.add(match[1]);
+        // Store the raw key date part (might be ISO format)
+        const rawDate = match[1];
+        // Normalize to YYYY-MM-DD for deduplication
+        const normalizedDate = rawDate.split('T')[0];
+        datesToLoad.add(normalizedDate);
+        // Also track the raw key for legacy blob lookup
+        if (rawDate !== normalizedDate) {
+          console.log(`[loadAllReservations] Found legacy ISO key: ${key}, normalized to: ${normalizedDate}`);
+        }
       }
     }
   } catch (listErr) {
@@ -133,6 +156,30 @@ async function loadAllReservations() {
   // Step 3: Load reservations for each discovered date
   console.log(`[loadAllReservations] Loading reservations for ${datesToLoad.size} dates from blob storage`);
 
+  // Also try to load from legacy ISO-format keys directly from the blob listing
+  const legacyKeysToTry = new Map(); // normalizedDate -> [rawKeys]
+  try {
+    const allKeys = await listKeys('reservations', '');
+    for (const key of allKeys) {
+      // Match ISO format keys like "reservations/2026-01-29T00:00:00.000Z.json"
+      const isoMatch = key.match(/^(?:reservations\/)?(\d{4}-\d{2}-\d{2}T[^.]+\.\d+Z)\.json$/);
+      if (isoMatch) {
+        const rawDate = isoMatch[1];
+        const normalizedDate = rawDate.split('T')[0];
+        if (!legacyKeysToTry.has(normalizedDate)) {
+          legacyKeysToTry.set(normalizedDate, []);
+        }
+        legacyKeysToTry.get(normalizedDate).push(key);
+        datesToLoad.add(normalizedDate);
+      }
+    }
+    if (legacyKeysToTry.size > 0) {
+      console.log(`[loadAllReservations] Found ${legacyKeysToTry.size} dates with legacy ISO keys`);
+    }
+  } catch (err) {
+    console.error(`[loadAllReservations] Error scanning for legacy keys:`, err.message);
+  }
+
   for (const date of datesToLoad) {
     try {
       // Try reading with prefix first (standard format)
@@ -141,6 +188,18 @@ async function loadAllReservations() {
       // Fallback: try without prefix
       if (reservations === null) {
         reservations = await readJSON('reservations', `${date}.json`, null);
+      }
+
+      // Fallback: try legacy ISO-format keys for this date
+      if (reservations === null && legacyKeysToTry.has(date)) {
+        for (const legacyKey of legacyKeysToTry.get(date)) {
+          console.log(`[loadAllReservations] Trying legacy key: ${legacyKey}`);
+          reservations = await readJSON('reservations', legacyKey, null);
+          if (reservations !== null) {
+            console.log(`[loadAllReservations] ✓ Found reservations in legacy key: ${legacyKey}`);
+            break;
+          }
+        }
       }
 
       if (reservations === null) {
@@ -155,9 +214,11 @@ async function loadAllReservations() {
 
       if (Array.isArray(reservations)) {
         reservations.forEach(r => {
-          const uniqueKey = `${r.date || date}-${r.confirmationCode}`;
+          // Normalize the date when storing in allReservations
+          const normalizedReservationDate = normalizeDate(r.date || date);
+          const uniqueKey = `${normalizedReservationDate}-${r.confirmationCode}`;
           if (!existingKeys.has(uniqueKey)) {
-            allReservations.push({ ...r, date: r.date || date, source: 'blob' });
+            allReservations.push({ ...r, date: normalizedReservationDate, source: 'blob' });
             existingKeys.add(uniqueKey);
             reservationsFromBlob++;
           }
@@ -194,10 +255,12 @@ async function loadAllReservations() {
           if (Array.isArray(reservations)) {
             let localAdded = 0;
             reservations.forEach(r => {
-              const uniqueKey = `${r.date || date}-${r.confirmationCode}`;
+              // Normalize the date when storing in allReservations
+              const normalizedLocalDate = normalizeDate(r.date || date);
+              const uniqueKey = `${normalizedLocalDate}-${r.confirmationCode}`;
               // Avoid duplicates if already loaded from blobs
               if (!existingKeys.has(uniqueKey)) {
-                allReservations.push({ ...r, date: r.date || date, source: 'local' });
+                allReservations.push({ ...r, date: normalizedLocalDate, source: 'local' });
                 existingKeys.add(uniqueKey);
                 reservationsFromLocal++;
                 localAdded++;
@@ -235,7 +298,8 @@ async function loadAllReservations() {
 }
 
 async function saveReservations(date, reservations) {
-  const key = `reservations/${date}.json`;
+  const normalizedDate = normalizeDate(date);
+  const key = `reservations/${normalizedDate}.json`;
   await writeJSON('reservations', key, reservations, { updatedAt: new Date().toISOString() });
 }
 
@@ -285,7 +349,8 @@ async function getAvailability({ date, guests }) {
 async function createReservation(payload) {
   const settings = await loadSettings();
   const normalizedTime = normalizeTime(payload.time);
-  const availability = await getAvailability({ date: payload.date, guests: payload.guests });
+  const normalizedPayloadDate = normalizeDate(payload.date);
+  const availability = await getAvailability({ date: normalizedPayloadDate, guests: payload.guests });
   const slot = availability.slots.find((entry) => entry.time === normalizedTime);
 
   if (!slot) {
@@ -298,7 +363,7 @@ async function createReservation(payload) {
   const reservation = {
     id: randomUUID(),
     confirmationCode: generateConfirmationCode(),
-    date: payload.date,
+    date: normalizedPayloadDate,
     time: normalizedTime,
     guests: payload.guests,
     name: sanitizeText(payload.name),
@@ -311,9 +376,9 @@ async function createReservation(payload) {
     updatedAt: new Date().toISOString()
   };
 
-  await withLock(`reservation:${payload.date}`, async () => {
-    const reservations = await loadReservations(payload.date);
-    const blockedSlots = await loadBlocked(payload.date);
+  await withLock(`reservation:${normalizedPayloadDate}`, async () => {
+    const reservations = await loadReservations(normalizedPayloadDate);
+    const blockedSlots = await loadBlocked(normalizedPayloadDate);
 
     const freshSlot = calculateSlotAvailability({
       reservations,
@@ -330,7 +395,7 @@ async function createReservation(payload) {
     }
 
     reservations.push(reservation);
-    await saveReservations(payload.date, reservations);
+    await saveReservations(normalizedPayloadDate, reservations);
   });
 
   await indexReservation(reservation);
@@ -342,8 +407,9 @@ async function createReservation(payload) {
 }
 
 async function updateReservationStatus({ date, confirmationCode, status }) {
-  return withLock(`reservation:${date}`, async () => {
-    const reservations = await loadReservations(date);
+  const normalizedStatusDate = normalizeDate(date);
+  return withLock(`reservation:${normalizedStatusDate}`, async () => {
+    const reservations = await loadReservations(normalizedStatusDate);
     const index = reservations.findIndex((entry) => entry.confirmationCode === confirmationCode);
     if (index === -1) {
       throw new Error('Reservierung nicht gefunden.');
@@ -351,7 +417,7 @@ async function updateReservationStatus({ date, confirmationCode, status }) {
 
     reservations[index].status = status;
     reservations[index].updatedAt = new Date().toISOString();
-    await saveReservations(date, reservations);
+    await saveReservations(normalizedStatusDate, reservations);
     return reservations[index];
   });
 }
@@ -361,9 +427,10 @@ async function cancelReservation({ confirmationCode, email }) {
   if (!date) {
     throw new Error('Reservierung wurde nicht gefunden.');
   }
+  const normalizedCancelDate = normalizeDate(date);
 
-  return withLock(`reservation:${date}`, async () => {
-    const reservations = await loadReservations(date);
+  return withLock(`reservation:${normalizedCancelDate}`, async () => {
+    const reservations = await loadReservations(normalizedCancelDate);
     const index = reservations.findIndex((entry) => entry.confirmationCode === confirmationCode);
     if (index === -1) {
       throw new Error('Reservierung wurde nicht gefunden.');
@@ -376,22 +443,23 @@ async function cancelReservation({ confirmationCode, email }) {
 
     reservations[index].status = 'cancelled';
     reservations[index].updatedAt = new Date().toISOString();
-    await saveReservations(date, reservations);
+    await saveReservations(normalizedCancelDate, reservations);
 
     return reservations[index];
   });
 }
 
 async function deleteReservation({ date, confirmationCode }) {
-  return withLock(`reservation:${date}`, async () => {
-    const reservations = await loadReservations(date);
+  const normalizedDeleteDate = normalizeDate(date);
+  return withLock(`reservation:${normalizedDeleteDate}`, async () => {
+    const reservations = await loadReservations(normalizedDeleteDate);
     const index = reservations.findIndex((entry) => entry.confirmationCode === confirmationCode);
     if (index === -1) {
       throw new Error('Reservierung wurde nicht gefunden.');
     }
 
     const deleted = reservations.splice(index, 1)[0];
-    await saveReservations(date, reservations);
+    await saveReservations(normalizedDeleteDate, reservations);
 
     // Remove from index
     const reservationIndex = await readJSON('reservations', 'reservation-index.json', {});
@@ -404,12 +472,15 @@ async function deleteReservation({ date, confirmationCode }) {
 
 async function findReservationDateByCode(confirmationCode) {
   const list = await readJSON('reservations', 'reservation-index.json', {});
-  return list[confirmationCode] || null;
+  const date = list[confirmationCode] || null;
+  // Normalize the date in case old entries have ISO format
+  return date ? normalizeDate(date) : null;
 }
 
 async function indexReservation(reservation) {
   const index = await readJSON('reservations', 'reservation-index.json', {});
-  index[reservation.confirmationCode] = reservation.date;
+  // Store normalized date to ensure consistent YYYY-MM-DD format
+  index[reservation.confirmationCode] = normalizeDate(reservation.date);
   await writeJSON('reservations', 'reservation-index.json', index);
 }
 
