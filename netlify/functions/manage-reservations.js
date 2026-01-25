@@ -18,13 +18,23 @@ function response(statusCode, body) {
   };
 }
 
-function authenticate(context) {
+function authenticate(event, context) {
   // Check for Netlify Identity user from clientContext
   const user = context?.clientContext?.user;
-  if (!user) {
-    throw new Error('Nicht autorisiert. Bitte mit Netlify Identity anmelden.');
+  if (user) {
+    return user;
   }
-  return user;
+
+  // Fallback: Check for Admin Token (for local development or API access)
+  const authHeader = event.headers?.authorization || event.headers?.Authorization || '';
+  const token = authHeader.replace(/^Bearer\s+/i, '');
+  const adminToken = process.env.RESERVATION_ADMIN_TOKEN || process.env.ADMIN_TOKEN;
+
+  if (adminToken && token === adminToken) {
+    return { email: 'admin@local', app_metadata: { roles: ['admin'] } };
+  }
+
+  throw new Error('Nicht autorisiert. Bitte mit Netlify Identity anmelden oder Admin-Token verwenden.');
 }
 
 async function handleGet(event) {
@@ -115,7 +125,7 @@ exports.handler = async (event, context) => {
   }
 
   try {
-    authenticate(context);
+    authenticate(event, context);
   } catch (error) {
     return response(401, { message: error.message });
   }

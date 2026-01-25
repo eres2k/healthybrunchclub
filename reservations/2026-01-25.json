@@ -1,0 +1,47 @@
+[
+  {
+    "id": "550e8400-e29b-41d4-a716-446655440010",
+    "confirmationCode": "HBC-TEST-0010",
+    "date": "2026-01-25",
+    "time": "09:30",
+    "guests": 3,
+    "name": "Lisa Weber",
+    "email": "lisa@example.com",
+    "phone": "+43 123 456 7900",
+    "specialRequests": "Glutenfrei bitte",
+    "status": "confirmed",
+    "timezone": "Europe/Vienna",
+    "createdAt": "2026-01-20T10:00:00.000Z",
+    "updatedAt": "2026-01-20T10:00:00.000Z"
+  },
+  {
+    "id": "550e8400-e29b-41d4-a716-446655440011",
+    "confirmationCode": "HBC-TEST-0011",
+    "date": "2026-01-25",
+    "time": "10:30",
+    "guests": 5,
+    "name": "Peter Bauer",
+    "email": "peter@example.com",
+    "phone": "+43 123 456 7901",
+    "specialRequests": "",
+    "status": "confirmed",
+    "timezone": "Europe/Vienna",
+    "createdAt": "2026-01-21T14:30:00.000Z",
+    "updatedAt": "2026-01-21T14:30:00.000Z"
+  },
+  {
+    "id": "550e8400-e29b-41d4-a716-446655440012",
+    "confirmationCode": "HBC-TEST-0012",
+    "date": "2026-01-25",
+    "time": "12:00",
+    "guests": 2,
+    "name": "Sandra Klein",
+    "email": "sandra@example.com",
+    "phone": "+43 123 456 7902",
+    "specialRequests": "Fensterplatz",
+    "status": "confirmed",
+    "timezone": "Europe/Vienna",
+    "createdAt": "2026-01-22T09:00:00.000Z",
+    "updatedAt": "2026-01-22T09:00:00.000Z"
+  }
+]
