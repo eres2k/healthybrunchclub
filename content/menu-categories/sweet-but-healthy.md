@@ -40,5 +40,5 @@ items:
       - immunstärkend
       - belebend
     allergens: []
-    image: /content/images/whatsapp-image-2025-09-17-at-14.14.55.jpeg
+    image: /content/images/img_5252.jpg
 ---
