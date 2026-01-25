@@ -63,8 +63,25 @@ async function loadReservations(date) {
 async function loadAllReservations() {
   const allReservations = [];
   const existingKeys = new Set();
+  const datesToLoad = new Set();
 
-  // First try to load from blob storage
+  // Step 1: Get dates from the reservation index (most reliable source)
+  try {
+    const reservationIndex = await readJSON('reservations', 'reservation-index.json', {});
+    const indexDates = new Set(Object.values(reservationIndex));
+    console.log(`[loadAllReservations] Found ${indexDates.size} unique dates from reservation index`);
+    indexDates.forEach(date => {
+      if (date && typeof date === 'string') {
+        // Handle both "YYYY-MM-DD" and "YYYY-MM-DDT..." formats
+        const dateOnly = date.split('T')[0];
+        datesToLoad.add(dateOnly);
+      }
+    });
+  } catch (indexErr) {
+    console.error('[loadAllReservations] Error reading reservation index:', indexErr);
+  }
+
+  // Step 2: Also try listing blob keys to find any dates not in the index
   try {
     // Try listing with prefix first, then without if empty
     let keys = await listKeys('reservations', 'reservations/');
@@ -88,45 +105,48 @@ async function loadAllReservations() {
         match = key.match(/^(\d{4}-\d{2}-\d{2})\.json$/);
       }
 
-      if (!match) {
-        console.log(`[loadAllReservations] Skipping non-matching key: ${key}`);
-        continue;
-      }
-
-      const date = match[1];
-      try {
-        // Try reading with the key as-is first
-        let reservations = await readJSON('reservations', key, null);
-
-        // If not found and key doesn't have prefix, try with prefix
-        if (reservations === null && !key.startsWith('reservations/')) {
-          reservations = await readJSON('reservations', `reservations/${key}`, []);
-        }
-
-        if (reservations === null) {
-          reservations = [];
-        }
-
-        console.log(`[loadAllReservations] Loaded ${Array.isArray(reservations) ? reservations.length : 0} reservations for ${date}`);
-
-        if (Array.isArray(reservations)) {
-          reservations.forEach(r => {
-            const uniqueKey = `${r.date || date}-${r.confirmationCode}`;
-            if (!existingKeys.has(uniqueKey)) {
-              allReservations.push({ ...r, date: r.date || date });
-              existingKeys.add(uniqueKey);
-            }
-          });
-        }
-      } catch (readErr) {
-        console.error(`[loadAllReservations] Error reading blob ${key}:`, readErr);
+      if (match) {
+        datesToLoad.add(match[1]);
       }
     }
   } catch (listErr) {
     console.error('[loadAllReservations] Error listing blob keys:', listErr);
   }
 
-  // Also check local filesystem (for development and as fallback data source)
+  // Step 3: Load reservations for each discovered date
+  console.log(`[loadAllReservations] Loading reservations for ${datesToLoad.size} dates`);
+
+  for (const date of datesToLoad) {
+    try {
+      // Try reading with prefix first (standard format)
+      let reservations = await readJSON('reservations', `reservations/${date}.json`, null);
+
+      // Fallback: try without prefix
+      if (reservations === null) {
+        reservations = await readJSON('reservations', `${date}.json`, null);
+      }
+
+      if (reservations === null) {
+        reservations = [];
+      }
+
+      console.log(`[loadAllReservations] Loaded ${Array.isArray(reservations) ? reservations.length : 0} reservations for ${date}`);
+
+      if (Array.isArray(reservations)) {
+        reservations.forEach(r => {
+          const uniqueKey = `${r.date || date}-${r.confirmationCode}`;
+          if (!existingKeys.has(uniqueKey)) {
+            allReservations.push({ ...r, date: r.date || date });
+            existingKeys.add(uniqueKey);
+          }
+        });
+      }
+    } catch (readErr) {
+      console.error(`[loadAllReservations] Error reading reservations for ${date}:`, readErr);
+    }
+  }
+
+  // Step 4: Also check local filesystem (for development and as fallback data source)
   // This works locally and when files are bundled via netlify.toml included_files
   const localReservationsDir = path.resolve(__dirname, '../../../reservations');
   console.log(`[loadAllReservations] Checking local dir: ${localReservationsDir}`);
