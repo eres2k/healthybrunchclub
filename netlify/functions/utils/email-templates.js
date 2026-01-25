@@ -421,7 +421,7 @@ function renderAdminEmail(reservation) {
           </div>
 
           <div class="section" style="text-align: center;">
-            <a href="https://healthybrunchclub.at/admin/reservations.html" class="button button-gold">Reservierungen verwalten</a>
+            <a href="https://healthybrunchclub.at/admin-dashboard.html" class="button button-gold">Reservierungen verwalten</a>
           </div>
         </div>
         <div class="footer">
@@ -713,6 +713,45 @@ function renderFeedbackRequestEmail(reservation, options = {}) {
 }
 
 /**
+ * Plain text admin cancellation email
+ */
+function renderAdminCancellationEmailText(reservation, options = {}) {
+  const { DateTime } = require('luxon');
+  const dateOnly = reservation.date.split('T')[0];
+  const date = DateTime.fromISO(dateOnly).toFormat('dd.MM.yyyy');
+
+  let text = `Reservierung storniert
+======================
+
+Code: ${reservation.confirmationCode}
+
+Stornierte Reservierung:
+- Datum: ${date}
+- Uhrzeit: ${reservation.time} Uhr
+- Personen: ${reservation.guests}
+
+Gast-Informationen:
+- Name: ${reservation.name}
+- E-Mail: ${reservation.email}
+- Telefon: ${reservation.phone}`;
+
+  if (options.reason) {
+    text += `\n- Stornierungsgrund: ${options.reason}`;
+  }
+  if (options.cancelledBy) {
+    text += `\n- Storniert von: ${options.cancelledBy}`;
+  }
+
+  text += `
+
+Hinweis: Der Platz ist nun wieder verfügbar. Prüfen Sie die Warteliste für mögliche Nachrücker.
+
+Verwalten: https://healthybrunchclub.at/admin-dashboard.html`;
+
+  return text;
+}
+
+/**
  * Admin cancellation notification
  */
 function renderAdminCancellationEmail(reservation, options = {}) {
@@ -790,7 +829,7 @@ function renderAdminCancellationEmail(reservation, options = {}) {
           </div>
 
           <div class="section" style="text-align: center;">
-            <a href="https://healthybrunchclub.at/admin/reservations.html" class="button button-gold">Reservierungen verwalten</a>
+            <a href="https://healthybrunchclub.at/admin-dashboard.html" class="button button-gold">Reservierungen verwalten</a>
           </div>
         </div>
         <div class="footer">
@@ -903,7 +942,7 @@ Gast-Informationen:
 - E-Mail: ${reservation.email}
 - Telefon: ${reservation.phone}${reservation.specialRequests ? `\n- Wünsche: ${reservation.specialRequests}` : ''}
 
-Verwalten: https://healthybrunchclub.at/admin/reservations.html`;
+Verwalten: https://healthybrunchclub.at/admin-dashboard.html`;
 }
 
 /**
@@ -1060,6 +1099,7 @@ module.exports = {
   // Admin templates
   renderAdminEmail,
   renderAdminCancellationEmail,
+  renderAdminCancellationEmailText,
   // Plain text templates
   renderGuestEmailText,
   renderAdminEmailText,

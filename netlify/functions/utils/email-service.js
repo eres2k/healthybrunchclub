@@ -11,6 +11,7 @@ const {
   renderWaitlistEmail,
   renderFeedbackRequestEmail,
   renderAdminCancellationEmail,
+  renderAdminCancellationEmailText,
   // Plain text versions
   renderGuestEmailText,
   renderAdminEmailText,
@@ -179,6 +180,7 @@ async function sendCancellationEmails(reservation, options = {}) {
   // Send admin notifications to all configured admins
   await sendToAllAdmins({
     subject: `Stornierung: ${reservation.name} - ${dateOnly} ${reservation.time}`,
+    text: renderAdminCancellationEmailText(reservation, options),
     html: renderAdminCancellationEmail(reservation, options)
   });
 
