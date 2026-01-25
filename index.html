@@ -961,5 +961,18 @@
       <input type="text" name="website" />
     </form>
 
+    <!-- Hidden form for email fallback via Netlify Forms -->
+    <form name="email-fallback" netlify netlify-honeypot="bot-field" hidden>
+      <input type="hidden" name="bot-field" />
+      <input type="email" name="to" />
+      <input type="email" name="from" />
+      <input type="text" name="subject" />
+      <textarea name="text"></textarea>
+      <textarea name="html"></textarea>
+      <input type="text" name="replyTo" />
+      <input type="text" name="timestamp" />
+      <input type="text" name="attachments_note" />
+    </form>
+
 </body>
 </html>
