@@ -21,6 +21,10 @@ items:
       carbs: 30g
       fat: 10g
     image: /content/images/dscf2517-400w.webp
+    dietary:
+      vegan: true
+      glutenFree: true
+      lactoseFree: true
   - name: golden kurkuma
     tags:
       - immunstärkend
@@ -33,6 +37,10 @@ items:
       protein: 8g
       carbs: 30g
       fat: 10g
+    dietary:
+      vegan: true
+      glutenFree: true
+      lactoseFree: true
   - special: false
     name: kefir mango lassi
     price: "4.50"
@@ -47,6 +55,8 @@ items:
       - proteinreich
     allergens:
       - G
+    dietary:
+      glutenFree: true
   - special: false
     name: cherry ice glow
     price: "4.50"
@@ -69,6 +79,11 @@ items:
       protein: 1g
       carbs: 20g
       fat: 2g
+    dietary:
+      vegan: true
+      vegetarian: false
+      glutenFree: true
+      lactoseFree: true
   - recommended: false
     isNew: true
     seasonal: false
@@ -81,6 +96,10 @@ items:
       protein: 1g
       carbs: 20g
       fat: 2g
+    dietary:
+      vegan: true
+      glutenFree: true
+      lactoseFree: true
   - recommended: false
     isNew: true
     seasonal: false
@@ -94,4 +113,8 @@ items:
       protein: 2g
       carbs: 4g
       fat: 22g
+    dietary:
+      vegan: true
+      glutenFree: true
+      lactoseFree: true
 ---
