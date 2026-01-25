@@ -23,6 +23,10 @@ items:
       carbs: 60g
       fat: 12g
     image: /content/images/whatsapp-image-2025-09-17-at-09.52.07.jpeg
+    dietary:
+      vegan: true
+      glutenFree: true
+      lactoseFree: true
   - name: kokoscreme power-oats
     tags:
       - glutenfrei
@@ -41,6 +45,10 @@ items:
       carbs: 60g
       fat: 12g
     image: /content/images/img_5251.jpg
+    dietary:
+      vegan: true
+      glutenFree: true
+      lactoseFree: true
   - special: false
     name: extra
     description: mit 15g protein geschmacksneutral +2,50
