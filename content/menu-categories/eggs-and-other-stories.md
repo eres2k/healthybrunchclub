@@ -109,4 +109,5 @@ items:
       protein: ""
       carbs: ""
       fat: ""
+    image: /content/images/screenshot-2026-01-24-1324100.png
 ---
