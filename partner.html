@@ -134,16 +134,25 @@
             display: flex;
             align-items: center;
             justify-content: center;
-            border: 2px dashed var(--light-gray);
-            color: var(--warm-gray);
-            font-size: 0.75rem;
-            text-transform: uppercase;
-            letter-spacing: 0.1em;
+            border: 2px solid var(--light-gray);
+            overflow: hidden;
+            padding: 15px;
         }
 
-        .partner-logo i {
-            font-size: 2.5rem;
-            color: var(--gold);
+        .partner-logo img {
+            max-width: 100%;
+            max-height: 100%;
+            object-fit: contain;
+        }
+
+        .partner-link {
+            text-decoration: none;
+            color: inherit;
+            display: block;
+        }
+
+        .partner-link:hover .partner-logo {
+            border-color: var(--gold);
         }
 
         .partner-name {
@@ -204,10 +213,7 @@
             .partner-logo {
                 width: 80px;
                 height: 80px;
-            }
-
-            .partner-logo i {
-                font-size: 1.75rem;
+                padding: 10px;
             }
 
             .partner-name {
@@ -265,45 +271,55 @@
                 </p>
 
                 <div class="partners-grid">
-                    <div class="partner-card">
-                        <div class="partner-logo">
-                            <i class="fas fa-image"></i>
+                    <a href="https://www.sonnentor.com/" target="_blank" rel="noopener noreferrer" class="partner-link">
+                        <div class="partner-card">
+                            <div class="partner-logo">
+                                <img src="content/images/partner/logo-sonnentor.webp" alt="Sonnentor Logo" width="90" height="90" loading="lazy">
+                            </div>
+                            <h3 class="partner-name">Sonnentor</h3>
+                            <p class="partner-description">Bio-Kräuter & Tees</p>
                         </div>
-                        <h3 class="partner-name">Sonnentor</h3>
-                        <p class="partner-description">Bio-Kräuter & Tees</p>
-                    </div>
+                    </a>
 
-                    <div class="partner-card">
-                        <div class="partner-logo">
-                            <i class="fas fa-image"></i>
+                    <a href="https://www.mykotheke.at/" target="_blank" rel="noopener noreferrer" class="partner-link">
+                        <div class="partner-card">
+                            <div class="partner-logo">
+                                <img src="content/images/partner/logo-mykotheke.webp" alt="Mykotheke Logo" width="90" height="22" loading="lazy">
+                            </div>
+                            <h3 class="partner-name">MYKOTHEKE</h3>
+                            <p class="partner-description">Vitalpilze & Superfoods</p>
                         </div>
-                        <h3 class="partner-name">MYKOTHEKE</h3>
-                        <p class="partner-description">Vitalpilze & Superfoods</p>
-                    </div>
+                    </a>
 
-                    <div class="partner-card">
-                        <div class="partner-logo">
-                            <i class="fas fa-image"></i>
+                    <a href="https://www.myhoney.at/" target="_blank" rel="noopener noreferrer" class="partner-link">
+                        <div class="partner-card">
+                            <div class="partner-logo">
+                                <img src="content/images/partner/logo-myhoney.webp" alt="My Honey Logo" width="90" height="26" loading="lazy">
+                            </div>
+                            <h3 class="partner-name">my honey</h3>
+                            <p class="partner-description">Premium Honig</p>
                         </div>
-                        <h3 class="partner-name">my honey</h3>
-                        <p class="partner-description">Premium Honig</p>
-                    </div>
+                    </a>
 
-                    <div class="partner-card">
-                        <div class="partner-logo">
-                            <i class="fas fa-image"></i>
+                    <a href="https://www.pilzbrueder.at/" target="_blank" rel="noopener noreferrer" class="partner-link">
+                        <div class="partner-card">
+                            <div class="partner-logo">
+                                <img src="content/images/partner/logo-pilzbrueder.webp" alt="Pilzbrüder Logo" width="90" height="48" loading="lazy">
+                            </div>
+                            <h3 class="partner-name">Pilzbrüder</h3>
+                            <p class="partner-description">Frische Pilze</p>
                         </div>
-                        <h3 class="partner-name">Pilzbrüder</h3>
-                        <p class="partner-description">Frische Pilze</p>
-                    </div>
+                    </a>
 
-                    <div class="partner-card">
-                        <div class="partner-logo">
-                            <i class="fas fa-image"></i>
+                    <a href="https://www.joseph.co.at/" target="_blank" rel="noopener noreferrer" class="partner-link">
+                        <div class="partner-card">
+                            <div class="partner-logo">
+                                <img src="content/images/partner/logo-joseph-brot.webp" alt="Joseph Brot Logo" width="90" height="90" loading="lazy">
+                            </div>
+                            <h3 class="partner-name">Joseph Brot vom Pheinsten</h3>
+                            <p class="partner-description">Handwerkliches Brot</p>
                         </div>
-                        <h3 class="partner-name">Joseph Brot vom Pheinsten</h3>
-                        <p class="partner-description">Handwerkliches Brot</p>
-                    </div>
+                    </a>
                 </div>
             </div>
         </div>
