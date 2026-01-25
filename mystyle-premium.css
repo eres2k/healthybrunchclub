@@ -4205,10 +4205,235 @@ body.dark-mode video:hover {
 }
 
 /* ========================================
-   PDF DOWNLOAD BUTTONS
+   MODERN MENU DOWNLOAD CARDS
    ======================================== */
 
-/* Container für beide PDF-Buttons */
+/* Section container */
+.menu-downloads-section {
+    margin: 24px 0;
+    padding: 0;
+}
+
+/* Grid layout for menu cards */
+.menu-downloads-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 16px;
+}
+
+/* Individual menu card */
+.menu-download-card {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 16px;
+    background: linear-gradient(145deg, #ffffff 0%, #f8f9fa 100%);
+    border: 1px solid rgba(30, 74, 60, 0.1);
+    border-radius: 16px;
+    text-decoration: none;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    position: relative;
+    overflow: hidden;
+    cursor: pointer;
+}
+
+.menu-download-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: linear-gradient(145deg, var(--forest-green) 0%, var(--sage-green) 100%);
+    opacity: 0;
+    transition: opacity 0.3s ease;
+    z-index: 0;
+}
+
+.menu-download-card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 12px 32px rgba(30, 74, 60, 0.2);
+    border-color: transparent;
+}
+
+.menu-download-card:hover::before {
+    opacity: 1;
+}
+
+.menu-download-card:hover .menu-card-icon,
+.menu-download-card:hover .menu-card-content,
+.menu-download-card:hover .menu-card-download {
+    color: white;
+}
+
+.menu-download-card:hover .menu-card-icon {
+    background: rgba(255, 255, 255, 0.2);
+}
+
+.menu-download-card:hover .menu-card-download {
+    background: rgba(255, 255, 255, 0.2);
+}
+
+/* Icon container */
+.menu-card-icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 48px;
+    height: 48px;
+    background: rgba(30, 74, 60, 0.08);
+    border-radius: 12px;
+    color: var(--forest-green);
+    flex-shrink: 0;
+    transition: all 0.3s ease;
+    position: relative;
+    z-index: 1;
+}
+
+/* Content area */
+.menu-card-content {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    flex: 1;
+    min-width: 0;
+    position: relative;
+    z-index: 1;
+    transition: color 0.3s ease;
+}
+
+.menu-card-label {
+    font-size: 10px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    color: var(--sage-green);
+    transition: color 0.3s ease;
+}
+
+.menu-card-title {
+    font-size: 15px;
+    font-weight: 700;
+    color: var(--forest-green);
+    line-height: 1.2;
+    transition: color 0.3s ease;
+}
+
+.menu-card-lang {
+    font-size: 12px;
+    color: var(--sage-green);
+    font-weight: 500;
+    transition: color 0.3s ease;
+}
+
+/* Download indicator */
+.menu-card-download {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 36px;
+    height: 36px;
+    background: rgba(30, 74, 60, 0.06);
+    border-radius: 10px;
+    color: var(--forest-green);
+    flex-shrink: 0;
+    transition: all 0.3s ease;
+    position: relative;
+    z-index: 1;
+}
+
+/* Special variant for LASA card */
+.menu-card-lasa .menu-card-icon {
+    background: rgba(201, 169, 110, 0.15);
+    color: var(--gold, #c9a96e);
+}
+
+.menu-card-lasa .menu-card-label {
+    color: var(--gold, #c9a96e);
+}
+
+.menu-card-lasa::before {
+    background: linear-gradient(145deg, var(--gold, #c9a96e) 0%, #b8956a 100%);
+}
+
+/* Special variant for Kids card */
+.menu-card-kids .menu-card-icon {
+    background: rgba(255, 183, 77, 0.15);
+    color: #f5a623;
+}
+
+.menu-card-kids .menu-card-label {
+    color: #f5a623;
+}
+
+.menu-card-kids::before {
+    background: linear-gradient(145deg, #f5a623 0%, #e09400 100%);
+}
+
+/* Tablet layout - 2 columns */
+@media (max-width: 992px) {
+    .menu-downloads-grid {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 12px;
+    }
+}
+
+/* Mobile layout - stacked cards */
+@media (max-width: 576px) {
+    .menu-downloads-section {
+        margin: 16px 0;
+    }
+
+    .menu-downloads-grid {
+        grid-template-columns: 1fr;
+        gap: 10px;
+    }
+
+    .menu-download-card {
+        padding: 14px;
+        border-radius: 12px;
+    }
+
+    .menu-card-icon {
+        width: 42px;
+        height: 42px;
+        border-radius: 10px;
+    }
+
+    .menu-card-icon svg {
+        width: 20px;
+        height: 20px;
+    }
+
+    .menu-card-title {
+        font-size: 14px;
+    }
+
+    .menu-card-label {
+        font-size: 9px;
+    }
+
+    .menu-card-lang {
+        font-size: 11px;
+    }
+
+    .menu-card-download {
+        width: 32px;
+        height: 32px;
+        border-radius: 8px;
+    }
+
+    .menu-card-download svg {
+        width: 16px;
+        height: 16px;
+    }
+}
+
+/* ========================================
+   LEGACY PDF DOWNLOAD BUTTONS
+   (kept for backwards compatibility)
+   ======================================== */
+
 .pdf-downloads {
     display: flex;
     gap: 12px;
@@ -4216,7 +4441,6 @@ body.dark-mode video:hover {
     flex-wrap: wrap;
 }
 
-/* Styling für beide PDF-Download-Buttons */
 .pdf-download-btn {
     display: inline-flex;
     align-items: center;
@@ -4235,7 +4459,6 @@ body.dark-mode video:hover {
     cursor: pointer;
 }
 
-/* Hover-Effekt */
 .pdf-download-btn:hover {
     background: var(--sage-green);
     border-color: var(--sage-green);
@@ -4243,12 +4466,10 @@ body.dark-mode video:hover {
     box-shadow: 0 4px 8px rgba(0,0,0,0.15);
 }
 
-/* Active State */
 .pdf-download-btn:active {
     transform: translateY(0);
 }
 
-/* Mobile Optimierung */
 @media (max-width: 480px) {
     .pdf-downloads {
         flex-direction: column;
@@ -5547,7 +5768,34 @@ body.dark-mode .btn-save-preferences:hover {
         font-size: 0.85rem;
     }
 
-    /* Compact PDF downloads */
+    /* Compact menu downloads */
+    .menu-downloads-section {
+        margin: var(--spacing-md) 0;
+    }
+
+    .menu-downloads-grid {
+        gap: 8px;
+    }
+
+    .menu-download-card {
+        padding: 12px;
+    }
+
+    .menu-card-icon {
+        width: 36px;
+        height: 36px;
+    }
+
+    .menu-card-title {
+        font-size: 13px;
+    }
+
+    .menu-card-download {
+        width: 28px;
+        height: 28px;
+    }
+
+    /* Compact legacy PDF downloads */
     .pdf-downloads {
         margin-bottom: var(--spacing-md);
         gap: 0.5rem;
