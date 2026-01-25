@@ -44,6 +44,7 @@ items:
     description: wärmender shot mit frischem ingwer.
     allergens: []
     price: "2.40"
+    image: /content/images/whatsapp-image-2025-09-18-at-11.27.03.jpeg
   - name: ingwer–kurkuma shot
     tags:
       - entzündungshemmend
@@ -51,6 +52,7 @@ items:
     description: kraftvoller shot mit ingwer und kurkuma.
     allergens: []
     price: "2.40"
+    image: /content/images/whatsapp-image-2025-09-18-at-11.27.03.jpeg
   - name: sellerie–zitrone shot
     tags:
       - detox
@@ -58,4 +60,5 @@ items:
     description: frischer shot aus sellerie und zitrone.
     allergens: []
     price: "2.40"
+    image: /content/images/whatsapp-image-2025-09-18-at-11.27.03.jpeg
 ---
