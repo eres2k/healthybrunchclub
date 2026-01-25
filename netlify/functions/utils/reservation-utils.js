@@ -66,15 +66,28 @@ async function loadAllReservations() {
 
   // First try to load from blob storage
   try {
-    const keys = await listKeys('reservations', 'reservations/');
-    console.log(`[loadAllReservations] Found ${keys.length} keys in blob storage`);
+    // Try listing with prefix first, then without if empty
+    let keys = await listKeys('reservations', 'reservations/');
+    console.log(`[loadAllReservations] Found ${keys.length} keys with 'reservations/' prefix`);
+
+    // If no keys found with prefix, try without prefix
+    if (keys.length === 0) {
+      keys = await listKeys('reservations', '');
+      console.log(`[loadAllReservations] Found ${keys.length} keys without prefix`);
+    }
 
     for (const key of keys) {
       // Skip the index file
       if (key === 'reservation-index.json' || key.includes('index')) continue;
 
-      // Extract date from key (format: reservations/YYYY-MM-DD.json)
-      const match = key.match(/reservations\/(\d{4}-\d{2}-\d{2})\.json/);
+      // Extract date from key - support both formats:
+      // - reservations/YYYY-MM-DD.json (with prefix)
+      // - YYYY-MM-DD.json (without prefix)
+      let match = key.match(/reservations\/(\d{4}-\d{2}-\d{2})\.json/);
+      if (!match) {
+        match = key.match(/^(\d{4}-\d{2}-\d{2})\.json$/);
+      }
+
       if (!match) {
         console.log(`[loadAllReservations] Skipping non-matching key: ${key}`);
         continue;
@@ -82,7 +95,18 @@ async function loadAllReservations() {
 
       const date = match[1];
       try {
-        const reservations = await readJSON('reservations', key, []);
+        // Try reading with the key as-is first
+        let reservations = await readJSON('reservations', key, null);
+
+        // If not found and key doesn't have prefix, try with prefix
+        if (reservations === null && !key.startsWith('reservations/')) {
+          reservations = await readJSON('reservations', `reservations/${key}`, []);
+        }
+
+        if (reservations === null) {
+          reservations = [];
+        }
+
         console.log(`[loadAllReservations] Loaded ${Array.isArray(reservations) ? reservations.length : 0} reservations for ${date}`);
 
         if (Array.isArray(reservations)) {

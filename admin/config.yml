@@ -207,6 +207,13 @@ collections:
             media_folder: "/content"
             public_folder: "/content"
             hint: "PDF version of the English menu"
+          - label: "📄 LASA English Menu PDF"
+            name: "lasa_english_menu_pdf"
+            widget: "file"
+            required: false
+            media_folder: "/content"
+            public_folder: "/content"
+            hint: "PDF version of the LASA English menu"
           - {label: "Version", name: "version", widget: "string", required: false, hint: "z.B. Winter 2025, v3.2"}
           - {label: "Letzte Aktualisierung", name: "last_updated", widget: "datetime", default: "", required: false, hint: "Wird automatisch gesetzt"}
           - {label: "Aktiv", name: "active", widget: "boolean", default: true, hint: "PDF auf der Website anzeigen?"}
