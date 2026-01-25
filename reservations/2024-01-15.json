@@ -1,0 +1,47 @@
+[
+  {
+    "id": "550e8400-e29b-41d4-a716-446655440001",
+    "confirmationCode": "HBC-TEST-0001",
+    "date": "2024-01-15",
+    "time": "10:00",
+    "guests": 4,
+    "name": "Max Mustermann",
+    "email": "max@example.com",
+    "phone": "+43 123 456 7890",
+    "specialRequests": "Vegetarisch bitte",
+    "status": "confirmed",
+    "timezone": "Europe/Vienna",
+    "createdAt": "2024-01-10T08:30:00.000Z",
+    "updatedAt": "2024-01-10T08:30:00.000Z"
+  },
+  {
+    "id": "550e8400-e29b-41d4-a716-446655440002",
+    "confirmationCode": "HBC-TEST-0002",
+    "date": "2024-01-15",
+    "time": "11:30",
+    "guests": 2,
+    "name": "Anna Schmidt",
+    "email": "anna@example.com",
+    "phone": "+43 123 456 7891",
+    "specialRequests": "",
+    "status": "confirmed",
+    "timezone": "Europe/Vienna",
+    "createdAt": "2024-01-11T14:00:00.000Z",
+    "updatedAt": "2024-01-11T14:00:00.000Z"
+  },
+  {
+    "id": "550e8400-e29b-41d4-a716-446655440003",
+    "confirmationCode": "HBC-TEST-0003",
+    "date": "2024-01-15",
+    "time": "12:00",
+    "guests": 6,
+    "name": "Thomas Müller",
+    "email": "thomas@example.com",
+    "phone": "+43 123 456 7892",
+    "specialRequests": "Kinderstuhl benötigt",
+    "status": "waitlisted",
+    "timezone": "Europe/Vienna",
+    "createdAt": "2024-01-12T09:15:00.000Z",
+    "updatedAt": "2024-01-12T09:15:00.000Z"
+  }
+]
