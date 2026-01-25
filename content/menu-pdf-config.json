@@ -7,5 +7,6 @@
   "menu_pdf": "/content/speisekarte-hbc.pdf",
   "version": "1.0",
   "title": "Speisekarte PDF",
-  "description": "Aktuelle Speisekarte des Healthy Brunch Clubs x LASA"
+  "description": "Aktuelle Speisekarte des Healthy Brunch Clubs x LASA",
+  "lasa_english_menu_pdf": "/content/lasa-speisekarte.pdf"
 }
