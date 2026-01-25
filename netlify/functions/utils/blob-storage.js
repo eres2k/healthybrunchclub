@@ -68,6 +68,12 @@ async function deleteKey(storeName, key) {
   await store.delete(key);
 }
 
+async function listKeys(storeName, prefix = '') {
+  const store = getBlobStore(storeName);
+  const result = await store.list({ prefix });
+  return result.blobs.map(blob => blob.key);
+}
+
 function delay(ms) {
   return new Promise(resolve => setTimeout(resolve, ms));
 }
@@ -136,5 +142,6 @@ module.exports = {
   readJSON,
   writeJSON,
   deleteKey,
+  listKeys,
   withLock
 };

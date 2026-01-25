@@ -164,6 +164,7 @@
           </label>
         </div>
         <button class="btn btn-primary" id="btn-load">Verfügbarkeit laden</button>
+        <button class="btn btn-secondary" id="btn-load-all" style="margin-left: .5rem;">Alle Reservierungen anzeigen</button>
         <div id="availability-result"></div>
       </div>
 
@@ -173,6 +174,7 @@
         <table>
           <thead>
             <tr>
+              <th id="th-date" style="display: none;">Datum</th>
               <th>Zeit</th>
               <th>Name / Kontakt</th>
               <th>Gäste</th>
@@ -305,6 +307,7 @@
     });
 
     let currentDate = '';
+    let showAllMode = false;
 
     function getStatusBadge(status) {
       const labels = {
@@ -318,37 +321,49 @@
     function renderReservations(reservations, date) {
       const tbody = document.getElementById('reservation-table');
       const countDiv = document.getElementById('reservation-count');
+      const thDate = document.getElementById('th-date');
       tbody.innerHTML = '';
+
+      // Show/hide date column based on mode
+      thDate.style.display = showAllMode ? '' : 'none';
 
       const active = reservations.filter(r => r.status !== 'cancelled');
       const cancelled = reservations.filter(r => r.status === 'cancelled');
-      countDiv.textContent = `${active.length} aktive Reservierungen, ${cancelled.length} storniert`;
+      const modeText = showAllMode ? ' (alle Termine)' : '';
+      countDiv.textContent = `${active.length} aktive Reservierungen, ${cancelled.length} storniert${modeText}`;
 
       if (reservations.length === 0) {
-        tbody.innerHTML = '<tr><td colspan="5" style="text-align: center; color: #999; padding: 2rem;">Keine Reservierungen für dieses Datum</td></tr>';
+        const colspan = showAllMode ? 6 : 5;
+        const message = showAllMode ? 'Keine Reservierungen vorhanden' : 'Keine Reservierungen für dieses Datum';
+        tbody.innerHTML = `<tr><td colspan="${colspan}" style="text-align: center; color: #999; padding: 2rem;">${message}</td></tr>`;
         return;
       }
 
-      // Sort by time
-      reservations.sort((a, b) => a.time.localeCompare(b.time));
+      // Sort: in all mode, already sorted by date desc then time; in single mode, sort by time
+      if (!showAllMode) {
+        reservations.sort((a, b) => a.time.localeCompare(b.time));
+      }
 
       reservations.forEach((entry) => {
         const row = document.createElement('tr');
         row.style.opacity = entry.status === 'cancelled' ? '0.5' : '1';
 
+        const entryDate = entry.date || date;
         const actions = [];
         if (entry.status !== 'confirmed') {
-          actions.push(`<button class="btn btn-primary btn-sm" data-action="confirm" data-code="${entry.confirmationCode}" data-date="${date}">Bestätigen</button>`);
+          actions.push(`<button class="btn btn-primary btn-sm" data-action="confirm" data-code="${entry.confirmationCode}" data-date="${entryDate}">Bestätigen</button>`);
         }
         if (entry.status !== 'waitlisted') {
-          actions.push(`<button class="btn btn-warning btn-sm" data-action="waitlist" data-code="${entry.confirmationCode}" data-date="${date}">Warteliste</button>`);
+          actions.push(`<button class="btn btn-warning btn-sm" data-action="waitlist" data-code="${entry.confirmationCode}" data-date="${entryDate}">Warteliste</button>`);
         }
         if (entry.status !== 'cancelled') {
-          actions.push(`<button class="btn btn-secondary btn-sm" data-action="cancel" data-code="${entry.confirmationCode}" data-date="${date}">Stornieren</button>`);
+          actions.push(`<button class="btn btn-secondary btn-sm" data-action="cancel" data-code="${entry.confirmationCode}" data-date="${entryDate}">Stornieren</button>`);
         }
-        actions.push(`<button class="btn btn-danger btn-sm" data-action="delete" data-code="${entry.confirmationCode}" data-date="${date}">Löschen</button>`);
+        actions.push(`<button class="btn btn-danger btn-sm" data-action="delete" data-code="${entry.confirmationCode}" data-date="${entryDate}">Löschen</button>`);
 
+        const dateCell = showAllMode ? `<td><strong>${entryDate}</strong></td>` : '';
         row.innerHTML = `
+          ${dateCell}
           <td><strong>${entry.time}</strong></td>
           <td>
             <div>${entry.name}</div>
@@ -370,6 +385,7 @@
         return;
       }
       currentDate = date;
+      showAllMode = false;
       try {
         const response = await authenticatedFetch(`/.netlify/functions/manage-reservations?date=${date}`);
         const data = await response.json();
@@ -380,7 +396,21 @@
       }
     }
 
+    async function loadAllReservations() {
+      showAllMode = true;
+      currentDate = '';
+      try {
+        const response = await authenticatedFetch('/.netlify/functions/manage-reservations?all=true');
+        const data = await response.json();
+        document.getElementById('availability-result').textContent = `${data.reservations.length} Reservierungen insgesamt gefunden.`;
+        renderReservations(data.reservations, '');
+      } catch (error) {
+        showBanner(error.message, 'error');
+      }
+    }
+
     document.getElementById('btn-load').addEventListener('click', loadReservations);
+    document.getElementById('btn-load-all').addEventListener('click', loadAllReservations);
 
     document.getElementById('reservation-table').addEventListener('click', async (event) => {
       const button = event.target.closest('button[data-action]');
@@ -408,8 +438,12 @@
           });
           showBanner(`Reservierung ${status === 'confirmed' ? 'bestätigt' : status === 'waitlisted' ? 'auf Warteliste gesetzt' : 'storniert'}.`);
         }
-        // Reload reservations
-        await loadReservations();
+        // Reload reservations based on current mode
+        if (showAllMode) {
+          await loadAllReservations();
+        } else {
+          await loadReservations();
+        }
       } catch (error) {
         showBanner(error.message, 'error');
       }
