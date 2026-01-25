@@ -178,42 +178,41 @@ collections:
 
   - name: "menu_pdf"
     label: "📄 Speisekarten PDF"
-    description: "PDF-Version der Speisekarte für QR-Code verwalten"
+    description: "PDF-Versionen der Speisekarten hochladen - werden automatisch standardisiert"
     files:
-      - label: "Menü PDF"
+      - label: "Menü PDFs"
         name: "menu_pdf_file"
         file: "content/menu-pdf-config.json"
         fields:
-          - {label: "Titel", name: "title", widget: "string", default: "Speisekarte PDF", hint: "Interner Titel"}
-          - {label: "Beschreibung", name: "description", widget: "text", required: false, hint: "Kurze Beschreibung"}
-          - label: "📄 Speisekarten PDF"
+          - {label: "Titel", name: "title", widget: "string", default: "Speisekarte PDF", hint: "Interner Titel für die Speisekarte"}
+          - {label: "Beschreibung", name: "description", widget: "text", required: false, hint: "Wird auf der Website angezeigt"}
+          - label: "🇩🇪 Hauptspeisekarte"
             name: "menu_pdf"
             widget: "file"
-            required: false
+            required: true
             media_folder: "/content"
             public_folder: "/content"
-            hint: "PDF-Version der Speisekarte - wird als menu.pdf gespeichert"
-          - label: "📄 Kids Menu PDF"
-            name: "kids_menu_pdf"
-            widget: "file"
-            required: false
-            media_folder: "/content"
-            public_folder: "/content"
-            hint: "PDF-Version der Kinderkarte - wird als kidsmenu.pdf gespeichert"
-          - label: "📄 English Menu PDF"
+            hint: "Deutsche Speisekarte (wird automatisch zu HBC_DE_MENU.pdf)"
+          - label: "🇬🇧 English Menu"
             name: "english_menu_pdf"
             widget: "file"
             required: false
             media_folder: "/content"
             public_folder: "/content"
-            hint: "PDF version of the English menu"
-          - label: "📄 LASA English Menu PDF"
+            hint: "English menu (wird automatisch zu HBC_EN_MENU.pdf)"
+          - label: "👶 Kinderkarte"
+            name: "kids_menu_pdf"
+            widget: "file"
+            required: false
+            media_folder: "/content"
+            public_folder: "/content"
+            hint: "Für die Kleinen (wird automatisch zu HBC_KIDS_MENU.pdf)"
+          - label: "🌿 LASA English Menu"
             name: "lasa_english_menu_pdf"
             widget: "file"
             required: false
             media_folder: "/content"
             public_folder: "/content"
-            hint: "PDF version of the LASA English menu"
-          - {label: "Version", name: "version", widget: "string", required: false, hint: "z.B. Winter 2025, v3.2"}
-          - {label: "Letzte Aktualisierung", name: "last_updated", widget: "datetime", default: "", required: false, hint: "Wird automatisch gesetzt"}
-          - {label: "Aktiv", name: "active", widget: "boolean", default: true, hint: "PDF auf der Website anzeigen?"}
+            hint: "LASA special English menu (wird automatisch zu LASA_EN_MENU.pdf)"
+          - {label: "Version", name: "version", widget: "string", required: false, hint: "z.B. Frühjahr 2026, v3.2"}
+          - {label: "Aktiv", name: "active", widget: "boolean", default: true, hint: "Menü auf der Website anzeigen?"}
