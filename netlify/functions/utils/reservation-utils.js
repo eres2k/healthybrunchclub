@@ -2,6 +2,8 @@
 
 const { randomUUID } = require('crypto');
 const { DateTime } = require('luxon');
+const fs = require('fs');
+const path = require('path');
 const { readJSON, writeJSON, withLock, listKeys } = require('./blob-storage');
 const { sanitizeText } = require('./validation');
 
@@ -59,8 +61,10 @@ async function loadReservations(date) {
 }
 
 async function loadAllReservations() {
-  const keys = await listKeys('reservations', 'reservations/');
   const allReservations = [];
+
+  // First try to load from blob storage
+  const keys = await listKeys('reservations', 'reservations/');
 
   for (const key of keys) {
     // Skip the index file
@@ -77,6 +81,36 @@ async function loadAllReservations() {
       reservations.forEach(r => {
         allReservations.push({ ...r, date: r.date || date });
       });
+    }
+  }
+
+  // Also check local filesystem (for development and as data source)
+  const localReservationsDir = path.resolve(__dirname, '../../../reservations');
+  if (fs.existsSync(localReservationsDir)) {
+    const existingDates = new Set(allReservations.map(r => `${r.date}-${r.confirmationCode}`));
+    const files = fs.readdirSync(localReservationsDir);
+    for (const file of files) {
+      const match = file.match(/^(\d{4}-\d{2}-\d{2})\.json$/);
+      if (!match) continue;
+
+      const date = match[1];
+      const filePath = path.join(localReservationsDir, file);
+      try {
+        const content = fs.readFileSync(filePath, 'utf-8');
+        const reservations = JSON.parse(content);
+        if (Array.isArray(reservations)) {
+          reservations.forEach(r => {
+            const key = `${r.date || date}-${r.confirmationCode}`;
+            // Avoid duplicates if already loaded from blobs
+            if (!existingDates.has(key)) {
+              allReservations.push({ ...r, date: r.date || date });
+              existingDates.add(key);
+            }
+          });
+        }
+      } catch (err) {
+        console.error(`Error reading local file ${file}:`, err);
+      }
     }
   }
 
