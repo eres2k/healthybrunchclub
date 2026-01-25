@@ -23,6 +23,12 @@ items:
       fat: 24g
     price: "10.90"
     image: /content/images/img-20250806-wa0004.jpg
+    dietary:
+      vegan: true
+      glutenFree: true
+      lactoseFree: true
+      allergens:
+        - besonders histaminreich
   - name: avocado bread
     tags:
       - vegetarisch
@@ -53,9 +59,12 @@ items:
     price: "12.90"
     image: /content/images/img-20250806-wa0002.jpg
     dietary:
-      vegetarian: true
+      vegetarian: false
       vegan: true
       glutenFree: true
+      lactoseFree: true
+      allergens:
+        - besonders histaminreich
   - name: extras
     tags:
       - optional
