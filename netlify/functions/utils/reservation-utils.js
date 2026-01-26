@@ -69,7 +69,24 @@ async function saveBlocked(date, blocked) {
 async function loadReservations(date) {
   const normalizedDate = normalizeDate(date);
   const key = `reservations/${normalizedDate}.json`;
-  const reservations = await readJSON('reservations', key, []);
+  let reservations = await readJSON('reservations', key, null);
+
+  // If not found, try legacy ISO-format key (e.g., reservations/2026-01-29T00:00:00.000Z.json)
+  if (reservations === null) {
+    const legacyKey = `reservations/${normalizedDate}T00:00:00.000Z.json`;
+    reservations = await readJSON('reservations', legacyKey, null);
+
+    // If found in legacy key, migrate to normalized key for future lookups
+    if (reservations !== null && Array.isArray(reservations) && reservations.length > 0) {
+      console.log(`[loadReservations] Found ${reservations.length} reservations in legacy key ${legacyKey}, migrating to ${key}`);
+      await writeJSON('reservations', key, reservations, { updatedAt: new Date().toISOString() });
+    }
+  }
+
+  if (reservations === null) {
+    reservations = [];
+  }
+
   return Array.isArray(reservations) ? reservations : [];
 }
 
