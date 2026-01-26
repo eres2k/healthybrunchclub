@@ -371,6 +371,217 @@
       color: #243424;
     }
 
+    /* Timeline Visual Overview */
+    .timeline-overview {
+      margin-bottom: 1.5rem;
+      background: #fff;
+      border-radius: 10px;
+      padding: 1rem;
+      box-shadow: 0 1px 4px rgba(0,0,0,.05);
+    }
+    .timeline-overview-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 1rem;
+      padding-bottom: .75rem;
+      border-bottom: 1px solid #e4eadf;
+    }
+    .timeline-overview-title {
+      font-size: .85rem;
+      font-weight: 600;
+      color: #2f5138;
+      text-transform: uppercase;
+      letter-spacing: .08em;
+    }
+    .timeline-overview-stats {
+      display: flex;
+      gap: 1rem;
+      font-size: .8rem;
+      color: #6b7a6c;
+    }
+    .timeline-overview-stats span {
+      display: flex;
+      align-items: center;
+      gap: .3rem;
+    }
+    .timeline-overview-stats .count {
+      font-weight: 700;
+      color: #243424;
+    }
+    .timeline-grid {
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+    }
+    .timeline-slot {
+      display: flex;
+      align-items: stretch;
+      min-height: 36px;
+      border-radius: 6px;
+      overflow: hidden;
+      background: #fafafa;
+    }
+    .timeline-slot:hover {
+      background: #f0f4ef;
+    }
+    .timeline-slot.blocked {
+      background: #fdecea;
+    }
+    .timeline-time {
+      width: 60px;
+      min-width: 60px;
+      padding: .5rem;
+      font-size: .75rem;
+      font-weight: 600;
+      color: #6b7a6c;
+      background: #f0f4ef;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-right: 2px solid #e4eadf;
+    }
+    .timeline-slot.blocked .timeline-time {
+      background: #f5c6cb;
+      color: #721c24;
+    }
+    .timeline-reservations {
+      flex: 1;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 4px;
+      padding: 4px 8px;
+      align-items: center;
+    }
+    .timeline-reservation {
+      display: inline-flex;
+      align-items: center;
+      gap: .4rem;
+      padding: .35rem .6rem;
+      border-radius: 5px;
+      font-size: .75rem;
+      font-weight: 500;
+      cursor: pointer;
+      transition: transform .1s, box-shadow .1s;
+      max-width: 180px;
+      overflow: hidden;
+    }
+    .timeline-reservation:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 2px 6px rgba(0,0,0,.15);
+    }
+    .timeline-reservation.status-confirmed {
+      background: #d4edda;
+      color: #155724;
+      border-left: 3px solid #28a745;
+    }
+    .timeline-reservation.status-pending {
+      background: #ffe5d9;
+      color: #8a3800;
+      border-left: 3px solid #ff6b35;
+      animation: pulse-pending 2s infinite;
+    }
+    .timeline-reservation.status-waitlisted {
+      background: #fff3cd;
+      color: #856404;
+      border-left: 3px solid #ffc107;
+    }
+    .timeline-reservation.status-cancelled {
+      background: #f8d7da;
+      color: #721c24;
+      border-left: 3px solid #dc3545;
+      opacity: 0.6;
+      text-decoration: line-through;
+    }
+    .timeline-reservation.status-noshow {
+      background: #e2e3e5;
+      color: #383d41;
+      border-left: 3px solid #6c757d;
+      opacity: 0.7;
+    }
+    .timeline-reservation-guests {
+      background: rgba(0,0,0,.1);
+      padding: .1rem .35rem;
+      border-radius: 3px;
+      font-size: .7rem;
+      font-weight: 700;
+    }
+    .timeline-reservation-name {
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+    .timeline-empty {
+      color: #ccc;
+      font-size: .75rem;
+      font-style: italic;
+    }
+    .timeline-blocked-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: .3rem;
+      padding: .3rem .6rem;
+      background: #dc3545;
+      color: #fff;
+      border-radius: 4px;
+      font-size: .7rem;
+      font-weight: 600;
+    }
+    .timeline-capacity-bar {
+      height: 4px;
+      background: #e4eadf;
+      border-radius: 2px;
+      margin-top: 4px;
+      overflow: hidden;
+    }
+    .timeline-capacity-fill {
+      height: 100%;
+      border-radius: 2px;
+      transition: width .3s;
+    }
+    .timeline-capacity-fill.low { background: #28a745; }
+    .timeline-capacity-fill.medium { background: #ffc107; }
+    .timeline-capacity-fill.high { background: #dc3545; }
+    .timeline-legend {
+      display: flex;
+      gap: 1rem;
+      flex-wrap: wrap;
+      margin-top: 1rem;
+      padding-top: .75rem;
+      border-top: 1px solid #e4eadf;
+    }
+    .timeline-legend-item {
+      display: flex;
+      align-items: center;
+      gap: .4rem;
+      font-size: .7rem;
+      color: #6b7a6c;
+    }
+    .timeline-legend-color {
+      width: 12px;
+      height: 12px;
+      border-radius: 3px;
+    }
+    .timeline-legend-color.confirmed { background: #d4edda; border-left: 3px solid #28a745; }
+    .timeline-legend-color.pending { background: #ffe5d9; border-left: 3px solid #ff6b35; }
+    .timeline-legend-color.waitlisted { background: #fff3cd; border-left: 3px solid #ffc107; }
+    .timeline-legend-color.cancelled { background: #f8d7da; border-left: 3px solid #dc3545; }
+    .timeline-legend-color.noshow { background: #e2e3e5; border-left: 3px solid #6c757d; }
+
+    @media (max-width: 600px) {
+      .timeline-reservation {
+        max-width: 120px;
+        padding: .25rem .4rem;
+      }
+      .timeline-reservation-name {
+        display: none;
+      }
+      .timeline-overview-stats {
+        flex-wrap: wrap;
+        gap: .5rem;
+      }
+    }
+
     /* Blocked Slots List */
     .blocked-list {
       display: grid;
@@ -668,6 +879,39 @@
               <button class="btn btn-secondary btn-sm" id="btn-block-day">Slot blockieren</button>
             </div>
           </div>
+
+          <!-- Visual Timeline Overview -->
+          <div class="timeline-overview" id="timeline-overview">
+            <div class="timeline-overview-header">
+              <span class="timeline-overview-title">Tagesübersicht</span>
+              <div class="timeline-overview-stats" id="timeline-stats"></div>
+            </div>
+            <div class="timeline-grid" id="timeline-grid"></div>
+            <div class="timeline-legend">
+              <div class="timeline-legend-item">
+                <div class="timeline-legend-color confirmed"></div>
+                <span>Bestätigt</span>
+              </div>
+              <div class="timeline-legend-item">
+                <div class="timeline-legend-color pending"></div>
+                <span>Angefragt</span>
+              </div>
+              <div class="timeline-legend-item">
+                <div class="timeline-legend-color waitlisted"></div>
+                <span>Warteliste</span>
+              </div>
+              <div class="timeline-legend-item">
+                <div class="timeline-legend-color cancelled"></div>
+                <span>Storniert</span>
+              </div>
+              <div class="timeline-legend-item">
+                <div class="timeline-legend-color noshow"></div>
+                <span>No-Show</span>
+              </div>
+            </div>
+          </div>
+
+          <h4 style="font-size: .9rem; text-transform: uppercase; letter-spacing: .08em; color: #6b7a6c; margin-bottom: .75rem;">Reservierungsliste</h4>
           <table>
             <thead>
               <tr>
@@ -1222,6 +1466,148 @@
       `;
     }
 
+    function renderTimelineOverview(dateStr, reservations, blockedSlots) {
+      const grid = document.getElementById('timeline-grid');
+      const stats = document.getElementById('timeline-stats');
+
+      // Calculate stats
+      const activeReservations = reservations.filter(r => r.status !== 'cancelled');
+      const confirmedCount = reservations.filter(r => r.status === 'confirmed').length;
+      const pendingCount = reservations.filter(r => r.status === 'pending').length;
+      const waitlistedCount = reservations.filter(r => r.status === 'waitlisted').length;
+      const totalGuests = activeReservations.reduce((sum, r) => sum + Number(r.guests || 0), 0);
+      const confirmedGuests = reservations.filter(r => r.status === 'confirmed').reduce((sum, r) => sum + Number(r.guests || 0), 0);
+
+      // Render stats
+      stats.innerHTML = `
+        <span><span class="count">${activeReservations.length}</span> Reservierungen</span>
+        <span><span class="count">${confirmedGuests}</span> Gäste (best.)</span>
+        ${pendingCount > 0 ? `<span style="color: #ff6b35;"><span class="count">${pendingCount}</span> offen</span>` : ''}
+        ${blockedSlots.length > 0 ? `<span style="color: #dc3545;"><span class="count">${blockedSlots.length}</span> blockiert</span>` : ''}
+      `;
+
+      // Get day of week to determine opening hours
+      const dayDate = new Date(dateStr);
+      const dayOfWeek = dayDate.getDay(); // 0 = Sunday
+
+      // Define opening hours based on day
+      let openingStart = '09:00';
+      let openingEnd = '15:00';
+
+      // Adjust based on day (similar to standard.json)
+      if (dayOfWeek === 0 || dayOfWeek === 6) {
+        // Weekend: 08:30 - 16:00
+        openingStart = '08:30';
+        openingEnd = '16:00';
+      } else if (dayOfWeek === 5) {
+        // Friday: 09:00 - 16:00
+        openingStart = '09:00';
+        openingEnd = '16:00';
+      } else if (dayOfWeek === 1) {
+        // Monday: 09:00 - 15:00
+        openingStart = '09:00';
+        openingEnd = '15:00';
+      } else {
+        // Tue-Thu: 09:00 - 15:00
+        openingStart = '09:00';
+        openingEnd = '15:00';
+      }
+
+      // Use settings if available
+      if (adminSettings.openingHours) {
+        openingStart = adminSettings.openingHours.start || openingStart;
+        openingEnd = adminSettings.openingHours.end || openingEnd;
+      }
+
+      // Generate time slots (30-minute intervals for display)
+      const slots = [];
+      const [startHour, startMin] = openingStart.split(':').map(Number);
+      const [endHour, endMin] = openingEnd.split(':').map(Number);
+
+      let currentHour = startHour;
+      let currentMin = startMin;
+
+      while (currentHour < endHour || (currentHour === endHour && currentMin < endMin)) {
+        const timeStr = `${String(currentHour).padStart(2, '0')}:${String(currentMin).padStart(2, '0')}`;
+        slots.push(timeStr);
+
+        currentMin += 30;
+        if (currentMin >= 60) {
+          currentMin = 0;
+          currentHour++;
+        }
+      }
+
+      // Build blocked slots lookup
+      const blockedLookup = {};
+      blockedSlots.forEach(b => {
+        blockedLookup[b.time] = b;
+      });
+
+      // Group reservations by time slot (match to nearest 30-min slot)
+      const reservationsBySlot = {};
+      reservations.forEach(r => {
+        // Find the matching slot (exact match or closest earlier slot)
+        const [rHour, rMin] = r.time.split(':').map(Number);
+        const roundedMin = rMin < 30 ? '00' : '30';
+        const slotKey = `${String(rHour).padStart(2, '0')}:${roundedMin}`;
+
+        if (!reservationsBySlot[slotKey]) {
+          reservationsBySlot[slotKey] = [];
+        }
+        reservationsBySlot[slotKey].push(r);
+      });
+
+      // Render timeline
+      let html = '';
+
+      slots.forEach(timeSlot => {
+        const slotReservations = reservationsBySlot[timeSlot] || [];
+        const isBlocked = blockedLookup[timeSlot];
+
+        const slotClass = isBlocked ? 'timeline-slot blocked' : 'timeline-slot';
+
+        html += `<div class="${slotClass}">`;
+        html += `<div class="timeline-time">${timeSlot}</div>`;
+        html += '<div class="timeline-reservations">';
+
+        if (isBlocked) {
+          html += `<span class="timeline-blocked-badge">&#128683; Blockiert (Kap: ${isBlocked.capacity})</span>`;
+        }
+
+        if (slotReservations.length > 0) {
+          slotReservations
+            .sort((a, b) => {
+              // Sort: pending first, then confirmed, then others
+              const order = { pending: 0, confirmed: 1, waitlisted: 2, noshow: 3, cancelled: 4 };
+              return (order[a.status] || 5) - (order[b.status] || 5);
+            })
+            .forEach(r => {
+              const firstName = r.name.split(' ')[0];
+              html += `
+                <div class="timeline-reservation status-${r.status}"
+                     title="${r.name} - ${r.guests} Gäste - ${r.email}${r.specialRequests ? '\n' + r.specialRequests : ''}"
+                     data-code="${r.confirmationCode}" data-date="${r.date}">
+                  <span class="timeline-reservation-guests">${r.guests}</span>
+                  <span class="timeline-reservation-name">${firstName}</span>
+                </div>
+              `;
+            });
+        } else if (!isBlocked) {
+          html += '<span class="timeline-empty">-</span>';
+        }
+
+        html += '</div></div>';
+      });
+
+      // If no slots found, show message
+      if (slots.length === 0) {
+        html = '<div style="text-align: center; padding: 1rem; color: #999;">Keine Zeitslots für diesen Tag konfiguriert.</div>';
+      }
+
+      grid.innerHTML = html;
+    }
+
     function showDayDetail(dateStr) {
       const detail = document.getElementById('day-detail');
       const title = document.getElementById('day-detail-title');
@@ -1231,6 +1617,9 @@
       const blockedSlots = getBlockedSlotsForDate(dateStr);
 
       title.textContent = `Reservierungen fur ${formatDate(dateStr)}`;
+
+      // Render the visual timeline overview
+      renderTimelineOverview(dateStr, reservations, blockedSlots);
 
       if (reservations.length === 0 && blockedSlots.length === 0) {
         body.innerHTML = '<tr><td colspan="5" style="text-align: center; color: #999; padding: 2rem;">Keine Reservierungen fur diesen Tag.</td></tr>';
