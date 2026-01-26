@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Reservierungen - Healthy Brunch Club CMS</title>
+  <title>Reservierungen - Healthy Brunch Club x LASA CMS</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link href="https://fonts.googleapis.com/css2?family=Lato:wght@400;600;700&display=swap" rel="stylesheet">
   <script src="https://identity.netlify.com/v1/netlify-identity-widget.js"></script>
@@ -79,9 +79,18 @@
     .btn:disabled { opacity: .5; cursor: not-allowed; }
     .status-badge { display: inline-block; padding: .25rem .6rem; border-radius: 4px; font-size: .8rem; font-weight: 600; }
     .status-confirmed { background: #d4edda; color: #155724; }
+    .status-pending { background: #ff6b35; color: #fff; animation: pulse-pending 2s infinite; }
     .status-waitlisted { background: #fff3cd; color: #856404; }
     .status-cancelled { background: #f8d7da; color: #721c24; }
     .status-noshow { background: #e2e3e5; color: #383d41; }
+    @keyframes pulse-pending {
+      0%, 100% { box-shadow: 0 0 0 0 rgba(255, 107, 53, 0.4); }
+      50% { box-shadow: 0 0 0 8px rgba(255, 107, 53, 0); }
+    }
+    .stat-card.pending { background: linear-gradient(135deg, #ff6b35, #ff8c5a); }
+    .stat-card.pending .stat-value { color: #fff; font-size: 2.2rem; }
+    .stat-card.pending .stat-label { color: rgba(255,255,255,0.9); }
+    .pending-row { background: rgba(255, 107, 53, 0.1) !important; border-left: 4px solid #ff6b35; }
     .reservation-details { font-size: .85rem; color: #666; }
     .reservation-email { font-size: .8rem; color: #888; }
     .banner { padding: 1rem; border-radius: 8px; margin-bottom: 1rem; display: none; }
@@ -470,7 +479,7 @@
   <!-- Login Overlay -->
   <div class="login-overlay" id="login-overlay">
     <div class="login-card">
-      <div class="login-logo">Healthy Brunch Club</div>
+      <div class="login-logo">Healthy Brunch Club x LASA</div>
       <div class="login-subtitle">Reservierungen Verwaltung</div>
       <p style="color: #6b7a6c; margin-bottom: 1.5rem;">Bitte melden Sie sich mit Ihrem Netlify Identity Account an.</p>
       <button class="btn btn-primary" id="btn-login">Mit Netlify anmelden</button>
@@ -483,7 +492,7 @@
   <!-- Header -->
   <header class="cms-header">
     <div class="cms-header-left">
-      <a href="/admin/" class="cms-logo">Healthy Brunch Club</a>
+      <a href="/admin/" class="cms-logo">Healthy Brunch Club x LASA</a>
       <nav class="cms-nav">
         <a href="/admin/">Content</a>
         <a href="/admin/chatbot-logs.html">Chatbot-Logs</a>
@@ -505,6 +514,10 @@
 
     <!-- Stats Row -->
     <div class="stats-row" id="stats-row">
+      <div class="stat-card pending clickable" id="stat-pending-card" title="Offene Anfragen anzeigen">
+        <div class="stat-value" id="stat-pending">-</div>
+        <div class="stat-label">Angefragt</div>
+      </div>
       <div class="stat-card clickable" id="stat-today-card" title="Heute anzeigen">
         <div class="stat-value" id="stat-today">-</div>
         <div class="stat-label">Heute</div>
@@ -540,10 +553,25 @@
 
     <!-- Tabs -->
     <div class="tabs" id="tabs">
+      <button class="tab" data-tab="pending" style="background: rgba(255,107,53,0.1);">Angefragt <span class="badge" id="pending-badge" style="display:none; background:#ff6b35;">0</span></button>
       <button class="tab active" data-tab="calendar">Kalender</button>
       <button class="tab" data-tab="list">Liste</button>
       <button class="tab" data-tab="blocked">Blockierte Slots <span class="badge" id="blocked-badge" style="display:none;">0</span></button>
       <button class="tab" data-tab="settings">Einstellungen</button>
+    </div>
+
+    <!-- Pending (Angefragt) Tab -->
+    <div class="tab-content" id="pending-tab">
+      <div class="card" style="border-left: 4px solid #ff6b35;">
+        <h2 class="card-title" style="color: #ff6b35;">
+          <span class="icon">&#9888;</span> Offene Reservierungsanfragen
+        </h2>
+        <p class="settings-description">Diese Reservierungen warten auf Ihre Bestatigung. Klicken Sie auf "Bestatigen", um dem Gast eine Bestatigungsmail zu senden.</p>
+
+        <div id="pending-list-container">
+          <div class="loading">Lade offene Anfragen...</div>
+        </div>
+      </div>
     </div>
 
     <!-- Calendar Tab -->
@@ -602,6 +630,7 @@
             <span>Status filtern</span>
             <select id="filter-status">
               <option value="">Alle Status</option>
+              <option value="pending">Angefragt</option>
               <option value="confirmed">Bestatigt</option>
               <option value="waitlisted">Warteliste</option>
               <option value="cancelled">Storniert</option>
@@ -848,6 +877,7 @@
 
     function getStatusBadge(status) {
       const labels = {
+        pending: 'Angefragt',
         confirmed: 'Bestatigt',
         waitlisted: 'Warteliste',
         cancelled: 'Storniert',
@@ -923,18 +953,32 @@
       const today = new Date().toISOString().split('T')[0];
       const weekDates = getWeekDates();
 
+      const pending = allReservations.filter(r => r.status === 'pending');
       const confirmed = allReservations.filter(r => r.status === 'confirmed');
       const waitlisted = allReservations.filter(r => r.status === 'waitlisted');
       const todayReservations = allReservations.filter(r => r.date === today && r.status !== 'cancelled');
       const weekReservations = allReservations.filter(r => weekDates.includes(r.date) && r.status !== 'cancelled');
       const totalGuests = confirmed.reduce((sum, r) => sum + Number(r.guests || 0), 0);
 
+      document.getElementById('stat-pending').textContent = pending.length;
       document.getElementById('stat-today').textContent = todayReservations.length;
       document.getElementById('stat-week').textContent = weekReservations.length;
       document.getElementById('stat-confirmed').textContent = confirmed.length;
       document.getElementById('stat-waitlist').textContent = waitlisted.length;
       document.getElementById('stat-guests').textContent = totalGuests;
       document.getElementById('stat-blocked').textContent = allBlockedSlots.length;
+
+      // Update pending badge
+      const pendingBadge = document.getElementById('pending-badge');
+      if (pending.length > 0) {
+        pendingBadge.textContent = pending.length;
+        pendingBadge.style.display = 'inline';
+        // Make tab pulse when there are pending requests
+        document.querySelector('[data-tab="pending"]').style.animation = 'pulse-pending 2s infinite';
+      } else {
+        pendingBadge.style.display = 'none';
+        document.querySelector('[data-tab="pending"]').style.animation = 'none';
+      }
 
       // Update blocked badge
       const blockedBadge = document.getElementById('blocked-badge');
@@ -944,6 +988,9 @@
       } else {
         blockedBadge.style.display = 'none';
       }
+
+      // Render pending list
+      renderPendingReservations();
     }
 
     // ===== Calendar Functions =====
@@ -1094,8 +1141,10 @@
           .sort((a, b) => a.time.localeCompare(b.time))
           .forEach(r => {
             const actions = buildActionButtons(r, dateStr);
+            const rowClass = r.status === 'pending' ? 'pending-row' : '';
+            const rowStyle = r.status === 'cancelled' ? 'opacity: 0.5;' : '';
             rows += `
-              <tr data-id="${r.id}" data-code="${r.confirmationCode}" data-date="${r.date}" style="opacity: ${r.status === 'cancelled' ? '0.5' : '1'}">
+              <tr class="${rowClass}" data-id="${r.id}" data-code="${r.confirmationCode}" data-date="${r.date}" style="${rowStyle}">
                 <td><strong>${r.time}</strong></td>
                 <td>${formatContact(r)}</td>
                 <td>${r.guests}</td>
@@ -1115,17 +1164,23 @@
       const entryDate = entry.date || date;
       const actions = [];
 
-      if (entry.status !== 'confirmed') {
-        actions.push(`<button class="btn btn-primary btn-sm" data-action="confirm" data-code="${entry.confirmationCode}" data-date="${entryDate}">Bestatigen</button>`);
-      }
-      if (entry.status !== 'waitlisted') {
-        actions.push(`<button class="btn btn-warning btn-sm" data-action="waitlist" data-code="${entry.confirmationCode}" data-date="${entryDate}">Warteliste</button>`);
-      }
-      if (entry.status !== 'cancelled') {
-        actions.push(`<button class="btn btn-secondary btn-sm" data-action="cancel" data-code="${entry.confirmationCode}" data-date="${entryDate}">Stornieren</button>`);
-      }
-      if (entry.status === 'confirmed' && entry.status !== 'noshow') {
-        actions.push(`<button class="btn btn-info btn-sm" data-action="noshow" data-code="${entry.confirmationCode}" data-date="${entryDate}">No-Show</button>`);
+      // For pending status, show confirm button prominently
+      if (entry.status === 'pending') {
+        actions.push(`<button class="btn btn-primary btn-sm" style="background:#ff6b35;" data-action="confirm" data-code="${entry.confirmationCode}" data-date="${entryDate}">Bestatigen</button>`);
+        actions.push(`<button class="btn btn-secondary btn-sm" data-action="cancel" data-code="${entry.confirmationCode}" data-date="${entryDate}">Ablehnen</button>`);
+      } else {
+        if (entry.status !== 'confirmed') {
+          actions.push(`<button class="btn btn-primary btn-sm" data-action="confirm" data-code="${entry.confirmationCode}" data-date="${entryDate}">Bestatigen</button>`);
+        }
+        if (entry.status !== 'waitlisted') {
+          actions.push(`<button class="btn btn-warning btn-sm" data-action="waitlist" data-code="${entry.confirmationCode}" data-date="${entryDate}">Warteliste</button>`);
+        }
+        if (entry.status !== 'cancelled') {
+          actions.push(`<button class="btn btn-secondary btn-sm" data-action="cancel" data-code="${entry.confirmationCode}" data-date="${entryDate}">Stornieren</button>`);
+        }
+        if (entry.status === 'confirmed' && entry.status !== 'noshow') {
+          actions.push(`<button class="btn btn-info btn-sm" data-action="noshow" data-code="${entry.confirmationCode}" data-date="${entryDate}">No-Show</button>`);
+        }
       }
       actions.push(`<button class="btn btn-danger btn-sm" data-action="delete" data-code="${entry.confirmationCode}" data-date="${entryDate}">Loschen</button>`);
 
@@ -1148,8 +1203,10 @@
 
       tbody.innerHTML = reservations.map(entry => {
         const actions = buildActionButtons(entry, entry.date);
+        const rowClass = entry.status === 'pending' ? 'pending-row' : '';
+        const rowStyle = entry.status === 'cancelled' ? 'opacity: 0.5;' : '';
         return `
-          <tr style="opacity: ${entry.status === 'cancelled' ? '0.5' : '1'}">
+          <tr class="${rowClass}" style="${rowStyle}">
             <td><strong>${formatDate(entry.date)}</strong></td>
             <td><strong>${entry.time}</strong></td>
             <td>${formatContact(entry)}</td>
@@ -1217,6 +1274,100 @@
       html += '</div>';
 
       container.innerHTML = html;
+    }
+
+    // ===== Pending Reservations Functions =====
+    function renderPendingReservations() {
+      const container = document.getElementById('pending-list-container');
+      const pending = allReservations.filter(r => r.status === 'pending').sort((a, b) => {
+        // Sort by date, then by time
+        const dateCompare = a.date.localeCompare(b.date);
+        if (dateCompare !== 0) return dateCompare;
+        return a.time.localeCompare(b.time);
+      });
+
+      if (pending.length === 0) {
+        container.innerHTML = `
+          <div class="empty-state">
+            <div class="empty-state-icon" style="color: #2f5138;">&#10003;</div>
+            <div class="empty-state-title">Keine offenen Anfragen</div>
+            <p>Alle Reservierungsanfragen wurden bearbeitet.</p>
+          </div>
+        `;
+        return;
+      }
+
+      let html = `
+        <div style="margin-bottom: 1rem; display: flex; gap: .5rem; flex-wrap: wrap;">
+          <button class="btn btn-primary" id="btn-confirm-all-pending">Alle bestatigen</button>
+        </div>
+        <table>
+          <thead>
+            <tr>
+              <th>Datum</th>
+              <th>Zeit</th>
+              <th>Name / Kontakt</th>
+              <th>Gaste</th>
+              <th>Eingegangen</th>
+              <th>Aktionen</th>
+            </tr>
+          </thead>
+          <tbody>
+      `;
+
+      pending.forEach(r => {
+        const createdAt = r.createdAt ? new Date(r.createdAt).toLocaleString('de-DE', {
+          day: '2-digit', month: '2-digit', year: 'numeric',
+          hour: '2-digit', minute: '2-digit'
+        }) : '-';
+
+        html += `
+          <tr class="pending-row" data-code="${r.confirmationCode}" data-date="${r.date}">
+            <td><strong>${formatDate(r.date)}</strong></td>
+            <td><strong>${r.time}</strong></td>
+            <td>${formatContact(r)}</td>
+            <td>${r.guests}</td>
+            <td style="font-size: .85rem; color: #666;">${createdAt}</td>
+            <td>
+              <div class="btn-group">
+                <button class="btn btn-primary btn-sm" data-action="confirm" data-code="${r.confirmationCode}" data-date="${r.date}">Bestatigen</button>
+                <button class="btn btn-secondary btn-sm" data-action="cancel" data-code="${r.confirmationCode}" data-date="${r.date}">Ablehnen</button>
+                <button class="btn btn-danger btn-sm" data-action="delete" data-code="${r.confirmationCode}" data-date="${r.date}">Loschen</button>
+              </div>
+            </td>
+          </tr>
+        `;
+      });
+
+      html += '</tbody></table>';
+      container.innerHTML = html;
+
+      // Add handler for "confirm all" button
+      document.getElementById('btn-confirm-all-pending')?.addEventListener('click', async () => {
+        if (!confirm(`Alle ${pending.length} Anfragen bestatigen und E-Mails senden?`)) return;
+
+        for (const r of pending) {
+          try {
+            await authenticatedFetch('/.netlify/functions/manage-reservations', {
+              method: 'PATCH',
+              body: JSON.stringify({
+                confirmationCode: r.confirmationCode,
+                date: r.date,
+                status: 'confirmed',
+                sendEmail: true
+              })
+            });
+          } catch (error) {
+            console.error('Fehler bei', r.confirmationCode, error);
+          }
+        }
+
+        showBanner(`${pending.length} Reservierungen bestatigt.`);
+        await loadAllReservations();
+        updateStats();
+        renderCalendar();
+        applyFilters();
+      });
     }
 
     // ===== Settings Functions =====
@@ -1329,7 +1480,9 @@
             noshow: 'noshow'
           };
           const status = statusMap[action];
-          const sendEmail = action !== 'cancel' && action !== 'noshow' && confirm('E-Mail an Gast senden?');
+          // For confirm action, always send email (this sends the confirmation)
+          // For cancel/noshow, don't ask for email
+          const sendEmail = action === 'confirm' ? confirm('Bestatigungsmail an Gast senden?') : (action !== 'cancel' && action !== 'noshow' && confirm('E-Mail an Gast senden?'));
 
           await authenticatedFetch('/.netlify/functions/manage-reservations', {
             method: 'PATCH',
@@ -1522,6 +1675,10 @@
     });
 
     // Stats card clicks
+    document.getElementById('stat-pending-card').addEventListener('click', () => {
+      document.querySelector('[data-tab="pending"]').click();
+    });
+
     document.getElementById('stat-today-card').addEventListener('click', () => {
       document.getElementById('btn-today').click();
     });

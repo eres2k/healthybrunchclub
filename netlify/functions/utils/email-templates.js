@@ -214,7 +214,7 @@ function getBaseStyles() {
 function renderFooter() {
   return `
     <div class="footer" style="text-align: center; padding: 32px; background: #fafaf8; color: #484848; font-size: 13px;">
-      <div class="footer-brand" style="font-family: 'Playfair Display', Georgia, serif; font-size: 14px; color: #1a1a1a; margin-bottom: 8px;">Healthy Brunch Club Wien</div>
+      <div class="footer-brand" style="font-family: 'Playfair Display', Georgia, serif; font-size: 14px; color: #1a1a1a; margin-bottom: 8px;">Healthy Brunch Club x LASA Wien</div>
       <p style="margin: 8px 0; font-family: 'Montserrat', Arial, sans-serif;">Neubaugasse 15 · 1070 Wien</p>
       <p style="margin: 8px 0; color: #c9a961; font-family: 'Montserrat', Arial, sans-serif;">hello@healthybrunchclub.at</p>
       <div class="gold-line" style="width: 60px; height: 1px; background: #c9a961; margin: 16px auto;"></div>
@@ -318,7 +318,7 @@ function renderGuestEmail(reservation, options = {}) {
     <body style="font-family: 'Montserrat', Arial, sans-serif; font-weight: 300; background-color: #f5f0e8; color: #2d2d2d; margin: 0; padding: 20px; line-height: 1.6;">
       <div class="container" style="max-width: 640px; margin: 0 auto; background: #ffffff; overflow: hidden; box-shadow: 0 4px 24px rgba(0,0,0,0.08);">
         <div class="header header-confirmed" style="padding: 48px 32px; text-align: center; color: #fff; background: linear-gradient(135deg, #1a1a1a 0%, #2d2d2d 100%);">
-          <div class="logo-text" style="font-family: 'Playfair Display', Georgia, serif; font-size: 12px; letter-spacing: 3px; text-transform: uppercase; color: #c9a961; margin-bottom: 24px;">Healthy Brunch Club</div>
+          <div class="logo-text" style="font-family: 'Playfair Display', Georgia, serif; font-size: 12px; letter-spacing: 3px; text-transform: uppercase; color: #c9a961; margin-bottom: 24px;">Healthy Brunch Club x LASA</div>
           <h1 style="font-family: 'Playfair Display', Georgia, serif; margin: 0 0 8px 0; font-size: 32px; font-weight: 400; letter-spacing: -0.5px; color: #ffffff;">Reservierung bestätigt</h1>
           <div class="gold-line" style="width: 60px; height: 1px; background: #c9a961; margin: 16px auto;"></div>
           <p style="margin: 0; opacity: 0.9; font-family: 'Montserrat', Arial, sans-serif;">Wir freuen uns auf Ihren Besuch</p>
@@ -456,7 +456,7 @@ function renderCancellationEmail(reservation, options = {}) {
     <body style="font-family: 'Montserrat', Arial, sans-serif; font-weight: 300; background-color: #f5f0e8; color: #2d2d2d; margin: 0; padding: 20px; line-height: 1.6;">
       <div class="container" style="max-width: 640px; margin: 0 auto; background: #ffffff; overflow: hidden; box-shadow: 0 4px 24px rgba(0,0,0,0.08);">
         <div class="header header-cancelled" style="padding: 48px 32px; text-align: center; color: #fff; background: linear-gradient(135deg, #8b4049 0%, #6b2d35 100%);">
-          <div class="logo-text" style="font-family: 'Playfair Display', Georgia, serif; font-size: 12px; letter-spacing: 3px; text-transform: uppercase; color: #c9a961; margin-bottom: 24px;">Healthy Brunch Club</div>
+          <div class="logo-text" style="font-family: 'Playfair Display', Georgia, serif; font-size: 12px; letter-spacing: 3px; text-transform: uppercase; color: #c9a961; margin-bottom: 24px;">Healthy Brunch Club x LASA</div>
           <h1 style="font-family: 'Playfair Display', Georgia, serif; margin: 0 0 8px 0; font-size: 32px; font-weight: 400; letter-spacing: -0.5px; color: #ffffff;">Reservierung storniert</h1>
           <div class="gold-line" style="width: 60px; height: 1px; background: #c9a961; margin: 16px auto;"></div>
         </div>
@@ -513,7 +513,7 @@ function renderReminderEmail(reservation, options = {}) {
     <body style="font-family: 'Montserrat', Arial, sans-serif; font-weight: 300; background-color: #f5f0e8; color: #2d2d2d; margin: 0; padding: 20px; line-height: 1.6;">
       <div class="container" style="max-width: 640px; margin: 0 auto; background: #ffffff; overflow: hidden; box-shadow: 0 4px 24px rgba(0,0,0,0.08);">
         <div class="header header-reminder" style="padding: 48px 32px; text-align: center; color: #fff; background: linear-gradient(135deg, #1e4a3c 0%, #2d5a4a 100%);">
-          <div class="logo-text" style="font-family: 'Playfair Display', Georgia, serif; font-size: 12px; letter-spacing: 3px; text-transform: uppercase; color: #c9a961; margin-bottom: 24px;">Healthy Brunch Club</div>
+          <div class="logo-text" style="font-family: 'Playfair Display', Georgia, serif; font-size: 12px; letter-spacing: 3px; text-transform: uppercase; color: #c9a961; margin-bottom: 24px;">Healthy Brunch Club x LASA</div>
           <h1 style="font-family: 'Playfair Display', Georgia, serif; margin: 0 0 8px 0; font-size: 32px; font-weight: 400; letter-spacing: -0.5px; color: #ffffff;">Bis morgen!</h1>
           <div class="gold-line" style="width: 60px; height: 1px; background: #c9a961; margin: 16px auto;"></div>
           <p style="margin: 0; opacity: 0.9; font-family: 'Montserrat', Arial, sans-serif;">Wir freuen uns auf Ihren Besuch</p>
@@ -573,7 +573,7 @@ function renderWaitlistEmail(reservation) {
     <body style="font-family: 'Montserrat', Arial, sans-serif; font-weight: 300; background-color: #f5f0e8; color: #2d2d2d; margin: 0; padding: 20px; line-height: 1.6;">
       <div class="container" style="max-width: 640px; margin: 0 auto; background: #ffffff; overflow: hidden; box-shadow: 0 4px 24px rgba(0,0,0,0.08);">
         <div class="header header-waitlist" style="padding: 48px 32px; text-align: center; color: #fff; background: linear-gradient(135deg, #8b7355 0%, #6b5a45 100%);">
-          <div class="logo-text" style="font-family: 'Playfair Display', Georgia, serif; font-size: 12px; letter-spacing: 3px; text-transform: uppercase; color: #c9a961; margin-bottom: 24px;">Healthy Brunch Club</div>
+          <div class="logo-text" style="font-family: 'Playfair Display', Georgia, serif; font-size: 12px; letter-spacing: 3px; text-transform: uppercase; color: #c9a961; margin-bottom: 24px;">Healthy Brunch Club x LASA</div>
           <h1 style="font-family: 'Playfair Display', Georgia, serif; margin: 0 0 8px 0; font-size: 32px; font-weight: 400; letter-spacing: -0.5px; color: #ffffff;">Warteliste</h1>
           <div class="gold-line" style="width: 60px; height: 1px; background: #c9a961; margin: 16px auto;"></div>
           <p style="margin: 0; opacity: 0.9; font-family: 'Montserrat', Arial, sans-serif;">Wir benachrichtigen Sie, sobald ein Platz frei wird</p>
@@ -683,7 +683,7 @@ Was passiert jetzt?
 Du erhältst eine separate E-Mail, sobald wir deine Reservierung bestätigt haben.
 
 --
-Healthy Brunch Club Wien
+Healthy Brunch Club x LASA Wien
 Neubaugasse 15 · 1070 Wien
 hello@healthybrunchclub.at`;
 }
@@ -793,7 +793,7 @@ Route planen: https://maps.google.com/?q=Neubaugasse+15+1070+Wien
 Wichtig: Bitte komm pünktlich. Bei Verspätungen über 15 Minuten kann deine Reservierung an wartende Gäste vergeben werden.
 
 --
-Healthy Brunch Club Wien
+Healthy Brunch Club x LASA Wien
 hello@healthybrunchclub.at`;
 }
 
@@ -812,7 +812,7 @@ function renderWaitlistPromotedEmail(reservation, options = {}) {
     <body style="font-family: 'Montserrat', Arial, sans-serif; font-weight: 300; background-color: #f5f0e8; color: #2d2d2d; margin: 0; padding: 20px; line-height: 1.6;">
       <div class="container" style="max-width: 640px; margin: 0 auto; background: #ffffff; overflow: hidden; box-shadow: 0 4px 24px rgba(0,0,0,0.08);">
         <div class="header header-confirmed" style="padding: 48px 32px; text-align: center; color: #fff; background: linear-gradient(135deg, #1a1a1a 0%, #2d2d2d 100%);">
-          <div class="logo-text" style="font-family: 'Playfair Display', Georgia, serif; font-size: 12px; letter-spacing: 3px; text-transform: uppercase; color: #c9a961; margin-bottom: 24px;">Healthy Brunch Club</div>
+          <div class="logo-text" style="font-family: 'Playfair Display', Georgia, serif; font-size: 12px; letter-spacing: 3px; text-transform: uppercase; color: #c9a961; margin-bottom: 24px;">Healthy Brunch Club x LASA</div>
           <h1 style="font-family: 'Playfair Display', Georgia, serif; margin: 0 0 8px 0; font-size: 32px; font-weight: 400; letter-spacing: -0.5px; color: #ffffff;">Platz frei geworden!</h1>
           <div class="gold-line" style="width: 60px; height: 1px; background: #c9a961; margin: 16px auto;"></div>
           <p style="margin: 0; opacity: 0.9; font-family: 'Montserrat', Arial, sans-serif;">Ihre Reservierung wurde bestätigt</p>
@@ -862,7 +862,7 @@ function renderFeedbackRequestEmail(reservation, options = {}) {
     <body style="font-family: 'Montserrat', Arial, sans-serif; font-weight: 300; background-color: #f5f0e8; color: #2d2d2d; margin: 0; padding: 20px; line-height: 1.6;">
       <div class="container" style="max-width: 640px; margin: 0 auto; background: #ffffff; overflow: hidden; box-shadow: 0 4px 24px rgba(0,0,0,0.08);">
         <div class="header header-feedback" style="padding: 48px 32px; text-align: center; color: #fff; background: linear-gradient(135deg, #7a8b68 0%, #5a6b48 100%);">
-          <div class="logo-text" style="font-family: 'Playfair Display', Georgia, serif; font-size: 12px; letter-spacing: 3px; text-transform: uppercase; color: #c9a961; margin-bottom: 24px;">Healthy Brunch Club</div>
+          <div class="logo-text" style="font-family: 'Playfair Display', Georgia, serif; font-size: 12px; letter-spacing: 3px; text-transform: uppercase; color: #c9a961; margin-bottom: 24px;">Healthy Brunch Club x LASA</div>
           <h1 style="font-family: 'Playfair Display', Georgia, serif; margin: 0 0 8px 0; font-size: 32px; font-weight: 400; letter-spacing: -0.5px; color: #ffffff;">Danke für Ihren Besuch!</h1>
           <div class="gold-line" style="width: 60px; height: 1px; background: #c9a961; margin: 16px auto;"></div>
         </div>
@@ -873,7 +873,7 @@ function renderFeedbackRequestEmail(reservation, options = {}) {
 
           <div class="section" style="margin-bottom: 32px;">
             <p style="font-family: 'Montserrat', Arial, sans-serif; line-height: 1.7; margin: 0 0 16px 0;">Liebe/r ${reservation.name.split(' ')[0]},</p>
-            <p style="font-family: 'Montserrat', Arial, sans-serif; line-height: 1.7; margin: 0 0 16px 0;">vielen Dank, dass Sie uns im Healthy Brunch Club Wien besucht haben! Wir hoffen, Sie hatten eine wunderbare Zeit und es hat Ihnen geschmeckt.</p>
+            <p style="font-family: 'Montserrat', Arial, sans-serif; line-height: 1.7; margin: 0 0 16px 0;">vielen Dank, dass Sie uns im Healthy Brunch Club x LASA Wien besucht haben! Wir hoffen, Sie hatten eine wunderbare Zeit und es hat Ihnen geschmeckt.</p>
           </div>
 
           <div class="highlight-box" style="background: #fafaf8; border-left: 3px solid #c9a961; padding: 20px 24px; margin: 24px 0;">
@@ -1052,15 +1052,15 @@ function renderIcs(reservation) {
   return [
     'BEGIN:VCALENDAR',
     'VERSION:2.0',
-    'PRODID:-//Healthy Brunch Club Wien//Reservierung//DE',
+    'PRODID:-//Healthy Brunch Club x LASA Wien//Reservierung//DE',
     'BEGIN:VEVENT',
     `UID:${reservation.confirmationCode}@healthybrunchclub.at`,
     `DTSTAMP:${format(DateTime.utc())}`,
     `DTSTART:${format(start)}`,
     `DTEND:${format(end)}`,
-    'SUMMARY:Brunch im Healthy Brunch Club Wien',
+    'SUMMARY:Brunch im Healthy Brunch Club x LASA Wien',
     `DESCRIPTION:Reservierung für ${reservation.guests} Personen\\nBestätigungscode: ${reservation.confirmationCode}`,
-    'LOCATION:Healthy Brunch Club Wien\\, Neubaugasse 15\\, 1070 Wien',
+    'LOCATION:Healthy Brunch Club x LASA Wien\\, Neubaugasse 15\\, 1070 Wien',
     'END:VEVENT',
     'END:VCALENDAR'
   ].join('\r\n');
@@ -1094,8 +1094,8 @@ Name: ${reservation.name}`;
  * Plain text guest confirmation email
  */
 function renderGuestEmailText(reservation) {
-  return `Healthy Brunch Club Wien
-========================
+  return `Healthy Brunch Club x LASA Wien
+================================
 
 Ihre Reservierung ist bestätigt!
 
@@ -1109,7 +1109,7 @@ Wichtig: Bitte kommen Sie pünktlich. Bei Verspätungen über 15 Minuten kann Ih
 Wir freuen uns auf Ihren Besuch!
 
 --
-Healthy Brunch Club Wien
+Healthy Brunch Club x LASA Wien
 hello@healthybrunchclub.at
 Eat well. Feel better.`;
 }
@@ -1146,8 +1146,8 @@ Verwalten: https://healthybrunchclub.at/admin-dashboard.html`;
  * Plain text waitlist email
  */
 function renderWaitlistEmailText(reservation) {
-  return `Healthy Brunch Club Wien
-========================
+  return `Healthy Brunch Club x LASA Wien
+================================
 
 Sie sind auf der Warteliste
 
@@ -1161,7 +1161,7 @@ Was passiert jetzt?
 Neue Reservierung: https://healthybrunchclub.at/#reservation
 
 --
-Healthy Brunch Club Wien
+Healthy Brunch Club x LASA Wien
 hello@healthybrunchclub.at`;
 }
 
@@ -1169,8 +1169,8 @@ hello@healthybrunchclub.at`;
  * Plain text cancellation email
  */
 function renderCancellationEmailText(reservation, options = {}) {
-  let text = `Healthy Brunch Club Wien
-========================
+  let text = `Healthy Brunch Club x LASA Wien
+================================
 
 Ihre Reservierung wurde storniert
 
@@ -1187,7 +1187,7 @@ Wir würden uns freuen, Sie bald bei uns begrüßen zu dürfen!
 Neue Reservierung: https://healthybrunchclub.at/#reservation
 
 --
-Healthy Brunch Club Wien
+Healthy Brunch Club x LASA Wien
 hello@healthybrunchclub.at`;
 
   return text;
@@ -1202,8 +1202,8 @@ function renderReminderEmailText(reservation) {
   const date = DateTime.fromISO(dateOnly, { zone: reservation.timezone || 'Europe/Vienna' })
     .toFormat('EEEE, dd. MMMM yyyy', { locale: 'de' });
 
-  return `Healthy Brunch Club Wien
-========================
+  return `Healthy Brunch Club x LASA Wien
+================================
 
 Bis morgen!
 
@@ -1222,7 +1222,7 @@ Route planen: https://maps.google.com/?q=Neubaugasse+15+1070+Wien
 Wir freuen uns auf Sie!
 
 --
-Healthy Brunch Club Wien
+Healthy Brunch Club x LASA Wien
 hello@healthybrunchclub.at`;
 }
 
@@ -1230,8 +1230,8 @@ hello@healthybrunchclub.at`;
  * Plain text waitlist promoted email
  */
 function renderWaitlistPromotedEmailText(reservation) {
-  return `Healthy Brunch Club Wien
-========================
+  return `Healthy Brunch Club x LASA Wien
+================================
 
 Platz frei geworden - Ihre Reservierung ist bestätigt!
 
@@ -1247,7 +1247,7 @@ Bitte stornieren Sie rechtzeitig, damit andere Gäste nachrücken können.
 Kontakt: hello@healthybrunchclub.at
 
 --
-Healthy Brunch Club Wien
+Healthy Brunch Club x LASA Wien
 hello@healthybrunchclub.at
 Eat well. Feel better.`;
 }
@@ -1258,14 +1258,14 @@ Eat well. Feel better.`;
 function renderFeedbackRequestEmailText(reservation, options = {}) {
   const feedbackUrl = options.feedbackUrl || 'https://g.page/r/CQiDEMSRXhHbEBM/review';
 
-  return `Healthy Brunch Club Wien
-========================
+  return `Healthy Brunch Club x LASA Wien
+================================
 
 Danke für Ihren Besuch!
 
 Liebe/r ${reservation.name.split(' ')[0]},
 
-vielen Dank, dass Sie uns im Healthy Brunch Club Wien besucht haben! Wir hoffen, Sie hatten eine wunderbare Zeit und es hat Ihnen geschmeckt.
+vielen Dank, dass Sie uns im Healthy Brunch Club x LASA Wien besucht haben! Wir hoffen, Sie hatten eine wunderbare Zeit und es hat Ihnen geschmeckt.
 
 Ihre Meinung ist uns wichtig!
 Eine kurze Bewertung hilft uns, noch besser zu werden – und anderen Gästen bei ihrer Entscheidung.
@@ -1280,7 +1280,7 @@ Code: DANKE10
 Neue Reservierung: https://healthybrunchclub.at/#reservation
 
 --
-Healthy Brunch Club Wien
+Healthy Brunch Club x LASA Wien
 hello@healthybrunchclub.at
 Eat well. Feel better.`;
 }
