@@ -1,0 +1,62 @@
+[
+  {
+    "id": "a1b2c3d4-e5f6-7890-abcd-ef1234567806",
+    "confirmationCode": "HBC-IMP1-2506",
+    "date": "2026-02-01",
+    "time": "10:00",
+    "guests": 2,
+    "name": "Kimberly lapuz",
+    "email": "kimberly@import.local",
+    "phone": "",
+    "specialRequests": "",
+    "status": "confirmed",
+    "timezone": "Europe/Vienna",
+    "createdAt": "2026-01-26T12:00:00.000Z",
+    "updatedAt": "2026-01-26T12:00:00.000Z"
+  },
+  {
+    "id": "a1b2c3d4-e5f6-7890-abcd-ef1234567807",
+    "confirmationCode": "HBC-IMP1-2507",
+    "date": "2026-02-01",
+    "time": "12:00",
+    "guests": 2,
+    "name": "Annabel",
+    "email": "annabel@import.local",
+    "phone": "",
+    "specialRequests": "",
+    "status": "confirmed",
+    "timezone": "Europe/Vienna",
+    "createdAt": "2026-01-26T12:00:00.000Z",
+    "updatedAt": "2026-01-26T12:00:00.000Z"
+  },
+  {
+    "id": "a1b2c3d4-e5f6-7890-abcd-ef1234567808",
+    "confirmationCode": "HBC-IMP1-2508",
+    "date": "2026-02-01",
+    "time": "12:00",
+    "guests": 5,
+    "name": "Jeannette Diaz",
+    "email": "jeannette@import.local",
+    "phone": "",
+    "specialRequests": "",
+    "status": "confirmed",
+    "timezone": "Europe/Vienna",
+    "createdAt": "2026-01-26T12:00:00.000Z",
+    "updatedAt": "2026-01-26T12:00:00.000Z"
+  },
+  {
+    "id": "a1b2c3d4-e5f6-7890-abcd-ef1234567809",
+    "confirmationCode": "HBC-IMP1-2509",
+    "date": "2026-02-01",
+    "time": "12:00",
+    "guests": 2,
+    "name": "Nicko",
+    "email": "nicko@import.local",
+    "phone": "",
+    "specialRequests": "",
+    "status": "confirmed",
+    "timezone": "Europe/Vienna",
+    "createdAt": "2026-01-26T12:00:00.000Z",
+    "updatedAt": "2026-01-26T12:00:00.000Z"
+  }
+]

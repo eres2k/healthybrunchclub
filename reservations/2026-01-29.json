@@ -1,0 +1,32 @@
+[
+  {
+    "id": "a1b2c3d4-e5f6-7890-abcd-ef1234567802",
+    "confirmationCode": "HBC-IMP1-2502",
+    "date": "2026-01-29",
+    "time": "08:00",
+    "guests": 2,
+    "name": "Jan Paul Gines",
+    "email": "janpaul@import.local",
+    "phone": "",
+    "specialRequests": "",
+    "status": "confirmed",
+    "timezone": "Europe/Vienna",
+    "createdAt": "2026-01-26T12:00:00.000Z",
+    "updatedAt": "2026-01-26T12:00:00.000Z"
+  },
+  {
+    "id": "a1b2c3d4-e5f6-7890-abcd-ef1234567803",
+    "confirmationCode": "HBC-IMP1-2503",
+    "date": "2026-01-29",
+    "time": "08:30",
+    "guests": 8,
+    "name": "Tina",
+    "email": "tina@import.local",
+    "phone": "",
+    "specialRequests": "",
+    "status": "confirmed",
+    "timezone": "Europe/Vienna",
+    "createdAt": "2026-01-26T12:00:00.000Z",
+    "updatedAt": "2026-01-26T12:00:00.000Z"
+  }
+]
