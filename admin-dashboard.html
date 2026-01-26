@@ -888,6 +888,45 @@
     </div>
   </div>
 
+  <!-- Cancellation Modal with Email Option -->
+  <div id="cancel-modal" style="display: none; position: fixed; inset: 0; background: rgba(0,0,0,.5); z-index: 200; align-items: center; justify-content: center;">
+    <div style="background: #fff; padding: 2rem; border-radius: 12px; max-width: 600px; width: 95%; max-height: 90vh; overflow-y: auto;">
+      <h3 style="margin-bottom: 1rem; color: #dc3545; display: flex; align-items: center; gap: .5rem;">
+        <span style="font-size: 1.5rem;">&#9888;</span> Reservierung stornieren
+      </h3>
+      <div id="cancel-modal-reservation-info" style="background: #f8f9fa; padding: 1rem; border-radius: 8px; margin-bottom: 1rem;"></div>
+
+      <label class="checkbox-label" style="margin-bottom: 1rem; padding: 1rem; background: #fdf2f2; border-radius: 8px; border: 1px solid #f5c6cb;">
+        <input type="checkbox" id="cancel-send-email" checked />
+        <span style="font-weight: 600;">Stornierungs-E-Mail an Gast senden</span>
+      </label>
+
+      <div id="cancel-email-preview-container" style="margin-bottom: 1rem;">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: .5rem;">
+          <span style="font-size: .9rem; font-weight: 600; color: #6b7a6c;">E-Mail Vorschau:</span>
+          <button type="button" class="btn btn-secondary btn-sm" id="toggle-email-preview">Vorschau anzeigen</button>
+        </div>
+        <div id="cancel-email-preview" style="display: none; border: 1px solid #e4eadf; border-radius: 8px; max-height: 300px; overflow: auto;"></div>
+      </div>
+
+      <div style="display: flex; gap: .5rem; justify-content: flex-end;">
+        <button class="btn btn-secondary" id="cancel-modal-close">Abbrechen</button>
+        <button class="btn btn-danger" id="cancel-modal-confirm">Stornieren</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Email Preview Modal (for Confirm/Waitlist) -->
+  <div id="email-preview-modal" style="display: none; position: fixed; inset: 0; background: rgba(0,0,0,.5); z-index: 200; align-items: center; justify-content: center;">
+    <div style="background: #fff; padding: 2rem; border-radius: 12px; max-width: 700px; width: 95%; max-height: 90vh; overflow-y: auto;">
+      <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem;">
+        <h3 style="margin: 0; color: #2f5138;" id="email-preview-title">E-Mail Vorschau</h3>
+        <button class="btn btn-secondary btn-sm" id="email-preview-close">&times; Schließen</button>
+      </div>
+      <div id="email-preview-content" style="border: 1px solid #e4eadf; border-radius: 8px; overflow: hidden;"></div>
+    </div>
+  </div>
+
   <script>
     const banner = document.getElementById('admin-banner');
     const loginOverlay = document.getElementById('login-overlay');
@@ -1217,17 +1256,21 @@
     function buildActionButtons(entry, date) {
       const entryDate = entry.date || date;
       const actions = [];
+      const entryJson = JSON.stringify(entry).replace(/"/g, '&quot;');
 
       // For pending status, show confirm button prominently
       if (entry.status === 'pending') {
-        actions.push(`<button class="btn btn-primary btn-sm" style="background:#ff6b35;" data-action="confirm" data-code="${entry.confirmationCode}" data-date="${entryDate}">Bestatigen</button>`);
+        actions.push(`<button class="btn btn-primary btn-sm" style="background:#ff6b35; position: relative;" data-action="confirm" data-code="${entry.confirmationCode}" data-date="${entryDate}" title="Hover für E-Mail Vorschau">Bestatigen</button>`);
+        actions.push(`<button class="btn btn-secondary btn-sm" style="font-size: .7rem; padding: .3rem .5rem;" data-action="preview-confirm" data-reservation='${entryJson}' title="E-Mail Vorschau anzeigen">👁</button>`);
         actions.push(`<button class="btn btn-secondary btn-sm" data-action="cancel" data-code="${entry.confirmationCode}" data-date="${entryDate}">Ablehnen</button>`);
       } else {
         if (entry.status !== 'confirmed') {
           actions.push(`<button class="btn btn-primary btn-sm" data-action="confirm" data-code="${entry.confirmationCode}" data-date="${entryDate}">Bestatigen</button>`);
+          actions.push(`<button class="btn btn-secondary btn-sm" style="font-size: .7rem; padding: .3rem .5rem;" data-action="preview-confirm" data-reservation='${entryJson}' title="E-Mail Vorschau">👁</button>`);
         }
         if (entry.status !== 'waitlisted') {
           actions.push(`<button class="btn btn-warning btn-sm" data-action="waitlist" data-code="${entry.confirmationCode}" data-date="${entryDate}">Warteliste</button>`);
+          actions.push(`<button class="btn btn-secondary btn-sm" style="font-size: .7rem; padding: .3rem .5rem;" data-action="preview-waitlist" data-reservation='${entryJson}' title="E-Mail Vorschau">👁</button>`);
         }
         if (entry.status !== 'cancelled') {
           actions.push(`<button class="btn btn-secondary btn-sm" data-action="cancel" data-code="${entry.confirmationCode}" data-date="${entryDate}">Stornieren</button>`);
@@ -1550,6 +1593,75 @@
       }
     }
 
+    // ===== Cancellation Modal =====
+    let pendingCancellation = null;
+
+    function showCancellationModal(reservation) {
+      pendingCancellation = reservation;
+      const modal = document.getElementById('cancel-modal');
+      const infoDiv = document.getElementById('cancel-modal-reservation-info');
+      const previewDiv = document.getElementById('cancel-email-preview');
+      const previewContainer = document.getElementById('cancel-email-preview-container');
+
+      // Fill reservation info
+      infoDiv.innerHTML = `
+        <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: .5rem;">
+          <div><strong>Name:</strong> ${reservation.name}</div>
+          <div><strong>E-Mail:</strong> ${reservation.email}</div>
+          <div><strong>Datum:</strong> ${formatDate(reservation.date)}</div>
+          <div><strong>Zeit:</strong> ${reservation.time} Uhr</div>
+          <div><strong>Gäste:</strong> ${reservation.guests}</div>
+          <div><strong>Code:</strong> ${reservation.confirmationCode}</div>
+        </div>
+      `;
+
+      // Reset checkbox and hide preview
+      document.getElementById('cancel-send-email').checked = true;
+      previewDiv.style.display = 'none';
+      document.getElementById('toggle-email-preview').textContent = 'Vorschau anzeigen';
+
+      // Load email preview
+      loadEmailPreview('cancellation', reservation, previewDiv);
+
+      modal.style.display = 'flex';
+    }
+
+    async function loadEmailPreview(type, reservation, targetDiv) {
+      try {
+        const response = await authenticatedFetch('/.netlify/functions/email-preview', {
+          method: 'POST',
+          body: JSON.stringify({ type, reservation })
+        });
+        const data = await response.json();
+        targetDiv.innerHTML = `<iframe srcdoc="${data.html.replace(/"/g, '&quot;')}" style="width: 100%; height: 300px; border: none;"></iframe>`;
+      } catch (error) {
+        targetDiv.innerHTML = `<div style="padding: 1rem; color: #dc3545;">Fehler beim Laden der Vorschau: ${error.message}</div>`;
+      }
+    }
+
+    function showEmailPreviewModal(type, reservation) {
+      const modal = document.getElementById('email-preview-modal');
+      const titleEl = document.getElementById('email-preview-title');
+      const contentDiv = document.getElementById('email-preview-content');
+
+      const titles = {
+        confirmation: 'Bestätigungs-E-Mail Vorschau',
+        waitlist: 'Warteliste-E-Mail Vorschau',
+        cancellation: 'Stornierungs-E-Mail Vorschau'
+      };
+      titleEl.textContent = titles[type] || 'E-Mail Vorschau';
+
+      contentDiv.innerHTML = '<div class="loading">Lade Vorschau...</div>';
+      modal.style.display = 'flex';
+
+      loadEmailPreview(type, reservation, contentDiv).then(() => {
+        const iframe = contentDiv.querySelector('iframe');
+        if (iframe) {
+          iframe.style.height = '500px';
+        }
+      });
+    }
+
     // ===== Action Handlers =====
     async function handleReservationAction(action, confirmationCode, date) {
       try {
@@ -1561,22 +1673,27 @@
           });
           hideStatusChangeOverlay();
           showBanner('Reservierung geloscht.');
+        } else if (action === 'cancel') {
+          // Show cancellation modal instead of simple confirm
+          const reservation = allReservations.find(r => r.confirmationCode === confirmationCode && r.date === date);
+          if (reservation) {
+            showCancellationModal(reservation);
+          }
+          return; // Don't continue, modal handles the rest
         } else {
           const statusMap = {
             confirm: 'confirmed',
             waitlist: 'waitlisted',
-            cancel: 'cancelled',
             noshow: 'noshow'
           };
           const status = statusMap[action];
           // For confirm action, always send email (this sends the confirmation)
-          // For cancel/noshow, don't ask for email
-          const sendEmail = action === 'confirm' ? confirm('Bestatigungsmail an Gast senden?') : (action !== 'cancel' && action !== 'noshow' && confirm('E-Mail an Gast senden?'));
+          // For noshow, don't send email
+          const sendEmail = action === 'confirm' ? confirm('Bestatigungsmail an Gast senden?') : (action === 'waitlist' && confirm('Warteliste-E-Mail an Gast senden?'));
 
           const loadingMessages = {
             confirmed: sendEmail ? 'Reservierung wird bestätigt und E-Mail wird versendet...' : 'Reservierung wird bestätigt...',
             waitlisted: sendEmail ? 'Wird auf Warteliste gesetzt und E-Mail wird versendet...' : 'Wird auf Warteliste gesetzt...',
-            cancelled: 'Reservierung wird storniert...',
             noshow: 'Wird als No-Show markiert...'
           };
           showStatusChangeOverlay(loadingMessages[status]);
@@ -1590,7 +1707,6 @@
           const messages = {
             confirmed: 'Reservierung bestatigt.',
             waitlisted: 'Auf Warteliste gesetzt.',
-            cancelled: 'Reservierung storniert.',
             noshow: 'Als No-Show markiert.'
           };
           showBanner(messages[status]);
@@ -1608,6 +1724,44 @@
         hideStatusChangeOverlay();
         showBanner(error.message, 'error');
       }
+    }
+
+    async function executeCancellation() {
+      if (!pendingCancellation) return;
+
+      const sendEmail = document.getElementById('cancel-send-email').checked;
+      const { confirmationCode, date } = pendingCancellation;
+
+      document.getElementById('cancel-modal').style.display = 'none';
+
+      const loadingMsg = sendEmail
+        ? 'Reservierung wird storniert und E-Mail wird versendet...'
+        : 'Reservierung wird storniert...';
+      showStatusChangeOverlay(loadingMsg);
+
+      try {
+        await authenticatedFetch('/.netlify/functions/manage-reservations', {
+          method: 'PATCH',
+          body: JSON.stringify({ confirmationCode, date, status: 'cancelled', sendEmail })
+        });
+
+        hideStatusChangeOverlay();
+        showBanner(sendEmail ? 'Reservierung storniert und E-Mail versendet.' : 'Reservierung storniert.');
+
+        await loadAllReservations();
+        updateStats();
+        renderCalendar();
+        applyFilters();
+
+        if (selectedDate) {
+          showDayDetail(selectedDate);
+        }
+      } catch (error) {
+        hideStatusChangeOverlay();
+        showBanner(error.message, 'error');
+      }
+
+      pendingCancellation = null;
     }
 
     async function handleBlockSlot(date, time, capacity) {
@@ -1827,6 +1981,33 @@
       document.getElementById('block-modal').style.display = 'none';
     });
 
+    // Cancellation modal event listeners
+    document.getElementById('cancel-modal-close').addEventListener('click', () => {
+      document.getElementById('cancel-modal').style.display = 'none';
+      pendingCancellation = null;
+    });
+
+    document.getElementById('cancel-modal-confirm').addEventListener('click', () => {
+      executeCancellation();
+    });
+
+    document.getElementById('toggle-email-preview').addEventListener('click', () => {
+      const previewDiv = document.getElementById('cancel-email-preview');
+      const btn = document.getElementById('toggle-email-preview');
+      if (previewDiv.style.display === 'none') {
+        previewDiv.style.display = 'block';
+        btn.textContent = 'Vorschau ausblenden';
+      } else {
+        previewDiv.style.display = 'none';
+        btn.textContent = 'Vorschau anzeigen';
+      }
+    });
+
+    // Email preview modal close
+    document.getElementById('email-preview-close').addEventListener('click', () => {
+      document.getElementById('email-preview-modal').style.display = 'none';
+    });
+
     // Block slot from blocked tab
     document.getElementById('btn-block').addEventListener('click', () => {
       const date = document.getElementById('block-date').value;
@@ -1898,6 +2079,14 @@
         if (confirm(`Slot am ${formatDate(date)} um ${time} freigeben?`)) {
           await handleUnblockSlot(date, time);
         }
+        return;
+      }
+
+      // Handle email preview actions
+      if (action === 'preview-confirm' || action === 'preview-waitlist') {
+        const reservation = JSON.parse(button.dataset.reservation);
+        const type = action === 'preview-confirm' ? 'confirmation' : 'waitlist';
+        showEmailPreviewModal(type, reservation);
         return;
       }
 
