@@ -4400,25 +4400,72 @@ body.dark-mode video:hover {
     background: linear-gradient(145deg, #6366f1 0%, #4f46e5 100%);
 }
 
-/* Grid layout for 5 cards */
+/* Grid layout - Base */
 .menu-downloads-grid {
     display: grid;
-    grid-template-columns: repeat(5, 1fr);
     gap: 16px;
 }
 
-/* Tablet layout - 2-3 columns */
+/* Primary menus grid - 2 main menus */
+.menu-grid-primary {
+    grid-template-columns: repeat(2, 1fr);
+    margin-bottom: 12px;
+}
+
+/* Secondary menus grid - 3 smaller items */
+.menu-grid-secondary-home {
+    grid-template-columns: repeat(3, 1fr);
+}
+
+.menu-grid-secondary-home .menu-download-card {
+    padding: 12px;
+}
+
+.menu-grid-secondary-home .menu-card-icon {
+    width: 40px;
+    height: 40px;
+}
+
+.menu-grid-secondary-home .menu-card-icon svg {
+    width: 18px;
+    height: 18px;
+}
+
+.menu-grid-secondary-home .menu-card-title {
+    font-size: 13px;
+}
+
+.menu-grid-secondary-home .menu-card-label {
+    font-size: 9px;
+}
+
+.menu-grid-secondary-home .menu-card-download {
+    width: 30px;
+    height: 30px;
+}
+
+/* Tablet layout */
 @media (max-width: 992px) {
-    .menu-downloads-grid {
+    .menu-grid-primary {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 12px;
+    }
+
+    .menu-grid-secondary-home {
         grid-template-columns: repeat(3, 1fr);
         gap: 12px;
     }
 }
 
 @media (max-width: 768px) {
-    .menu-downloads-grid {
+    .menu-grid-primary {
         grid-template-columns: repeat(2, 1fr);
         gap: 12px;
+    }
+
+    .menu-grid-secondary-home {
+        grid-template-columns: repeat(3, 1fr);
+        gap: 10px;
     }
 }
 
@@ -4428,9 +4475,38 @@ body.dark-mode video:hover {
         margin: 16px 0;
     }
 
-    .menu-downloads-grid {
-        grid-template-columns: 1fr;
+    .menu-grid-primary {
+        grid-template-columns: repeat(2, 1fr);
         gap: 10px;
+        margin-bottom: 10px;
+    }
+
+    .menu-grid-secondary-home {
+        grid-template-columns: repeat(3, 1fr);
+        gap: 8px;
+    }
+
+    .menu-grid-secondary-home .menu-download-card {
+        padding: 10px;
+    }
+
+    .menu-grid-secondary-home .menu-card-icon {
+        width: 32px;
+        height: 32px;
+    }
+
+    .menu-grid-secondary-home .menu-card-icon svg {
+        width: 14px;
+        height: 14px;
+    }
+
+    .menu-grid-secondary-home .menu-card-title {
+        font-size: 11px;
+    }
+
+    .menu-grid-secondary-home .menu-card-download {
+        width: 26px;
+        height: 26px;
     }
 
     .menu-download-card {

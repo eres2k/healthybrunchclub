@@ -100,12 +100,30 @@
             font-size: 0.95rem;
         }
 
-        /* Menu Grid */
-        .menu-grid {
+        /* Menu Grid - Main Menus */
+        .menu-grid-main {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            grid-template-columns: repeat(2, 1fr);
             gap: 2rem;
+            margin-bottom: 2rem;
+        }
+
+        /* Menu Grid - Secondary Menus */
+        .menu-grid-secondary {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 1.5rem;
             margin-bottom: 3rem;
+        }
+
+        .menu-section-label {
+            font-size: 0.75rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.15em;
+            color: var(--sage-green);
+            margin-bottom: 1rem;
+            padding-left: 0.25rem;
         }
 
         /* Menu Card */
@@ -509,7 +527,8 @@
 
         /* Responsive */
         @media (max-width: 768px) {
-            .menu-grid {
+            .menu-grid-main,
+            .menu-grid-secondary {
                 grid-template-columns: 1fr;
             }
 
@@ -530,6 +549,12 @@
             }
         }
 
+        @media (max-width: 576px) {
+            .menu-section-label {
+                text-align: center;
+            }
+        }
+
         /* Loading Animation */
         @keyframes fadeIn {
             from { opacity: 0; transform: translateY(20px); }
@@ -540,10 +565,52 @@
             animation: fadeIn 0.5s ease forwards;
         }
 
-        .menu-card:nth-child(1) { animation-delay: 0.1s; }
-        .menu-card:nth-child(2) { animation-delay: 0.2s; }
-        .menu-card:nth-child(3) { animation-delay: 0.3s; }
-        .menu-card:nth-child(4) { animation-delay: 0.4s; }
+        .menu-grid-main .menu-card:nth-child(1) { animation-delay: 0.1s; }
+        .menu-grid-main .menu-card:nth-child(2) { animation-delay: 0.2s; }
+        .menu-grid-secondary .menu-card:nth-child(1) { animation-delay: 0.3s; }
+        .menu-grid-secondary .menu-card:nth-child(2) { animation-delay: 0.4s; }
+
+        /* Secondary Menu Cards - Compact Style */
+        .menu-grid-secondary .menu-card {
+            background: linear-gradient(145deg, #fafbfc 0%, #f5f6f7 100%);
+        }
+
+        .menu-grid-secondary .menu-card-header {
+            padding: 1.25rem 1rem;
+        }
+
+        .menu-grid-secondary .menu-card-icon {
+            width: 44px;
+            height: 44px;
+            font-size: 1.1rem;
+            margin-bottom: 0.75rem;
+        }
+
+        .menu-grid-secondary .menu-card-title {
+            font-size: 1.15rem;
+        }
+
+        .menu-grid-secondary .menu-card-subtitle {
+            font-size: 0.75rem;
+        }
+
+        .menu-grid-secondary .menu-card-actions {
+            padding: 1rem;
+            gap: 0.5rem;
+        }
+
+        .menu-grid-secondary .btn {
+            padding: 0.7rem 1rem;
+            font-size: 0.8rem;
+        }
+
+        .menu-grid-secondary .qr-section {
+            padding: 1rem;
+        }
+
+        .menu-grid-secondary .qr-toggle {
+            font-size: 0.75rem;
+        }
     </style>
 </head>
 <body>
@@ -571,8 +638,9 @@
             <p>Wählen Sie Ihre bevorzugte Speisekarte - zum Anzeigen, Herunterladen oder per QR-Code scannen</p>
         </div>
 
-        <!-- Menu Cards Grid -->
-        <div class="menu-grid">
+        <!-- Main Menu Cards -->
+        <p class="menu-section-label">Hauptspeisekarten</p>
+        <div class="menu-grid-main">
             <!-- HBC German Menu -->
             <div class="menu-card">
                 <div class="menu-card-header">
@@ -640,7 +708,11 @@
                     </div>
                 </div>
             </div>
+        </div>
 
+        <!-- Secondary Menu Cards -->
+        <p class="menu-section-label">Weitere Speisekarten</p>
+        <div class="menu-grid-secondary">
             <!-- HBC Kids Menu -->
             <div class="menu-card">
                 <div class="menu-card-header">
