@@ -443,6 +443,51 @@
       to { transform: rotate(360deg); }
     }
 
+    /* Status Change Overlay */
+    .status-change-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(36, 52, 36, 0.9);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 9999;
+      opacity: 0;
+      visibility: hidden;
+      transition: opacity 0.3s, visibility 0.3s;
+    }
+    .status-change-overlay.active {
+      opacity: 1;
+      visibility: visible;
+    }
+    .status-change-content {
+      background: #fff;
+      padding: 2.5rem 3rem;
+      border-radius: 16px;
+      text-align: center;
+      box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+      max-width: 400px;
+    }
+    .status-change-spinner {
+      width: 50px;
+      height: 50px;
+      border: 4px solid #e4eadf;
+      border-top-color: #2f5138;
+      border-radius: 50%;
+      animation: spin 1s linear infinite;
+      margin: 0 auto 1.5rem;
+    }
+    .status-change-title {
+      font-size: 1.2rem;
+      font-weight: 600;
+      color: #243424;
+      margin-bottom: 0.5rem;
+    }
+    .status-change-text {
+      color: #6b7a6c;
+      font-size: 0.95rem;
+    }
+
     /* Empty State */
     .empty-state {
       text-align: center;
@@ -809,6 +854,15 @@
           </div>
         </form>
       </div>
+    </div>
+  </div>
+
+  <!-- Status Change Loading Overlay -->
+  <div class="status-change-overlay" id="status-change-overlay">
+    <div class="status-change-content">
+      <div class="status-change-spinner"></div>
+      <div class="status-change-title">Änderung wird bearbeitet...</div>
+      <div class="status-change-text" id="status-change-text">Status wird aktualisiert und E-Mail wird versendet</div>
     </div>
   </div>
 
@@ -1346,6 +1400,10 @@
       document.getElementById('btn-confirm-all-pending')?.addEventListener('click', async () => {
         if (!confirm(`Alle ${pending.length} Anfragen bestatigen und E-Mails senden?`)) return;
 
+        showStatusChangeOverlay(`${pending.length} Reservierungen werden bestätigt und E-Mails versendet...`);
+        let successCount = 0;
+        let errorCount = 0;
+
         for (const r of pending) {
           try {
             await authenticatedFetch('/.netlify/functions/manage-reservations', {
@@ -1357,12 +1415,22 @@
                 sendEmail: true
               })
             });
+            successCount++;
+            // Update overlay text with progress
+            document.getElementById('status-change-text').textContent =
+              `${successCount} von ${pending.length} Reservierungen bestätigt...`;
           } catch (error) {
             console.error('Fehler bei', r.confirmationCode, error);
+            errorCount++;
           }
         }
 
-        showBanner(`${pending.length} Reservierungen bestatigt.`);
+        hideStatusChangeOverlay();
+        if (errorCount > 0) {
+          showBanner(`${successCount} Reservierungen bestatigt, ${errorCount} Fehler.`, errorCount > successCount ? 'error' : 'success');
+        } else {
+          showBanner(`${pending.length} Reservierungen bestatigt.`);
+        }
         await loadAllReservations();
         updateStats();
         renderCalendar();
@@ -1463,14 +1531,35 @@
       renderSettings();
     }
 
+    // ===== Status Change Loading Functions =====
+    function showStatusChangeOverlay(message) {
+      const overlay = document.getElementById('status-change-overlay');
+      const textEl = document.getElementById('status-change-text');
+      if (textEl && message) {
+        textEl.textContent = message;
+      }
+      if (overlay) {
+        overlay.classList.add('active');
+      }
+    }
+
+    function hideStatusChangeOverlay() {
+      const overlay = document.getElementById('status-change-overlay');
+      if (overlay) {
+        overlay.classList.remove('active');
+      }
+    }
+
     // ===== Action Handlers =====
     async function handleReservationAction(action, confirmationCode, date) {
       try {
         if (action === 'delete') {
           if (!confirm('Reservierung endgultig loschen?')) return;
+          showStatusChangeOverlay('Reservierung wird gelöscht...');
           await authenticatedFetch(`/.netlify/functions/manage-reservations?date=${date}&confirmationCode=${confirmationCode}`, {
             method: 'DELETE'
           });
+          hideStatusChangeOverlay();
           showBanner('Reservierung geloscht.');
         } else {
           const statusMap = {
@@ -1484,11 +1573,20 @@
           // For cancel/noshow, don't ask for email
           const sendEmail = action === 'confirm' ? confirm('Bestatigungsmail an Gast senden?') : (action !== 'cancel' && action !== 'noshow' && confirm('E-Mail an Gast senden?'));
 
+          const loadingMessages = {
+            confirmed: sendEmail ? 'Reservierung wird bestätigt und E-Mail wird versendet...' : 'Reservierung wird bestätigt...',
+            waitlisted: sendEmail ? 'Wird auf Warteliste gesetzt und E-Mail wird versendet...' : 'Wird auf Warteliste gesetzt...',
+            cancelled: 'Reservierung wird storniert...',
+            noshow: 'Wird als No-Show markiert...'
+          };
+          showStatusChangeOverlay(loadingMessages[status]);
+
           await authenticatedFetch('/.netlify/functions/manage-reservations', {
             method: 'PATCH',
             body: JSON.stringify({ confirmationCode, date, status, sendEmail })
           });
 
+          hideStatusChangeOverlay();
           const messages = {
             confirmed: 'Reservierung bestatigt.',
             waitlisted: 'Auf Warteliste gesetzt.',
@@ -1507,6 +1605,7 @@
           showDayDetail(selectedDate);
         }
       } catch (error) {
+        hideStatusChangeOverlay();
         showBanner(error.message, 'error');
       }
     }

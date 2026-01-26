@@ -3,23 +3,34 @@
 const { DateTime } = require('luxon');
 
 /**
+ * Website base URL for images
+ */
+const WEBSITE_BASE_URL = 'https://healthybrunchclub.at';
+
+/**
  * Featured dishes to promote in guest emails
  */
 const FEATURED_DISHES = [
   {
-    name: 'Avocado Bowl',
-    description: 'Cremige Avocado mit pochierten Eiern, Quinoa & Microgreens',
-    icon: '🥑'
+    name: 'Chia Lovers',
+    description: 'Zarte Chiasamen in Kokosdrink, frische Mangocreme & Heidelbeeren',
+    icon: '🥣',
+    image: '/content/images/img_5252.jpg',
+    fallbackIcon: '🥣'
   },
   {
-    name: 'Açaí Energy Bowl',
-    description: 'Açaí, Banane, Beeren, hausgemachtes Granola & Kokosflocken',
-    icon: '🥣'
+    name: 'Beggs Enedict',
+    description: 'Pochierte Eier auf Sauerteigbrot, Pilze, Avocadosauce & Pinienkerne',
+    icon: '🍳',
+    image: '/content/images/whatsapp-image-2025-09-17-at-09.51.42.jpeg',
+    fallbackIcon: '🍳'
   },
   {
-    name: 'Eggs Any Style',
-    description: 'Bio-Eier nach Wahl auf Süßkartoffel & Avocado',
-    icon: '🍳'
+    name: 'Beet Boost',
+    description: 'Frisch gepresster Saft mit Karotten, Äpfel, Zitrone, Rote Beete & Ingwer',
+    icon: '🥤',
+    image: '/content/images/dsc00362_ergebnis.jpg',
+    fallbackIcon: '🥤'
   }
 ];
 
@@ -214,6 +225,20 @@ function getBaseStyles() {
 function renderFooter() {
   return `
     <div class="footer" style="text-align: center; padding: 32px; background: #fafaf8; color: #484848; font-size: 13px;">
+      <div style="margin-bottom: 20px;">
+        <a href="https://healthybrunchclub.at" style="text-decoration: none;">
+          <!--[if mso]>
+          <v:roundrect xmlns:v="urn:schemas-microsoft-com:vml" xmlns:w="urn:schemas-microsoft-com:office:word" style="height:60px;width:150px;v-text-anchor:middle;" arcsize="0%" stroke="f" fillcolor="#fafaf8">
+          <w:anchorlock/>
+          <center style="color:#1a1a1a;font-family:'Playfair Display',Georgia,serif;font-size:14px;font-weight:bold;">HBC x LASA</center>
+          </v:roundrect>
+          <![endif]-->
+          <!--[if !mso]><!-->
+          <img src="${WEBSITE_BASE_URL}/content/images/logo.png" alt="Healthy Brunch Club x LASA" width="150" height="68" style="width: 150px; height: auto; max-height: 68px; display: inline-block;" onerror="this.style.display='none';this.nextElementSibling.style.display='inline-block';">
+          <span style="display: none; font-family: 'Playfair Display', Georgia, serif; font-size: 16px; color: #1a1a1a; font-weight: bold;">HBC x LASA</span>
+          <!--<![endif]-->
+        </a>
+      </div>
       <div class="footer-brand" style="font-family: 'Playfair Display', Georgia, serif; font-size: 14px; color: #1a1a1a; margin-bottom: 8px;">Healthy Brunch Club x LASA Wien</div>
       <p style="margin: 8px 0; font-family: 'Montserrat', Arial, sans-serif;">Neubaugasse 15 · 1070 Wien</p>
       <p style="margin: 8px 0; color: #c9a961; font-family: 'Montserrat', Arial, sans-serif;">hello@healthybrunchclub.at</p>
@@ -231,14 +256,25 @@ function renderFooter() {
 function renderFeaturedDishes() {
   return `
     <div class="section" style="margin-bottom: 32px;">
-      <h3 style="text-align: center; font-family: 'Playfair Display', Georgia, serif; margin: 0 0 12px 0; color: #1a1a1a; font-size: 18px; font-weight: 400;">Was Sie bei uns erwartet</h3>
+      <h3 style="text-align: center; font-family: 'Playfair Display', Georgia, serif; margin: 0 0 12px 0; color: #1a1a1a; font-size: 18px; font-weight: 400;">Was dich bei uns erwartet</h3>
       <div class="gold-line" style="width: 60px; height: 1px; background: #c9a961; margin: 16px auto;"></div>
       <div style="margin-top: 24px;">
         ${FEATURED_DISHES.map(dish => `
           <table cellpadding="0" cellspacing="0" border="0" width="100%" style="margin-bottom: 12px; background: #fafaf8; border-left: 3px solid #c9a961;">
             <tr>
-              <td style="padding: 16px; width: 50px; font-size: 32px; vertical-align: middle;">${dish.icon}</td>
-              <td style="padding: 16px 16px 16px 0; vertical-align: middle;">
+              <td style="padding: 12px; width: 80px; vertical-align: middle;">
+                <!--[if mso]>
+                <v:roundrect xmlns:v="urn:schemas-microsoft-com:vml" xmlns:w="urn:schemas-microsoft-com:office:word" style="height:60px;width:60px;v-text-anchor:middle;" arcsize="10%" stroke="f" fillcolor="#fafaf8">
+                <w:anchorlock/>
+                <center style="font-size:32px;">${dish.fallbackIcon}</center>
+                </v:roundrect>
+                <![endif]-->
+                <!--[if !mso]><!-->
+                <img src="${WEBSITE_BASE_URL}${dish.image}" alt="${dish.name}" width="60" height="60" style="width: 60px; height: 60px; object-fit: cover; border-radius: 8px; display: block;" onerror="this.style.display='none';this.nextElementSibling.style.display='block';">
+                <span style="display: none; font-size: 32px; text-align: center; width: 60px; line-height: 60px;">${dish.fallbackIcon}</span>
+                <!--<![endif]-->
+              </td>
+              <td style="padding: 12px 16px 12px 8px; vertical-align: middle;">
                 <div style="font-family: 'Playfair Display', Georgia, serif; font-size: 16px; color: #1a1a1a; margin-bottom: 4px;">${dish.name}</div>
                 <div style="font-size: 13px; color: #484848; font-family: 'Montserrat', Arial, sans-serif;">${dish.description}</div>
               </td>
@@ -247,7 +283,7 @@ function renderFeaturedDishes() {
         `).join('')}
       </div>
       <p style="text-align: center; margin-top: 20px;">
-        <a href="https://healthybrunchclub.at/menu" style="display: inline-block; padding: 16px 32px; background: transparent; border: 1px solid #1a1a1a; color: #1a1a1a; text-decoration: none; font-size: 12px; text-transform: uppercase; letter-spacing: 2px; font-weight: 500; font-family: 'Montserrat', Arial, sans-serif;">Menü ansehen</a>
+        <a href="https://healthybrunchclub.at/menu.html" style="display: inline-block; padding: 16px 32px; background: transparent; border: 1px solid #1a1a1a; color: #1a1a1a; text-decoration: none; font-size: 12px; text-transform: uppercase; letter-spacing: 2px; font-weight: 500; font-family: 'Montserrat', Arial, sans-serif;">Menü ansehen</a>
       </p>
     </div>
   `;
@@ -720,8 +756,7 @@ function renderConfirmationEmail(reservation) {
 
           <div class="section" style="margin-bottom: 32px;">
             <p style="font-family: 'Montserrat', Arial, sans-serif; line-height: 1.7; margin: 0 0 16px 0;">Hallo <strong>${reservation.name}</strong>,</p>
-            <p style="font-family: 'Montserrat', Arial, sans-serif; line-height: 1.7; margin: 0 0 16px 0;">Vielen Dank für deine Reservierung! Wir freuen uns sehr, dich bald bei uns begrüßen zu dürfen.</p>
-            <p style="font-family: 'Montserrat', Arial, sans-serif; line-height: 1.7; margin: 0 0 16px 0;">Hiermit bestätigen wir deine Buchung:</p>
+            <p style="font-family: 'Montserrat', Arial, sans-serif; line-height: 1.7; margin: 0 0 16px 0;">Vielen Dank für deine Reservierung! Hiermit bestätigen wir deine Buchung:</p>
           </div>
 
           <div class="highlight-box" style="background: #1a1a1a; border-left: 3px solid #c9a961; padding: 24px; margin: 24px 0;">
@@ -772,9 +807,7 @@ Reservierung bestätigt!
 
 Hallo ${reservation.name},
 
-Vielen Dank für deine Reservierung! Wir freuen uns sehr, dich bald bei uns begrüßen zu dürfen.
-
-Hiermit bestätigen wir deine Buchung:
+Vielen Dank für deine Reservierung! Hiermit bestätigen wir deine Buchung:
 
 • Datum: ${date}
 • Uhrzeit: ${reservation.time} Uhr
