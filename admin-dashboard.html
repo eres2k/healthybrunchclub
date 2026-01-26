@@ -169,6 +169,63 @@
       margin-bottom: 1.5rem;
     }
 
+    /* Export Dropdown */
+    .export-dropdown {
+      position: relative;
+      display: inline-block;
+    }
+    .export-dropdown-content {
+      display: none;
+      position: absolute;
+      top: 100%;
+      left: 0;
+      background: #fff;
+      min-width: 220px;
+      box-shadow: 0 4px 16px rgba(0,0,0,.12);
+      border-radius: 8px;
+      z-index: 50;
+      overflow: hidden;
+      margin-top: .25rem;
+    }
+    .export-dropdown-content.show {
+      display: block;
+    }
+    .export-dropdown-item {
+      display: flex;
+      align-items: center;
+      gap: .75rem;
+      padding: .75rem 1rem;
+      font-size: .9rem;
+      color: #243424;
+      cursor: pointer;
+      transition: background .15s;
+      border: none;
+      background: none;
+      width: 100%;
+      text-align: left;
+    }
+    .export-dropdown-item:hover {
+      background: #edf3eb;
+    }
+    .export-dropdown-item .icon {
+      width: 20px;
+      text-align: center;
+      font-size: 1rem;
+    }
+    .export-dropdown-divider {
+      height: 1px;
+      background: #e4eadf;
+      margin: .25rem 0;
+    }
+    .export-dropdown-header {
+      padding: .5rem 1rem;
+      font-size: .7rem;
+      text-transform: uppercase;
+      letter-spacing: .08em;
+      color: #6b7a6c;
+      background: #f6f7f4;
+    }
+
     /* Tabs */
     .tabs {
       display: flex;
@@ -825,8 +882,37 @@
     <!-- Quick Actions -->
     <div class="quick-actions">
       <button class="btn btn-primary" id="btn-refresh">Aktualisieren</button>
-      <button class="btn btn-secondary" id="btn-export-csv">CSV Export</button>
-      <button class="btn btn-secondary" id="btn-today">Heute anzeigen</button>
+      <div class="export-dropdown">
+        <button class="btn btn-secondary" id="btn-export-toggle">
+          <span>Export</span>
+          <span style="margin-left: .25rem;">&#9662;</span>
+        </button>
+        <div class="export-dropdown-content" id="export-dropdown">
+          <div class="export-dropdown-header">Datei-Export</div>
+          <button class="export-dropdown-item" data-export="csv">
+            <span class="icon">&#128196;</span>
+            <span>CSV (Excel)</span>
+          </button>
+          <button class="export-dropdown-item" data-export="pdf">
+            <span class="icon">&#128462;</span>
+            <span>PDF</span>
+          </button>
+          <button class="export-dropdown-item" data-export="html">
+            <span class="icon">&#127760;</span>
+            <span>HTML</span>
+          </button>
+          <div class="export-dropdown-divider"></div>
+          <div class="export-dropdown-header">Kalender-Export</div>
+          <button class="export-dropdown-item" data-export="ical">
+            <span class="icon">&#128197;</span>
+            <span>iCal (.ics)</span>
+          </button>
+          <button class="export-dropdown-item" data-export="google">
+            <span class="icon">&#128198;</span>
+            <span>Google Calendar</span>
+          </button>
+        </div>
+      </div>
     </div>
 
     <!-- Tabs -->
@@ -863,7 +949,7 @@
               <button id="next-month" title="Nachster Monat">&rarr;</button>
             </div>
             <div class="btn-group">
-              <button class="btn btn-secondary btn-sm" id="today-btn">Heute</button>
+              <button class="btn btn-secondary btn-sm" id="today-btn">Heute anzeigen</button>
             </div>
           </div>
           <div class="calendar-grid" id="calendar-grid">
@@ -2253,21 +2339,43 @@
       }
     }
 
+    // Helper: Get future reservations (today and onwards)
+    function getFutureReservations() {
+      const today = new Date().toISOString().split('T')[0];
+      return allReservations.filter(r => r.date >= today).sort((a, b) => {
+        if (a.date !== b.date) return a.date.localeCompare(b.date);
+        return a.time.localeCompare(b.time);
+      });
+    }
+
+    // Helper: Format status for display
+    function formatStatusText(status) {
+      const statusMap = {
+        'pending': 'Angefragt',
+        'confirmed': 'Bestätigt',
+        'waitlisted': 'Warteliste',
+        'cancelled': 'Storniert',
+        'noshow': 'No-Show'
+      };
+      return statusMap[status] || status;
+    }
+
     function exportToCSV() {
-      if (allReservations.length === 0) {
+      const reservations = getFutureReservations();
+      if (reservations.length === 0) {
         showBanner('Keine Reservierungen zum Exportieren.', 'error');
         return;
       }
 
-      const headers = ['Datum', 'Zeit', 'Name', 'E-Mail', 'Telefon', 'Gaste', 'Status', 'Wunsche'];
-      const rows = allReservations.map(r => [
+      const headers = ['Datum', 'Zeit', 'Name', 'E-Mail', 'Telefon', 'Gäste', 'Status', 'Wünsche'];
+      const rows = reservations.map(r => [
         r.date,
         r.time,
         r.name,
         r.email,
         r.phone || '',
         r.guests,
-        r.status,
+        formatStatusText(r.status),
         r.specialRequests || ''
       ]);
 
@@ -2282,7 +2390,287 @@
       document.body.appendChild(link);
       link.click();
       link.remove();
-      showBanner('CSV Export erstellt.');
+      showBanner(`CSV Export erstellt (${reservations.length} Reservierungen).`);
+    }
+
+    function exportToPDF() {
+      const reservations = getFutureReservations();
+      if (reservations.length === 0) {
+        showBanner('Keine Reservierungen zum Exportieren.', 'error');
+        return;
+      }
+
+      // Group by date
+      const byDate = {};
+      reservations.forEach(r => {
+        if (!byDate[r.date]) byDate[r.date] = [];
+        byDate[r.date].push(r);
+      });
+
+      const formatDate = (dateStr) => {
+        const d = new Date(dateStr);
+        return d.toLocaleDateString('de-DE', { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' });
+      };
+
+      let content = `
+        <html>
+        <head>
+          <meta charset="utf-8">
+          <title>Reservierungen - Healthy Brunch Club</title>
+          <style>
+            @page { size: A4; margin: 15mm; }
+            body { font-family: 'Segoe UI', Arial, sans-serif; font-size: 11pt; color: #243424; }
+            h1 { color: #2f5138; font-size: 18pt; margin-bottom: 5mm; }
+            h2 { color: #2f5138; font-size: 13pt; margin: 8mm 0 4mm 0; border-bottom: 1px solid #e4eadf; padding-bottom: 2mm; }
+            .meta { color: #6b7a6c; font-size: 9pt; margin-bottom: 8mm; }
+            table { width: 100%; border-collapse: collapse; margin-bottom: 5mm; }
+            th, td { padding: 2.5mm; text-align: left; border-bottom: 1px solid #e4eadf; font-size: 10pt; }
+            th { background: #edf3eb; font-weight: 600; text-transform: uppercase; font-size: 8pt; letter-spacing: 0.5pt; }
+            .status { display: inline-block; padding: 1mm 3mm; border-radius: 3px; font-size: 8pt; font-weight: 600; }
+            .status-confirmed { background: #d4edda; color: #155724; }
+            .status-pending { background: #ff6b35; color: #fff; }
+            .status-waitlisted { background: #fff3cd; color: #856404; }
+            .status-cancelled { background: #f8d7da; color: #721c24; }
+            .status-noshow { background: #e2e3e5; color: #383d41; }
+            .total { margin-top: 8mm; padding: 4mm; background: #edf3eb; border-radius: 3mm; }
+            @media print { body { -webkit-print-color-adjust: exact; print-color-adjust: exact; } }
+          </style>
+        </head>
+        <body>
+          <h1>Reservierungen - Healthy Brunch Club</h1>
+          <div class="meta">Erstellt am ${new Date().toLocaleDateString('de-DE')} um ${new Date().toLocaleTimeString('de-DE', { hour: '2-digit', minute: '2-digit' })} Uhr</div>
+      `;
+
+      let totalGuests = 0;
+      Object.keys(byDate).sort().forEach(date => {
+        const dayReservations = byDate[date];
+        const dayGuests = dayReservations.reduce((sum, r) => sum + (r.status !== 'cancelled' && r.status !== 'noshow' ? r.guests : 0), 0);
+        totalGuests += dayGuests;
+
+        content += `<h2>${formatDate(date)} (${dayReservations.length} Reservierungen, ${dayGuests} Gäste)</h2>`;
+        content += `<table><thead><tr><th>Zeit</th><th>Name</th><th>Kontakt</th><th>Gäste</th><th>Status</th><th>Wünsche</th></tr></thead><tbody>`;
+
+        dayReservations.forEach(r => {
+          content += `<tr>
+            <td>${r.time}</td>
+            <td>${r.name}</td>
+            <td>${r.email}${r.phone ? '<br>' + r.phone : ''}</td>
+            <td>${r.guests}</td>
+            <td><span class="status status-${r.status}">${formatStatusText(r.status)}</span></td>
+            <td>${r.specialRequests || '-'}</td>
+          </tr>`;
+        });
+        content += `</tbody></table>`;
+      });
+
+      content += `
+        <div class="total">
+          <strong>Gesamt:</strong> ${reservations.length} Reservierungen, ${totalGuests} Gäste erwartet
+        </div>
+        </body></html>
+      `;
+
+      const printWindow = window.open('', '_blank');
+      printWindow.document.write(content);
+      printWindow.document.close();
+      printWindow.onload = () => {
+        printWindow.print();
+      };
+      showBanner(`PDF Export geöffnet (${reservations.length} Reservierungen).`);
+    }
+
+    function exportToHTML() {
+      const reservations = getFutureReservations();
+      if (reservations.length === 0) {
+        showBanner('Keine Reservierungen zum Exportieren.', 'error');
+        return;
+      }
+
+      // Group by date
+      const byDate = {};
+      reservations.forEach(r => {
+        if (!byDate[r.date]) byDate[r.date] = [];
+        byDate[r.date].push(r);
+      });
+
+      const formatDate = (dateStr) => {
+        const d = new Date(dateStr);
+        return d.toLocaleDateString('de-DE', { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' });
+      };
+
+      let content = `<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Reservierungen - Healthy Brunch Club</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; background: #f6f7f4; color: #243424; padding: 2rem; }
+    .container { max-width: 1000px; margin: 0 auto; }
+    h1 { color: #2f5138; margin-bottom: .5rem; }
+    .meta { color: #6b7a6c; margin-bottom: 2rem; }
+    h2 { color: #2f5138; margin: 2rem 0 1rem; padding-bottom: .5rem; border-bottom: 2px solid #e4eadf; }
+    .card { background: #fff; border-radius: 12px; padding: 1.5rem; margin-bottom: 1rem; box-shadow: 0 2px 8px rgba(0,0,0,.06); }
+    .reservation { display: grid; grid-template-columns: 80px 1fr 100px 100px; gap: 1rem; align-items: center; padding: 1rem 0; border-bottom: 1px solid #e4eadf; }
+    .reservation:last-child { border-bottom: none; }
+    .time { font-weight: 600; font-size: 1.1rem; color: #2f5138; }
+    .name { font-weight: 600; }
+    .contact { font-size: .85rem; color: #6b7a6c; }
+    .guests { text-align: center; }
+    .status { display: inline-block; padding: .25rem .6rem; border-radius: 4px; font-size: .8rem; font-weight: 600; }
+    .status-confirmed { background: #d4edda; color: #155724; }
+    .status-pending { background: #ff6b35; color: #fff; }
+    .status-waitlisted { background: #fff3cd; color: #856404; }
+    .status-cancelled { background: #f8d7da; color: #721c24; }
+    .status-noshow { background: #e2e3e5; color: #383d41; }
+    .wishes { font-size: .85rem; color: #6b7a6c; font-style: italic; margin-top: .5rem; }
+    .summary { background: #edf3eb; padding: 1rem 1.5rem; border-radius: 8px; margin-top: 2rem; }
+    @media (max-width: 600px) {
+      .reservation { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>Reservierungen - Healthy Brunch Club</h1>
+    <div class="meta">Erstellt am ${new Date().toLocaleDateString('de-DE')} um ${new Date().toLocaleTimeString('de-DE', { hour: '2-digit', minute: '2-digit' })} Uhr</div>
+`;
+
+      let totalGuests = 0;
+      Object.keys(byDate).sort().forEach(date => {
+        const dayReservations = byDate[date];
+        const dayGuests = dayReservations.reduce((sum, r) => sum + (r.status !== 'cancelled' && r.status !== 'noshow' ? r.guests : 0), 0);
+        totalGuests += dayGuests;
+
+        content += `    <h2>${formatDate(date)}</h2>\n    <div class="card">\n`;
+
+        dayReservations.forEach(r => {
+          content += `      <div class="reservation">
+        <div class="time">${r.time}</div>
+        <div>
+          <div class="name">${r.name}</div>
+          <div class="contact">${r.email}${r.phone ? ' | ' + r.phone : ''}</div>
+          ${r.specialRequests ? '<div class="wishes">' + r.specialRequests + '</div>' : ''}
+        </div>
+        <div class="guests">${r.guests} Gäste</div>
+        <div><span class="status status-${r.status}">${formatStatusText(r.status)}</span></div>
+      </div>\n`;
+        });
+        content += `    </div>\n`;
+      });
+
+      content += `    <div class="summary"><strong>Gesamt:</strong> ${reservations.length} Reservierungen, ${totalGuests} Gäste erwartet</div>
+  </div>
+</body>
+</html>`;
+
+      const blob = new Blob([content], { type: 'text/html;charset=utf-8;' });
+      const link = document.createElement('a');
+      link.href = URL.createObjectURL(blob);
+      link.download = `reservierungen-${new Date().toISOString().split('T')[0]}.html`;
+      document.body.appendChild(link);
+      link.click();
+      link.remove();
+      showBanner(`HTML Export erstellt (${reservations.length} Reservierungen).`);
+    }
+
+    function exportToIcal() {
+      const reservations = getFutureReservations().filter(r => r.status !== 'cancelled' && r.status !== 'noshow');
+      if (reservations.length === 0) {
+        showBanner('Keine aktiven Reservierungen zum Exportieren.', 'error');
+        return;
+      }
+
+      const escapeIcal = (str) => (str || '').replace(/[\\;,\n]/g, c => '\\' + c);
+      const formatIcalDate = (date, time) => {
+        const d = new Date(`${date}T${time}`);
+        return d.toISOString().replace(/[-:]/g, '').replace(/\.\d{3}/, '');
+      };
+
+      let ical = `BEGIN:VCALENDAR
+VERSION:2.0
+PRODID:-//Healthy Brunch Club//Reservierungen//DE
+CALSCALE:GREGORIAN
+METHOD:PUBLISH
+X-WR-CALNAME:HBC Reservierungen
+X-WR-TIMEZONE:Europe/Berlin
+`;
+
+      reservations.forEach(r => {
+        const startDate = formatIcalDate(r.date, r.time);
+        // End time: assume 2 hours
+        const endTime = new Date(`${r.date}T${r.time}`);
+        endTime.setHours(endTime.getHours() + 2);
+        const endDate = endTime.toISOString().replace(/[-:]/g, '').replace(/\.\d{3}/, '');
+
+        const uid = `${r.confirmationCode || r.date + r.time + r.name}@healthybrunchclub`;
+        const summary = `${r.name} (${r.guests} Gäste)`;
+        const description = `Status: ${formatStatusText(r.status)}\\nE-Mail: ${r.email}${r.phone ? '\\nTelefon: ' + r.phone : ''}${r.specialRequests ? '\\nWünsche: ' + escapeIcal(r.specialRequests) : ''}`;
+
+        ical += `BEGIN:VEVENT
+UID:${uid}
+DTSTART:${startDate}
+DTEND:${endDate}
+SUMMARY:${escapeIcal(summary)}
+DESCRIPTION:${description}
+STATUS:${r.status === 'confirmed' ? 'CONFIRMED' : 'TENTATIVE'}
+END:VEVENT
+`;
+      });
+
+      ical += `END:VCALENDAR`;
+
+      const blob = new Blob([ical], { type: 'text/calendar;charset=utf-8;' });
+      const link = document.createElement('a');
+      link.href = URL.createObjectURL(blob);
+      link.download = `reservierungen-${new Date().toISOString().split('T')[0]}.ics`;
+      document.body.appendChild(link);
+      link.click();
+      link.remove();
+      showBanner(`iCal Export erstellt (${reservations.length} Reservierungen).`);
+    }
+
+    function exportToGoogleCalendar() {
+      const reservations = getFutureReservations().filter(r => r.status !== 'cancelled' && r.status !== 'noshow');
+      if (reservations.length === 0) {
+        showBanner('Keine aktiven Reservierungen zum Exportieren.', 'error');
+        return;
+      }
+
+      if (reservations.length > 1) {
+        // For multiple reservations, use iCal export and show instructions
+        const confirmed = confirm(
+          `Es gibt ${reservations.length} Reservierungen.\n\n` +
+          `Google Calendar erlaubt nur einzelne Events zu importieren.\n\n` +
+          `Möchten Sie stattdessen eine iCal-Datei (.ics) exportieren, die Sie in Google Calendar importieren können?\n\n` +
+          `(Gehen Sie zu calendar.google.com → Einstellungen → Importieren & Exportieren → Importieren)`
+        );
+        if (confirmed) {
+          exportToIcal();
+        }
+        return;
+      }
+
+      // Single reservation: open Google Calendar directly
+      const r = reservations[0];
+      const formatGoogleDate = (date, time) => {
+        return `${date.replace(/-/g, '')}T${time.replace(':', '')}00`;
+      };
+
+      const startDate = formatGoogleDate(r.date, r.time);
+      const endTime = new Date(`${r.date}T${r.time}`);
+      endTime.setHours(endTime.getHours() + 2);
+      const endDate = `${r.date.replace(/-/g, '')}T${String(endTime.getHours()).padStart(2, '0')}${String(endTime.getMinutes()).padStart(2, '0')}00`;
+
+      const title = encodeURIComponent(`${r.name} (${r.guests} Gäste)`);
+      const details = encodeURIComponent(`Status: ${formatStatusText(r.status)}\nE-Mail: ${r.email}${r.phone ? '\nTelefon: ' + r.phone : ''}${r.specialRequests ? '\nWünsche: ' + r.specialRequests : ''}`);
+      const location = encodeURIComponent('Healthy Brunch Club');
+
+      const url = `https://calendar.google.com/calendar/render?action=TEMPLATE&text=${title}&dates=${startDate}/${endDate}&details=${details}&location=${location}`;
+
+      window.open(url, '_blank');
+      showBanner('Google Calendar geöffnet.');
     }
 
     // ===== Event Listeners =====
@@ -2324,8 +2712,47 @@
 
     // Quick actions
     document.getElementById('btn-refresh').addEventListener('click', loadAllData);
-    document.getElementById('btn-export-csv').addEventListener('click', exportToCSV);
-    document.getElementById('btn-today').addEventListener('click', () => {
+
+    // Export dropdown
+    const exportToggle = document.getElementById('btn-export-toggle');
+    const exportDropdown = document.getElementById('export-dropdown');
+
+    exportToggle.addEventListener('click', (e) => {
+      e.stopPropagation();
+      exportDropdown.classList.toggle('show');
+    });
+
+    // Close dropdown when clicking outside
+    document.addEventListener('click', (e) => {
+      if (!e.target.closest('.export-dropdown')) {
+        exportDropdown.classList.remove('show');
+      }
+    });
+
+    // Export actions
+    exportDropdown.addEventListener('click', (e) => {
+      const item = e.target.closest('.export-dropdown-item');
+      if (!item) return;
+
+      const exportType = item.dataset.export;
+      exportDropdown.classList.remove('show');
+
+      switch (exportType) {
+        case 'csv': exportToCSV(); break;
+        case 'pdf': exportToPDF(); break;
+        case 'html': exportToHTML(); break;
+        case 'ical': exportToIcal(); break;
+        case 'google': exportToGoogleCalendar(); break;
+      }
+    });
+
+    // Stats card clicks
+    document.getElementById('stat-pending-card').addEventListener('click', () => {
+      document.querySelector('[data-tab="pending"]').click();
+    });
+
+    // Navigate to today and show day detail
+    function goToToday() {
       const today = new Date().toISOString().split('T')[0];
       currentMonth = new Date();
       selectedDate = today;
@@ -2336,16 +2763,9 @@
       document.querySelectorAll('.calendar-day').forEach(d => {
         d.classList.toggle('selected', d.dataset.date === today);
       });
-    });
+    }
 
-    // Stats card clicks
-    document.getElementById('stat-pending-card').addEventListener('click', () => {
-      document.querySelector('[data-tab="pending"]').click();
-    });
-
-    document.getElementById('stat-today-card').addEventListener('click', () => {
-      document.getElementById('btn-today').click();
-    });
+    document.getElementById('stat-today-card').addEventListener('click', goToToday);
 
     document.getElementById('stat-blocked-card').addEventListener('click', () => {
       document.querySelector('[data-tab="blocked"]').click();
@@ -2362,10 +2782,7 @@
       renderCalendar();
     });
 
-    document.getElementById('today-btn').addEventListener('click', () => {
-      currentMonth = new Date();
-      renderCalendar();
-    });
+    document.getElementById('today-btn').addEventListener('click', goToToday);
 
     // Block day button
     document.getElementById('btn-block-day').addEventListener('click', () => {
