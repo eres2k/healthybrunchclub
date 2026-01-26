@@ -50,17 +50,20 @@
     }
     .btn-logout:hover { background: #f5f5f5; }
 
-    .container { max-width: 1200px; margin: 0 auto; padding: 2rem; }
+    .container { max-width: 1400px; margin: 0 auto; padding: 2rem; }
     .page-title { font-size: 1.75rem; font-weight: 700; margin-bottom: .5rem; color: #243424; }
     .page-subtitle { color: #6b7a6c; margin-bottom: 2rem; }
     .card { background: #fff; padding: 1.5rem; border-radius: 12px; box-shadow: 0 2px 8px rgba(0,0,0,.06); margin-bottom: 1.5rem; }
-    .card-title { font-size: 1.1rem; font-weight: 600; margin-bottom: 1rem; color: #2f5138; }
+    .card-title { font-size: 1.1rem; font-weight: 600; margin-bottom: 1rem; color: #2f5138; display: flex; align-items: center; gap: .5rem; }
+    .card-title .icon { font-size: 1.2rem; }
     .grid { display: grid; gap: 1rem; }
     .grid-2 { grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); }
+    .grid-3 { grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); }
+    .grid-4 { grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); }
     table { width: 100%; border-collapse: collapse; }
     th, td { padding: .75rem; border-bottom: 1px solid #e4eadf; text-align: left; font-size: .9rem; }
     th { text-transform: uppercase; letter-spacing: .08em; font-size: .75rem; color: #6b7a6c; }
-    .btn { display: inline-flex; align-items: center; justify-content: center; padding: .75rem 1.6rem; border-radius: 8px; border: none; font-weight: 600; cursor: pointer; transition: all .15s; }
+    .btn { display: inline-flex; align-items: center; justify-content: center; padding: .75rem 1.6rem; border-radius: 8px; border: none; font-weight: 600; cursor: pointer; transition: all .15s; gap: .5rem; }
     .btn-primary { background: #2f5138; color: #fff; }
     .btn-primary:hover { background: #243f2c; }
     .btn-secondary { background: #edf3eb; color: #2f5138; }
@@ -69,20 +72,29 @@
     .btn-danger:hover { background: #bb2d3b; }
     .btn-warning { background: #ffc107; color: #212529; }
     .btn-warning:hover { background: #ffca2c; }
+    .btn-info { background: #17a2b8; color: #fff; }
+    .btn-info:hover { background: #138496; }
     .btn-sm { padding: .4rem .8rem; font-size: .8rem; }
     .btn-group { display: flex; gap: .5rem; flex-wrap: wrap; }
+    .btn:disabled { opacity: .5; cursor: not-allowed; }
     .status-badge { display: inline-block; padding: .25rem .6rem; border-radius: 4px; font-size: .8rem; font-weight: 600; }
     .status-confirmed { background: #d4edda; color: #155724; }
     .status-waitlisted { background: #fff3cd; color: #856404; }
     .status-cancelled { background: #f8d7da; color: #721c24; }
+    .status-noshow { background: #e2e3e5; color: #383d41; }
     .reservation-details { font-size: .85rem; color: #666; }
     .reservation-email { font-size: .8rem; color: #888; }
     .banner { padding: 1rem; border-radius: 8px; margin-bottom: 1rem; display: none; }
     .banner.show { display: block; }
     .banner.error { background: #fdecea; color: #842029; }
     .banner.success { background: #e6f4ea; color: #0f5132; }
-    input, select { width: 100%; padding: .75rem 1rem; border-radius: 8px; border: 1px solid #ced9cf; font-size: .95rem; }
-    input:focus, select:focus { outline: none; border-color: #2f5138; }
+    input, select, textarea { width: 100%; padding: .75rem 1rem; border-radius: 8px; border: 1px solid #ced9cf; font-size: .95rem; font-family: inherit; }
+    input:focus, select:focus, textarea:focus { outline: none; border-color: #2f5138; }
+    label { display: block; margin-bottom: .5rem; }
+    label span { display: block; font-size: .85rem; color: #6b7a6c; margin-bottom: .3rem; }
+    .form-row { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1rem; margin-bottom: 1rem; }
+    .checkbox-label { display: flex; align-items: center; gap: .5rem; cursor: pointer; }
+    .checkbox-label input[type="checkbox"] { width: auto; }
 
     /* Login overlay */
     .login-overlay {
@@ -109,7 +121,7 @@
     /* Stats Row */
     .stats-row {
       display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+      grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
       gap: 1rem;
       margin-bottom: 1.5rem;
     }
@@ -118,45 +130,74 @@
       border-radius: 12px;
       padding: 1.2rem;
       text-align: center;
+      transition: transform .15s, box-shadow .15s;
     }
+    .stat-card:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 4px 12px rgba(0,0,0,.08);
+    }
+    .stat-card.clickable { cursor: pointer; }
     .stat-value {
-      font-size: 2rem;
+      font-size: 1.8rem;
       font-weight: 700;
       color: #2f5138;
     }
     .stat-label {
-      font-size: .75rem;
+      font-size: .7rem;
       text-transform: uppercase;
       letter-spacing: .1em;
       color: #6b7a6c;
       margin-top: .3rem;
     }
+    .stat-card.warning .stat-value { color: #856404; }
+    .stat-card.danger .stat-value { color: #dc3545; }
+
+    /* Quick Actions */
+    .quick-actions {
+      display: flex;
+      gap: .75rem;
+      flex-wrap: wrap;
+      margin-bottom: 1.5rem;
+    }
 
     /* Tabs */
     .tabs {
       display: flex;
-      gap: .5rem;
+      gap: .25rem;
       margin-bottom: 1.5rem;
       border-bottom: 2px solid #e4eadf;
       padding-bottom: 0;
+      overflow-x: auto;
     }
     .tab {
-      padding: .8rem 1.5rem;
+      padding: .8rem 1.2rem;
       border: none;
       background: transparent;
       cursor: pointer;
-      font-size: .9rem;
+      font-size: .85rem;
       text-transform: uppercase;
-      letter-spacing: .1em;
+      letter-spacing: .08em;
       color: #6b7a6c;
       border-bottom: 3px solid transparent;
       margin-bottom: -2px;
       transition: all .2s ease;
+      white-space: nowrap;
+      display: flex;
+      align-items: center;
+      gap: .4rem;
     }
     .tab:hover { color: #243424; }
     .tab.active {
       color: #2f5138;
       border-bottom-color: #2f5138;
+    }
+    .tab .badge {
+      background: #dc3545;
+      color: #fff;
+      font-size: .65rem;
+      padding: .15rem .4rem;
+      border-radius: 999px;
+      font-weight: 700;
     }
     .tab-content { display: none; }
     .tab-content.active { display: block; }
@@ -168,6 +209,8 @@
       justify-content: space-between;
       align-items: center;
       margin-bottom: 1rem;
+      flex-wrap: wrap;
+      gap: .5rem;
     }
     .calendar-nav {
       display: flex;
@@ -189,6 +232,8 @@
       text-transform: uppercase;
       letter-spacing: .1em;
       color: #243424;
+      min-width: 180px;
+      text-align: center;
     }
     .calendar-grid {
       display: grid;
@@ -205,13 +250,14 @@
       font-weight: 600;
     }
     .calendar-day {
-      min-height: 80px;
+      min-height: 85px;
       padding: .5rem;
       border: 1px solid #e4eadf;
       border-radius: 8px;
       background: #fff;
       cursor: pointer;
       transition: all .2s ease;
+      position: relative;
     }
     .calendar-day:hover {
       background: #f6f7f4;
@@ -229,14 +275,26 @@
       background: rgba(47, 81, 56, 0.1);
       border-color: #2f5138;
     }
+    .calendar-day.has-blocked {
+      background: linear-gradient(135deg, #fff 70%, #fdecea 70%);
+    }
+    .calendar-day.fully-blocked {
+      background: #fdecea;
+      border-color: #dc3545;
+    }
     .calendar-day-number {
       font-size: .9rem;
       font-weight: 600;
       margin-bottom: .3rem;
     }
+    .calendar-day-info {
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+    }
     .calendar-day-count {
-      font-size: .7rem;
-      padding: .2rem .5rem;
+      font-size: .65rem;
+      padding: .15rem .4rem;
       border-radius: 999px;
       display: inline-block;
     }
@@ -248,6 +306,14 @@
       background: #f0f0f0;
       color: #999;
     }
+    .calendar-day-count.blocked {
+      background: #fdecea;
+      color: #dc3545;
+    }
+    .calendar-day-count.guests {
+      background: #e7f3ff;
+      color: #0066cc;
+    }
 
     /* Day Detail */
     .day-detail {
@@ -258,12 +324,131 @@
       display: none;
     }
     .day-detail.show { display: block; }
+    .day-detail-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 1rem;
+      flex-wrap: wrap;
+      gap: .5rem;
+    }
     .day-detail-title {
-      margin: 0 0 1rem 0;
+      margin: 0;
       font-size: 1rem;
       text-transform: uppercase;
       letter-spacing: .1em;
       color: #243424;
+    }
+
+    /* Blocked Slots List */
+    .blocked-list {
+      display: grid;
+      gap: .5rem;
+    }
+    .blocked-item {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: .75rem 1rem;
+      background: #fff;
+      border-radius: 8px;
+      border-left: 4px solid #dc3545;
+    }
+    .blocked-item-info {
+      display: flex;
+      flex-direction: column;
+      gap: .2rem;
+    }
+    .blocked-item-date { font-weight: 600; }
+    .blocked-item-time { font-size: .85rem; color: #666; }
+    .blocked-item-capacity { font-size: .8rem; color: #888; }
+
+    /* Settings Form */
+    .settings-section {
+      margin-bottom: 2rem;
+      padding-bottom: 1.5rem;
+      border-bottom: 1px solid #e4eadf;
+    }
+    .settings-section:last-child {
+      border-bottom: none;
+      margin-bottom: 0;
+      padding-bottom: 0;
+    }
+    .settings-section-title {
+      font-size: 1rem;
+      font-weight: 600;
+      color: #2f5138;
+      margin-bottom: 1rem;
+      display: flex;
+      align-items: center;
+      gap: .5rem;
+    }
+    .settings-description {
+      font-size: .85rem;
+      color: #6b7a6c;
+      margin-bottom: 1rem;
+    }
+    .email-list {
+      display: flex;
+      flex-wrap: wrap;
+      gap: .5rem;
+      margin-bottom: .5rem;
+    }
+    .email-tag {
+      display: inline-flex;
+      align-items: center;
+      gap: .3rem;
+      background: #edf3eb;
+      padding: .3rem .6rem;
+      border-radius: 999px;
+      font-size: .85rem;
+    }
+    .email-tag button {
+      background: none;
+      border: none;
+      cursor: pointer;
+      color: #dc3545;
+      font-size: 1rem;
+      line-height: 1;
+    }
+
+    /* Loading State */
+    .loading {
+      text-align: center;
+      padding: 2rem;
+      color: #6b7a6c;
+    }
+    .loading::after {
+      content: '';
+      display: inline-block;
+      width: 20px;
+      height: 20px;
+      border: 2px solid #2f5138;
+      border-radius: 50%;
+      border-top-color: transparent;
+      animation: spin 1s linear infinite;
+      margin-left: .5rem;
+      vertical-align: middle;
+    }
+    @keyframes spin {
+      to { transform: rotate(360deg); }
+    }
+
+    /* Empty State */
+    .empty-state {
+      text-align: center;
+      padding: 3rem 1rem;
+      color: #6b7a6c;
+    }
+    .empty-state-icon {
+      font-size: 3rem;
+      margin-bottom: 1rem;
+    }
+    .empty-state-title {
+      font-size: 1.1rem;
+      font-weight: 600;
+      color: #243424;
+      margin-bottom: .5rem;
     }
 
     /* Responsive */
@@ -276,6 +461,8 @@
       }
       .calendar-day-number { font-size: .8rem; }
       .stats-row { grid-template-columns: repeat(2, 1fr); }
+      .container { padding: 1rem; }
+      .quick-actions { justify-content: center; }
     }
   </style>
 </head>
@@ -313,110 +500,83 @@
   <!-- Main Content -->
   <div class="container" id="main-content" style="display: none;">
     <h1 class="page-title">Reservierungen</h1>
-    <p class="page-subtitle">Reservierungen verwalten, Verfugbarkeit prufen und Zeitslots blockieren</p>
+    <p class="page-subtitle">Reservierungen verwalten, Verfugbarkeit steuern und Einstellungen konfigurieren</p>
 
     <div class="banner" id="admin-banner"></div>
 
     <!-- Stats Row -->
-    <div class="stats-row" id="stats-row" style="display: none;">
-      <div class="stat-card">
-        <div class="stat-value" id="stat-total">0</div>
-        <div class="stat-label">Gesamt</div>
+    <div class="stats-row" id="stats-row">
+      <div class="stat-card clickable" id="stat-today-card" title="Heute anzeigen">
+        <div class="stat-value" id="stat-today">-</div>
+        <div class="stat-label">Heute</div>
       </div>
       <div class="stat-card">
-        <div class="stat-value" id="stat-confirmed">0</div>
+        <div class="stat-value" id="stat-week">-</div>
+        <div class="stat-label">Diese Woche</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-value" id="stat-confirmed">-</div>
         <div class="stat-label">Bestatigt</div>
       </div>
-      <div class="stat-card">
-        <div class="stat-value" id="stat-guests">0</div>
-        <div class="stat-label">Gaste</div>
+      <div class="stat-card warning">
+        <div class="stat-value" id="stat-waitlist">-</div>
+        <div class="stat-label">Warteliste</div>
       </div>
       <div class="stat-card">
-        <div class="stat-value" id="stat-today">0</div>
-        <div class="stat-label">Heute</div>
+        <div class="stat-value" id="stat-guests">-</div>
+        <div class="stat-label">Gaste (best.)</div>
+      </div>
+      <div class="stat-card danger" id="stat-blocked-card" title="Blockierte Slots anzeigen">
+        <div class="stat-value" id="stat-blocked">-</div>
+        <div class="stat-label">Blockiert</div>
       </div>
     </div>
 
-    <div id="dashboard">
+    <!-- Quick Actions -->
+    <div class="quick-actions">
+      <button class="btn btn-primary" id="btn-refresh">Aktualisieren</button>
+      <button class="btn btn-secondary" id="btn-export-csv">CSV Export</button>
+      <button class="btn btn-secondary" id="btn-today">Heute anzeigen</button>
+    </div>
+
+    <!-- Tabs -->
+    <div class="tabs" id="tabs">
+      <button class="tab active" data-tab="calendar">Kalender</button>
+      <button class="tab" data-tab="list">Liste</button>
+      <button class="tab" data-tab="blocked">Blockierte Slots <span class="badge" id="blocked-badge" style="display:none;">0</span></button>
+      <button class="tab" data-tab="settings">Einstellungen</button>
+    </div>
+
+    <!-- Calendar Tab -->
+    <div class="tab-content active" id="calendar-tab">
       <div class="card">
-        <h2 class="card-title">Verfugbarkeit prufen</h2>
-        <div class="grid grid-2">
-          <label>
-            <span>Datum</span>
-            <input type="date" id="admin-date" />
-          </label>
-          <label>
-            <span>Gaste</span>
-            <input type="number" id="admin-guests" min="1" value="2" />
-          </label>
-        </div>
-        <div style="margin-top: 1rem;">
-          <button class="btn btn-primary" id="btn-load">Verfugbarkeit laden</button>
-          <button class="btn btn-secondary" id="btn-export-csv" style="margin-left: .5rem;">CSV Export</button>
-        </div>
-        <div id="availability-result" style="margin-top: 1rem; color: #6b7a6c;"></div>
-      </div>
-
-      <!-- Tabs -->
-      <div class="tabs" id="tabs" style="display: none;">
-        <button class="tab active" data-tab="calendar">Kalender</button>
-        <button class="tab" data-tab="list">Liste</button>
-      </div>
-
-      <!-- Calendar View -->
-      <div class="tab-content active" id="calendar-tab">
-        <div class="card">
-          <div class="calendar-container">
-            <div class="calendar-header">
-              <div class="calendar-nav">
-                <button id="prev-month">&larr;</button>
-                <span class="calendar-month" id="calendar-month">Januar 2026</span>
-                <button id="next-month">&rarr;</button>
-              </div>
+        <div class="calendar-container">
+          <div class="calendar-header">
+            <div class="calendar-nav">
+              <button id="prev-month" title="Vorheriger Monat">&larr;</button>
+              <span class="calendar-month" id="calendar-month">Januar 2026</span>
+              <button id="next-month" title="Nachster Monat">&rarr;</button>
+            </div>
+            <div class="btn-group">
               <button class="btn btn-secondary btn-sm" id="today-btn">Heute</button>
             </div>
-            <div class="calendar-grid" id="calendar-grid">
-              <!-- Calendar will be rendered here -->
-            </div>
           </div>
-
-          <!-- Day Detail -->
-          <div class="day-detail" id="day-detail">
-            <h3 class="day-detail-title" id="day-detail-title"></h3>
-            <table>
-              <thead>
-                <tr>
-                  <th>Zeit</th>
-                  <th>Name / Kontakt</th>
-                  <th>Gaste</th>
-                  <th>Status</th>
-                  <th>Aktionen</th>
-                </tr>
-              </thead>
-              <tbody id="day-detail-body"></tbody>
-            </table>
+          <div class="calendar-grid" id="calendar-grid">
+            <!-- Calendar will be rendered here -->
           </div>
         </div>
-      </div>
 
-      <!-- List View -->
-      <div class="tab-content" id="list-tab">
-        <div class="card">
-          <h2 class="card-title">Reservierungen</h2>
-          <div class="grid grid-2" style="margin-bottom: 1rem;">
-            <label>
-              <span>Datum filtern</span>
-              <input type="date" id="filter-date" />
-            </label>
-            <div style="display: flex; align-items: flex-end;">
-              <button class="btn btn-secondary" id="clear-filter">Filter loschen</button>
+        <!-- Day Detail -->
+        <div class="day-detail" id="day-detail">
+          <div class="day-detail-header">
+            <h3 class="day-detail-title" id="day-detail-title"></h3>
+            <div class="btn-group">
+              <button class="btn btn-secondary btn-sm" id="btn-block-day">Slot blockieren</button>
             </div>
           </div>
-          <div id="reservation-count" style="margin-bottom: 1rem; color: #6b7a6c;"></div>
           <table>
             <thead>
               <tr>
-                <th id="th-date">Datum</th>
                 <th>Zeit</th>
                 <th>Name / Kontakt</th>
                 <th>Gaste</th>
@@ -424,73 +584,297 @@
                 <th>Aktionen</th>
               </tr>
             </thead>
-            <tbody id="reservation-table"></tbody>
+            <tbody id="day-detail-body"></tbody>
           </table>
         </div>
       </div>
+    </div>
 
+    <!-- List Tab -->
+    <div class="tab-content" id="list-tab">
       <div class="card">
-        <h2 class="card-title">Zeitslots blockieren</h2>
-        <div class="grid grid-2">
+        <h2 class="card-title">Alle Reservierungen</h2>
+        <div class="form-row" style="margin-bottom: 1rem;">
           <label>
-            <span>Datum</span>
-            <input type="date" id="block-date" />
+            <span>Datum filtern</span>
+            <input type="date" id="filter-date" />
           </label>
           <label>
-            <span>Zeit</span>
-            <input type="time" id="block-time" />
-          </label>
-          <label>
-            <span>Kapazitat</span>
-            <input type="number" id="block-capacity" min="0" value="0" />
-          </label>
-        </div>
-        <button class="btn btn-secondary" id="btn-block" style="margin-top: 1rem;">Blockieren</button>
-      </div>
-
-      <div class="card">
-        <h2 class="card-title">Export</h2>
-        <div class="grid grid-2">
-          <label>
-            <span>Datum</span>
-            <input type="date" id="export-date" />
-          </label>
-          <label>
-            <span>Format</span>
-            <select id="export-format">
-              <option value="csv">CSV</option>
-              <option value="pdf">PDF</option>
+            <span>Status filtern</span>
+            <select id="filter-status">
+              <option value="">Alle Status</option>
+              <option value="confirmed">Bestatigt</option>
+              <option value="waitlisted">Warteliste</option>
+              <option value="cancelled">Storniert</option>
+              <option value="noshow">No-Show</option>
             </select>
           </label>
+          <div style="display: flex; align-items: flex-end;">
+            <button class="btn btn-secondary" id="clear-filter">Filter loschen</button>
+          </div>
         </div>
-        <button class="btn btn-primary" id="btn-export" style="margin-top: 1rem;">Export starten</button>
+        <div id="reservation-count" style="margin-bottom: 1rem; color: #6b7a6c;"></div>
+        <table>
+          <thead>
+            <tr>
+              <th>Datum</th>
+              <th>Zeit</th>
+              <th>Name / Kontakt</th>
+              <th>Gaste</th>
+              <th>Status</th>
+              <th>Aktionen</th>
+            </tr>
+          </thead>
+          <tbody id="reservation-table"></tbody>
+        </table>
       </div>
+    </div>
 
+    <!-- Blocked Slots Tab -->
+    <div class="tab-content" id="blocked-tab">
+      <div class="card">
+        <h2 class="card-title">Blockierte Zeitslots</h2>
+        <p class="settings-description">Ubersicht aller blockierten Zeitslots. Blockierte Slots haben eine reduzierte oder keine Kapazitat fur Reservierungen.</p>
+
+        <!-- Add new blocked slot -->
+        <div style="background: #f6f7f4; padding: 1rem; border-radius: 8px; margin-bottom: 1.5rem;">
+          <h3 style="font-size: .9rem; margin-bottom: 1rem; color: #2f5138;">Neuen Slot blockieren</h3>
+          <div class="form-row">
+            <label>
+              <span>Datum</span>
+              <input type="date" id="block-date" />
+            </label>
+            <label>
+              <span>Zeit</span>
+              <input type="time" id="block-time" />
+            </label>
+            <label>
+              <span>Kapazitat (0 = voll blockiert)</span>
+              <input type="number" id="block-capacity" min="0" value="0" />
+            </label>
+          </div>
+          <button class="btn btn-danger" id="btn-block">Slot blockieren</button>
+        </div>
+
+        <div id="blocked-list-container">
+          <div class="loading">Lade blockierte Slots...</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Settings Tab -->
+    <div class="tab-content" id="settings-tab">
+      <div class="card">
+        <h2 class="card-title">Einstellungen</h2>
+
+        <div id="settings-loading" class="loading">Lade Einstellungen...</div>
+
+        <form id="settings-form" style="display: none;">
+          <!-- Capacity Settings -->
+          <div class="settings-section">
+            <h3 class="settings-section-title">Kapazitat & Verfugbarkeit</h3>
+            <div class="form-row">
+              <label>
+                <span>Max. Gaste pro Zeitslot</span>
+                <input type="number" id="setting-maxCapacityPerSlot" min="1" max="200" />
+              </label>
+              <label>
+                <span>Max. Gaste pro Reservierung</span>
+                <input type="number" id="setting-maxGuestsPerReservation" min="1" max="50" />
+              </label>
+              <label>
+                <span>Slot-Intervall (Minuten)</span>
+                <input type="number" id="setting-slotIntervalMinutes" min="5" max="60" step="5" />
+              </label>
+            </div>
+          </div>
+
+          <!-- Opening Hours -->
+          <div class="settings-section">
+            <h3 class="settings-section-title">Offnungszeiten</h3>
+            <div class="form-row">
+              <label>
+                <span>Offnung</span>
+                <input type="time" id="setting-openingStart" />
+              </label>
+              <label>
+                <span>Schliessung</span>
+                <input type="time" id="setting-openingEnd" />
+              </label>
+            </div>
+          </div>
+
+          <!-- Booking Rules -->
+          <div class="settings-section">
+            <h3 class="settings-section-title">Buchungsregeln</h3>
+            <div class="form-row">
+              <label>
+                <span>Min. Vorausbuchung (Stunden)</span>
+                <input type="number" id="setting-minAdvanceBookingHours" min="0" max="168" />
+              </label>
+              <label>
+                <span>Max. Vorausbuchung (Tage)</span>
+                <input type="number" id="setting-maxAdvanceBookingDays" min="1" max="365" />
+              </label>
+              <label>
+                <span>Stornierungsfrist (Stunden vor Termin)</span>
+                <input type="number" id="setting-cancellationDeadlineHours" min="0" max="72" />
+              </label>
+            </div>
+            <div class="form-row">
+              <label class="checkbox-label">
+                <input type="checkbox" id="setting-waitlistEnabled" />
+                <span>Warteliste aktivieren</span>
+              </label>
+              <label class="checkbox-label">
+                <input type="checkbox" id="setting-autoConfirmReservations" />
+                <span>Automatisch bestatigen (wenn Kapazitat verfugbar)</span>
+              </label>
+              <label class="checkbox-label">
+                <input type="checkbox" id="setting-requirePhoneNumber" />
+                <span>Telefonnummer erforderlich</span>
+              </label>
+            </div>
+          </div>
+
+          <!-- Email Notifications -->
+          <div class="settings-section">
+            <h3 class="settings-section-title">E-Mail Benachrichtigungen</h3>
+            <p class="settings-description">E-Mail-Adressen, die bei neuen Reservierungen benachrichtigt werden sollen.</p>
+            <div class="email-list" id="admin-email-list"></div>
+            <div class="form-row">
+              <label>
+                <span>Neue E-Mail hinzufugen</span>
+                <input type="email" id="new-admin-email" placeholder="email@example.com" />
+              </label>
+              <div style="display: flex; align-items: flex-end;">
+                <button type="button" class="btn btn-secondary" id="btn-add-email">Hinzufugen</button>
+              </div>
+            </div>
+            <div class="form-row" style="margin-top: 1rem;">
+              <label class="checkbox-label">
+                <input type="checkbox" id="setting-sendAdminNotifications" />
+                <span>Admin-Benachrichtigungen aktivieren</span>
+              </label>
+              <label>
+                <span>Erinnerung senden (Stunden vor Termin)</span>
+                <input type="number" id="setting-reminderEmailHoursBeforeReservation" min="0" max="72" />
+              </label>
+            </div>
+          </div>
+
+          <!-- No-Show Settings -->
+          <div class="settings-section">
+            <h3 class="settings-section-title">No-Show Verwaltung</h3>
+            <div class="form-row">
+              <label>
+                <span>No-Show Schwellenwert (fur Warnung)</span>
+                <input type="number" id="setting-noShowThreshold" min="1" max="10" />
+              </label>
+            </div>
+            <p class="settings-description">Gaste mit mehr als dieser Anzahl an No-Shows werden markiert.</p>
+          </div>
+
+          <div style="margin-top: 1.5rem;">
+            <button type="submit" class="btn btn-primary">Einstellungen speichern</button>
+            <button type="button" class="btn btn-secondary" id="btn-reset-settings" style="margin-left: .5rem;">Zurucksetzen</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <!-- Block Slot Modal -->
+  <div id="block-modal" style="display: none; position: fixed; inset: 0; background: rgba(0,0,0,.5); z-index: 200; align-items: center; justify-content: center;">
+    <div style="background: #fff; padding: 2rem; border-radius: 12px; max-width: 400px; width: 90%;">
+      <h3 style="margin-bottom: 1rem; color: #2f5138;">Zeitslot blockieren</h3>
+      <p style="margin-bottom: 1rem; color: #6b7a6c;" id="block-modal-date"></p>
+      <div class="form-row">
+        <label>
+          <span>Zeit</span>
+          <input type="time" id="modal-block-time" />
+        </label>
+        <label>
+          <span>Kapazitat (0 = voll blockiert)</span>
+          <input type="number" id="modal-block-capacity" min="0" value="0" />
+        </label>
+      </div>
+      <div style="display: flex; gap: .5rem; margin-top: 1rem;">
+        <button class="btn btn-danger" id="modal-block-confirm">Blockieren</button>
+        <button class="btn btn-secondary" id="modal-block-cancel">Abbrechen</button>
+      </div>
     </div>
   </div>
 
   <script>
     const banner = document.getElementById('admin-banner');
-    const dashboard = document.getElementById('dashboard');
     const loginOverlay = document.getElementById('login-overlay');
     const mainContent = document.getElementById('main-content');
     const userDisplay = document.getElementById('user-display');
-    const statsRow = document.getElementById('stats-row');
     const tabsContainer = document.getElementById('tabs');
     let currentUser = null;
     let allReservations = [];
+    let allBlockedSlots = [];
+    let adminSettings = {};
     let currentMonth = new Date();
+    let selectedDate = null;
 
     const MONTH_NAMES = ['Januar', 'Februar', 'Marz', 'April', 'Mai', 'Juni',
                          'Juli', 'August', 'September', 'Oktober', 'November', 'Dezember'];
     const DAY_NAMES = ['Mo', 'Di', 'Mi', 'Do', 'Fr', 'Sa', 'So'];
 
+    // ===== Utility Functions =====
     function showBanner(message, type = 'success') {
       banner.textContent = message;
       banner.className = `banner show ${type}`;
       setTimeout(() => banner.classList.remove('show'), 4000);
     }
 
+    function formatDate(dateStr) {
+      const [year, month, day] = dateStr.split('-');
+      return `${day}.${month}.${year}`;
+    }
+
+    function formatContact(reservation) {
+      let html = `<div>${reservation.name}</div>`;
+      html += `<div class="reservation-email">${reservation.email}</div>`;
+      if (reservation.phone) {
+        html += `<div class="reservation-details">${reservation.phone}</div>`;
+      }
+      if (reservation.specialRequests) {
+        html += `<div class="reservation-details" style="font-style: italic;">"${reservation.specialRequests}"</div>`;
+      }
+      return html;
+    }
+
+    function getStatusBadge(status) {
+      const labels = {
+        confirmed: 'Bestatigt',
+        waitlisted: 'Warteliste',
+        cancelled: 'Storniert',
+        noshow: 'No-Show'
+      };
+      return `<span class="status-badge status-${status}">${labels[status] || status}</span>`;
+    }
+
+    function getWeekDates() {
+      const today = new Date();
+      const dayOfWeek = today.getDay();
+      const monday = new Date(today);
+      monday.setDate(today.getDate() - (dayOfWeek === 0 ? 6 : dayOfWeek - 1));
+      const sunday = new Date(monday);
+      sunday.setDate(monday.getDate() + 6);
+
+      const dates = [];
+      const current = new Date(monday);
+      while (current <= sunday) {
+        dates.push(current.toISOString().split('T')[0]);
+        current.setDate(current.getDate() + 1);
+      }
+      return dates;
+    }
+
+    // ===== Auth Functions =====
     function updateAuthState() {
       currentUser = netlifyIdentity.currentUser();
       if (currentUser) {
@@ -535,81 +919,41 @@
       return response;
     }
 
-    // Netlify Identity event handlers
-    netlifyIdentity.on('init', user => {
-      currentUser = user;
-      updateAuthState();
-      // Reservierungen nur laden wenn eingeloggt
-      if (user) {
-        loadAllReservations();
-      }
-    });
-
-    netlifyIdentity.on('login', user => {
-      currentUser = user;
-      netlifyIdentity.close();
-      updateAuthState();
-      showBanner('Erfolgreich angemeldet.');
-      // Reservierungen nach Login laden
-      loadAllReservations();
-    });
-
-    netlifyIdentity.on('logout', () => {
-      currentUser = null;
-      updateAuthState();
-    });
-
-    document.getElementById('btn-login').addEventListener('click', () => {
-      netlifyIdentity.open('login');
-    });
-
-    document.getElementById('btn-logout').addEventListener('click', () => {
-      netlifyIdentity.logout();
-    });
-
-    let currentDate = '';
-    let showAllMode = false;
-
-    function getStatusBadge(status) {
-      const labels = {
-        confirmed: 'Bestatigt',
-        waitlisted: 'Warteliste',
-        cancelled: 'Storniert'
-      };
-      return `<span class="status-badge status-${status}">${labels[status] || status}</span>`;
-    }
-
-    function formatDate(dateStr) {
-      const [year, month, day] = dateStr.split('-');
-      return `${day}.${month}.${year}`;
-    }
-
-    function formatContact(reservation) {
-      let html = `<div>${reservation.name}</div>`;
-      html += `<div class="reservation-email">${reservation.email}</div>`;
-      if (reservation.phone) {
-        html += `<div class="reservation-details">${reservation.phone}</div>`;
-      }
-      if (reservation.specialRequests) {
-        html += `<div class="reservation-details">${reservation.specialRequests}</div>`;
-      }
-      return html;
-    }
-
+    // ===== Stats Functions =====
     function updateStats() {
       const today = new Date().toISOString().split('T')[0];
+      const weekDates = getWeekDates();
+
       const confirmed = allReservations.filter(r => r.status === 'confirmed');
+      const waitlisted = allReservations.filter(r => r.status === 'waitlisted');
       const todayReservations = allReservations.filter(r => r.date === today && r.status !== 'cancelled');
+      const weekReservations = allReservations.filter(r => weekDates.includes(r.date) && r.status !== 'cancelled');
       const totalGuests = confirmed.reduce((sum, r) => sum + Number(r.guests || 0), 0);
 
-      document.getElementById('stat-total').textContent = allReservations.length;
-      document.getElementById('stat-confirmed').textContent = confirmed.length;
-      document.getElementById('stat-guests').textContent = totalGuests;
       document.getElementById('stat-today').textContent = todayReservations.length;
+      document.getElementById('stat-week').textContent = weekReservations.length;
+      document.getElementById('stat-confirmed').textContent = confirmed.length;
+      document.getElementById('stat-waitlist').textContent = waitlisted.length;
+      document.getElementById('stat-guests').textContent = totalGuests;
+      document.getElementById('stat-blocked').textContent = allBlockedSlots.length;
+
+      // Update blocked badge
+      const blockedBadge = document.getElementById('blocked-badge');
+      if (allBlockedSlots.length > 0) {
+        blockedBadge.textContent = allBlockedSlots.length;
+        blockedBadge.style.display = 'inline';
+      } else {
+        blockedBadge.style.display = 'none';
+      }
     }
 
+    // ===== Calendar Functions =====
     function getReservationsForDate(dateStr) {
       return allReservations.filter(r => r.date === dateStr);
+    }
+
+    function getBlockedSlotsForDate(dateStr) {
+      return allBlockedSlots.filter(b => b.date === dateStr);
     }
 
     function renderCalendar() {
@@ -645,32 +989,13 @@
         const prevMonthNum = month === 0 ? 12 : month;
         const prevYear = month === 0 ? year - 1 : year;
         const dateStr = `${prevYear}-${String(prevMonthNum).padStart(2, '0')}-${String(day).padStart(2, '0')}`;
-        const reservations = getReservationsForDate(dateStr);
-        const count = reservations.filter(r => r.status !== 'cancelled').length;
-
-        html += `
-          <div class="calendar-day other-month" data-date="${dateStr}">
-            <div class="calendar-day-number">${day}</div>
-            ${count > 0 ? `<div class="calendar-day-count has-reservations">${count} Res.</div>` : ''}
-          </div>
-        `;
+        html += renderCalendarDay(dateStr, day, true, today);
       }
 
       // Days of current month
       for (let day = 1; day <= daysInMonth; day++) {
         const dateStr = `${year}-${String(month + 1).padStart(2, '0')}-${String(day).padStart(2, '0')}`;
-        const reservations = getReservationsForDate(dateStr);
-        const count = reservations.filter(r => r.status !== 'cancelled').length;
-        const isToday = dateStr === today;
-
-        html += `
-          <div class="calendar-day${isToday ? ' today' : ''}" data-date="${dateStr}">
-            <div class="calendar-day-number">${day}</div>
-            ${count > 0
-              ? `<div class="calendar-day-count has-reservations">${count} Res.</div>`
-              : `<div class="calendar-day-count no-reservations">-</div>`}
-          </div>
-        `;
+        html += renderCalendarDay(dateStr, day, false, today);
       }
 
       // Empty cells after last day
@@ -680,15 +1005,7 @@
         const nextMonthNum = month === 11 ? 1 : month + 2;
         const nextYear = month === 11 ? year + 1 : year;
         const dateStr = `${nextYear}-${String(nextMonthNum).padStart(2, '0')}-${String(i).padStart(2, '0')}`;
-        const reservations = getReservationsForDate(dateStr);
-        const count = reservations.filter(r => r.status !== 'cancelled').length;
-
-        html += `
-          <div class="calendar-day other-month" data-date="${dateStr}">
-            <div class="calendar-day-number">${i}</div>
-            ${count > 0 ? `<div class="calendar-day-count has-reservations">${count} Res.</div>` : ''}
-          </div>
-        `;
+        html += renderCalendarDay(dateStr, i, true, today);
       }
 
       grid.innerHTML = html;
@@ -697,6 +1014,7 @@
       grid.querySelectorAll('.calendar-day').forEach(dayEl => {
         dayEl.addEventListener('click', () => {
           const date = dayEl.dataset.date;
+          selectedDate = date;
           showDayDetail(date);
 
           grid.querySelectorAll('.calendar-day').forEach(d => d.classList.remove('selected'));
@@ -705,23 +1023,79 @@
       });
     }
 
+    function renderCalendarDay(dateStr, day, isOtherMonth, today) {
+      const reservations = getReservationsForDate(dateStr);
+      const blockedSlots = getBlockedSlotsForDate(dateStr);
+      const activeReservations = reservations.filter(r => r.status !== 'cancelled');
+      const totalGuests = activeReservations.filter(r => r.status === 'confirmed').reduce((sum, r) => sum + Number(r.guests || 0), 0);
+
+      const isToday = dateStr === today;
+      const hasBlocked = blockedSlots.length > 0;
+      const isFullyBlocked = hasBlocked && blockedSlots.every(b => b.capacity === 0);
+
+      let classes = 'calendar-day';
+      if (isOtherMonth) classes += ' other-month';
+      if (isToday) classes += ' today';
+      if (hasBlocked && !isFullyBlocked) classes += ' has-blocked';
+      if (isFullyBlocked) classes += ' fully-blocked';
+
+      let infoHtml = '';
+      if (activeReservations.length > 0) {
+        infoHtml += `<span class="calendar-day-count has-reservations">${activeReservations.length} Res.</span>`;
+      }
+      if (totalGuests > 0) {
+        infoHtml += `<span class="calendar-day-count guests">${totalGuests} Gaste</span>`;
+      }
+      if (hasBlocked) {
+        infoHtml += `<span class="calendar-day-count blocked">${blockedSlots.length} Block.</span>`;
+      }
+      if (!infoHtml && !isOtherMonth) {
+        infoHtml = '<span class="calendar-day-count no-reservations">-</span>';
+      }
+
+      return `
+        <div class="${classes}" data-date="${dateStr}">
+          <div class="calendar-day-number">${day}</div>
+          <div class="calendar-day-info">${infoHtml}</div>
+        </div>
+      `;
+    }
+
     function showDayDetail(dateStr) {
       const detail = document.getElementById('day-detail');
       const title = document.getElementById('day-detail-title');
       const body = document.getElementById('day-detail-body');
 
       const reservations = getReservationsForDate(dateStr);
+      const blockedSlots = getBlockedSlotsForDate(dateStr);
 
       title.textContent = `Reservierungen fur ${formatDate(dateStr)}`;
 
-      if (reservations.length === 0) {
+      if (reservations.length === 0 && blockedSlots.length === 0) {
         body.innerHTML = '<tr><td colspan="5" style="text-align: center; color: #999; padding: 2rem;">Keine Reservierungen fur diesen Tag.</td></tr>';
       } else {
-        const rows = reservations
+        let rows = '';
+
+        // Show blocked slots first
+        blockedSlots.forEach(slot => {
+          rows += `
+            <tr style="background: #fdecea;">
+              <td><strong>${slot.time}</strong></td>
+              <td colspan="2"><span class="status-badge status-cancelled">BLOCKIERT</span> (Kapazitat: ${slot.capacity})</td>
+              <td></td>
+              <td>
+                <button class="btn btn-secondary btn-sm" data-action="unblock" data-date="${dateStr}" data-time="${slot.time}">Freigeben</button>
+              </td>
+            </tr>
+          `;
+        });
+
+        // Then reservations
+        reservations
           .sort((a, b) => a.time.localeCompare(b.time))
-          .map((r) => {
+          .forEach(r => {
             const actions = buildActionButtons(r, dateStr);
-            return `
+            rows += `
               <tr data-id="${r.id}" data-code="${r.confirmationCode}" data-date="${r.date}" style="opacity: ${r.status === 'cancelled' ? '0.5' : '1'}">
                 <td><strong>${r.time}</strong></td>
                 <td>${formatContact(r)}</td>
@@ -730,8 +1104,8 @@
                 <td><div class="btn-group">${actions}</div></td>
               </tr>
             `;
-          })
-          .join('');
+          });
+
         body.innerHTML = rows;
       }
 
@@ -741,6 +1115,7 @@
     function buildActionButtons(entry, date) {
       const entryDate = entry.date || date;
       const actions = [];
+
       if (entry.status !== 'confirmed') {
         actions.push(`<button class="btn btn-primary btn-sm" data-action="confirm" data-code="${entry.confirmationCode}" data-date="${entryDate}">Bestatigen</button>`);
       }
@@ -750,98 +1125,321 @@
       if (entry.status !== 'cancelled') {
         actions.push(`<button class="btn btn-secondary btn-sm" data-action="cancel" data-code="${entry.confirmationCode}" data-date="${entryDate}">Stornieren</button>`);
       }
+      if (entry.status === 'confirmed' && entry.status !== 'noshow') {
+        actions.push(`<button class="btn btn-info btn-sm" data-action="noshow" data-code="${entry.confirmationCode}" data-date="${entryDate}">No-Show</button>`);
+      }
       actions.push(`<button class="btn btn-danger btn-sm" data-action="delete" data-code="${entry.confirmationCode}" data-date="${entryDate}">Loschen</button>`);
+
       return actions.join('');
     }
 
-    function renderReservations(reservations, date) {
+    // ===== List View Functions =====
+    function renderReservations(reservations) {
       const tbody = document.getElementById('reservation-table');
       const countDiv = document.getElementById('reservation-count');
-      const thDate = document.getElementById('th-date');
-      tbody.innerHTML = '';
-
-      thDate.style.display = showAllMode ? '' : 'none';
 
       const active = reservations.filter(r => r.status !== 'cancelled');
       const cancelled = reservations.filter(r => r.status === 'cancelled');
-      const modeText = showAllMode ? ' (alle Termine)' : '';
-      countDiv.textContent = `${active.length} aktive Reservierungen, ${cancelled.length} storniert${modeText}`;
+      countDiv.textContent = `${active.length} aktive Reservierungen, ${cancelled.length} storniert (von ${allReservations.length} gesamt)`;
 
       if (reservations.length === 0) {
-        const colspan = showAllMode ? 6 : 5;
-        const message = showAllMode ? 'Keine Reservierungen vorhanden' : 'Keine Reservierungen fur dieses Datum';
-        tbody.innerHTML = `<tr><td colspan="${colspan}" style="text-align: center; color: #999; padding: 2rem;">${message}</td></tr>`;
+        tbody.innerHTML = '<tr><td colspan="6" style="text-align: center; color: #999; padding: 2rem;">Keine Reservierungen gefunden.</td></tr>';
         return;
       }
 
-      if (!showAllMode) {
-        reservations.sort((a, b) => a.time.localeCompare(b.time));
-      }
-
-      reservations.forEach((entry) => {
-        const row = document.createElement('tr');
-        row.style.opacity = entry.status === 'cancelled' ? '0.5' : '1';
-
-        const entryDate = entry.date || date;
-        const actions = buildActionButtons(entry, entryDate);
-
-        const dateCell = showAllMode ? `<td><strong>${formatDate(entryDate)}</strong></td>` : '';
-        row.innerHTML = `
-          ${dateCell}
-          <td><strong>${entry.time}</strong></td>
-          <td>${formatContact(entry)}</td>
-          <td>${entry.guests}</td>
-          <td>${getStatusBadge(entry.status)}</td>
-          <td><div class="btn-group">${actions}</div></td>
+      tbody.innerHTML = reservations.map(entry => {
+        const actions = buildActionButtons(entry, entry.date);
+        return `
+          <tr style="opacity: ${entry.status === 'cancelled' ? '0.5' : '1'}">
+            <td><strong>${formatDate(entry.date)}</strong></td>
+            <td><strong>${entry.time}</strong></td>
+            <td>${formatContact(entry)}</td>
+            <td>${entry.guests}</td>
+            <td>${getStatusBadge(entry.status)}</td>
+            <td><div class="btn-group">${actions}</div></td>
+          </tr>
         `;
-        tbody.appendChild(row);
-      });
+      }).join('');
     }
 
-    async function loadReservations() {
-      const date = document.getElementById('admin-date').value;
-      if (!date) {
-        showBanner('Bitte Datum auswahlen.', 'error');
+    function applyFilters() {
+      const dateFilter = document.getElementById('filter-date').value;
+      const statusFilter = document.getElementById('filter-status').value;
+
+      let filtered = [...allReservations];
+
+      if (dateFilter) {
+        filtered = filtered.filter(r => r.date === dateFilter);
+      }
+      if (statusFilter) {
+        filtered = filtered.filter(r => r.status === statusFilter);
+      }
+
+      renderReservations(filtered);
+    }
+
+    // ===== Blocked Slots Functions =====
+    function renderBlockedSlots() {
+      const container = document.getElementById('blocked-list-container');
+
+      if (allBlockedSlots.length === 0) {
+        container.innerHTML = `
+          <div class="empty-state">
+            <div class="empty-state-icon">&#10003;</div>
+            <div class="empty-state-title">Keine blockierten Slots</div>
+            <p>Alle Zeitslots sind verfugbar.</p>
+          </div>
+        `;
         return;
       }
-      currentDate = date;
-      showAllMode = false;
-      try {
-        const response = await authenticatedFetch(`/.netlify/functions/manage-reservations?date=${date}`);
-        const data = await response.json();
-        document.getElementById('availability-result').textContent = `${data.availability.slots.length} Slots gefunden.`;
-        allReservations = data.reservations || [];
-        renderReservations(allReservations, date);
-        renderCalendar();
-        updateStats();
-        statsRow.style.display = 'grid';
-        tabsContainer.style.display = 'flex';
-      } catch (error) {
-        showBanner(error.message, 'error');
-      }
+
+      // Group by date
+      const grouped = {};
+      allBlockedSlots.forEach(slot => {
+        if (!grouped[slot.date]) grouped[slot.date] = [];
+        grouped[slot.date].push(slot);
+      });
+
+      let html = '<div class="blocked-list">';
+      Object.keys(grouped).sort().forEach(date => {
+        grouped[date].forEach(slot => {
+          html += `
+            <div class="blocked-item">
+              <div class="blocked-item-info">
+                <div class="blocked-item-date">${formatDate(date)}</div>
+                <div class="blocked-item-time">${slot.time} Uhr</div>
+                <div class="blocked-item-capacity">Kapazitat: ${slot.capacity} ${slot.capacity === 0 ? '(voll blockiert)' : 'Gaste'}</div>
+              </div>
+              <button class="btn btn-danger btn-sm" data-action="unblock" data-date="${date}" data-time="${slot.time}">Freigeben</button>
+            </div>
+          `;
+        });
+      });
+      html += '</div>';
+
+      container.innerHTML = html;
     }
 
+    // ===== Settings Functions =====
+    function renderSettings() {
+      const form = document.getElementById('settings-form');
+      const loading = document.getElementById('settings-loading');
+
+      // Fill form with current settings
+      document.getElementById('setting-maxCapacityPerSlot').value = adminSettings.maxCapacityPerSlot || 40;
+      document.getElementById('setting-maxGuestsPerReservation').value = adminSettings.maxGuestsPerReservation || 20;
+      document.getElementById('setting-slotIntervalMinutes').value = adminSettings.slotIntervalMinutes || 15;
+      document.getElementById('setting-openingStart').value = adminSettings.openingHours?.start || '09:00';
+      document.getElementById('setting-openingEnd').value = adminSettings.openingHours?.end || '21:00';
+      document.getElementById('setting-minAdvanceBookingHours').value = adminSettings.minAdvanceBookingHours || 2;
+      document.getElementById('setting-maxAdvanceBookingDays').value = adminSettings.maxAdvanceBookingDays || 60;
+      document.getElementById('setting-cancellationDeadlineHours').value = adminSettings.cancellationDeadlineHours || 24;
+      document.getElementById('setting-waitlistEnabled').checked = adminSettings.waitlistEnabled !== false;
+      document.getElementById('setting-autoConfirmReservations').checked = adminSettings.autoConfirmReservations !== false;
+      document.getElementById('setting-requirePhoneNumber').checked = adminSettings.requirePhoneNumber === true;
+      document.getElementById('setting-sendAdminNotifications').checked = adminSettings.sendAdminNotifications !== false;
+      document.getElementById('setting-reminderEmailHoursBeforeReservation').value = adminSettings.reminderEmailHoursBeforeReservation || 24;
+      document.getElementById('setting-noShowThreshold').value = adminSettings.noShowThreshold || 2;
+
+      // Render email list
+      renderAdminEmails();
+
+      loading.style.display = 'none';
+      form.style.display = 'block';
+    }
+
+    function renderAdminEmails() {
+      const container = document.getElementById('admin-email-list');
+      const emails = adminSettings.adminEmails || [];
+
+      if (emails.length === 0) {
+        container.innerHTML = '<span style="color: #999; font-size: .85rem;">Keine E-Mail-Adressen konfiguriert</span>';
+        return;
+      }
+
+      container.innerHTML = emails.map(email => `
+        <span class="email-tag">
+          ${email}
+          <button type="button" data-remove-email="${email}" title="Entfernen">&times;</button>
+        </span>
+      `).join('');
+    }
+
+    // ===== Data Loading Functions =====
     async function loadAllReservations() {
-      showAllMode = true;
-      currentDate = '';
       try {
         const response = await authenticatedFetch('/.netlify/functions/manage-reservations?all=true');
         const data = await response.json();
         allReservations = data.reservations || [];
-        document.getElementById('availability-result').textContent = `${allReservations.length} Reservierungen insgesamt gefunden.`;
-        renderReservations(allReservations, '');
-        renderCalendar();
+      } catch (error) {
+        showBanner('Fehler beim Laden der Reservierungen: ' + error.message, 'error');
+        allReservations = [];
+      }
+    }
+
+    async function loadBlockedSlots() {
+      try {
+        const response = await authenticatedFetch('/.netlify/functions/admin-settings?action=blocked-slots');
+        const data = await response.json();
+        allBlockedSlots = data.blockedSlots || [];
+      } catch (error) {
+        console.error('Fehler beim Laden der blockierten Slots:', error);
+        allBlockedSlots = [];
+      }
+    }
+
+    async function loadSettings() {
+      try {
+        const response = await authenticatedFetch('/.netlify/functions/admin-settings');
+        const data = await response.json();
+        adminSettings = data.settings || {};
+      } catch (error) {
+        console.error('Fehler beim Laden der Einstellungen:', error);
+        adminSettings = {};
+      }
+    }
+
+    async function loadAllData() {
+      await Promise.all([
+        loadAllReservations(),
+        loadBlockedSlots(),
+        loadSettings()
+      ]);
+
+      updateStats();
+      renderCalendar();
+      renderReservations(allReservations);
+      renderBlockedSlots();
+      renderSettings();
+    }
+
+    // ===== Action Handlers =====
+    async function handleReservationAction(action, confirmationCode, date) {
+      try {
+        if (action === 'delete') {
+          if (!confirm('Reservierung endgultig loschen?')) return;
+          await authenticatedFetch(`/.netlify/functions/manage-reservations?date=${date}&confirmationCode=${confirmationCode}`, {
+            method: 'DELETE'
+          });
+          showBanner('Reservierung geloscht.');
+        } else {
+          const statusMap = {
+            confirm: 'confirmed',
+            waitlist: 'waitlisted',
+            cancel: 'cancelled',
+            noshow: 'noshow'
+          };
+          const status = statusMap[action];
+          const sendEmail = action !== 'cancel' && action !== 'noshow' && confirm('E-Mail an Gast senden?');
+
+          await authenticatedFetch('/.netlify/functions/manage-reservations', {
+            method: 'PATCH',
+            body: JSON.stringify({ confirmationCode, date, status, sendEmail })
+          });
+
+          const messages = {
+            confirmed: 'Reservierung bestatigt.',
+            waitlisted: 'Auf Warteliste gesetzt.',
+            cancelled: 'Reservierung storniert.',
+            noshow: 'Als No-Show markiert.'
+          };
+          showBanner(messages[status]);
+        }
+
+        await loadAllReservations();
         updateStats();
-        statsRow.style.display = 'grid';
-        tabsContainer.style.display = 'flex';
+        renderCalendar();
+        applyFilters();
+
+        if (selectedDate) {
+          showDayDetail(selectedDate);
+        }
       } catch (error) {
         showBanner(error.message, 'error');
       }
     }
 
-    async function exportAllReservationsCSV() {
+    async function handleBlockSlot(date, time, capacity) {
+      try {
+        await authenticatedFetch('/.netlify/functions/manage-reservations', {
+          method: 'POST',
+          body: JSON.stringify({ action: 'block-slot', date, time, capacity: Number(capacity) })
+        });
+        showBanner('Slot blockiert.');
+
+        await loadBlockedSlots();
+        updateStats();
+        renderCalendar();
+        renderBlockedSlots();
+
+        if (selectedDate) {
+          showDayDetail(selectedDate);
+        }
+      } catch (error) {
+        showBanner(error.message, 'error');
+      }
+    }
+
+    async function handleUnblockSlot(date, time) {
+      try {
+        await authenticatedFetch('/.netlify/functions/admin-settings', {
+          method: 'POST',
+          body: JSON.stringify({ action: 'delete-blocked-slot', date, time })
+        });
+        showBanner('Slot freigegeben.');
+
+        await loadBlockedSlots();
+        updateStats();
+        renderCalendar();
+        renderBlockedSlots();
+
+        if (selectedDate) {
+          showDayDetail(selectedDate);
+        }
+      } catch (error) {
+        showBanner(error.message, 'error');
+      }
+    }
+
+    async function handleSaveSettings(e) {
+      e.preventDefault();
+
+      const settings = {
+        maxCapacityPerSlot: Number(document.getElementById('setting-maxCapacityPerSlot').value),
+        maxGuestsPerReservation: Number(document.getElementById('setting-maxGuestsPerReservation').value),
+        slotIntervalMinutes: Number(document.getElementById('setting-slotIntervalMinutes').value),
+        openingHours: {
+          start: document.getElementById('setting-openingStart').value,
+          end: document.getElementById('setting-openingEnd').value
+        },
+        minAdvanceBookingHours: Number(document.getElementById('setting-minAdvanceBookingHours').value),
+        maxAdvanceBookingDays: Number(document.getElementById('setting-maxAdvanceBookingDays').value),
+        cancellationDeadlineHours: Number(document.getElementById('setting-cancellationDeadlineHours').value),
+        waitlistEnabled: document.getElementById('setting-waitlistEnabled').checked,
+        autoConfirmReservations: document.getElementById('setting-autoConfirmReservations').checked,
+        requirePhoneNumber: document.getElementById('setting-requirePhoneNumber').checked,
+        sendAdminNotifications: document.getElementById('setting-sendAdminNotifications').checked,
+        reminderEmailHoursBeforeReservation: Number(document.getElementById('setting-reminderEmailHoursBeforeReservation').value),
+        noShowThreshold: Number(document.getElementById('setting-noShowThreshold').value),
+        adminEmails: adminSettings.adminEmails || []
+      };
+
+      try {
+        const response = await authenticatedFetch('/.netlify/functions/admin-settings', {
+          method: 'PUT',
+          body: JSON.stringify({ settings })
+        });
+        const data = await response.json();
+        adminSettings = data.settings;
+        showBanner('Einstellungen gespeichert.');
+      } catch (error) {
+        showBanner('Fehler: ' + error.message, 'error');
+      }
+    }
+
+    function exportToCSV() {
       if (allReservations.length === 0) {
-        showBanner('Bitte zuerst Reservierungen laden.', 'error');
+        showBanner('Keine Reservierungen zum Exportieren.', 'error');
         return;
       }
 
@@ -871,8 +1469,33 @@
       showBanner('CSV Export erstellt.');
     }
 
+    // ===== Event Listeners =====
+
+    // Netlify Identity
+    netlifyIdentity.on('init', user => {
+      currentUser = user;
+      updateAuthState();
+      if (user) loadAllData();
+    });
+
+    netlifyIdentity.on('login', user => {
+      currentUser = user;
+      netlifyIdentity.close();
+      updateAuthState();
+      showBanner('Erfolgreich angemeldet.');
+      loadAllData();
+    });
+
+    netlifyIdentity.on('logout', () => {
+      currentUser = null;
+      updateAuthState();
+    });
+
+    document.getElementById('btn-login').addEventListener('click', () => netlifyIdentity.open('login'));
+    document.getElementById('btn-logout').addEventListener('click', () => netlifyIdentity.logout());
+
     // Tab switching
-    tabsContainer.addEventListener('click', (e) => {
+    tabsContainer.addEventListener('click', e => {
       const tab = e.target.closest('.tab');
       if (!tab) return;
 
@@ -883,23 +1506,29 @@
       document.getElementById(`${tab.dataset.tab}-tab`).classList.add('active');
     });
 
-    document.getElementById('btn-load').addEventListener('click', loadReservations);
-    document.getElementById('btn-export-csv').addEventListener('click', exportAllReservationsCSV);
+    // Quick actions
+    document.getElementById('btn-refresh').addEventListener('click', loadAllData);
+    document.getElementById('btn-export-csv').addEventListener('click', exportToCSV);
+    document.getElementById('btn-today').addEventListener('click', () => {
+      const today = new Date().toISOString().split('T')[0];
+      currentMonth = new Date();
+      selectedDate = today;
+      renderCalendar();
+      showDayDetail(today);
 
-    // Filter by date
-    document.getElementById('filter-date').addEventListener('change', () => {
-      const date = document.getElementById('filter-date').value;
-      if (date) {
-        const filtered = allReservations.filter(r => r.date === date);
-        renderReservations(filtered, date);
-      } else {
-        renderReservations(allReservations, '');
-      }
+      // Select today in calendar
+      document.querySelectorAll('.calendar-day').forEach(d => {
+        d.classList.toggle('selected', d.dataset.date === today);
+      });
     });
 
-    document.getElementById('clear-filter').addEventListener('click', () => {
-      document.getElementById('filter-date').value = '';
-      renderReservations(allReservations, '');
+    // Stats card clicks
+    document.getElementById('stat-today-card').addEventListener('click', () => {
+      document.getElementById('btn-today').click();
+    });
+
+    document.getElementById('stat-blocked-card').addEventListener('click', () => {
+      document.querySelector('[data-tab="blocked"]').click();
     });
 
     // Calendar navigation
@@ -916,97 +1545,114 @@
     document.getElementById('today-btn').addEventListener('click', () => {
       currentMonth = new Date();
       renderCalendar();
-      const today = new Date().toISOString().split('T')[0];
-      showDayDetail(today);
     });
 
-    // Handle actions for both reservation table and day detail
-    document.addEventListener('click', async (event) => {
-      const button = event.target.closest('button[data-action]');
+    // Block day button
+    document.getElementById('btn-block-day').addEventListener('click', () => {
+      if (!selectedDate) return;
+      document.getElementById('block-modal-date').textContent = `Datum: ${formatDate(selectedDate)}`;
+      document.getElementById('modal-block-time').value = '';
+      document.getElementById('modal-block-capacity').value = '0';
+      document.getElementById('block-modal').style.display = 'flex';
+    });
+
+    // Block modal
+    document.getElementById('modal-block-confirm').addEventListener('click', () => {
+      const time = document.getElementById('modal-block-time').value;
+      const capacity = document.getElementById('modal-block-capacity').value;
+      if (!time) {
+        showBanner('Bitte Zeit angeben.', 'error');
+        return;
+      }
+      document.getElementById('block-modal').style.display = 'none';
+      handleBlockSlot(selectedDate, time, capacity);
+    });
+
+    document.getElementById('modal-block-cancel').addEventListener('click', () => {
+      document.getElementById('block-modal').style.display = 'none';
+    });
+
+    // Block slot from blocked tab
+    document.getElementById('btn-block').addEventListener('click', () => {
+      const date = document.getElementById('block-date').value;
+      const time = document.getElementById('block-time').value;
+      const capacity = document.getElementById('block-capacity').value;
+      if (!date || !time) {
+        showBanner('Bitte Datum und Zeit angeben.', 'error');
+        return;
+      }
+      handleBlockSlot(date, time, capacity);
+    });
+
+    // Filters
+    document.getElementById('filter-date').addEventListener('change', applyFilters);
+    document.getElementById('filter-status').addEventListener('change', applyFilters);
+    document.getElementById('clear-filter').addEventListener('click', () => {
+      document.getElementById('filter-date').value = '';
+      document.getElementById('filter-status').value = '';
+      renderReservations(allReservations);
+    });
+
+    // Settings form
+    document.getElementById('settings-form').addEventListener('submit', handleSaveSettings);
+
+    document.getElementById('btn-reset-settings').addEventListener('click', () => {
+      if (confirm('Alle Einstellungen auf Standardwerte zurucksetzen?')) {
+        adminSettings = {};
+        renderSettings();
+      }
+    });
+
+    // Add admin email
+    document.getElementById('btn-add-email').addEventListener('click', () => {
+      const input = document.getElementById('new-admin-email');
+      const email = input.value.trim();
+      if (!email || !email.includes('@')) {
+        showBanner('Bitte gultige E-Mail-Adresse eingeben.', 'error');
+        return;
+      }
+      if (!adminSettings.adminEmails) adminSettings.adminEmails = [];
+      if (adminSettings.adminEmails.includes(email)) {
+        showBanner('E-Mail-Adresse bereits vorhanden.', 'error');
+        return;
+      }
+      adminSettings.adminEmails.push(email);
+      renderAdminEmails();
+      input.value = '';
+    });
+
+    // Remove admin email
+    document.getElementById('admin-email-list').addEventListener('click', e => {
+      const btn = e.target.closest('[data-remove-email]');
+      if (!btn) return;
+      const email = btn.dataset.removeEmail;
+      adminSettings.adminEmails = (adminSettings.adminEmails || []).filter(e => e !== email);
+      renderAdminEmails();
+    });
+
+    // Global action handler (reservations & unblock)
+    document.addEventListener('click', async e => {
+      const button = e.target.closest('button[data-action]');
       if (!button) return;
 
       const action = button.dataset.action;
-      const confirmationCode = button.dataset.code;
       const date = button.dataset.date;
 
-      try {
-        if (action === 'delete') {
-          if (!confirm('Reservierung endgultig loschen?')) return;
-          await authenticatedFetch(`/.netlify/functions/manage-reservations?date=${date}&confirmationCode=${confirmationCode}`, {
-            method: 'DELETE'
-          });
-          showBanner('Reservierung geloscht.');
-        } else {
-          const statusMap = { confirm: 'confirmed', waitlist: 'waitlisted', cancel: 'cancelled' };
-          const status = statusMap[action];
-          const sendEmail = action !== 'cancel' && confirm('E-Mail an Gast senden?');
-
-          await authenticatedFetch('/.netlify/functions/manage-reservations', {
-            method: 'PATCH',
-            body: JSON.stringify({ confirmationCode, date, status, sendEmail })
-          });
-          showBanner(`Reservierung ${status === 'confirmed' ? 'bestatigt' : status === 'waitlisted' ? 'auf Warteliste gesetzt' : 'storniert'}.`);
+      if (action === 'unblock') {
+        const time = button.dataset.time;
+        if (confirm(`Slot am ${formatDate(date)} um ${time} freigeben?`)) {
+          await handleUnblockSlot(date, time);
         }
+        return;
+      }
 
-        // Reload reservations
-        if (showAllMode) {
-          await loadAllReservations();
-        } else if (currentDate) {
-          await loadReservations();
-        }
-
-        // Refresh day detail if visible
-        const detail = document.getElementById('day-detail');
-        if (detail.classList.contains('show')) {
-          showDayDetail(date);
-        }
-      } catch (error) {
-        showBanner(error.message, 'error');
+      const confirmationCode = button.dataset.code;
+      if (confirmationCode) {
+        await handleReservationAction(action, confirmationCode, date);
       }
     });
 
-    document.getElementById('btn-block').addEventListener('click', async () => {
-      try {
-        const date = document.getElementById('block-date').value;
-        const time = document.getElementById('block-time').value;
-        const capacity = Number(document.getElementById('block-capacity').value);
-        if (!date || !time) {
-          showBanner('Bitte Datum und Zeit angeben.', 'error');
-          return;
-        }
-        await authenticatedFetch('/.netlify/functions/manage-reservations', {
-          method: 'POST',
-          body: JSON.stringify({ action: 'block-slot', date, time, capacity })
-        });
-        showBanner('Slot aktualisiert.');
-      } catch (error) {
-        showBanner(error.message, 'error');
-      }
-    });
-
-    document.getElementById('btn-export').addEventListener('click', async () => {
-      try {
-        const date = document.getElementById('export-date').value;
-        const format = document.getElementById('export-format').value;
-        if (!date) {
-          showBanner('Bitte Datum auswahlen.', 'error');
-          return;
-        }
-        const response = await authenticatedFetch(`/.netlify/functions/export-reservations?date=${date}&format=${format}`);
-        const blob = await response.blob();
-        const url = URL.createObjectURL(blob);
-        const a = document.createElement('a');
-        a.href = url;
-        a.download = `reservations-${date}.${format}`;
-        a.click();
-        URL.revokeObjectURL(url);
-        showBanner('Export erstellt.');
-      } catch (error) {
-        showBanner(error.message, 'error');
-      }
-    });
-
-    // Init Netlify Identity and Calendar
+    // Init
     netlifyIdentity.init();
     renderCalendar();
   </script>
