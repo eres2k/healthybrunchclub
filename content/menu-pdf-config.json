@@ -1,12 +1,12 @@
 {
   "english_menu_pdf": "https://healthybrunchclub.at/content/menu-english.pdf",
-  "kids_menu_pdf": "/content/für-die-kleinen.pdf",
+  "kids_menu_pdf": "/content/hbc_kids_menu.pdf",
   "active": true,
   "pdf_file": "/content/menu.pdf",
+  "lasa_menu_pdf": "/content/LASA_DE_MENU.PDF",
   "last_updated": "2025-11-06T19:44:56.177Z",
   "menu_pdf": "/content/speisekarte-hbc.pdf",
   "version": "1.0",
   "title": "Speisekarte PDF",
-  "description": "Aktuelle Speisekarte des Healthy Brunch Clubs x LASA",
-  "lasa_menu_pdf": "/content/LASA_DE_MENU.PDF"
+  "description": "Aktuelle Speisekarte des Healthy Brunch Clubs x LASA"
 }
