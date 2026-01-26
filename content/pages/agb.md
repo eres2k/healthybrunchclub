@@ -5,7 +5,7 @@ title: AGB
 
 ### 1. Geltungsbereich
 
-Diese Allgemeinen Geschäftsbedingungen gelten für alle Leistungen des Healthy Brunch Club, Gumpendorfer Straße 9, 1060 Wien.
+Diese Allgemeinen Geschäftsbedingungen gelten für alle Leistungen des Healthy Brunch Club, Neubaugasse 15, 1070 Wien.
 
 ### 2. Reservierungen
 
@@ -68,8 +68,8 @@ Sollten einzelne Bestimmungen dieser AGB unwirksam sein oder werden, berührt di
 
 **Kontakt:**
 Healthy Brunch Club
-Gumpendorfer Straße 9
-1060 Wien
+Neubaugasse 15
+1070 Wien
 E-Mail: hello@healthybrunchclub.at
 
 *Stand: Januar 2025*

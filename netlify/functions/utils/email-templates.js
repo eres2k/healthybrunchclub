@@ -215,7 +215,7 @@ function renderFooter() {
   return `
     <div class="footer" style="text-align: center; padding: 32px; background: #fafaf8; color: #484848; font-size: 13px;">
       <div class="footer-brand" style="font-family: 'Playfair Display', Georgia, serif; font-size: 14px; color: #1a1a1a; margin-bottom: 8px;">Healthy Brunch Club Wien</div>
-      <p style="margin: 8px 0; font-family: 'Montserrat', Arial, sans-serif;">Gumpendorfer Straße 65 · 1060 Wien</p>
+      <p style="margin: 8px 0; font-family: 'Montserrat', Arial, sans-serif;">Neubaugasse 15 · 1070 Wien</p>
       <p style="margin: 8px 0; color: #c9a961; font-family: 'Montserrat', Arial, sans-serif;">hello@healthybrunchclub.at</p>
       <div class="gold-line" style="width: 60px; height: 1px; background: #c9a961; margin: 16px auto;"></div>
       <p style="font-size: 11px; color: #888; margin-top: 16px; font-family: 'Montserrat', Arial, sans-serif;">
@@ -340,8 +340,8 @@ function renderGuestEmail(reservation, options = {}) {
 
           <div class="section" style="text-align: center; margin-bottom: 32px;">
             <h3 style="font-family: 'Playfair Display', Georgia, serif; margin: 0 0 12px 0; color: #1a1a1a; font-size: 18px; font-weight: 400;">So finden Sie uns</h3>
-            <p style="font-family: 'Montserrat', Arial, sans-serif; line-height: 1.7; margin: 0 0 16px 0;">Gumpendorfer Straße 65, 1060 Wien</p>
-            <a href="https://maps.google.com/?q=Gumpendorfer+Straße+65+1060+Wien" style="display: inline-block; padding: 16px 32px; background: transparent; border: 1px solid #1a1a1a; color: #1a1a1a; text-decoration: none; font-size: 12px; text-transform: uppercase; letter-spacing: 2px; font-weight: 500; font-family: 'Montserrat', Arial, sans-serif;">Route planen</a>
+            <p style="font-family: 'Montserrat', Arial, sans-serif; line-height: 1.7; margin: 0 0 16px 0;">Neubaugasse 15, 1070 Wien</p>
+            <a href="https://maps.google.com/?q=Neubaugasse+15+1070+Wien" style="display: inline-block; padding: 16px 32px; background: transparent; border: 1px solid #1a1a1a; color: #1a1a1a; text-decoration: none; font-size: 12px; text-transform: uppercase; letter-spacing: 2px; font-weight: 500; font-family: 'Montserrat', Arial, sans-serif;">Route planen</a>
           </div>
         </div>
         ${renderFooter()}
@@ -541,8 +541,8 @@ function renderReminderEmail(reservation, options = {}) {
 
           <div class="section" style="text-align: center; background: #fafaf8; padding: 24px; margin: 0 -32px 32px -32px;">
             <h3 style="font-family: 'Playfair Display', Georgia, serif; margin: 0 0 12px 0; color: #1a1a1a; font-size: 18px; font-weight: 400;">So finden Sie uns</h3>
-            <p style="margin-bottom: 16px; font-family: 'Montserrat', Arial, sans-serif;">Gumpendorfer Straße 65, 1060 Wien</p>
-            <a href="https://maps.google.com/?q=Gumpendorfer+Straße+65+1060+Wien" style="display: inline-block; padding: 16px 32px; background: #c9a961; color: #1a1a1a; text-decoration: none; font-size: 12px; text-transform: uppercase; letter-spacing: 2px; font-weight: 500; font-family: 'Montserrat', Arial, sans-serif;">Route planen</a>
+            <p style="margin-bottom: 16px; font-family: 'Montserrat', Arial, sans-serif;">Neubaugasse 15, 1070 Wien</p>
+            <a href="https://maps.google.com/?q=Neubaugasse+15+1070+Wien" style="display: inline-block; padding: 16px 32px; background: #c9a961; color: #1a1a1a; text-decoration: none; font-size: 12px; text-transform: uppercase; letter-spacing: 2px; font-weight: 500; font-family: 'Montserrat', Arial, sans-serif;">Route planen</a>
           </div>
 
           <div class="section" style="text-align: center; margin-top: 32px;">
@@ -875,7 +875,7 @@ function renderIcs(reservation) {
     `DTEND:${format(end)}`,
     'SUMMARY:Brunch im Healthy Brunch Club Wien',
     `DESCRIPTION:Reservierung für ${reservation.guests} Personen\\nBestätigungscode: ${reservation.confirmationCode}`,
-    'LOCATION:Healthy Brunch Club Wien\\, Gumpendorfer Straße 65\\, 1060 Wien',
+    'LOCATION:Healthy Brunch Club Wien\\, Neubaugasse 15\\, 1070 Wien',
     'END:VEVENT',
     'END:VCALENDAR'
   ].join('\r\n');
@@ -916,8 +916,8 @@ Ihre Reservierung ist bestätigt!
 
 ${renderPlainTextReservation(reservation)}
 
-Adresse: Gumpendorfer Straße 65, 1060 Wien
-Google Maps: https://maps.google.com/?q=Gumpendorfer+Straße+65+1060+Wien
+Adresse: Neubaugasse 15, 1070 Wien
+Google Maps: https://maps.google.com/?q=Neubaugasse+15+1070+Wien
 
 Wichtig: Bitte kommen Sie pünktlich. Bei Verspätungen über 15 Minuten kann Ihre Reservierung an wartende Gäste vergeben werden.
 
@@ -1031,8 +1031,8 @@ Gut zu wissen:
 - Bitte kommen Sie pünktlich zum reservierten Zeitpunkt
 - Bei Verspätung über 15 Minuten kann Ihre Reservierung verfallen
 
-Adresse: Gumpendorfer Straße 65, 1060 Wien
-Route planen: https://maps.google.com/?q=Gumpendorfer+Straße+65+1060+Wien
+Adresse: Neubaugasse 15, 1070 Wien
+Route planen: https://maps.google.com/?q=Neubaugasse+15+1070+Wien
 
 Wir freuen uns auf Sie!
 
@@ -1054,8 +1054,8 @@ ${renderPlainTextReservation(reservation)}
 
 Tolle Neuigkeiten! Ein Platz ist frei geworden und Ihre Reservierung wurde von der Warteliste bestätigt.
 
-Adresse: Gumpendorfer Straße 65, 1060 Wien
-Route planen: https://maps.google.com/?q=Gumpendorfer+Straße+65+1060+Wien
+Adresse: Neubaugasse 15, 1070 Wien
+Route planen: https://maps.google.com/?q=Neubaugasse+15+1070+Wien
 
 Können Sie den Termin nicht wahrnehmen?
 Bitte stornieren Sie rechtzeitig, damit andere Gäste nachrücken können.

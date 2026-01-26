@@ -575,7 +575,7 @@ exports.handler = async (event, context) => {
         doc.setTextColor(...colors.charcoal);
         doc.setFontSize(9);
         doc.setFont('helvetica', 'normal');
-        doc.text('Gumpendorfer Straße 9 • 1060 Wien', pageWidth / 2, yPos, { align: 'center' });
+        doc.text('Neubaugasse 15 • 1070 Wien', pageWidth / 2, yPos, { align: 'center' });
         
         yPos += 4;
         doc.setTextColor(...colors.warmGray);
