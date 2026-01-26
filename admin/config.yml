@@ -5,13 +5,13 @@ backend:
 media_folder: "/content/images"
 public_folder: "/content/images"
 
-# Premium CMS Configuration
+# Site Configuration
 site_url: https://healthybrunchclub.at
 display_url: https://healthybrunchclub.at
 logo_url: https://healthybrunchclub.at/content/images/logo.png
 
-# Publish Mode
-publish_mode: editorial_workflow
+# Direct Publishing - no draft/review workflow for faster content updates
+# publish_mode: editorial_workflow (REMOVED - saves clicks!)
 
 collections:
   - name: "menu-categories"
@@ -126,22 +126,8 @@ collections:
               - {label: "Facebook", name: "facebook", widget: "string", required: false}
               - {label: "Pinterest", name: "pinterest", widget: "string", required: false}
 
-  - name: "reservation_settings"
-    label: "Reservierungs-Einstellungen"
-    files:
-      - name: "general_settings"
-        label: "Allgemeine Einstellungen"
-        file: "content/reservierung/settings.json"
-        format: "json"
-        fields:
-          - label: "Reservierungseinstellungen"
-            name: "settings"
-            widget: "object"
-            fields:
-              - {label: "Max. Tage im Voraus", name: "max_days_advance", widget: "number", default: 30}
-              - {label: "Min. Stunden Vorlaufzeit", name: "min_hours_advance", widget: "number", default: 2}
-              - {label: "Standard Slot-Dauer (Minuten)", name: "slot_duration", widget: "number", default: 90}
-              - {label: "Standard Max. Gäste pro Slot", name: "default_max_guests", widget: "number", default: 20}
+  # Note: Reservation settings are managed in the Reservierungen Dashboard
+  # Go to: /admin-dashboard.html → Settings tab
 
   - name: "available_dates"
     label: "Verfügbare Tage"
@@ -164,17 +150,8 @@ collections:
           - {label: "Max. Gäste", name: "max_guests", widget: "number", default: 20}
       - {label: "Notiz", name: "note", widget: "text", required: false, hint: "Wird Kunden angezeigt"}
 
-  - name: "blocked_reservations"
-    label: "Blockierte Reservierungen"
-    folder: "content/blocked-reservations"
-    create: true
-    identifier_field: "title"
-    fields:
-      - {label: "Titel", name: "title", widget: "string"}
-      - {label: "Datum", name: "date", widget: "datetime", format: "YYYY-MM-DD", dateFormat: "DD.MM.YYYY", timeFormat: false}
-      - {label: "Zeit", name: "time", widget: "string"}
-      - {label: "Anzahl blockierte Plätze", name: "blocked_seats", widget: "number"}
-      - {label: "Grund", name: "reason", widget: "text", required: false}
+  # Note: Blocked reservations are managed in the Reservierungen Dashboard
+  # Go to: /admin-dashboard.html → Blocked Slots tab
 
   - name: "menu_pdf"
     label: "📄 Speisekarten PDF"
