@@ -535,6 +535,10 @@
     netlifyIdentity.on('init', user => {
       currentUser = user;
       updateAuthState();
+      // Reservierungen nur laden wenn eingeloggt
+      if (user) {
+        loadAllReservations();
+      }
     });
 
     netlifyIdentity.on('login', user => {
@@ -542,6 +546,8 @@
       netlifyIdentity.close();
       updateAuthState();
       showBanner('Erfolgreich angemeldet.');
+      // Reservierungen nach Login laden
+      loadAllReservations();
     });
 
     netlifyIdentity.on('logout', () => {
@@ -875,9 +881,6 @@
 
     document.getElementById('btn-load').addEventListener('click', loadReservations);
     document.getElementById('btn-export-csv').addEventListener('click', exportAllReservationsCSV);
-
-    // Automatisch alle Reservierungen laden beim Start
-    loadAllReservations();
 
     // Filter by date
     document.getElementById('filter-date').addEventListener('change', () => {
