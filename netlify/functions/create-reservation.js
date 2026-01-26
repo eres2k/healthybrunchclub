@@ -5,7 +5,7 @@ const headers = {
 };
 
 // Import E-Mail Service
-const { sendReservationEmails } = require('./utils/email-service');
+const { sendRequestReceivedEmails } = require('./utils/email-service');
 const { createReservation } = require('./utils/reservation-utils');
 
 exports.handler = async (event, context) => {
@@ -67,10 +67,10 @@ exports.handler = async (event, context) => {
 
     const reservation = result.reservation;
 
-    // Send confirmation emails
+    // Send request received emails (Angefragt status)
     try {
-      await sendReservationEmails(reservation);
-      console.log('E-Mail-Bestätigung wurde versendet an:', reservation.email);
+      await sendRequestReceivedEmails(reservation);
+      console.log('Reservierungsanfrage-E-Mail wurde versendet an:', reservation.email);
     } catch (emailError) {
       console.error('E-Mail konnte nicht versendet werden:', emailError);
       // Continue even if email fails
