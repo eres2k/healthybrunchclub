@@ -365,7 +365,7 @@ function renderGuestEmail(reservation, options = {}) {
           </div>
 
           <div class="section" style="margin-bottom: 32px;">
-            <h3 style="font-family: 'Playfair Display', Georgia, serif; margin: 0 0 12px 0; color: #1a1a1a; font-size: 18px; font-weight: 400;">Deine Reservierung</h3>
+            <h3 style="font-family: 'Playfair Display', Georgia, serif; margin: 0 0 12px 0; color: #1a1a1a; font-size: 18px; font-weight: 400;">deine Reservierung</h3>
             <div class="gold-line" style="width: 60px; height: 1px; background: #c9a961; margin: 12px 0 20px 0;"></div>
             ${renderReservationDetails(reservation)}
           </div>
@@ -543,7 +543,7 @@ function renderReminderEmail(reservation, options = {}) {
     <head>
       <meta charset="utf-8" />
       <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-      <title>Erinnerung: Deine Reservierung morgen</title>
+      <title>Erinnerung: deine Reservierung morgen</title>
       <style>${getBaseStyles()}</style>
     </head>
     <body style="font-family: 'Montserrat', Arial, sans-serif; font-weight: 300; background-color: #f5f0e8; color: #2d2d2d; margin: 0; padding: 20px; line-height: 1.6;">
@@ -603,7 +603,7 @@ function renderWaitlistEmail(reservation) {
     <head>
       <meta charset="utf-8" />
       <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-      <title>Du bist auf der Warteliste</title>
+      <title>du bist auf der Warteliste</title>
       <style>${getBaseStyles()}</style>
     </head>
     <body style="font-family: 'Montserrat', Arial, sans-serif; font-weight: 300; background-color: #f5f0e8; color: #2d2d2d; margin: 0; padding: 20px; line-height: 1.6;">
@@ -624,15 +624,15 @@ function renderWaitlistEmail(reservation) {
           </div>
 
           <div class="section" style="margin-bottom: 32px;">
-            <h3 style="font-family: 'Playfair Display', Georgia, serif; margin: 0 0 12px 0; color: #1a1a1a; font-size: 18px; font-weight: 400;">Deine Anfrage</h3>
+            <h3 style="font-family: 'Playfair Display', Georgia, serif; margin: 0 0 12px 0; color: #1a1a1a; font-size: 18px; font-weight: 400;">deine Anfrage</h3>
             ${renderReservationDetails(reservation)}
           </div>
 
           <div class="section" style="margin-bottom: 32px;">
             <h3 style="font-family: 'Playfair Display', Georgia, serif; margin: 0 0 12px 0; color: #1a1a1a; font-size: 18px; font-weight: 400;">Wie geht es weiter?</h3>
             <ul style="line-height: 2; padding-left: 20px; color: #484848; font-family: 'Montserrat', Arial, sans-serif;">
-              <li>Du erhältst sofort eine E-Mail, wenn ein Platz frei wird</li>
-              <li>Deine Position hängt vom Zeitpunkt deiner Anfrage ab</li>
+              <li>du erhältst sofort eine E-Mail, wenn ein Platz frei wird</li>
+              <li>deine Position hängt vom Zeitpunkt deiner Anfrage ab</li>
               <li>Alternativ kannst du einen anderen Termin buchen</li>
             </ul>
           </div>
@@ -848,7 +848,7 @@ function renderWaitlistPromotedEmail(reservation, options = {}) {
           <div class="logo-text" style="font-family: 'Playfair Display', Georgia, serif; font-size: 12px; letter-spacing: 3px; text-transform: uppercase; color: #c9a961; margin-bottom: 24px;">Healthy Brunch Club x LASA</div>
           <h1 style="font-family: 'Playfair Display', Georgia, serif; margin: 0 0 8px 0; font-size: 32px; font-weight: 400; letter-spacing: -0.5px; color: #ffffff;">Platz frei geworden!</h1>
           <div class="gold-line" style="width: 60px; height: 1px; background: #c9a961; margin: 16px auto;"></div>
-          <p style="margin: 0; opacity: 0.9; font-family: 'Montserrat', Arial, sans-serif;">Deine Reservierung wurde bestätigt</p>
+          <p style="margin: 0; opacity: 0.9; font-family: 'Montserrat', Arial, sans-serif;">deine Reservierung wurde bestätigt</p>
         </div>
         <div class="content" style="padding: 40px 32px;">
           <div class="section" style="text-align: center; margin-bottom: 32px;">
@@ -860,7 +860,7 @@ function renderWaitlistPromotedEmail(reservation, options = {}) {
           </div>
 
           <div class="section" style="margin-bottom: 32px;">
-            <h3 style="font-family: 'Playfair Display', Georgia, serif; margin: 0 0 12px 0; color: #1a1a1a; font-size: 18px; font-weight: 400;">Deine Reservierung</h3>
+            <h3 style="font-family: 'Playfair Display', Georgia, serif; margin: 0 0 12px 0; color: #1a1a1a; font-size: 18px; font-weight: 400;">deine Reservierung</h3>
             ${renderReservationDetails(reservation)}
           </div>
 
@@ -910,7 +910,7 @@ function renderFeedbackRequestEmail(reservation, options = {}) {
           </div>
 
           <div class="highlight-box" style="background: #fafaf8; border-left: 3px solid #c9a961; padding: 20px 24px; margin: 24px 0;">
-            <p style="margin: 0; font-family: 'Montserrat', Arial, sans-serif; line-height: 1.7;"><strong>Deine Meinung ist uns wichtig!</strong><br>
+            <p style="margin: 0; font-family: 'Montserrat', Arial, sans-serif; line-height: 1.7;"><strong>deine Meinung ist uns wichtig!</strong><br>
             Eine kurze Bewertung hilft uns, noch besser zu werden – und anderen Gästen bei ihrer Entscheidung.</p>
           </div>
 
@@ -1130,7 +1130,7 @@ function renderGuestEmailText(reservation) {
   return `Healthy Brunch Club x LASA Wien
 ================================
 
-Deine Reservierung ist bestätigt!
+deine Reservierung ist bestätigt!
 
 ${renderPlainTextReservation(reservation)}
 
@@ -1182,13 +1182,13 @@ function renderWaitlistEmailText(reservation) {
   return `Healthy Brunch Club x LASA Wien
 ================================
 
-Du bist auf der Warteliste
+du bist auf der Warteliste
 
 ${renderPlainTextReservation(reservation)}
 
 Was passiert jetzt?
-- Du erhältst sofort eine E-Mail, wenn ein Platz frei wird
-- Deine Position hängt vom Zeitpunkt deiner Anfrage ab
+- du erhältst sofort eine E-Mail, wenn ein Platz frei wird
+- deine Position hängt vom Zeitpunkt deiner Anfrage ab
 - Alternativ kannst du einen anderen Termin buchen
 
 Neue Reservierung: https://healthybrunchclub.at/#reservation
@@ -1205,7 +1205,7 @@ function renderCancellationEmailText(reservation, options = {}) {
   let text = `Healthy Brunch Club x LASA Wien
 ================================
 
-Deine Reservierung wurde storniert
+deine Reservierung wurde storniert
 
 ${renderPlainTextReservation(reservation)}`;
 
@@ -1240,7 +1240,7 @@ function renderReminderEmailText(reservation) {
 
 Bis morgen!
 
-Deine Reservierung:
+deine Reservierung:
 - Datum: ${date}
 - Uhrzeit: ${reservation.time} Uhr
 - Personen: ${reservation.guests}
@@ -1300,7 +1300,7 @@ Liebe/r ${reservation.name.split(' ')[0]},
 
 vielen Dank, dass du uns im Healthy Brunch Club x LASA Wien besucht hast! Wir hoffen, du hattest eine wunderbare Zeit und es hat dir geschmeckt.
 
-Deine Meinung ist uns wichtig!
+deine Meinung ist uns wichtig!
 Eine kurze Bewertung hilft uns, noch besser zu werden – und anderen Gästen bei ihrer Entscheidung.
 
 Bewertung abgeben: ${feedbackUrl}
