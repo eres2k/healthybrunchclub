@@ -4386,8 +4386,36 @@ body.dark-mode video:hover {
     background: linear-gradient(145deg, #f5a623 0%, #e09400 100%);
 }
 
-/* Tablet layout - 2 columns */
+/* Special variant for Online/All Menus card */
+.menu-card-online .menu-card-icon {
+    background: rgba(99, 102, 241, 0.12);
+    color: #6366f1;
+}
+
+.menu-card-online .menu-card-label {
+    color: #6366f1;
+}
+
+.menu-card-online::before {
+    background: linear-gradient(145deg, #6366f1 0%, #4f46e5 100%);
+}
+
+/* Grid layout for 5 cards */
+.menu-downloads-grid {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    gap: 16px;
+}
+
+/* Tablet layout - 2-3 columns */
 @media (max-width: 992px) {
+    .menu-downloads-grid {
+        grid-template-columns: repeat(3, 1fr);
+        gap: 12px;
+    }
+}
+
+@media (max-width: 768px) {
     .menu-downloads-grid {
         grid-template-columns: repeat(2, 1fr);
         gap: 12px;
