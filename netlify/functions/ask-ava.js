@@ -258,10 +258,13 @@ exports.handler = async (event, context) => {
     // Extract user data for logging
     const userData = extractUserData(event);
 
-    // Log conversation for future improvements (non-blocking)
-    logConversation(message, cleanResponse, userData).catch(err => {
+    // Log conversation for future improvements
+    // Must await to ensure it completes before the function terminates
+    try {
+      await logConversation(message, cleanResponse, userData);
+    } catch (err) {
       console.error('Failed to log conversation:', err.message);
-    });
+    }
 
     return {
       statusCode: 200,
