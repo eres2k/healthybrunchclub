@@ -528,6 +528,10 @@
         updateAuthState();
         throw new Error('Nicht autorisiert');
       }
+      if (!response.ok) {
+        const data = await response.json().catch(() => ({}));
+        throw new Error(data.message || `Fehler: ${response.status}`);
+      }
       return response;
     }
 
