@@ -1,7 +1,7 @@
 'use strict';
 
 const { getAvailability, loadReservations, loadAllReservations, saveBlocked, loadBlocked, updateReservationStatus, deleteReservation } = require('./utils/reservation-utils');
-const { sendReservationEmails } = require('./utils/email-service');
+const { sendStatusUpdateEmail } = require('./utils/email-service');
 
 const DEFAULT_HEADERS = {
   'Access-Control-Allow-Origin': '*',
@@ -67,12 +67,18 @@ async function handlePatch(event) {
     return response(400, { message: 'Bestätigungscode, Datum und Status sind erforderlich.' });
   }
 
+  // Get the current reservation to track previous status
+  const reservations = await loadReservations(date);
+  const existingReservation = reservations.find(r => r.confirmationCode === confirmationCode);
+  const previousStatus = existingReservation?.status || 'pending';
+
   const reservation = await updateReservationStatus({ date, confirmationCode, status });
 
   let emailSent = false;
   if (sendEmail) {
     try {
-      await sendReservationEmails(reservation);
+      // Use sendStatusUpdateEmail which handles different status transitions
+      await sendStatusUpdateEmail(reservation, previousStatus);
       emailSent = true;
     } catch (error) {
       console.error('E-Mail Versand nach Update fehlgeschlagen:', error);

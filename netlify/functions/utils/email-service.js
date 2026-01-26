@@ -12,6 +12,8 @@ const {
   renderFeedbackRequestEmail,
   renderAdminCancellationEmail,
   renderAdminCancellationEmailText,
+  renderRequestReceivedEmail,
+  renderConfirmationEmail,
   // Plain text versions
   renderGuestEmailText,
   renderAdminEmailText,
@@ -19,7 +21,9 @@ const {
   renderCancellationEmailText,
   renderReminderEmailText,
   renderWaitlistPromotedEmailText,
-  renderFeedbackRequestEmailText
+  renderFeedbackRequestEmailText,
+  renderRequestReceivedEmailText,
+  renderConfirmationEmailText
 } = require('./email-templates');
 const { writeJSON } = require('./blob-storage');
 
@@ -152,6 +156,69 @@ async function sendReservationEmails(reservation) {
 }
 
 /**
+ * Sends request received email when user submits a new reservation (Angefragt status).
+ * Only sends to guest + admin notification.
+ */
+async function sendRequestReceivedEmails(reservation) {
+  if (!reservation?.email) {
+    throw new Error('E-Mail-Adresse fehlt für den Versand.');
+  }
+
+  const from = FROM_EMAIL();
+  const adminEmails = getAdminEmails();
+
+  // Send guest email - request received
+  await sendEmail({
+    to: reservation.email,
+    from,
+    subject: 'Healthy Brunch Club Wien – Reservierungsanfrage erhalten',
+    text: renderRequestReceivedEmailText(reservation),
+    html: renderRequestReceivedEmail(reservation)
+  });
+
+  // Delay before admin emails to avoid rate limit
+  await delay(EMAIL_DELAY_MS);
+
+  // Extract just the date part for subject line
+  const dateOnly = reservation.date.split('T')[0];
+
+  // Send admin notifications about the new request
+  await sendToAllAdmins({
+    subject: `Neue Anfrage: ${reservation.name} - ${dateOnly} ${reservation.time}`,
+    text: renderAdminEmailText(reservation),
+    html: renderAdminEmail(reservation)
+  });
+
+  await logEmail(reservation.confirmationCode, 'request-received', [reservation.email, ...adminEmails]);
+}
+
+/**
+ * Sends confirmation email when admin confirms reservation (Bestätigt status).
+ */
+async function sendConfirmationEmails(reservation) {
+  if (!reservation?.email) {
+    throw new Error('E-Mail-Adresse fehlt für den Versand.');
+  }
+
+  const from = FROM_EMAIL();
+  const adminEmails = getAdminEmails();
+  const icsContent = renderIcs(reservation);
+  const attachments = [encodeAttachment(icsContent, 'text/calendar', `reservation-${reservation.confirmationCode}.ics`)];
+
+  // Send guest email - confirmation
+  await sendEmail({
+    to: reservation.email,
+    from,
+    subject: 'Healthy Brunch Club Wien – Reservierung bestätigt',
+    text: renderConfirmationEmailText(reservation),
+    html: renderConfirmationEmail(reservation),
+    attachments
+  });
+
+  await logEmail(reservation.confirmationCode, 'confirmation', [reservation.email, ...adminEmails]);
+}
+
+/**
  * Sends cancellation confirmation emails (guest + all admins).
  */
 async function sendCancellationEmails(reservation, options = {}) {
@@ -265,6 +332,12 @@ async function sendStatusUpdateEmail(reservation, previousStatus) {
   }
 
   // Handle specific status transitions
+  // When admin confirms a pending reservation
+  if (previousStatus === 'pending' && reservation.status === 'confirmed') {
+    return sendConfirmationEmails(reservation);
+  }
+
+  // When a waitlisted reservation gets confirmed
   if (previousStatus === 'waitlisted' && reservation.status === 'confirmed') {
     return sendWaitlistPromotedEmail(reservation);
   }
@@ -273,12 +346,19 @@ async function sendStatusUpdateEmail(reservation, previousStatus) {
     return sendCancellationEmails(reservation);
   }
 
+  // For other status changes to confirmed, send confirmation email
+  if (reservation.status === 'confirmed') {
+    return sendConfirmationEmails(reservation);
+  }
+
   // For other status changes, send a generic confirmation
   return sendReservationEmails(reservation);
 }
 
 module.exports = {
   sendReservationEmails,
+  sendRequestReceivedEmails,
+  sendConfirmationEmails,
   sendCancellationEmails,
   sendReminderEmail,
   sendWaitlistPromotedEmail,

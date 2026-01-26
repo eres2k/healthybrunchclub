@@ -295,8 +295,10 @@ function renderReservationDetails(reservation) {
  */
 function translateStatus(status) {
   switch (status) {
+    case 'pending': return 'Angefragt';
     case 'waitlisted': return 'Warteliste';
     case 'cancelled': return 'Storniert';
+    case 'confirmed': return 'Bestätigt';
     default: return 'Bestätigt';
   }
 }
@@ -610,6 +612,189 @@ function renderWaitlistEmail(reservation) {
       </div>
     </body>
   </html>`;
+}
+
+/**
+ * Request received email (Angefragt) - sent when user submits a reservation request
+ */
+function renderRequestReceivedEmail(reservation) {
+  return `<!DOCTYPE html>
+  <html lang="de">
+    <head>
+      <meta charset="utf-8" />
+      <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+      <title>Reservierungsanfrage erhalten</title>
+      <style>${getBaseStyles()}</style>
+    </head>
+    <body style="font-family: 'Montserrat', Arial, sans-serif; font-weight: 300; background-color: #f5f0e8; color: #2d2d2d; margin: 0; padding: 20px; line-height: 1.6;">
+      <div class="container" style="max-width: 640px; margin: 0 auto; background: #ffffff; overflow: hidden; box-shadow: 0 4px 24px rgba(0,0,0,0.08);">
+        <div class="header header-waitlist" style="padding: 48px 32px; text-align: center; color: #fff; background: linear-gradient(135deg, #8b7355 0%, #6b5a45 100%);">
+          <div class="logo-text" style="font-family: 'Playfair Display', Georgia, serif; font-size: 12px; letter-spacing: 3px; text-transform: uppercase; color: #c9a961; margin-bottom: 24px;">Healthy Brunch Club x LASA</div>
+          <h1 style="font-family: 'Playfair Display', Georgia, serif; margin: 0 0 8px 0; font-size: 32px; font-weight: 400; letter-spacing: -0.5px; color: #ffffff;">Anfrage erhalten</h1>
+          <div class="gold-line" style="width: 60px; height: 1px; background: #c9a961; margin: 16px auto;"></div>
+          <p style="margin: 0; opacity: 0.9; font-family: 'Montserrat', Arial, sans-serif;">Wir bearbeiten deine Anfrage</p>
+        </div>
+        <div class="content" style="padding: 40px 32px;">
+          <div class="section" style="text-align: center; margin-bottom: 32px;">
+            <span class="badge badge-waitlist" style="display: inline-block; padding: 8px 16px; font-size: 11px; text-transform: uppercase; letter-spacing: 2px; font-weight: 500; background: #faf6f1; color: #8b7355; font-family: 'Montserrat', Arial, sans-serif;">Angefragt</span>
+          </div>
+
+          <div class="section" style="margin-bottom: 32px;">
+            <p style="font-family: 'Montserrat', Arial, sans-serif; line-height: 1.7; margin: 0 0 16px 0;">Hi <strong>${reservation.name.split(' ')[0]}</strong>,</p>
+            <p style="font-family: 'Montserrat', Arial, sans-serif; line-height: 1.7; margin: 0 0 16px 0;">Danke für deine Reservierungsanfrage beim Healthy Brunch Club x LASA!</p>
+            <p style="font-family: 'Montserrat', Arial, sans-serif; line-height: 1.7; margin: 0 0 16px 0;">Wir bearbeiten deine Anfrage und melden uns in Kürze mit einer Bestätigung.</p>
+          </div>
+
+          <div class="section" style="margin-bottom: 32px;">
+            <h3 style="font-family: 'Playfair Display', Georgia, serif; margin: 0 0 12px 0; color: #1a1a1a; font-size: 18px; font-weight: 400;">Deine Anfrage</h3>
+            ${renderReservationDetails(reservation)}
+          </div>
+
+          <div class="highlight-box" style="background: #fafaf8; border-left: 3px solid #c9a961; padding: 20px 24px; margin: 24px 0;">
+            <p style="margin: 0; font-family: 'Montserrat', Arial, sans-serif; line-height: 1.7;"><strong>Was passiert jetzt?</strong><br>Du erhältst eine separate E-Mail, sobald wir deine Reservierung bestätigt haben.</p>
+          </div>
+
+          ${renderFeaturedDishes()}
+        </div>
+        ${renderFooter()}
+      </div>
+    </body>
+  </html>`;
+}
+
+/**
+ * Plain text request received email
+ */
+function renderRequestReceivedEmailText(reservation) {
+  return `Healthy Brunch Club x LASA
+========================
+
+Reservierungsanfrage erhalten
+
+Hi ${reservation.name.split(' ')[0]},
+
+Danke für deine Reservierungsanfrage beim Healthy Brunch Club x LASA!
+
+Wir bearbeiten deine Anfrage und melden uns in Kürze mit einer Bestätigung.
+
+${renderPlainTextReservation(reservation)}
+
+Was passiert jetzt?
+Du erhältst eine separate E-Mail, sobald wir deine Reservierung bestätigt haben.
+
+--
+Healthy Brunch Club Wien
+Neubaugasse 15 · 1070 Wien
+hello@healthybrunchclub.at`;
+}
+
+/**
+ * Confirmation email (Bestätigt) - sent when admin confirms the reservation
+ */
+function renderConfirmationEmail(reservation) {
+  // Extract just the date part if it's a full ISO timestamp
+  const dateOnly = reservation.date.split('T')[0];
+  const date = DateTime.fromISO(dateOnly, { zone: reservation.timezone || 'Europe/Vienna' })
+    .toFormat('EEEE, dd. MMMM yyyy', { locale: 'de' });
+
+  return `<!DOCTYPE html>
+  <html lang="de">
+    <head>
+      <meta charset="utf-8" />
+      <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+      <title>Reservierung bestätigt</title>
+      <style>${getBaseStyles()}</style>
+    </head>
+    <body style="font-family: 'Montserrat', Arial, sans-serif; font-weight: 300; background-color: #f5f0e8; color: #2d2d2d; margin: 0; padding: 20px; line-height: 1.6;">
+      <div class="container" style="max-width: 640px; margin: 0 auto; background: #ffffff; overflow: hidden; box-shadow: 0 4px 24px rgba(0,0,0,0.08);">
+        <div class="header header-confirmed" style="padding: 48px 32px; text-align: center; color: #fff; background: linear-gradient(135deg, #1a1a1a 0%, #2d2d2d 100%);">
+          <div class="logo-text" style="font-family: 'Playfair Display', Georgia, serif; font-size: 12px; letter-spacing: 3px; text-transform: uppercase; color: #c9a961; margin-bottom: 24px;">Healthy Brunch Club x LASA</div>
+          <h1 style="font-family: 'Playfair Display', Georgia, serif; margin: 0 0 8px 0; font-size: 32px; font-weight: 400; letter-spacing: -0.5px; color: #ffffff;">Reservierung bestätigt</h1>
+          <div class="gold-line" style="width: 60px; height: 1px; background: #c9a961; margin: 16px auto;"></div>
+          <p style="margin: 0; opacity: 0.9; font-family: 'Montserrat', Arial, sans-serif;">Wir freuen uns auf dich!</p>
+        </div>
+        <div class="content" style="padding: 40px 32px;">
+          <div class="section" style="text-align: center; margin-bottom: 32px;">
+            <span class="badge badge-confirmed" style="display: inline-block; padding: 8px 16px; font-size: 11px; text-transform: uppercase; letter-spacing: 2px; font-weight: 500; background: #f5f0e8; color: #1e4a3c; font-family: 'Montserrat', Arial, sans-serif;">Bestätigt</span>
+          </div>
+
+          <div class="section" style="margin-bottom: 32px;">
+            <p style="font-family: 'Montserrat', Arial, sans-serif; line-height: 1.7; margin: 0 0 16px 0;">Hallo <strong>${reservation.name}</strong>,</p>
+            <p style="font-family: 'Montserrat', Arial, sans-serif; line-height: 1.7; margin: 0 0 16px 0;">Vielen Dank für deine Reservierung! Wir freuen uns sehr, dich bald bei uns begrüßen zu dürfen.</p>
+            <p style="font-family: 'Montserrat', Arial, sans-serif; line-height: 1.7; margin: 0 0 16px 0;">Hiermit bestätigen wir deine Buchung:</p>
+          </div>
+
+          <div class="highlight-box" style="background: #1a1a1a; border-left: 3px solid #c9a961; padding: 24px; margin: 24px 0;">
+            <p style="margin: 0; color: #fff; font-family: 'Montserrat', Arial, sans-serif; line-height: 2;">
+              <span style="color: #c9a961;">•</span> <strong style="color: #fff;">Datum:</strong> <span style="color: #e8e8e8;">${date}</span><br>
+              <span style="color: #c9a961;">•</span> <strong style="color: #fff;">Uhrzeit:</strong> <span style="color: #e8e8e8;">${reservation.time} Uhr</span><br>
+              <span style="color: #c9a961;">•</span> <strong style="color: #fff;">Personenzahl:</strong> <span style="color: #e8e8e8;">${reservation.guests} ${reservation.guests === 1 ? 'Person' : 'Personen'}</span>
+            </p>
+          </div>
+
+          <div class="section" style="margin-bottom: 32px;">
+            <p style="font-family: 'Montserrat', Arial, sans-serif; line-height: 1.7; margin: 0 0 16px 0;">Wir freuen uns auf deinen Besuch!</p>
+            <p style="font-family: 'Montserrat', Arial, sans-serif; line-height: 1.7; margin: 0 0 8px 0;">Liebe Grüße,</p>
+            <p style="font-family: 'Montserrat', Arial, sans-serif; line-height: 1.7; margin: 0;"><strong>Dein THBC x LASA Team</strong></p>
+          </div>
+
+          <div class="section" style="text-align: center; background: #fafaf8; padding: 24px; margin: 0 -32px 32px -32px;">
+            <h3 style="font-family: 'Playfair Display', Georgia, serif; margin: 0 0 12px 0; color: #1a1a1a; font-size: 18px; font-weight: 400;">So findest du uns</h3>
+            <p style="margin-bottom: 8px; font-family: 'Montserrat', Arial, sans-serif;">Neubaugasse 15</p>
+            <p style="margin-bottom: 16px; font-family: 'Montserrat', Arial, sans-serif;">1070 Wien</p>
+            <a href="https://maps.google.com/?q=Neubaugasse+15+1070+Wien" style="display: inline-block; padding: 16px 32px; background: #c9a961; color: #1a1a1a; text-decoration: none; font-size: 12px; text-transform: uppercase; letter-spacing: 2px; font-weight: 500; font-family: 'Montserrat', Arial, sans-serif;">Route planen</a>
+          </div>
+
+          ${renderFeaturedDishes()}
+
+          <div class="highlight-box" style="background: #fafaf8; border-left: 3px solid #c9a961; padding: 20px 24px; margin: 24px 0;">
+            <p style="margin: 0; font-family: 'Montserrat', Arial, sans-serif; line-height: 1.7;"><strong>Gut zu wissen:</strong> Bitte komm pünktlich. Bei Verspätungen über 15 Minuten kann deine Reservierung an wartende Gäste vergeben werden.</p>
+          </div>
+        </div>
+        ${renderFooter()}
+      </div>
+    </body>
+  </html>`;
+}
+
+/**
+ * Plain text confirmation email
+ */
+function renderConfirmationEmailText(reservation) {
+  const dateOnly = reservation.date.split('T')[0];
+  const date = DateTime.fromISO(dateOnly, { zone: reservation.timezone || 'Europe/Vienna' })
+    .toFormat('EEEE, dd. MMMM yyyy', { locale: 'de' });
+
+  return `Healthy Brunch Club x LASA
+========================
+
+Reservierung bestätigt!
+
+Hallo ${reservation.name},
+
+Vielen Dank für deine Reservierung! Wir freuen uns sehr, dich bald bei uns begrüßen zu dürfen.
+
+Hiermit bestätigen wir deine Buchung:
+
+• Datum: ${date}
+• Uhrzeit: ${reservation.time} Uhr
+• Personenzahl: ${reservation.guests} ${reservation.guests === 1 ? 'Person' : 'Personen'}
+
+Wir freuen uns auf deinen Besuch!
+
+Liebe Grüße,
+Dein THBC x LASA Team
+
+Neubaugasse 15
+1070 Wien
+
+Route planen: https://maps.google.com/?q=Neubaugasse+15+1070+Wien
+
+Wichtig: Bitte komm pünktlich. Bei Verspätungen über 15 Minuten kann deine Reservierung an wartende Gäste vergeben werden.
+
+--
+Healthy Brunch Club Wien
+hello@healthybrunchclub.at`;
 }
 
 /**
@@ -1108,6 +1293,8 @@ module.exports = {
   renderWaitlistEmail,
   renderWaitlistPromotedEmail,
   renderFeedbackRequestEmail,
+  renderRequestReceivedEmail,
+  renderConfirmationEmail,
   // Admin templates
   renderAdminEmail,
   renderAdminCancellationEmail,
@@ -1120,6 +1307,8 @@ module.exports = {
   renderReminderEmailText,
   renderWaitlistPromotedEmailText,
   renderFeedbackRequestEmailText,
+  renderRequestReceivedEmailText,
+  renderConfirmationEmailText,
   // Utilities
   renderIcs,
   translateStatus,

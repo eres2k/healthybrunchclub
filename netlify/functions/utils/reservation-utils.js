@@ -387,7 +387,7 @@ async function createReservation(payload) {
     email: payload.email,
     phone: payload.phone,
     specialRequests: payload.specialRequests,
-    status: slot.remaining >= payload.guests ? 'confirmed' : 'waitlisted',
+    status: 'pending', // All new reservations start as pending (Angefragt) until admin confirms
     timezone: settings.timezone || TIMEZONE,
     createdAt: new Date().toISOString(),
     updatedAt: new Date().toISOString()
@@ -395,21 +395,6 @@ async function createReservation(payload) {
 
   await withLock(`reservation:${normalizedPayloadDate}`, async () => {
     const reservations = await loadReservations(normalizedPayloadDate);
-    const blockedSlots = await loadBlocked(normalizedPayloadDate);
-
-    const freshSlot = calculateSlotAvailability({
-      reservations,
-      blockedSlots,
-      time: normalizedTime,
-      guests: payload.guests,
-      maxCapacity: settings.maxCapacity || MAX_CAPACITY_PER_SLOT
-    });
-
-    if (freshSlot.remaining >= payload.guests) {
-      reservation.status = 'confirmed';
-    } else if (!settings.waitlist) {
-      throw new Error('Keine Plätze mehr verfügbar.');
-    }
 
     reservations.push(reservation);
     await saveReservations(normalizedPayloadDate, reservations);
