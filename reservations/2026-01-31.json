@@ -1,0 +1,32 @@
+[
+  {
+    "id": "a1b2c3d4-e5f6-7890-abcd-ef1234567804",
+    "confirmationCode": "HBC-IMP1-2504",
+    "date": "2026-01-31",
+    "time": "10:30",
+    "guests": 3,
+    "name": "Andrea Branc",
+    "email": "andrea@import.local",
+    "phone": "",
+    "specialRequests": "",
+    "status": "confirmed",
+    "timezone": "Europe/Vienna",
+    "createdAt": "2026-01-26T12:00:00.000Z",
+    "updatedAt": "2026-01-26T12:00:00.000Z"
+  },
+  {
+    "id": "a1b2c3d4-e5f6-7890-abcd-ef1234567805",
+    "confirmationCode": "HBC-IMP1-2505",
+    "date": "2026-01-31",
+    "time": "12:30",
+    "guests": 5,
+    "name": "Evamarie Pimentel-Klimpfinger",
+    "email": "evamarie@import.local",
+    "phone": "",
+    "specialRequests": "",
+    "status": "confirmed",
+    "timezone": "Europe/Vienna",
+    "createdAt": "2026-01-26T12:00:00.000Z",
+    "updatedAt": "2026-01-26T12:00:00.000Z"
+  }
+]

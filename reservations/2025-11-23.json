@@ -1,0 +1,17 @@
+[
+  {
+    "id": "a1b2c3d4-e5f6-7890-abcd-ef1234567801",
+    "confirmationCode": "HBC-IMP1-2501",
+    "date": "2025-11-23",
+    "time": "10:30",
+    "guests": 2,
+    "name": "Jacqueline Klincewicz",
+    "email": "jacqueline@import.local",
+    "phone": "",
+    "specialRequests": "",
+    "status": "confirmed",
+    "timezone": "Europe/Vienna",
+    "createdAt": "2026-01-26T12:00:00.000Z",
+    "updatedAt": "2026-01-26T12:00:00.000Z"
+  }
+]
