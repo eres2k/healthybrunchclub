@@ -25,7 +25,7 @@ const {
   renderRequestReceivedEmailText,
   renderConfirmationEmailText
 } = require('./email-templates');
-const { writeJSON } = require('./blob-storage');
+const { writeJSON, readJSON } = require('./blob-storage');
 
 const FROM_EMAIL = () => process.env.SENDER_EMAIL || 'noreply@healthybrunchclub.at';
 
@@ -33,27 +33,42 @@ const FROM_EMAIL = () => process.env.SENDER_EMAIL || 'noreply@healthybrunchclub.
 const delay = (ms) => new Promise(resolve => setTimeout(resolve, ms));
 const EMAIL_DELAY_MS = 600; // 600ms between emails to stay under 2/sec limit
 
+// Default admin emails for reservation notifications
+const DEFAULT_ADMIN_EMAILS = [
+  'hello@healthybrunchclub.at',
+  'erwin.esener@gmail.com'
+];
+
 /**
  * Returns array of admin email addresses for notifications.
- * Reads from ADMIN_NOTIFICATION_EMAILS env var (comma-separated) or falls back to defaults.
+ * Priority: 1) Admin settings from CMS, 2) ENV var, 3) defaults.
  */
-function getAdminEmails() {
+async function getAdminEmails() {
+  try {
+    // First, try to load from CMS admin settings
+    const settings = await readJSON('settings', 'admin-settings.json', {});
+    if (settings.adminEmails && Array.isArray(settings.adminEmails) && settings.adminEmails.length > 0) {
+      return settings.adminEmails.filter(Boolean);
+    }
+  } catch (error) {
+    console.error('Fehler beim Laden der Admin-E-Mails aus Einstellungen:', error.message);
+  }
+
+  // Fall back to environment variable
   const envEmails = process.env.ADMIN_NOTIFICATION_EMAILS;
   if (envEmails) {
     return envEmails.split(',').map(e => e.trim()).filter(Boolean);
   }
-  // Default admin emails for reservation notifications
-  return [
-    'hello@healthybrunchclub.at',
-    'erwin.esener@gmail.com'
-  ];
+
+  // Default admin emails
+  return DEFAULT_ADMIN_EMAILS;
 }
 
 /**
  * Sends email to all admin addresses sequentially with delays to avoid rate limits.
  */
 async function sendToAllAdmins(emailOptions) {
-  const adminEmails = getAdminEmails();
+  const adminEmails = await getAdminEmails();
   const from = FROM_EMAIL();
   const results = [];
 
@@ -111,7 +126,7 @@ async function sendReservationEmails(reservation) {
   }
 
   const from = FROM_EMAIL();
-  const adminEmails = getAdminEmails();
+  const adminEmails = await getAdminEmails();
   const icsContent = renderIcs(reservation);
   const attachments = [encodeAttachment(icsContent, 'text/calendar', `reservation-${reservation.confirmationCode}.ics`)];
 
@@ -165,7 +180,7 @@ async function sendRequestReceivedEmails(reservation) {
   }
 
   const from = FROM_EMAIL();
-  const adminEmails = getAdminEmails();
+  const adminEmails = await getAdminEmails();
 
   // Send guest email - request received
   await sendEmail({
@@ -201,7 +216,7 @@ async function sendConfirmationEmails(reservation) {
   }
 
   const from = FROM_EMAIL();
-  const adminEmails = getAdminEmails();
+  const adminEmails = await getAdminEmails();
   const icsContent = renderIcs(reservation);
   const attachments = [encodeAttachment(icsContent, 'text/calendar', `reservation-${reservation.confirmationCode}.ics`)];
 
@@ -227,7 +242,7 @@ async function sendCancellationEmails(reservation, options = {}) {
   }
 
   const from = FROM_EMAIL();
-  const adminEmails = getAdminEmails();
+  const adminEmails = await getAdminEmails();
 
   // Send guest cancellation confirmation
   await sendEmail({
