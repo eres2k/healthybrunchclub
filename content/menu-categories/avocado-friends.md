@@ -5,30 +5,31 @@ image: /content/images/dsc00338_ergebnis.jpg
 description: avocado in ihrer besten form – auf brot oder in der bowl. frisch,
   cremig und voll guter fette für körper und geist.
 items:
-  - name: avocado bowl
-    tags:
-      - vegetarisch
-      - glutenfrei
-      - sättigend
-    description: eine samtige kreation aus frisch zerdrückter avocado, veredelt mit
-      fein geriebenem apfel für eine süß-frische note, gekrönt von zart
-      gerösteten mandeln, die einen knackigen akzent setzen. ein belebendes,
-      nahrhaftes vergnügen für jeden moment.
+  - price: "10.90"
+    name: avocado bowl
     allergens:
       - h
-    nutrition:
-      calories: "300"
-      protein: 6g
-      carbs: 18g
-      fat: 24g
-    price: "10.90"
-    image: /content/images/img-20250806-wa0004.jpg
     dietary:
       vegan: true
       glutenFree: true
       lactoseFree: true
       allergens:
         - besonders histaminreich
+    nutrition:
+      calories: "300"
+      protein: 6g
+      carbs: 18g
+      fat: 24g
+    tags:
+      - vegetarisch
+      - glutenfrei
+      - sättigend
+    image: /content/images/img-20250806-wa0004.jpg
+    recommended: true
+    description: eine samtige kreation aus frisch zerdrückter avocado, veredelt mit
+      fein geriebenem apfel für eine süß-frische note, gekrönt von zart
+      gerösteten mandeln, die einen knackigen akzent setzen. ein belebendes,
+      nahrhaftes vergnügen für jeden moment.
   - name: avocado bread
     tags:
       - vegetarisch
