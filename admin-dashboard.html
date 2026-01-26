@@ -195,10 +195,32 @@
       align-items: center;
       gap: .4rem;
     }
-    .tab:hover { color: #243424; }
+    .tab:hover {
+      color: #243424;
+      background: rgba(47, 81, 56, 0.08);
+    }
+    .tab:active {
+      background: rgba(47, 81, 56, 0.15);
+      transform: scale(0.98);
+    }
     .tab.active {
       color: #2f5138;
       border-bottom-color: #2f5138;
+      background: rgba(47, 81, 56, 0.05);
+    }
+    .tab[data-tab="pending"] {
+      background: rgba(255, 107, 53, 0.1);
+    }
+    .tab[data-tab="pending"]:hover {
+      background: rgba(255, 107, 53, 0.2);
+    }
+    .tab[data-tab="pending"]:active {
+      background: rgba(255, 107, 53, 0.3);
+    }
+    .tab[data-tab="pending"].active {
+      background: rgba(255, 107, 53, 0.15);
+      border-bottom-color: #ff6b35;
+      color: #ff6b35;
     }
     .tab .badge {
       background: #dc3545;
@@ -598,7 +620,7 @@
 
     <!-- Tabs -->
     <div class="tabs" id="tabs">
-      <button class="tab" data-tab="pending" style="background: rgba(255,107,53,0.1);">Angefragt <span class="badge" id="pending-badge" style="display:none; background:#ff6b35;">0</span></button>
+      <button class="tab" data-tab="pending">Angefragt <span class="badge" id="pending-badge" style="display:none; background:#ff6b35;">0</span></button>
       <button class="tab active" data-tab="calendar">Kalender</button>
       <button class="tab" data-tab="list">Liste</button>
       <button class="tab" data-tab="blocked">Blockierte Slots <span class="badge" id="blocked-badge" style="display:none;">0</span></button>

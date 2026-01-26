@@ -197,7 +197,7 @@ exports.handler = async (event, context) => {
           // Previously ordered items get a moderate boost but not too much
           // to encourage discovery
           score += 8;
-          reasons.push('Du hast das schon einmal bestellt');
+          reasons.push('du hast das schon einmal bestellt');
         } else {
           // Slight boost for items similar to previous orders (same category)
           const similarOrdered = previousOrders.some(order => {
