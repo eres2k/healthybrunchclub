@@ -407,18 +407,40 @@ async function createReservation(payload) {
 }
 
 async function updateReservationStatus({ date, confirmationCode, status }) {
-  const normalizedStatusDate = normalizeDate(date);
-  return withLock(`reservation:${normalizedStatusDate}`, async () => {
-    const reservations = await loadReservations(normalizedStatusDate);
-    const index = reservations.findIndex((entry) => entry.confirmationCode === confirmationCode);
-    if (index === -1) {
+  // Versuche zuerst das übergebene Datum, dann den Index
+  let targetDate = normalizeDate(date);
+
+  // Prüfe ob die Reservierung unter diesem Datum existiert
+  let reservations = await loadReservations(targetDate);
+  let index = reservations.findIndex((entry) => entry.confirmationCode === confirmationCode);
+
+  // Falls nicht gefunden, versuche das Datum aus dem Index zu holen
+  if (index === -1) {
+    const indexedDate = await findReservationDateByCode(confirmationCode);
+    if (indexedDate && indexedDate !== targetDate) {
+      targetDate = indexedDate;
+      reservations = await loadReservations(targetDate);
+      index = reservations.findIndex((entry) => entry.confirmationCode === confirmationCode);
+    }
+  }
+
+  if (index === -1) {
+    throw new Error('Reservierung nicht gefunden.');
+  }
+
+  return withLock(`reservation:${targetDate}`, async () => {
+    // Lade nochmal innerhalb des Locks um Race Conditions zu vermeiden
+    const currentReservations = await loadReservations(targetDate);
+    const currentIndex = currentReservations.findIndex((entry) => entry.confirmationCode === confirmationCode);
+
+    if (currentIndex === -1) {
       throw new Error('Reservierung nicht gefunden.');
     }
 
-    reservations[index].status = status;
-    reservations[index].updatedAt = new Date().toISOString();
-    await saveReservations(normalizedStatusDate, reservations);
-    return reservations[index];
+    currentReservations[currentIndex].status = status;
+    currentReservations[currentIndex].updatedAt = new Date().toISOString();
+    await saveReservations(targetDate, currentReservations);
+    return currentReservations[currentIndex];
   });
 }
 
