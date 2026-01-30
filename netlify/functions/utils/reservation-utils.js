@@ -324,19 +324,33 @@ function calculateSlotAvailability({ reservations, blockedSlots, time, guests, m
   const blocked = blockedSlots.find((entry) => entry.time === time);
   const capacity = blocked?.capacity ?? maxCapacity;
 
+  // Count confirmed guests for display
   const confirmedGuests = reservations
     .filter((reservation) => reservation.time === time && reservation.status === 'confirmed')
     .reduce((sum, reservation) => sum + Number(reservation.guests || 0), 0);
 
+  // Count pending guests to determine if slot is effectively full
+  const pendingGuests = reservations
+    .filter((reservation) => reservation.time === time && reservation.status === 'pending')
+    .reduce((sum, reservation) => sum + Number(reservation.guests || 0), 0);
+
+  // For availability display, show remaining based on confirmed only
   const remaining = Math.max(capacity - confirmedGuests, 0);
+
+  // For new bookings, check if slot is effectively full (confirmed + pending)
+  const effectiveRemaining = Math.max(capacity - confirmedGuests - pendingGuests, 0);
   const fits = guests ? remaining >= guests : remaining > 0;
+  const shouldWaitlist = guests ? effectiveRemaining < guests : effectiveRemaining === 0;
 
   return {
     time,
     capacity,
     reserved: confirmedGuests,
+    pending: pendingGuests,
     remaining,
+    effectiveRemaining,
     waitlist: remaining === 0,
+    shouldWaitlist,
     fits
   };
 }
@@ -377,6 +391,16 @@ async function createReservation(payload) {
     };
   }
 
+  // Check if waitlist is enabled in settings
+  const waitlistEnabled = settings.waitlist !== false;
+
+  // Determine initial status based on slot availability
+  // If slot is effectively full (confirmed + pending >= capacity), put on waitlist
+  let initialStatus = 'pending';
+  if (slot.shouldWaitlist && waitlistEnabled) {
+    initialStatus = 'waitlisted';
+  }
+
   const reservation = {
     id: randomUUID(),
     confirmationCode: generateConfirmationCode(),
@@ -387,7 +411,7 @@ async function createReservation(payload) {
     email: payload.email,
     phone: payload.phone,
     specialRequests: payload.specialRequests,
-    status: 'pending', // All new reservations start as pending (Angefragt) until admin confirms
+    status: initialStatus,
     timezone: settings.timezone || TIMEZONE,
     createdAt: new Date().toISOString(),
     updatedAt: new Date().toISOString()
@@ -404,7 +428,8 @@ async function createReservation(payload) {
 
   return {
     success: true,
-    reservation
+    reservation,
+    waitlisted: initialStatus === 'waitlisted'
   };
 }
 
