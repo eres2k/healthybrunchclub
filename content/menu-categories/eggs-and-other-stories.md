@@ -10,7 +10,7 @@ items:
       - vegetarisch
       - glutenfrei
       - proteinreich
-    description: 1 Ei nach wahl (spiegelei, pochiert, gekocht oder eierspeise),
+    description: 2 eier nach wahl (spiegelei, pochiert, gekocht oder eierspeise),
       kunstvoll serviert auf scheiben von süßkartoffel und avocado. dazu
       sautierte champignons und shiitake-pilze, garniert mit rucola, rote beete,
       sprossen und kresse.
@@ -23,7 +23,7 @@ items:
       protein: 21g
       carbs: 49g
       fat: 21g
-    price: "17.90"
+    price: "18.90"
     image: /content/images/dsc00153_ergebnis.jpg
     dietary:
       lactoseFree: true
