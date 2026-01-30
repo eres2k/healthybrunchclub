@@ -9,6 +9,7 @@ const {
   renderReminderEmail,
   renderWaitlistPromotedEmail,
   renderWaitlistEmail,
+  renderWaitlistConfirmationEmail,
   renderFeedbackRequestEmail,
   renderAdminCancellationEmail,
   renderAdminCancellationEmailText,
@@ -18,6 +19,7 @@ const {
   renderGuestEmailText,
   renderAdminEmailText,
   renderWaitlistEmailText,
+  renderWaitlistConfirmationEmailText,
   renderCancellationEmailText,
   renderReminderEmailText,
   renderWaitlistPromotedEmailText,
@@ -318,6 +320,28 @@ async function sendWaitlistPromotedEmail(reservation) {
 }
 
 /**
+ * Sends email when admin puts a pending reservation on the waitlist.
+ * This is for manual waitlist placement before confirmation.
+ */
+async function sendWaitlistConfirmationEmail(reservation) {
+  if (!reservation?.email) {
+    throw new Error('E-Mail-Adresse fehlt für den Versand.');
+  }
+
+  const from = FROM_EMAIL();
+
+  await sendEmail({
+    to: reservation.email,
+    from,
+    subject: 'Healthy Brunch Club Wien – Warteliste',
+    text: renderWaitlistConfirmationEmailText(reservation),
+    html: renderWaitlistConfirmationEmail(reservation)
+  });
+
+  await logEmail(reservation.confirmationCode, 'waitlist-confirmation', [reservation.email]);
+}
+
+/**
  * Sends feedback request email after guest's visit.
  */
 async function sendFeedbackRequestEmail(reservation, options = {}) {
@@ -352,6 +376,11 @@ async function sendStatusUpdateEmail(reservation, previousStatus) {
     return sendConfirmationEmails(reservation);
   }
 
+  // When admin puts a pending reservation on the waitlist
+  if (previousStatus === 'pending' && reservation.status === 'waitlisted') {
+    return sendWaitlistConfirmationEmail(reservation);
+  }
+
   // When a waitlisted reservation gets confirmed
   if (previousStatus === 'waitlisted' && reservation.status === 'confirmed') {
     return sendWaitlistPromotedEmail(reservation);
@@ -366,6 +395,11 @@ async function sendStatusUpdateEmail(reservation, previousStatus) {
     return sendConfirmationEmails(reservation);
   }
 
+  // For status changes to waitlisted (from any other state), send waitlist confirmation
+  if (reservation.status === 'waitlisted') {
+    return sendWaitlistConfirmationEmail(reservation);
+  }
+
   // For other status changes, send a generic confirmation
   return sendReservationEmails(reservation);
 }
@@ -377,6 +411,7 @@ module.exports = {
   sendCancellationEmails,
   sendReminderEmail,
   sendWaitlistPromotedEmail,
+  sendWaitlistConfirmationEmail,
   sendFeedbackRequestEmail,
   sendStatusUpdateEmail
 };

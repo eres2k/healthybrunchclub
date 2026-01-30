@@ -595,6 +595,91 @@ function renderReminderEmail(reservation, options = {}) {
 }
 
 /**
+ * Waitlist confirmation email - sent when admin puts someone on waitlist from pending
+ * This is different from renderWaitlistEmail which is for when a slot is full at booking time
+ */
+function renderWaitlistConfirmationEmail(reservation) {
+  return `<!DOCTYPE html>
+  <html lang="de">
+    <head>
+      <meta charset="utf-8" />
+      <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+      <title>Auf der Warteliste</title>
+      <style>${getBaseStyles()}</style>
+    </head>
+    <body style="font-family: 'Montserrat', Arial, sans-serif; font-weight: 300; background-color: #f5f0e8; color: #2d2d2d; margin: 0; padding: 20px; line-height: 1.6;">
+      <div class="container" style="max-width: 640px; margin: 0 auto; background: #ffffff; overflow: hidden; box-shadow: 0 4px 24px rgba(0,0,0,0.08);">
+        <div class="header header-waitlist" style="padding: 48px 32px; text-align: center; color: #fff; background: linear-gradient(135deg, #8b7355 0%, #6b5a45 100%);">
+          <div class="logo-text" style="font-family: 'Playfair Display', Georgia, serif; font-size: 12px; letter-spacing: 3px; text-transform: uppercase; color: #c9a961; margin-bottom: 24px;">Healthy Brunch Club x LASA</div>
+          <h1 style="font-family: 'Playfair Display', Georgia, serif; margin: 0 0 8px 0; font-size: 32px; font-weight: 400; letter-spacing: -0.5px; color: #ffffff;">Warteliste</h1>
+          <div class="gold-line" style="width: 60px; height: 1px; background: #c9a961; margin: 16px auto;"></div>
+          <p style="margin: 0; opacity: 0.9; font-family: 'Montserrat', Arial, sans-serif;">Deine Anfrage wurde auf die Warteliste gesetzt</p>
+        </div>
+        <div class="content" style="padding: 40px 32px;">
+          <div class="section" style="text-align: center; margin-bottom: 32px;">
+            <span class="badge badge-waitlist" style="display: inline-block; padding: 8px 16px; font-size: 11px; text-transform: uppercase; letter-spacing: 2px; font-weight: 500; background: #faf6f1; color: #8b7355; font-family: 'Montserrat', Arial, sans-serif;">Warteliste</span>
+          </div>
+
+          <div class="section" style="margin-bottom: 32px;">
+            <p style="font-family: 'Montserrat', Arial, sans-serif; line-height: 1.7; margin: 0 0 16px 0;">Hallo <strong>${reservation.name.split(' ')[0]}</strong>,</p>
+            <p style="font-family: 'Montserrat', Arial, sans-serif; line-height: 1.7; margin: 0 0 16px 0;">Vielen Dank für deine Reservierungsanfrage! Wir haben dich auf unsere Warteliste gesetzt.</p>
+          </div>
+
+          <div class="highlight-box" style="background: #fafaf8; border-left: 3px solid #8b7355; padding: 20px 24px; margin: 24px 0;">
+            <p style="margin: 0; font-family: 'Montserrat', Arial, sans-serif; line-height: 1.7;"><strong>Was bedeutet das?</strong><br>Sobald wir deine Reservierung bestätigen können, erhältst du umgehend eine Bestätigungs-E-Mail. Wir melden uns so schnell wie möglich bei dir!</p>
+          </div>
+
+          <div class="section" style="margin-bottom: 32px;">
+            <h3 style="font-family: 'Playfair Display', Georgia, serif; margin: 0 0 12px 0; color: #1a1a1a; font-size: 18px; font-weight: 400;">Deine Anfrage</h3>
+            ${renderReservationDetails(reservation)}
+          </div>
+
+          <div class="section" style="margin-bottom: 32px;">
+            <h3 style="font-family: 'Playfair Display', Georgia, serif; margin: 0 0 12px 0; color: #1a1a1a; font-size: 18px; font-weight: 400;">Wie geht es weiter?</h3>
+            <ul style="line-height: 2; padding-left: 20px; color: #484848; font-family: 'Montserrat', Arial, sans-serif;">
+              <li>Wir prüfen deine Anfrage und melden uns bei dir</li>
+              <li>Du erhältst eine E-Mail sobald deine Reservierung bestätigt wurde</li>
+              <li>Bei Fragen erreichst du uns unter hello@healthybrunchclub.at</li>
+            </ul>
+          </div>
+
+          ${renderFeaturedDishes()}
+        </div>
+        ${renderFooter()}
+      </div>
+    </body>
+  </html>`;
+}
+
+/**
+ * Plain text waitlist confirmation email
+ */
+function renderWaitlistConfirmationEmailText(reservation) {
+  return `Healthy Brunch Club x LASA Wien
+================================
+
+Warteliste
+
+Hallo ${reservation.name.split(' ')[0]},
+
+Vielen Dank für deine Reservierungsanfrage! Wir haben dich auf unsere Warteliste gesetzt.
+
+Was bedeutet das?
+Sobald wir deine Reservierung bestätigen können, erhältst du umgehend eine Bestätigungs-E-Mail. Wir melden uns so schnell wie möglich bei dir!
+
+${renderPlainTextReservation(reservation)}
+
+Wie geht es weiter?
+- Wir prüfen deine Anfrage und melden uns bei dir
+- Du erhältst eine E-Mail sobald deine Reservierung bestätigt wurde
+- Bei Fragen erreichst du uns unter hello@healthybrunchclub.at
+
+--
+Healthy Brunch Club x LASA Wien
+hello@healthybrunchclub.at`;
+}
+
+/**
  * Waitlist email
  */
 function renderWaitlistEmail(reservation) {
@@ -1324,6 +1409,7 @@ module.exports = {
   renderCancellationEmail,
   renderReminderEmail,
   renderWaitlistEmail,
+  renderWaitlistConfirmationEmail,
   renderWaitlistPromotedEmail,
   renderFeedbackRequestEmail,
   renderRequestReceivedEmail,
@@ -1336,6 +1422,7 @@ module.exports = {
   renderGuestEmailText,
   renderAdminEmailText,
   renderWaitlistEmailText,
+  renderWaitlistConfirmationEmailText,
   renderCancellationEmailText,
   renderReminderEmailText,
   renderWaitlistPromotedEmailText,
