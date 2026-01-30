@@ -23,7 +23,7 @@ items:
       protein: 26g
       carbs: 63g
       fat: 38g
-    price: "21.90"
+    price: "19.90"
   - name: tina's soul food set
     tags:
       - ausgewogen
@@ -31,7 +31,7 @@ items:
       - sättigend
     description: |-
       * heißgetränk mit adaptogenen
-      * avocado bread mit 3 extras
+      * avocado bread
       * hafer dich lieb
     allergens:
       - a
@@ -49,7 +49,7 @@ items:
       - genussvoll
     description: |-
       * heißgetränk mit adaptogenen 
-      * eggcitement deiner wahl (aufpreis zweites ei: € 1,90)
+      * eggcitement deiner wahl 
       * berry good choice
     allergens:
       - a
@@ -62,5 +62,5 @@ items:
       protein: 14g
       carbs: 78g
       fat: 9g
-    price: "27.90"
+    price: "29.90"
 ---
