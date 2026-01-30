@@ -213,11 +213,11 @@ class ReservationWizard {
       button.setAttribute('aria-pressed', this.state.time === formattedTime ? 'true' : 'false');
       button.setAttribute(
         'aria-label',
-        `${displayTime}, ${slot.remaining > 0 ? `${slot.remaining} Plätze frei` : 'Warteliste verfügbar'}`
+        `${displayTime}, ${slot.remaining > 0 ? 'Verfügbar' : 'Warteliste verfügbar'}`
       );
       button.innerHTML = `
         <span class="time-slot__time">${displayTime}</span>
-        <span class="time-slot__capacity">${slot.remaining > 0 ? `${slot.remaining} Plätze frei` : 'Warteliste verfügbar'}</span>
+        <span class="time-slot__capacity">${slot.remaining > 0 ? 'Verfügbar' : 'Warteliste verfügbar'}</span>
       `;
       button.addEventListener('click', () => this.selectTime(slot));
       if (this.state.time === formattedTime) {
