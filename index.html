@@ -520,9 +520,9 @@
           <!-- Success Message -->
           <div id="reservation-success" class="reservation-step" style="display: none;">
             <div class="success-message">
-              <h3>✓ Reservierung erfolgreich!</h3>
+              <h3 id="success-title">✓ Reservierung erfolgreich!</h3>
               <p id="success-message">Vielen Dank! Ihre Reservierung wurde bestätigt.</p>
-              <p>Eine Bestätigung wurde an Ihre E-Mail-Adresse gesendet.</p>
+              <p id="email-confirm-text">Eine Bestätigung wurde an Ihre E-Mail-Adresse gesendet.</p>
               <button onclick="resetReservation()" class="reset-button">Neue Reservierung</button>
             </div>
           </div>
@@ -988,10 +988,29 @@
         successStep.style.display = 'block';
       }
 
+      const isWaitlisted = result.waitlisted === true;
+
+      // Update title based on status
+      const successTitleEl = document.getElementById('success-title');
+      if (successTitleEl) {
+        successTitleEl.textContent = isWaitlisted
+          ? '⏳ Auf der Warteliste'
+          : '✓ Reservierung erfolgreich!';
+      }
+
+      // Update message
       const successMessageEl = document.getElementById('success-message');
       if (successMessageEl) {
         successMessageEl.textContent =
           result.message || 'Vielen Dank für Ihre Reservierung! Sie erhalten in Kürze eine Bestätigungs-E-Mail.';
+      }
+
+      // Update email confirmation text
+      const emailConfirmEl = document.getElementById('email-confirm-text');
+      if (emailConfirmEl) {
+        emailConfirmEl.textContent = isWaitlisted
+          ? 'Sie erhalten eine Benachrichtigung per E-Mail, sobald ein Platz frei wird.'
+          : 'Eine Bestätigung wurde an Ihre E-Mail-Adresse gesendet.';
       }
 
       const confirmationCodeEl = document.getElementById('confirmation-code');

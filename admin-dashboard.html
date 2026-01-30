@@ -1755,24 +1755,24 @@
       const actions = [];
       const entryJson = JSON.stringify(entry).replace(/"/g, '&quot;');
 
-      // For pending status, show confirm button prominently
+      // For pending status, show confirm and waitlist buttons prominently
       if (entry.status === 'pending') {
         actions.push(`<button class="btn btn-primary btn-sm" style="background:#ff6b35; position: relative;" data-action="confirm" data-code="${entry.confirmationCode}" data-date="${entryDate}" title="Hover für E-Mail Vorschau">Bestatigen</button>`);
         actions.push(`<button class="btn btn-secondary btn-sm" style="font-size: .7rem; padding: .3rem .5rem;" data-action="preview-confirm" data-reservation='${entryJson}' title="E-Mail Vorschau anzeigen">👁</button>`);
+        actions.push(`<button class="btn btn-warning btn-sm" data-action="waitlist" data-code="${entry.confirmationCode}" data-date="${entryDate}">Warteliste</button>`);
+        actions.push(`<button class="btn btn-secondary btn-sm" style="font-size: .7rem; padding: .3rem .5rem;" data-action="preview-waitlist" data-reservation='${entryJson}' title="E-Mail Vorschau">👁</button>`);
         actions.push(`<button class="btn btn-secondary btn-sm" data-action="cancel" data-code="${entry.confirmationCode}" data-date="${entryDate}">Ablehnen</button>`);
       } else {
-        if (entry.status !== 'confirmed') {
+        // For waitlisted status, show confirm button to promote from waitlist
+        if (entry.status === 'waitlisted') {
           actions.push(`<button class="btn btn-primary btn-sm" data-action="confirm" data-code="${entry.confirmationCode}" data-date="${entryDate}">Bestatigen</button>`);
           actions.push(`<button class="btn btn-secondary btn-sm" style="font-size: .7rem; padding: .3rem .5rem;" data-action="preview-confirm" data-reservation='${entryJson}' title="E-Mail Vorschau">👁</button>`);
         }
-        if (entry.status !== 'waitlisted') {
-          actions.push(`<button class="btn btn-warning btn-sm" data-action="waitlist" data-code="${entry.confirmationCode}" data-date="${entryDate}">Warteliste</button>`);
-          actions.push(`<button class="btn btn-secondary btn-sm" style="font-size: .7rem; padding: .3rem .5rem;" data-action="preview-waitlist" data-reservation='${entryJson}' title="E-Mail Vorschau">👁</button>`);
-        }
+        // For confirmed status, show cancel and no-show options
         if (entry.status !== 'cancelled') {
           actions.push(`<button class="btn btn-secondary btn-sm" data-action="cancel" data-code="${entry.confirmationCode}" data-date="${entryDate}">Stornieren</button>`);
         }
-        if (entry.status === 'confirmed' && entry.status !== 'noshow') {
+        if (entry.status === 'confirmed') {
           actions.push(`<button class="btn btn-info btn-sm" data-action="noshow" data-code="${entry.confirmationCode}" data-date="${entryDate}">No-Show</button>`);
         }
       }
