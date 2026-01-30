@@ -6,6 +6,7 @@ const {
   renderAdminEmail,
   renderIcs,
   renderCancellationEmail,
+  renderRejectionEmail,
   renderReminderEmail,
   renderWaitlistPromotedEmail,
   renderWaitlistEmail,
@@ -21,6 +22,7 @@ const {
   renderWaitlistEmailText,
   renderWaitlistConfirmationEmailText,
   renderCancellationEmailText,
+  renderRejectionEmailText,
   renderReminderEmailText,
   renderWaitlistPromotedEmailText,
   renderFeedbackRequestEmailText,
@@ -272,6 +274,43 @@ async function sendCancellationEmails(reservation, options = {}) {
 }
 
 /**
+ * Sends rejection emails when admin declines a pending reservation request.
+ * Different from cancellation - used for pending requests that were never confirmed.
+ */
+async function sendRejectionEmails(reservation, options = {}) {
+  if (!reservation?.email) {
+    throw new Error('E-Mail-Adresse fehlt für den Versand.');
+  }
+
+  const from = FROM_EMAIL();
+  const adminEmails = await getAdminEmails();
+
+  // Send guest rejection notification
+  await sendEmail({
+    to: reservation.email,
+    from,
+    subject: 'Healthy Brunch Club Wien – Anfrage nicht möglich',
+    text: renderRejectionEmailText(reservation, options),
+    html: renderRejectionEmail(reservation, options)
+  });
+
+  // Delay before admin emails to avoid rate limit
+  await delay(EMAIL_DELAY_MS);
+
+  // Extract just the date part for subject line
+  const dateOnly = reservation.date.split('T')[0];
+
+  // Send admin notifications to all configured admins
+  await sendToAllAdmins({
+    subject: `Abgelehnt: ${reservation.name} - ${dateOnly} ${reservation.time}`,
+    text: renderAdminCancellationEmailText(reservation, { ...options, rejection: true }),
+    html: renderAdminCancellationEmail(reservation, { ...options, rejection: true })
+  });
+
+  await logEmail(reservation.confirmationCode, 'rejection', [reservation.email, ...adminEmails]);
+}
+
+/**
  * Sends reminder email to guest (1 day before reservation).
  */
 async function sendReminderEmail(reservation) {
@@ -364,10 +403,19 @@ async function sendFeedbackRequestEmail(reservation, options = {}) {
 
 /**
  * Sends status update email when reservation status changes.
+ * @param {Object} reservation - The reservation object
+ * @param {string} previousStatus - The status before the change
+ * @param {Object} options - Optional settings
+ * @param {string} options.emailType - Override email type (e.g., 'rejection' for declining pending)
  */
-async function sendStatusUpdateEmail(reservation, previousStatus) {
+async function sendStatusUpdateEmail(reservation, previousStatus, options = {}) {
   if (!reservation?.email) {
     throw new Error('E-Mail-Adresse fehlt für den Versand.');
+  }
+
+  // If explicit email type is requested, use that
+  if (options.emailType === 'rejection') {
+    return sendRejectionEmails(reservation, options);
   }
 
   // Handle specific status transitions
@@ -409,6 +457,7 @@ module.exports = {
   sendRequestReceivedEmails,
   sendConfirmationEmails,
   sendCancellationEmails,
+  sendRejectionEmails,
   sendReminderEmail,
   sendWaitlistPromotedEmail,
   sendWaitlistConfirmationEmail,

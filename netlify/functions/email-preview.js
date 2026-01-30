@@ -3,6 +3,7 @@
 const {
   renderConfirmationEmail,
   renderCancellationEmail,
+  renderRejectionEmail,
   renderWaitlistEmail,
   renderRequestReceivedEmail
 } = require('./utils/email-templates');
@@ -47,6 +48,9 @@ exports.handler = async (event, context) => {
         break;
       case 'cancellation':
         html = renderCancellationEmail(reservation);
+        break;
+      case 'rejection':
+        html = renderRejectionEmail(reservation);
         break;
       case 'waitlist':
         html = renderWaitlistEmail(reservation);
