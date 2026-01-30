@@ -744,9 +744,9 @@
           availabilityBadge = '<span class="date-availability is-full">Ausgebucht</span>';
         } else if (totalRemaining <= 10 || availableSlots.length <= 2) {
           cardClass += ' is-limited';
-          availabilityBadge = `<span class="date-availability is-limited">Nur noch ${availableSlots.length} Slots</span>`;
+          availabilityBadge = '<span class="date-availability is-limited">Wenige Plätze</span>';
         } else {
-          availabilityBadge = `<span class="date-availability is-available">${totalRemaining} Plätze frei</span>`;
+          availabilityBadge = '<span class="date-availability is-available">Verfügbar</span>';
         }
 
         card.className = cardClass;
@@ -818,10 +818,10 @@
           statusText = hasWaitlist ? 'Warteliste' : 'Ausgebucht';
         } else if (remaining <= 4) {
           className += ' is-limited';
-          statusText = `Noch ${remaining} Plätze`;
+          statusText = 'Wenige Plätze';
         } else {
           className += ' is-available';
-          statusText = `${remaining} Plätze frei`;
+          statusText = 'Verfügbar';
         }
 
         slotButton.className = className;
