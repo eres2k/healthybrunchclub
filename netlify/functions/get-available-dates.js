@@ -3,6 +3,9 @@
 const fs = require('fs').promises;
 const path = require('path');
 const matter = require('gray-matter');
+const { loadReservations, loadBlocked } = require('./utils/reservation-utils');
+
+const DEFAULT_MAX_CAPACITY = 40;
 
 function formatTimeSlot(time) {
   if (typeof time === 'number' || !Number.isNaN(Number(time))) {
@@ -35,6 +38,61 @@ function normalizeSlots(slots) {
       time: formattedTime
     };
   });
+}
+
+/**
+ * Calculate slot availability by checking existing reservations and blocked slots
+ */
+async function enrichSlotsWithAvailability(date, slots) {
+  try {
+    const reservations = await loadReservations(date);
+    const blockedSlots = await loadBlocked(date);
+
+    return slots.map((slot) => {
+      const slotTime = slot.time;
+      const maxCapacity = slot.max_guests || DEFAULT_MAX_CAPACITY;
+
+      // Check if slot is blocked
+      const blocked = blockedSlots.find((b) => b.time === slotTime);
+      const effectiveCapacity = blocked?.capacity !== undefined ? blocked.capacity : maxCapacity;
+
+      // Count confirmed reservations for this slot
+      const confirmedGuests = reservations
+        .filter((r) => r.time === slotTime && r.status === 'confirmed')
+        .reduce((sum, r) => sum + Number(r.guests || 0), 0);
+
+      // Count pending reservations as well (they might be confirmed)
+      const pendingGuests = reservations
+        .filter((r) => r.time === slotTime && r.status === 'pending')
+        .reduce((sum, r) => sum + Number(r.guests || 0), 0);
+
+      const totalReserved = confirmedGuests + pendingGuests;
+      const remaining = Math.max(effectiveCapacity - totalReserved, 0);
+      const isFull = remaining === 0;
+      const isBlocked = blocked?.capacity === 0;
+
+      return {
+        ...slot,
+        max_guests: maxCapacity,
+        capacity: effectiveCapacity,
+        reserved: totalReserved,
+        confirmed: confirmedGuests,
+        pending: pendingGuests,
+        remaining,
+        available: !isBlocked && remaining > 0,
+        waitlist: isFull && !isBlocked,
+        blocked: isBlocked
+      };
+    });
+  } catch (error) {
+    console.error(`Error enriching slots for ${date}:`, error);
+    // Return slots without availability info as fallback
+    return slots.map((slot) => ({
+      ...slot,
+      available: true,
+      remaining: slot.max_guests || DEFAULT_MAX_CAPACITY
+    }));
+  }
 }
 
 exports.handler = async (event) => {
@@ -74,11 +132,21 @@ exports.handler = async (event) => {
         today.setHours(0, 0, 0, 0);
 
         if (dateObj >= today) {
+          const normalizedSlots = normalizeSlots(data.slots || []);
+          // Enrich slots with actual availability data
+          const enrichedSlots = await enrichSlotsWithAvailability(data.date, normalizedSlots);
+
+          // Check if any slots are still available
+          const hasAvailableSlots = enrichedSlots.some((slot) => slot.available);
+          const totalRemaining = enrichedSlots.reduce((sum, slot) => sum + (slot.remaining || 0), 0);
+
           return {
             date: data.date,
             title: data.title || 'Verfügbar',
-            slots: normalizeSlots(data.slots || []),
-            note: data.note || ''
+            slots: enrichedSlots,
+            note: data.note || '',
+            hasAvailableSlots,
+            totalRemaining
           };
         }
         return null;

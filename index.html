@@ -727,15 +727,38 @@
         const month = date.toLocaleDateString('de-DE', { month: 'long' });
         const weekday = date.toLocaleDateString('de-DE', { weekday: 'long' });
 
+        // Check availability from enriched data
+        const hasAvailable = dateData.hasAvailableSlots !== false;
+        const totalRemaining = dateData.totalRemaining || 0;
+        const availableSlots = (dateData.slots || []).filter(s => s.available !== false && !s.blocked);
+
         const card = document.createElement('button');
         card.type = 'button';
-        card.className = 'date-card';
+
+        // Build availability status
+        let availabilityBadge = '';
+        let cardClass = 'date-card';
+
+        if (!hasAvailable || totalRemaining === 0) {
+          cardClass += ' is-fully-booked';
+          availabilityBadge = '<span class="date-availability is-full">Ausgebucht</span>';
+        } else if (totalRemaining <= 10 || availableSlots.length <= 2) {
+          cardClass += ' is-limited';
+          availabilityBadge = `<span class="date-availability is-limited">Nur noch ${availableSlots.length} Slots</span>`;
+        } else {
+          availabilityBadge = `<span class="date-availability is-available">${totalRemaining} Plätze frei</span>`;
+        }
+
+        card.className = cardClass;
         card.innerHTML = `
           <h4>${weekday}</h4>
           <span class="date-day">${dayNum}</span>
           <span class="date-month">${month}</span>
+          ${availabilityBadge}
           ${dateData.note ? `<div class="date-note">${dateData.note}</div>` : ''}
         `;
+
+        // Allow clicking fully booked dates to see waitlist options
         card.addEventListener('click', () => selectDate(dateData, card));
 
         container.appendChild(card);
@@ -772,12 +795,51 @@
       activeSlots.forEach((slot) => {
         const slotButton = document.createElement('button');
         slotButton.type = 'button';
-        slotButton.className = 'time-slot';
+
         const rawTime = typeof slot === 'object' && slot !== null ? (slot.time ?? slot.slot ?? slot) : slot;
         const formattedTime = formatTimeSlot(rawTime);
-        slotButton.textContent = formattedTime;
+
+        // Check availability from enriched slot data
+        const isBlocked = slot.blocked === true;
+        const isAvailable = slot.available !== false && !isBlocked;
+        const remaining = typeof slot.remaining === 'number' ? slot.remaining : (slot.max_guests || 20);
+        const hasWaitlist = slot.waitlist === true;
+        const reserved = slot.reserved || 0;
+
+        // Build slot button with availability info
+        let statusText = '';
+        let className = 'time-slot';
+
+        if (isBlocked) {
+          className += ' is-blocked';
+          statusText = 'Nicht verfügbar';
+        } else if (!isAvailable || remaining === 0) {
+          className += ' is-full';
+          statusText = hasWaitlist ? 'Warteliste' : 'Ausgebucht';
+        } else if (remaining <= 4) {
+          className += ' is-limited';
+          statusText = `Noch ${remaining} Plätze`;
+        } else {
+          className += ' is-available';
+          statusText = `${remaining} Plätze frei`;
+        }
+
+        slotButton.className = className;
+        slotButton.innerHTML = `
+          <span class="slot-time">${formattedTime}</span>
+          <span class="slot-status">${statusText}</span>
+        `;
         slotButton.dataset.time = formattedTime;
-        slotButton.addEventListener('click', (event) => selectTime(formattedTime, event.currentTarget));
+
+        // Disable button if blocked, allow waitlist
+        if (isBlocked) {
+          slotButton.disabled = true;
+        } else if (!isAvailable && !hasWaitlist) {
+          slotButton.disabled = true;
+        } else {
+          slotButton.addEventListener('click', (event) => selectTime(formattedTime, event.currentTarget));
+        }
+
         container.appendChild(slotButton);
       });
     }
