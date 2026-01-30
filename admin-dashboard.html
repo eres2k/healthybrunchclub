@@ -1759,6 +1759,8 @@
       if (entry.status === 'pending') {
         actions.push(`<button class="btn btn-primary btn-sm" style="background:#ff6b35; position: relative;" data-action="confirm" data-code="${entry.confirmationCode}" data-date="${entryDate}" title="Hover für E-Mail Vorschau">Bestatigen</button>`);
         actions.push(`<button class="btn btn-secondary btn-sm" style="font-size: .7rem; padding: .3rem .5rem;" data-action="preview-confirm" data-reservation='${entryJson}' title="E-Mail Vorschau anzeigen">👁</button>`);
+        actions.push(`<button class="btn btn-warning btn-sm" data-action="waitlist" data-code="${entry.confirmationCode}" data-date="${entryDate}">Warteliste</button>`);
+        actions.push(`<button class="btn btn-secondary btn-sm" style="font-size: .7rem; padding: .3rem .5rem;" data-action="preview-waitlist" data-reservation='${entryJson}' title="E-Mail Vorschau">👁</button>`);
         actions.push(`<button class="btn btn-secondary btn-sm" data-action="cancel" data-code="${entry.confirmationCode}" data-date="${entryDate}">Ablehnen</button>`);
       } else {
         if (entry.status !== 'confirmed') {
@@ -1925,6 +1927,8 @@
             <td>
               <div class="btn-group">
                 <button class="btn btn-primary btn-sm" data-action="confirm" data-code="${r.confirmationCode}" data-date="${r.date}">Bestatigen</button>
+                <button class="btn btn-warning btn-sm" data-action="waitlist" data-code="${r.confirmationCode}" data-date="${r.date}">Warteliste</button>
+                <button class="btn btn-secondary btn-sm" style="font-size: .7rem; padding: .3rem .5rem;" data-action="preview-waitlist" data-reservation='${JSON.stringify(r).replace(/"/g, '&quot;')}' title="E-Mail Vorschau">👁</button>
                 <button class="btn btn-secondary btn-sm" data-action="cancel" data-code="${r.confirmationCode}" data-date="${r.date}">Ablehnen</button>
                 <button class="btn btn-danger btn-sm" data-action="delete" data-code="${r.confirmationCode}" data-date="${r.date}">Loschen</button>
               </div>
