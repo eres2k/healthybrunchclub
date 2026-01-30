@@ -246,11 +246,11 @@ function main() {
     log('  ', `${status} ${labels[key]} (${filename})`);
   }
 
-  // Check if main menu exists (required)
+  // Check if main menu exists (warn if missing, but don't fail build)
   if (!results.menu_pdf.exists) {
     log('', '');
-    log('❌', 'ERROR: Main menu PDF (menu.pdf) is required!');
-    process.exit(1);
+    log('⚠️', 'WARNING: Main menu PDF (HBC_DE_MENU.pdf) is missing!');
+    log('  ', 'Upload the main menu PDF to content/HBC_DE_MENU.pdf');
   }
 
   log('', '');
