@@ -1284,6 +1284,94 @@ hello@healthybrunchclub.at`;
 }
 
 /**
+ * Rejection email - sent when admin declines/rejects a pending reservation request
+ * Different from cancellation which is for already confirmed reservations
+ */
+function renderRejectionEmail(reservation, options = {}) {
+  return `<!DOCTYPE html>
+  <html lang="de">
+    <head>
+      <meta charset="utf-8" />
+      <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+      <title>Reservierungsanfrage abgelehnt</title>
+      <style>${getBaseStyles()}</style>
+    </head>
+    <body style="font-family: 'Montserrat', Arial, sans-serif; font-weight: 300; background-color: #f5f0e8; color: #2d2d2d; margin: 0; padding: 20px; line-height: 1.6;">
+      <div class="container" style="max-width: 640px; margin: 0 auto; background: #ffffff; overflow: hidden; box-shadow: 0 4px 24px rgba(0,0,0,0.08);">
+        <div class="header header-cancelled" style="padding: 48px 32px; text-align: center; color: #fff; background: linear-gradient(135deg, #8b4049 0%, #6b2d35 100%);">
+          <div class="logo-text" style="font-family: 'Playfair Display', Georgia, serif; font-size: 12px; letter-spacing: 3px; text-transform: uppercase; color: #c9a961; margin-bottom: 24px;">Healthy Brunch Club x LASA</div>
+          <h1 style="font-family: 'Playfair Display', Georgia, serif; margin: 0 0 8px 0; font-size: 32px; font-weight: 400; letter-spacing: -0.5px; color: #ffffff;">Anfrage nicht möglich</h1>
+          <div class="gold-line" style="width: 60px; height: 1px; background: #c9a961; margin: 16px auto;"></div>
+        </div>
+        <div class="content" style="padding: 40px 32px;">
+          <div class="section" style="text-align: center; margin-bottom: 32px;">
+            <span class="badge badge-cancelled" style="display: inline-block; padding: 8px 16px; font-size: 11px; text-transform: uppercase; letter-spacing: 2px; font-weight: 500; background: #fdf2f2; color: #8b4049; font-family: 'Montserrat', Arial, sans-serif;">Abgelehnt</span>
+          </div>
+
+          <div class="section" style="margin-bottom: 32px;">
+            <p style="font-family: 'Montserrat', Arial, sans-serif; line-height: 1.7; margin: 0 0 16px 0;">Hallo <strong>${reservation.name.split(' ')[0]}</strong>,</p>
+            <p style="font-family: 'Montserrat', Arial, sans-serif; line-height: 1.7; margin: 0 0 16px 0;">Vielen Dank für dein Interesse am Healthy Brunch Club! Leider können wir deine Reservierungsanfrage nicht bestätigen.</p>
+          </div>
+
+          <div class="section" style="margin-bottom: 32px;">
+            <h3 style="font-family: 'Playfair Display', Georgia, serif; margin: 0 0 12px 0; color: #1a1a1a; font-size: 18px; font-weight: 400;">Angefragte Reservierung</h3>
+            ${renderReservationDetails(reservation)}
+          </div>
+
+          ${options.reason ? `
+          <div class="highlight-box" style="background: #fafaf8; border-left: 3px solid #8b4049; padding: 20px 24px; margin: 24px 0;">
+            <p style="margin: 0; font-family: 'Montserrat', Arial, sans-serif; line-height: 1.7;"><strong>Grund:</strong><br>${options.reason}</p>
+          </div>
+          ` : ''}
+
+          <div class="section" style="margin-bottom: 32px;">
+            <p style="font-family: 'Montserrat', Arial, sans-serif; line-height: 1.7; margin: 0 0 16px 0;">Wir würden uns sehr freuen, wenn du es zu einem anderen Zeitpunkt noch einmal versuchst!</p>
+          </div>
+
+          ${renderFeaturedDishes()}
+
+          <div class="section" style="text-align: center; margin-bottom: 32px;">
+            <a href="https://healthybrunchclub.at/#reservation" style="display: inline-block; padding: 16px 32px; background: #1a1a1a; color: #fff; text-decoration: none; font-size: 12px; text-transform: uppercase; letter-spacing: 2px; font-weight: 500; font-family: 'Montserrat', Arial, sans-serif;">Neuen Termin anfragen</a>
+          </div>
+        </div>
+        ${renderFooter()}
+      </div>
+    </body>
+  </html>`;
+}
+
+/**
+ * Plain text rejection email
+ */
+function renderRejectionEmailText(reservation, options = {}) {
+  let text = `Healthy Brunch Club x LASA Wien
+================================
+
+Hallo ${reservation.name.split(' ')[0]},
+
+Vielen Dank für dein Interesse am Healthy Brunch Club! Leider können wir deine Reservierungsanfrage nicht bestätigen.
+
+Angefragte Reservierung:
+${renderPlainTextReservation(reservation)}`;
+
+  if (options.reason) {
+    text += `\n\nGrund: ${options.reason}`;
+  }
+
+  text += `
+
+Wir würden uns sehr freuen, wenn du es zu einem anderen Zeitpunkt noch einmal versuchst!
+
+Neuen Termin anfragen: https://healthybrunchclub.at/#reservation
+
+--
+Healthy Brunch Club x LASA Wien
+hello@healthybrunchclub.at`;
+
+  return text;
+}
+
+/**
  * Plain text cancellation email
  */
 function renderCancellationEmailText(reservation, options = {}) {
@@ -1407,6 +1495,7 @@ module.exports = {
   // Guest templates
   renderGuestEmail,
   renderCancellationEmail,
+  renderRejectionEmail,
   renderReminderEmail,
   renderWaitlistEmail,
   renderWaitlistConfirmationEmail,
@@ -1424,6 +1513,7 @@ module.exports = {
   renderWaitlistEmailText,
   renderWaitlistConfirmationEmailText,
   renderCancellationEmailText,
+  renderRejectionEmailText,
   renderReminderEmailText,
   renderWaitlistPromotedEmailText,
   renderFeedbackRequestEmailText,

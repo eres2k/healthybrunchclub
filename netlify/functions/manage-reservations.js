@@ -61,7 +61,7 @@ async function handleGet(event) {
 
 async function handlePatch(event) {
   const body = JSON.parse(event.body || '{}');
-  const { confirmationCode, status, date, sendEmail = true } = body;
+  const { confirmationCode, status, date, sendEmail = true, emailType } = body;
 
   if (!confirmationCode || !status || !date) {
     return response(400, { message: 'Bestätigungscode, Datum und Status sind erforderlich.' });
@@ -78,7 +78,8 @@ async function handlePatch(event) {
   if (sendEmail) {
     try {
       // Use sendStatusUpdateEmail which handles different status transitions
-      await sendStatusUpdateEmail(reservation, previousStatus);
+      // Pass emailType option for special cases like rejection
+      await sendStatusUpdateEmail(reservation, previousStatus, { emailType });
       emailSent = true;
     } catch (error) {
       console.error('E-Mail Versand nach Update fehlgeschlagen:', error);
