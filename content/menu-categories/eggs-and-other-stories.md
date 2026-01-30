@@ -10,7 +10,7 @@ items:
       - vegetarisch
       - glutenfrei
       - proteinreich
-    description: 2 eier nach wahl (spiegelei, pochiert, gekocht oder eierspeise),
+    description: zwei eier nach wahl (spiegelei, pochiert, gekocht oder eierspeise),
       kunstvoll serviert auf scheiben von süßkartoffel und avocado. dazu
       sautierte champignons und shiitake-pilze, garniert mit rucola, rote beete,
       sprossen und kresse.
