@@ -207,17 +207,30 @@ class ReservationWizard {
       const displayTime = formatDisplayTime(formattedTime);
       const button = document.createElement('button');
       button.type = 'button';
-      button.className = `time-slot ${slot.remaining > 0 ? 'is-available' : 'is-full'}`;
       button.dataset.time = formattedTime;
       button.disabled = slot.remaining <= 0 && !slot.waitlist;
+
+      // Determine status text and class
+      let statusText = '';
+      let slotClass = 'time-slot';
+
+      if (slot.remaining <= 0) {
+        slotClass += ' is-full';
+        statusText = slot.waitlist ? 'Warteliste' : 'Ausgebucht';
+      } else if (slot.remaining < 8) {
+        slotClass += ' is-limited';
+        statusText = `Noch ${slot.remaining} ${slot.remaining === 1 ? 'Platz' : 'Plätze'}`;
+      } else {
+        slotClass += ' is-available';
+        statusText = 'Verfügbar';
+      }
+
+      button.className = slotClass;
       button.setAttribute('aria-pressed', this.state.time === formattedTime ? 'true' : 'false');
-      button.setAttribute(
-        'aria-label',
-        `${displayTime}, ${slot.remaining > 0 ? 'Verfügbar' : 'Warteliste verfügbar'}`
-      );
+      button.setAttribute('aria-label', `${displayTime}, ${statusText}`);
       button.innerHTML = `
         <span class="time-slot__time">${displayTime}</span>
-        <span class="time-slot__capacity">${slot.remaining > 0 ? 'Verfügbar' : 'Warteliste verfügbar'}</span>
+        <span class="time-slot__capacity">${statusText}</span>
       `;
       button.addEventListener('click', () => this.selectTime(slot));
       if (this.state.time === formattedTime) {
