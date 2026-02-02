@@ -816,9 +816,9 @@
         } else if (!isAvailable || remaining === 0) {
           className += ' is-full';
           statusText = hasWaitlist ? 'Warteliste' : 'Ausgebucht';
-        } else if (remaining <= 4) {
+        } else if (remaining < 8) {
           className += ' is-limited';
-          statusText = 'Wenige Plätze';
+          statusText = `Noch ${remaining} ${remaining === 1 ? 'Platz' : 'Plätze'}`;
         } else {
           className += ' is-available';
           statusText = 'Verfügbar';
