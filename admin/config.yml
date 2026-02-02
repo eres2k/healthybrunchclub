@@ -140,6 +140,7 @@ collections:
       - label: "Zeitslots"
         name: "slots"
         widget: "list"
+        hint: "Max. Gäste pro Zeitslot wird im Admin-Dashboard unter Einstellungen konfiguriert"
         fields:
           - label: "Zeit"
             name: "time"
@@ -147,7 +148,6 @@ collections:
             hint: "Format: HH:MM (z.B. 09:00, 14:30)"
             default: "09:00"
             pattern: ["^([0-1]?[0-9]|2[0-3]):[0-5][0-9]$", "Bitte Format HH:MM verwenden"]
-          - {label: "Max. Gäste", name: "max_guests", widget: "number", default: 20}
       - {label: "Notiz", name: "note", widget: "text", required: false, hint: "Wird Kunden angezeigt"}
 
   # Note: Blocked reservations are managed in the Reservierungen Dashboard
