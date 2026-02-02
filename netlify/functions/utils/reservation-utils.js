@@ -49,7 +49,6 @@ async function loadSettings() {
   return {
     timezone: TIMEZONE,
     maxCapacity: MAX_CAPACITY_PER_SLOT,
-    waitlist: true,
     ...settings
   };
 }
@@ -339,8 +338,8 @@ function calculateSlotAvailability({ reservations, blockedSlots, time, guests, m
 
   // For new bookings, check if slot is effectively full (confirmed + pending)
   const effectiveRemaining = Math.max(capacity - confirmedGuests - pendingGuests, 0);
-  const fits = guests ? remaining >= guests : remaining > 0;
-  const shouldWaitlist = guests ? effectiveRemaining < guests : effectiveRemaining === 0;
+  const fits = guests ? effectiveRemaining >= guests : effectiveRemaining > 0;
+  const isFull = effectiveRemaining === 0;
 
   return {
     time,
@@ -349,8 +348,7 @@ function calculateSlotAvailability({ reservations, blockedSlots, time, guests, m
     pending: pendingGuests,
     remaining,
     effectiveRemaining,
-    waitlist: remaining === 0,
-    shouldWaitlist,
+    full: isFull,
     fits
   };
 }
@@ -391,14 +389,13 @@ async function createReservation(payload) {
     };
   }
 
-  // Check if waitlist is enabled in settings
-  const waitlistEnabled = settings.waitlist !== false;
-
-  // Determine initial status based on slot availability
-  // If slot is effectively full (confirmed + pending >= capacity), put on waitlist
-  let initialStatus = 'pending';
-  if (slot.shouldWaitlist && waitlistEnabled) {
-    initialStatus = 'waitlisted';
+  // Check if slot has enough capacity for the requested guests
+  // Reject reservation if slot is full (confirmed + pending >= capacity)
+  if (!slot.fits) {
+    return {
+      success: false,
+      message: `Dieser Zeitslot ist leider ausgebucht. Bitte wählen Sie einen anderen Zeitslot.`
+    };
   }
 
   const reservation = {
@@ -411,7 +408,7 @@ async function createReservation(payload) {
     email: payload.email,
     phone: payload.phone,
     specialRequests: payload.specialRequests,
-    status: initialStatus,
+    status: 'pending',
     timezone: settings.timezone || TIMEZONE,
     createdAt: new Date().toISOString(),
     updatedAt: new Date().toISOString()
@@ -429,7 +426,7 @@ async function createReservation(payload) {
   return {
     success: true,
     reservation,
-    waitlisted: initialStatus === 'waitlisted'
+    waitlisted: false
   };
 }
 
