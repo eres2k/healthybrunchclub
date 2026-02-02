@@ -338,11 +338,9 @@ function calculateSlotAvailability({ reservations, blockedSlots, time, guests, m
     .filter((reservation) => reservation.time === time && reservation.status === 'pending')
     .reduce((sum, reservation) => sum + Number(reservation.guests || 0), 0);
 
-  // For availability display, show remaining based on confirmed only
-  const remaining = Math.max(capacity - confirmedGuests, 0);
-
-  // For new bookings, check if slot is effectively full (confirmed + pending)
+  // For availability display and bookings, use confirmed + pending
   const effectiveRemaining = Math.max(capacity - confirmedGuests - pendingGuests, 0);
+  const remaining = effectiveRemaining;
   const fits = guests ? effectiveRemaining >= guests : effectiveRemaining > 0;
   const isFull = effectiveRemaining === 0;
 
