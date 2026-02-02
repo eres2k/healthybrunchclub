@@ -139,21 +139,29 @@ exports.handler = async (event) => {
         const content = await fs.readFile(path.join(contentDir, file), 'utf8');
         const { data } = matter(content);
 
-        const dateObj = new Date(data.date);
+        // Extract date from filename (e.g., "2026-02-05.md" -> "2026-02-05")
+        // This is more reliable than data.date which can be incorrectly set
+        const filenameDateMatch = file.match(/^(\d{4}-\d{2}-\d{2})(?:-\d+)?\.md$/);
+        const filenameDate = filenameDateMatch ? filenameDateMatch[1] : null;
+
+        // Use filename date for reservations lookup (more reliable than data.date which can be incorrect)
+        const reservationDate = filenameDate || data.date;
+
+        const dateObj = new Date(reservationDate);
         const today = new Date();
         today.setHours(0, 0, 0, 0);
 
         if (dateObj >= today) {
           const normalizedSlots = normalizeSlots(data.slots || []);
-          // Enrich slots with actual availability data
-          const enrichedSlots = await enrichSlotsWithAvailability(data.date, normalizedSlots);
+          // Enrich slots with actual availability data using filename date for correct reservation lookup
+          const enrichedSlots = await enrichSlotsWithAvailability(reservationDate, normalizedSlots);
 
           // Check if any slots are still available
           const hasAvailableSlots = enrichedSlots.some((slot) => slot.available);
           const totalRemaining = enrichedSlots.reduce((sum, slot) => sum + (slot.remaining || 0), 0);
 
           return {
-            date: data.date,
+            date: reservationDate, // Use filename date for consistency with reservation lookups
             title: data.title || 'Verfügbar',
             slots: enrichedSlots,
             note: data.note || '',
