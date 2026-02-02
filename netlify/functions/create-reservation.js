@@ -5,7 +5,7 @@ const headers = {
 };
 
 // Import E-Mail Service
-const { sendRequestReceivedEmails, sendWaitlistConfirmationEmail } = require('./utils/email-service');
+const { sendRequestReceivedEmails } = require('./utils/email-service');
 const { createReservation } = require('./utils/reservation-utils');
 
 exports.handler = async (event, context) => {
@@ -66,36 +66,22 @@ exports.handler = async (event, context) => {
     }
 
     const reservation = result.reservation;
-    const isWaitlisted = result.waitlisted;
 
-    // Send appropriate email based on status
+    // Send confirmation email
     try {
-      if (isWaitlisted) {
-        // Reservation was auto-waitlisted due to capacity
-        await sendWaitlistConfirmationEmail(reservation);
-        console.log('Warteliste-E-Mail wurde versendet an:', reservation.email);
-      } else {
-        // Normal pending reservation
-        await sendRequestReceivedEmails(reservation);
-        console.log('Reservierungsanfrage-E-Mail wurde versendet an:', reservation.email);
-      }
+      await sendRequestReceivedEmails(reservation);
+      console.log('Reservierungsanfrage-E-Mail wurde versendet an:', reservation.email);
     } catch (emailError) {
       console.error('E-Mail konnte nicht versendet werden:', emailError);
       // Continue even if email fails
     }
-
-    // Return appropriate message based on status
-    const message = isWaitlisted
-      ? 'Vielen Dank! Da der gewünschte Zeitraum stark nachgefragt ist, wurden Sie auf unsere Warteliste gesetzt. Wir informieren Sie, sobald ein Platz frei wird.'
-      : 'Ihre Reservierung wurde erfolgreich übermittelt! Sie erhalten in Kürze eine Bestätigung per E-Mail.';
 
     return {
       statusCode: 200,
       headers,
       body: JSON.stringify({
         success: true,
-        message,
-        waitlisted: isWaitlisted,
+        message: 'Ihre Reservierung wurde erfolgreich übermittelt! Sie erhalten in Kürze eine Bestätigung per E-Mail.',
         reservation: {
           confirmationCode: reservation.confirmationCode,
           date: reservation.date,

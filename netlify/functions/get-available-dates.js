@@ -81,8 +81,8 @@ async function enrichSlotsWithAvailability(date, slots) {
 
       const totalReserved = confirmedGuests + pendingGuests;
       const remaining = Math.max(effectiveCapacity - totalReserved, 0);
-      const isFull = remaining === 0;
       const isBlocked = blocked?.capacity === 0;
+      const isFull = remaining === 0;
 
       return {
         time: slot.time,
@@ -91,8 +91,8 @@ async function enrichSlotsWithAvailability(date, slots) {
         confirmed: confirmedGuests,
         pending: pendingGuests,
         remaining,
-        available: !isBlocked && remaining > 0,
-        waitlist: isFull && !isBlocked,
+        available: !isBlocked && !isFull,
+        full: isFull,
         blocked: isBlocked
       };
     });
