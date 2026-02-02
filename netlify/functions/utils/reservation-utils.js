@@ -45,11 +45,16 @@ function createTimeSlots(openingHours = DEFAULT_OPENING) {
 }
 
 async function loadSettings() {
-  const settings = await readJSON('settings', 'reservation-settings.json', {});
+  // Load admin settings (from admin-dashboard) for maxCapacityPerSlot
+  const adminSettings = await readJSON('settings', 'admin-settings.json', {});
+  const reservationSettings = await readJSON('settings', 'reservation-settings.json', {});
+
   return {
     timezone: TIMEZONE,
-    maxCapacity: MAX_CAPACITY_PER_SLOT,
-    ...settings
+    maxCapacity: adminSettings.maxCapacityPerSlot || MAX_CAPACITY_PER_SLOT,
+    ...reservationSettings,
+    // Ensure admin settings take precedence
+    maxCapacityPerSlot: adminSettings.maxCapacityPerSlot || MAX_CAPACITY_PER_SLOT
   };
 }
 
