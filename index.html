@@ -504,7 +504,7 @@
                   <option value="5">5 Personen</option>
                   <option value="6">6 Personen</option>
                   <option value="7">7 Personen</option>
-                  <option value="8">8+ Personen</option>
+                  <option value="8">8 Personen</option>
                 </select>
               </div>
 
@@ -643,6 +643,7 @@
     // Reservation System
     let selectedDate = null;
     let selectedTime = null;
+    let selectedSlotRemaining = null;
 
     function formatTimeSlot(time) {
       if (typeof time === 'number' || !Number.isNaN(Number(time))) {
@@ -746,7 +747,8 @@
           cardClass += ' is-limited';
           availabilityBadge = '<span class="date-availability is-limited">Wenige Plätze</span>';
         } else {
-          availabilityBadge = '<span class="date-availability is-available">Verfügbar</span>';
+          // Keine Anzeige für normale Verfügbarkeit - nur bei Ausgebucht oder Wenige Plätze
+          availabilityBadge = '';
         }
 
         card.className = cardClass;
@@ -837,24 +839,50 @@
         } else if (!isAvailable && !hasWaitlist) {
           slotButton.disabled = true;
         } else {
-          slotButton.addEventListener('click', (event) => selectTime(formattedTime, event.currentTarget));
+          slotButton.addEventListener('click', (event) => selectTime(formattedTime, event.currentTarget, remaining));
         }
 
         container.appendChild(slotButton);
       });
     }
 
-    function selectTime(time, element) {
+    function selectTime(time, element, remaining) {
       selectedTime = formatTimeSlot(time);
+      selectedSlotRemaining = remaining;
 
       document.querySelectorAll('.time-slot').forEach((el) => el.classList.remove('selected'));
       element.classList.add('selected');
+
+      // Aktualisiere die Personenauswahl basierend auf verfügbaren Plätzen
+      updateGuestOptions(remaining);
 
       setTimeout(() => {
         document.getElementById('time-selection').style.display = 'none';
         document.getElementById('guest-details').style.display = 'block';
         updateFormSummary();
       }, 200);
+    }
+
+    function updateGuestOptions(maxGuests) {
+      const guestSelect = document.getElementById('guest-count');
+      if (!guestSelect) return;
+
+      const currentValue = guestSelect.value;
+      const maxAvailable = Math.min(maxGuests || 8, 8); // Maximum 8 Personen
+
+      guestSelect.innerHTML = '<option value="">Bitte wählen</option>';
+
+      for (let i = 1; i <= maxAvailable; i++) {
+        const option = document.createElement('option');
+        option.value = i;
+        option.textContent = i === 1 ? '1 Person' : `${i} Personen`;
+        guestSelect.appendChild(option);
+      }
+
+      // Behalte die vorherige Auswahl wenn möglich
+      if (currentValue && parseInt(currentValue) <= maxAvailable) {
+        guestSelect.value = currentValue;
+      }
     }
 
     function updateFormSummary() {
