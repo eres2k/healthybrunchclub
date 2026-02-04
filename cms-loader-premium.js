@@ -7,6 +7,13 @@ let touchStartX = 0;
 let touchEndX = 0;
 let touchStartedInProducts = false;
 
+// Auto-scroll settings
+let autoScrollInterval = null;
+let autoScrollPaused = false;
+let autoScrollResumeTimeout = null;
+const AUTO_SCROLL_SPEED = 1; // pixels per frame
+const AUTO_SCROLL_PAUSE_DURATION = 3000; // 3 seconds pause after user interaction
+
 // Define the 6 allowed tags globally
 const ALLOWED_TAGS = ['vegetarisch', 'glutenfrei', 'proteinreich', 'sättigend', 'belebend', 'immunstärkend'];
 
@@ -63,6 +70,7 @@ async function loadMenuCategories() {
         createCategorySlides();
         initializeCarouselNavigation();
         initializeScrollDetection();
+        initializeAutoScroll();
         updateSwipeIndicator();
 
     } catch (error) {
@@ -312,11 +320,89 @@ function initializeScrollDetection() {
     });
 }
 
+// Initialize auto-scroll for products
+function initializeAutoScroll() {
+    // Start auto-scrolling
+    startAutoScroll();
+
+    // Pause on user interaction
+    document.querySelectorAll('.products-scroll-container').forEach(container => {
+        // Pause on touch
+        container.addEventListener('touchstart', pauseAutoScroll, { passive: true });
+        // Pause on mouse enter (desktop)
+        container.addEventListener('mouseenter', pauseAutoScroll);
+        // Pause on manual scroll
+        container.addEventListener('wheel', pauseAutoScroll, { passive: true });
+    });
+
+    // Also pause when clicking tabs or arrows
+    document.querySelectorAll('.category-tab, .category-nav-arrow').forEach(el => {
+        el.addEventListener('click', pauseAutoScroll);
+    });
+}
+
+// Start auto-scroll animation
+function startAutoScroll() {
+    if (autoScrollInterval) return;
+
+    autoScrollInterval = setInterval(() => {
+        if (autoScrollPaused) return;
+
+        const container = document.querySelectorAll('.products-scroll-container')[currentCategoryIndex];
+        if (!container) return;
+
+        const scrollLeft = container.scrollLeft;
+        const scrollWidth = container.scrollWidth;
+        const clientWidth = container.clientWidth;
+        const maxScroll = scrollWidth - clientWidth;
+
+        // Check if at the end
+        if (scrollLeft >= maxScroll - 5) {
+            // Go to next category or loop back to first
+            if (currentCategoryIndex < allMenuCategories.length - 1) {
+                goToCategory(currentCategoryIndex + 1);
+                // Reset new category scroll to start
+                setTimeout(() => {
+                    const newContainer = document.querySelectorAll('.products-scroll-container')[currentCategoryIndex];
+                    if (newContainer) newContainer.scrollLeft = 0;
+                }, 100);
+            } else {
+                // Loop back to first category
+                goToCategory(0);
+                setTimeout(() => {
+                    const newContainer = document.querySelectorAll('.products-scroll-container')[0];
+                    if (newContainer) newContainer.scrollLeft = 0;
+                }, 100);
+            }
+        } else {
+            // Slowly scroll right
+            container.scrollLeft += AUTO_SCROLL_SPEED;
+        }
+    }, 30); // ~33fps for smooth scrolling
+}
+
+// Pause auto-scroll
+function pauseAutoScroll() {
+    autoScrollPaused = true;
+
+    // Clear any existing resume timeout
+    if (autoScrollResumeTimeout) {
+        clearTimeout(autoScrollResumeTimeout);
+    }
+
+    // Resume after pause duration
+    autoScrollResumeTimeout = setTimeout(() => {
+        autoScrollPaused = false;
+    }, AUTO_SCROLL_PAUSE_DURATION);
+}
+
 // Touch handlers for swipe
 function handleTouchStart(e) {
     touchStartX = e.changedTouches[0].screenX;
     // Check if touch started inside the products scroll area
     touchStartedInProducts = e.target.closest('.products-scroll-container') !== null;
+    // Pause auto-scroll on touch
+    pauseAutoScroll();
 }
 
 function handleTouchEnd(e) {
