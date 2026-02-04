@@ -154,257 +154,59 @@
         </div>
     </section>
 
-    <!-- Premium Menu Section -->
-    <section class="menu-premium" id="menu">
-        <div class="menu-intro">
-            <h2 class="section-title">unsere speisekarte</h2>
-            <p class="section-subtitle">mit gutem Gewissen genießen</p>
+    <!-- Featured Dishes Section -->
+    <section class="featured-dishes-section" id="menu">
+        <div class="featured-dishes-intro">
+            <h2 class="section-title">unsere highlights</h2>
+            <p class="section-subtitle">eine kleine auswahl unserer liebsten gerichte</p>
         </div>
 
-        <!-- Personalized Recommendations Section -->
-        <div class="recommendations-section" id="recommendationsSection" style="display: none;">
-            <div class="recommendations-header">
-                <div class="recommendations-title">
-                    <span class="sparkle-icon">✨</span>
-                    <h3>für dich empfohlen</h3>
-                    <button class="preferences-btn" onclick="openPreferencesModal()" type="button" aria-label="Präferenzen anpassen">
-                        <i class="fas fa-sliders-h"></i>
-                    </button>
-                </div>
-                <p class="recommendations-subtitle" id="recommendationsSubtitle">Basierend auf deinen Vorlieben</p>
-            </div>
-            <div class="recommendations-carousel" id="recommendationsCarousel">
-                <button class="carousel-arrow carousel-arrow-left" onclick="scrollRecommendations('left')" type="button" aria-label="Nach links scrollen">
-                    <i class="fas fa-chevron-left"></i>
-                </button>
-                <div class="recommendations-track" id="recommendationsTrack">
-                    <!-- Recommendation cards will be inserted here -->
-                </div>
-                <button class="carousel-arrow carousel-arrow-right" onclick="scrollRecommendations('right')" type="button" aria-label="Nach rechts scrollen">
-                    <i class="fas fa-chevron-right"></i>
-                </button>
-            </div>
-        </div>
-
-        <!-- Preferences Modal -->
-        <div class="preferences-modal-overlay" id="preferencesModalOverlay" onclick="closePreferencesModal()">
-            <div class="preferences-modal" onclick="event.stopPropagation()">
-                <button class="preferences-modal-close" onclick="closePreferencesModal()" type="button" aria-label="Schließen">
-                    <i class="fas fa-times"></i>
-                </button>
-                <div class="preferences-modal-content">
-                    <h3><i class="fas fa-heart"></i> Deine Präferenzen</h3>
-                    <p class="preferences-intro">Hilf uns, die perfekten Gerichte für dich zu finden!</p>
-
-                    <div class="preferences-section">
-                        <h4>Ernährungsweise</h4>
-                        <div class="preferences-options dietary-options">
-                            <label class="preference-chip">
-                                <input type="checkbox" name="dietary" value="vegetarisch">
-                                <span>🥬 Vegetarisch</span>
-                            </label>
-                            <label class="preference-chip">
-                                <input type="checkbox" name="dietary" value="glutenfrei">
-                                <span>🌾 Glutenfrei</span>
-                            </label>
-                        </div>
-                    </div>
-
-                    <div class="preferences-section">
-                        <h4>Dein Ziel</h4>
-                        <div class="preferences-options goal-options">
-                            <label class="preference-chip goal-chip">
-                                <input type="radio" name="goal" value="balanced" checked>
-                                <span>⚖️ Ausgewogen</span>
-                            </label>
-                            <label class="preference-chip goal-chip">
-                                <input type="radio" name="goal" value="fitness">
-                                <span>💪 Fitness</span>
-                            </label>
-                            <label class="preference-chip goal-chip">
-                                <input type="radio" name="goal" value="wellness">
-                                <span>🧘 Wellness</span>
-                            </label>
-                            <label class="preference-chip goal-chip">
-                                <input type="radio" name="goal" value="energy">
-                                <span>⚡ Energie</span>
-                            </label>
-                        </div>
-                    </div>
-
-                    <div class="preferences-actions">
-                        <button class="btn-save-preferences" onclick="savePreferences()">
-                            Empfehlungen aktualisieren
-                        </button>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <!-- Modern Menu Downloads Section -->
-        <div class="menu-downloads-section">
-            <!-- Main Menus - Primary Row -->
-            <div class="menu-downloads-grid menu-grid-primary">
-                <a href="/content/HBC_DE_MENU.pdf" download="Healthy-Brunch-Club-Speisekarte.pdf" class="menu-download-card">
-                    <div class="menu-card-icon">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                            <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
-                            <polyline points="14 2 14 8 20 8"></polyline>
-                            <line x1="16" y1="13" x2="8" y2="13"></line>
-                            <line x1="16" y1="17" x2="8" y2="17"></line>
-                        </svg>
-                    </div>
-                    <div class="menu-card-content">
-                        <span class="menu-card-label">HBC</span>
-                        <span class="menu-card-title">Speisekarte</span>
-                        <span class="menu-card-lang">Deutsch</span>
-                    </div>
-                    <div class="menu-card-download">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                            <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
-                            <polyline points="7 10 12 15 17 10"></polyline>
-                            <line x1="12" y1="15" x2="12" y2="3"></line>
-                        </svg>
-                    </div>
-                </a>
-
-                <a href="/content/HBC_EN_MENU.pdf" download="Healthy-Brunch-Club-Menu-English.pdf" class="menu-download-card">
-                    <div class="menu-card-icon">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                            <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
-                            <polyline points="14 2 14 8 20 8"></polyline>
-                            <line x1="16" y1="13" x2="8" y2="13"></line>
-                            <line x1="16" y1="17" x2="8" y2="17"></line>
-                        </svg>
-                    </div>
-                    <div class="menu-card-content">
-                        <span class="menu-card-label">HBC</span>
-                        <span class="menu-card-title">Menu</span>
-                        <span class="menu-card-lang">English</span>
-                    </div>
-                    <div class="menu-card-download">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                            <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
-                            <polyline points="7 10 12 15 17 10"></polyline>
-                            <line x1="12" y1="15" x2="12" y2="3"></line>
-                        </svg>
-                    </div>
-                </a>
-            </div>
-
-            <!-- Secondary Menus Row -->
-            <div class="menu-downloads-grid menu-grid-secondary-home">
-                <a href="/content/HBC_KIDS_MENU.pdf" download="Healthy-Brunch-Club-Kids-Menu.pdf" class="menu-download-card menu-card-kids">
-                    <div class="menu-card-icon">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                            <circle cx="12" cy="12" r="10"></circle>
-                            <path d="M8 14s1.5 2 4 2 4-2 4-2"></path>
-                            <line x1="9" y1="9" x2="9.01" y2="9"></line>
-                            <line x1="15" y1="9" x2="15.01" y2="9"></line>
-                        </svg>
-                    </div>
-                    <div class="menu-card-content">
-                        <span class="menu-card-label">HBC</span>
-                        <span class="menu-card-title">Kids Menu</span>
-                        <span class="menu-card-lang">Kindermenü</span>
-                    </div>
-                    <div class="menu-card-download">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                            <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
-                            <polyline points="7 10 12 15 17 10"></polyline>
-                            <line x1="12" y1="15" x2="12" y2="3"></line>
-                        </svg>
-                    </div>
-                </a>
-
-                <a href="/content/LASA_DE_MENU.PDF" download="LASA_DE_MENU.PDF" class="menu-download-card menu-card-lasa">
-                    <div class="menu-card-icon">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                            <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
-                            <polyline points="14 2 14 8 20 8"></polyline>
-                            <line x1="16" y1="13" x2="8" y2="13"></line>
-                            <line x1="16" y1="17" x2="8" y2="17"></line>
-                        </svg>
-                    </div>
-                    <div class="menu-card-content">
-                        <span class="menu-card-label">LASA</span>
-                        <span class="menu-card-title">Speisekarte</span>
-                        <span class="menu-card-lang">Deutsch</span>
-                    </div>
-                    <div class="menu-card-download">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                            <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
-                            <polyline points="7 10 12 15 17 10"></polyline>
-                            <line x1="12" y1="15" x2="12" y2="3"></line>
-                        </svg>
-                    </div>
-                </a>
-
-                <a href="/menu.html" class="menu-download-card menu-card-online">
-                    <div class="menu-card-icon">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                            <rect x="3" y="3" width="7" height="7"></rect>
-                            <rect x="14" y="3" width="7" height="7"></rect>
-                            <rect x="14" y="14" width="7" height="7"></rect>
-                            <rect x="3" y="14" width="7" height="7"></rect>
-                        </svg>
-                    </div>
-                    <div class="menu-card-content">
-                        <span class="menu-card-label">ALLE</span>
-                        <span class="menu-card-title">Menüs</span>
-                        <span class="menu-card-lang">Übersicht</span>
-                    </div>
-                    <div class="menu-card-download">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                            <line x1="5" y1="12" x2="19" y2="12"></line>
-                            <polyline points="12 5 19 12 12 19"></polyline>
-                        </svg>
-                    </div>
-                </a>
-            </div>
-        </div>
-
-        <!-- Elegant Minimal Filter System -->
-        <div class="menu-filter-container">
-            <div class="filter-bar">
-                <!-- Category Filters Row -->
-                <div class="filter-group">
-                    <div class="filter-buttons" id="categoryFilters">
-                        <button class="filter-btn active" data-filter="all">
-                            <span class="btn-text">alle gerichte</span>
-                        </button>
-                    </div>
-                </div>
-                
-                <!-- Tags and Actions Row -->
-                <div class="filter-row-bottom">
-                    <div class="filter-tags desktop-only" id="tagFilters">
-                        <!-- Tag filters will be populated dynamically -->
-                    </div>
-                    
-                    <div class="filter-actions">
-                        <button class="btn-icon" onclick="resetFilters()" type="button">
-                            <i class="fas fa-undo"></i>
-                            <span class="btn-text">zurücksetzen</span>
-                        </button>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <!-- Menu Content -->
-        <div class="menu-content" id="menuContainer">
+        <!-- Featured Dishes Grid -->
+        <div class="featured-dishes-container" id="featuredDishesContainer">
             <div class="menu-loading">
                 <i class="fas fa-spinner fa-spin"></i>
-                <p>speisekarte wird geladen...</p>
+                <p>wird geladen...</p>
             </div>
         </div>
 
-        <!-- Allergen Legend -->
-        <div class="allergen-info" id="allergenLegend" style="display: none;">
-            <h4 class="allergen-title">allergeninformationen</h4>
-            <div class="allergen-grid">
-                <!-- Allergens will be added dynamically -->
+        <!-- View Full Menu CTA -->
+        <div class="featured-dishes-cta">
+            <a href="/menu.html" class="btn-view-menu">
+                <span>vollständige speisekarte ansehen</span>
+                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <line x1="5" y1="12" x2="19" y2="12"></line>
+                    <polyline points="12 5 19 12 12 19"></polyline>
+                </svg>
+            </a>
+        </div>
+
+        <!-- Menu Downloads Section -->
+        <div class="menu-downloads-compact">
+            <div class="downloads-row">
+                <a href="/content/HBC_DE_MENU.pdf" download class="download-link">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+                        <polyline points="7 10 12 15 17 10"></polyline>
+                        <line x1="12" y1="15" x2="12" y2="3"></line>
+                    </svg>
+                    <span>Speisekarte (DE)</span>
+                </a>
+                <a href="/content/HBC_EN_MENU.pdf" download class="download-link">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+                        <polyline points="7 10 12 15 17 10"></polyline>
+                        <line x1="12" y1="15" x2="12" y2="3"></line>
+                    </svg>
+                    <span>Menu (EN)</span>
+                </a>
+                <a href="/content/HBC_KIDS_MENU.pdf" download class="download-link">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+                        <polyline points="7 10 12 15 17 10"></polyline>
+                        <line x1="12" y1="15" x2="12" y2="3"></line>
+                    </svg>
+                    <span>Kids Menu</span>
+                </a>
             </div>
         </div>
     </section>
