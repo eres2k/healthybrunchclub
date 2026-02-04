@@ -62,6 +62,7 @@ async function loadMenuCategories() {
         createCategoryTabs();
         createCategorySlides();
         initializeCarouselNavigation();
+        initializeScrollDetection();
         updateSwipeIndicator();
 
     } catch (error) {
@@ -256,6 +257,59 @@ function updateSwipeIndicator() {
         const isMobile = window.innerWidth <= 768;
         indicator.style.display = (isMobile && !isLastCategory) ? 'flex' : 'none';
     }
+}
+
+// Initialize scroll detection for auto-category-switch
+function initializeScrollDetection() {
+    let scrollTimeout = null;
+    let hasTriggeredSwitch = false;
+
+    document.querySelectorAll('.products-scroll-container').forEach((container, index) => {
+        container.addEventListener('scroll', () => {
+            // Clear previous timeout
+            if (scrollTimeout) clearTimeout(scrollTimeout);
+
+            // Wait for scroll to stop
+            scrollTimeout = setTimeout(() => {
+                // Only check if this is the active category
+                if (index !== currentCategoryIndex) return;
+
+                const scrollLeft = container.scrollLeft;
+                const scrollWidth = container.scrollWidth;
+                const clientWidth = container.clientWidth;
+                const scrollRight = scrollWidth - scrollLeft - clientWidth;
+
+                // Check if at the end (with 20px threshold)
+                if (scrollRight < 20 && !hasTriggeredSwitch) {
+                    if (currentCategoryIndex < allMenuCategories.length - 1) {
+                        hasTriggeredSwitch = true;
+                        goToCategory(currentCategoryIndex + 1);
+                        // Reset scroll position of new category
+                        setTimeout(() => {
+                            const newContainer = document.querySelectorAll('.products-scroll-container')[currentCategoryIndex];
+                            if (newContainer) newContainer.scrollLeft = 0;
+                            hasTriggeredSwitch = false;
+                        }, 100);
+                    }
+                }
+                // Check if at the beginning (scrolled back)
+                else if (scrollLeft < 20 && !hasTriggeredSwitch) {
+                    if (currentCategoryIndex > 0) {
+                        hasTriggeredSwitch = true;
+                        goToCategory(currentCategoryIndex - 1);
+                        // Scroll to end of previous category
+                        setTimeout(() => {
+                            const newContainer = document.querySelectorAll('.products-scroll-container')[currentCategoryIndex];
+                            if (newContainer) {
+                                newContainer.scrollLeft = newContainer.scrollWidth;
+                            }
+                            hasTriggeredSwitch = false;
+                        }, 100);
+                    }
+                }
+            }, 150);
+        }, { passive: true });
+    });
 }
 
 // Touch handlers for swipe

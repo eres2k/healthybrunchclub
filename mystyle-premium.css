@@ -549,6 +549,9 @@ h1, h2, h3, h4, h5, h6 {
     margin: 0 calc(-1 * var(--spacing-md));
     padding-left: var(--spacing-md);
     padding-right: var(--spacing-md);
+    scroll-behavior: smooth;
+    scroll-snap-type: x proximity;
+    -webkit-overflow-scrolling: touch;
 }
 
 .products-scroll-container::-webkit-scrollbar {
@@ -579,6 +582,7 @@ h1, h2, h3, h4, h5, h6 {
     overflow: hidden;
     box-shadow: 0 4px 20px rgba(0, 0, 0, 0.06);
     transition: transform var(--transition-normal), box-shadow var(--transition-normal);
+    scroll-snap-align: start;
 }
 
 .product-card:hover {
