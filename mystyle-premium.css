@@ -574,22 +574,16 @@ h1, h2, h3, h4, h5, h6 {
 /* Product Card */
 .product-card {
     flex: 0 0 280px;
-    min-width: 280px;
     background: var(--pure-white);
     border-radius: 16px;
     overflow: hidden;
     box-shadow: 0 4px 20px rgba(0, 0, 0, 0.06);
-    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    transition: transform var(--transition-normal), box-shadow var(--transition-normal);
 }
 
 .product-card:hover {
     transform: translateY(-6px);
     box-shadow: 0 12px 35px rgba(0, 0, 0, 0.1);
-}
-
-/* Card without image */
-.product-card:not(:has(.product-card-image)) .product-card-content {
-    padding-top: var(--spacing-lg);
 }
 
 .product-card-image {
