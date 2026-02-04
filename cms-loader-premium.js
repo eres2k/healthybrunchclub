@@ -8,10 +8,10 @@ let touchEndX = 0;
 let touchStartedInProducts = false;
 
 // Auto-scroll settings
-let autoScrollInterval = null;
+let autoScrollAnimationId = null;
 let autoScrollPaused = false;
 let autoScrollResumeTimeout = null;
-const AUTO_SCROLL_SPEED = 1; // pixels per frame
+const AUTO_SCROLL_SPEED = 0.5; // pixels per frame
 const AUTO_SCROLL_PAUSE_DURATION = 3000; // 3 seconds pause after user interaction
 
 // Define the 6 allowed tags globally
@@ -267,55 +267,57 @@ function updateSwipeIndicator() {
     }
 }
 
-// Initialize scroll detection for auto-category-switch
+// Initialize scroll detection for manual category-switch (only on overscroll)
 function initializeScrollDetection() {
-    let scrollTimeout = null;
-    let hasTriggeredSwitch = false;
+    let lastScrollLeft = 0;
+    let atEndCount = 0;
+    let atStartCount = 0;
 
     document.querySelectorAll('.products-scroll-container').forEach((container, index) => {
         container.addEventListener('scroll', () => {
-            // Clear previous timeout
-            if (scrollTimeout) clearTimeout(scrollTimeout);
+            // Only check if this is the active category
+            if (index !== currentCategoryIndex) return;
 
-            // Wait for scroll to stop
-            scrollTimeout = setTimeout(() => {
-                // Only check if this is the active category
-                if (index !== currentCategoryIndex) return;
+            const scrollLeft = container.scrollLeft;
+            const scrollWidth = container.scrollWidth;
+            const clientWidth = container.clientWidth;
+            const maxScroll = scrollWidth - clientWidth;
 
-                const scrollLeft = container.scrollLeft;
-                const scrollWidth = container.scrollWidth;
-                const clientWidth = container.clientWidth;
-                const scrollRight = scrollWidth - scrollLeft - clientWidth;
-
-                // Check if at the end (with 20px threshold)
-                if (scrollRight < 20 && !hasTriggeredSwitch) {
-                    if (currentCategoryIndex < allMenuCategories.length - 1) {
-                        hasTriggeredSwitch = true;
-                        goToCategory(currentCategoryIndex + 1);
-                        // Reset scroll position of new category
-                        setTimeout(() => {
-                            const newContainer = document.querySelectorAll('.products-scroll-container')[currentCategoryIndex];
-                            if (newContainer) newContainer.scrollLeft = 0;
-                            hasTriggeredSwitch = false;
-                        }, 100);
-                    }
+            // Detect if user is trying to scroll further at the end
+            if (scrollLeft >= maxScroll - 2 && lastScrollLeft >= maxScroll - 2) {
+                atEndCount++;
+                // Only switch after multiple scroll attempts at the end
+                if (atEndCount > 5 && currentCategoryIndex < allMenuCategories.length - 1) {
+                    atEndCount = 0;
+                    goToCategory(currentCategoryIndex + 1);
+                    setTimeout(() => {
+                        const newContainer = document.querySelectorAll('.products-scroll-container')[currentCategoryIndex];
+                        if (newContainer) newContainer.scrollLeft = 0;
+                    }, 100);
                 }
-                // Check if at the beginning (scrolled back)
-                else if (scrollLeft < 20 && !hasTriggeredSwitch) {
-                    if (currentCategoryIndex > 0) {
-                        hasTriggeredSwitch = true;
-                        goToCategory(currentCategoryIndex - 1);
-                        // Scroll to end of previous category
-                        setTimeout(() => {
-                            const newContainer = document.querySelectorAll('.products-scroll-container')[currentCategoryIndex];
-                            if (newContainer) {
-                                newContainer.scrollLeft = newContainer.scrollWidth;
-                            }
-                            hasTriggeredSwitch = false;
-                        }, 100);
-                    }
+            } else {
+                atEndCount = 0;
+            }
+
+            // Detect if user is trying to scroll further at the beginning
+            if (scrollLeft <= 2 && lastScrollLeft <= 2) {
+                atStartCount++;
+                // Only switch after multiple scroll attempts at the start
+                if (atStartCount > 5 && currentCategoryIndex > 0) {
+                    atStartCount = 0;
+                    goToCategory(currentCategoryIndex - 1);
+                    setTimeout(() => {
+                        const newContainer = document.querySelectorAll('.products-scroll-container')[currentCategoryIndex];
+                        if (newContainer) {
+                            newContainer.scrollLeft = newContainer.scrollWidth;
+                        }
+                    }, 100);
                 }
-            }, 150);
+            } else {
+                atStartCount = 0;
+            }
+
+            lastScrollLeft = scrollLeft;
         }, { passive: true });
     });
 }
@@ -341,44 +343,49 @@ function initializeAutoScroll() {
     });
 }
 
-// Start auto-scroll animation
+// Start auto-scroll animation using requestAnimationFrame
 function startAutoScroll() {
-    if (autoScrollInterval) return;
+    if (autoScrollAnimationId) return;
 
-    autoScrollInterval = setInterval(() => {
-        if (autoScrollPaused) return;
+    function autoScrollStep() {
+        if (!autoScrollPaused) {
+            const containers = document.querySelectorAll('.products-scroll-container');
+            const container = containers[currentCategoryIndex];
 
-        const container = document.querySelectorAll('.products-scroll-container')[currentCategoryIndex];
-        if (!container) return;
+            if (container) {
+                const scrollLeft = container.scrollLeft;
+                const scrollWidth = container.scrollWidth;
+                const clientWidth = container.clientWidth;
+                const maxScroll = scrollWidth - clientWidth;
 
-        const scrollLeft = container.scrollLeft;
-        const scrollWidth = container.scrollWidth;
-        const clientWidth = container.clientWidth;
-        const maxScroll = scrollWidth - clientWidth;
-
-        // Check if at the end
-        if (scrollLeft >= maxScroll - 5) {
-            // Go to next category or loop back to first
-            if (currentCategoryIndex < allMenuCategories.length - 1) {
-                goToCategory(currentCategoryIndex + 1);
-                // Reset new category scroll to start
-                setTimeout(() => {
-                    const newContainer = document.querySelectorAll('.products-scroll-container')[currentCategoryIndex];
-                    if (newContainer) newContainer.scrollLeft = 0;
-                }, 100);
-            } else {
-                // Loop back to first category
-                goToCategory(0);
-                setTimeout(() => {
-                    const newContainer = document.querySelectorAll('.products-scroll-container')[0];
-                    if (newContainer) newContainer.scrollLeft = 0;
-                }, 100);
+                // Check if at the end
+                if (scrollLeft >= maxScroll - 2) {
+                    // Go to next category or loop back to first
+                    if (currentCategoryIndex < allMenuCategories.length - 1) {
+                        goToCategory(currentCategoryIndex + 1);
+                        setTimeout(() => {
+                            const newContainer = document.querySelectorAll('.products-scroll-container')[currentCategoryIndex];
+                            if (newContainer) newContainer.scrollLeft = 0;
+                        }, 100);
+                    } else {
+                        // Loop back to first category
+                        goToCategory(0);
+                        setTimeout(() => {
+                            const newContainer = document.querySelectorAll('.products-scroll-container')[0];
+                            if (newContainer) newContainer.scrollLeft = 0;
+                        }, 100);
+                    }
+                } else {
+                    // Slowly scroll right
+                    container.scrollLeft += AUTO_SCROLL_SPEED;
+                }
             }
-        } else {
-            // Slowly scroll right
-            container.scrollLeft += AUTO_SCROLL_SPEED;
         }
-    }, 30); // ~33fps for smooth scrolling
+
+        autoScrollAnimationId = requestAnimationFrame(autoScrollStep);
+    }
+
+    autoScrollAnimationId = requestAnimationFrame(autoScrollStep);
 }
 
 // Pause auto-scroll
