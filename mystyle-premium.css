@@ -474,6 +474,34 @@ h1, h2, h3, h4, h5, h6 {
     min-height: 400px;
 }
 
+/* Loading and Error States */
+.category-carousel .menu-loading,
+.category-carousel .menu-error {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    min-height: 300px;
+    text-align: center;
+    color: var(--warm-gray);
+}
+
+.category-carousel .menu-loading i {
+    font-size: 2rem;
+    margin-bottom: var(--spacing-md);
+    color: var(--gold);
+}
+
+.menu-error {
+    padding: var(--spacing-xl);
+}
+
+.menu-error p {
+    margin: 0;
+    font-family: var(--font-body);
+    font-size: 1rem;
+}
+
 /* Category Slides */
 .category-slide {
     display: none;

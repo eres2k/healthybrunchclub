@@ -27,6 +27,8 @@ document.addEventListener('DOMContentLoaded', function() {
 
 // Load menu categories from CMS
 async function loadMenuCategories() {
+    const carousel = document.getElementById('categoryCarousel');
+
     try {
         const response = await fetch('/.netlify/functions/get-menu');
 
@@ -44,6 +46,14 @@ async function loadMenuCategories() {
 
         if (allMenuCategories.length === 0) {
             console.warn('CMS Loader: No categories with images found');
+            // Show all categories even without images as fallback
+            allMenuCategories = menuData.filter(category => category.items && category.items.length > 0);
+        }
+
+        if (allMenuCategories.length === 0) {
+            if (carousel) {
+                carousel.innerHTML = '<p class="menu-error">Speisekarte wird aktualisiert...</p>';
+            }
             return;
         }
 
@@ -55,6 +65,17 @@ async function loadMenuCategories() {
 
     } catch (error) {
         console.error('CMS Loader: Error loading menu:', error);
+        // Show error state
+        if (carousel) {
+            carousel.innerHTML = `
+                <div class="menu-error">
+                    <p>Speisekarte konnte nicht geladen werden.</p>
+                    <a href="/menu.html" class="btn-view-menu" style="margin-top: 1rem;">
+                        <span>Zur Speisekarte</span>
+                    </a>
+                </div>
+            `;
+        }
     }
 }
 
