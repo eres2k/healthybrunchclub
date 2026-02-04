@@ -5,6 +5,7 @@ let allMenuCategories = [];
 let currentCategoryIndex = 0;
 let touchStartX = 0;
 let touchEndX = 0;
+let touchStartedInProducts = false;
 
 // Define the 6 allowed tags globally
 const ALLOWED_TAGS = ['vegetarisch', 'glutenfrei', 'proteinreich', 'sättigend', 'belebend', 'immunstärkend'];
@@ -260,6 +261,8 @@ function updateSwipeIndicator() {
 // Touch handlers for swipe
 function handleTouchStart(e) {
     touchStartX = e.changedTouches[0].screenX;
+    // Check if touch started inside the products scroll area
+    touchStartedInProducts = e.target.closest('.products-scroll-container') !== null;
 }
 
 function handleTouchEnd(e) {
@@ -268,6 +271,12 @@ function handleTouchEnd(e) {
 }
 
 function handleSwipe() {
+    // Don't trigger category swipe if user was scrolling products
+    if (touchStartedInProducts) {
+        touchStartedInProducts = false;
+        return;
+    }
+
     const swipeThreshold = 50;
     const diff = touchStartX - touchEndX;
 
