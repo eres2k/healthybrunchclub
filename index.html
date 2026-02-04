@@ -154,23 +154,53 @@
         </div>
     </section>
 
-    <!-- Featured Dishes Section -->
-    <section class="featured-dishes-section" id="menu">
-        <div class="featured-dishes-intro">
-            <h2 class="section-title">unsere highlights</h2>
-            <p class="section-subtitle">eine kleine auswahl unserer liebsten gerichte</p>
+    <!-- Menu Showcase Section -->
+    <section class="menu-showcase-section" id="menu">
+        <div class="menu-showcase-intro">
+            <h2 class="section-title">unsere speisekarte</h2>
+            <p class="section-subtitle">entdecke unsere kategorien</p>
         </div>
 
-        <!-- Featured Dishes Grid -->
-        <div class="featured-dishes-container" id="featuredDishesContainer">
-            <div class="menu-loading">
-                <i class="fas fa-spinner fa-spin"></i>
-                <p>wird geladen...</p>
+        <!-- Category Navigation Tabs -->
+        <div class="category-tabs-wrapper">
+            <button class="category-nav-arrow category-nav-left" aria-label="Vorherige Kategorie">
+                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <polyline points="15 18 9 12 15 6"></polyline>
+                </svg>
+            </button>
+            <div class="category-tabs-container">
+                <div class="category-tabs" id="categoryTabs">
+                    <!-- Category tabs will be populated dynamically -->
+                </div>
+            </div>
+            <button class="category-nav-arrow category-nav-right" aria-label="Nächste Kategorie">
+                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <polyline points="9 18 15 12 9 6"></polyline>
+                </svg>
+            </button>
+        </div>
+
+        <!-- Category Content Carousel -->
+        <div class="category-carousel-wrapper">
+            <div class="category-carousel" id="categoryCarousel">
+                <!-- Category slides with products will be populated dynamically -->
+                <div class="menu-loading">
+                    <i class="fas fa-spinner fa-spin"></i>
+                    <p>wird geladen...</p>
+                </div>
             </div>
         </div>
 
+        <!-- Swipe Indicator (Mobile) -->
+        <div class="swipe-indicator">
+            <span>wischen für mehr</span>
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <polyline points="9 18 15 12 9 6"></polyline>
+            </svg>
+        </div>
+
         <!-- View Full Menu CTA -->
-        <div class="featured-dishes-cta">
+        <div class="menu-showcase-cta">
             <a href="/menu.html" class="btn-view-menu">
                 <span>vollständige speisekarte ansehen</span>
                 <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">

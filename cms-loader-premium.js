@@ -1,12 +1,15 @@
-// CMS Loader Premium - Featured Dishes Display
-// Elegant random product showcase for homepage
+// CMS Loader Premium - Category Carousel Display
+// Swipeable category showcase for homepage
 
 let allMenuCategories = [];
+let currentCategoryIndex = 0;
+let touchStartX = 0;
+let touchEndX = 0;
 
 // Define the 6 allowed tags globally
 const ALLOWED_TAGS = ['vegetarisch', 'glutenfrei', 'proteinreich', 'sättigend', 'belebend', 'immunstärkend'];
 
-// Tag display names mapping - only for the 6 allowed tags
+// Tag display names mapping
 const TAG_DISPLAY_NAMES = {
     'vegetarisch': 'Vegetarisch',
     'glutenfrei': 'Glutenfrei',
@@ -18,19 +21,13 @@ const TAG_DISPLAY_NAMES = {
 
 // Initialize on DOM ready
 document.addEventListener('DOMContentLoaded', function() {
-    console.log('CMS Loader: Initializing featured dishes...');
-    loadFeaturedDishes();
+    console.log('CMS Loader: Initializing category carousel...');
+    loadMenuCategories();
 });
 
-// Load and display 3 random featured dishes
-async function loadFeaturedDishes() {
+// Load menu categories from CMS
+async function loadMenuCategories() {
     try {
-        const container = document.getElementById('featuredDishesContainer');
-        if (!container) {
-            console.warn('CMS Loader: Featured dishes container not found');
-            return;
-        }
-
         const response = await fetch('/.netlify/functions/get-menu');
 
         if (!response.ok) {
@@ -40,55 +37,74 @@ async function loadFeaturedDishes() {
         const menuData = await response.json();
         console.log('CMS Loader: Menu data loaded successfully');
 
-        allMenuCategories = menuData;
+        // Filter categories that have items with images
+        allMenuCategories = menuData.filter(category =>
+            category.items && category.items.some(item => item.image)
+        );
 
-        // Collect all items with images
-        const allItems = [];
-        menuData.forEach(category => {
-            if (category.items) {
-                category.items.forEach(item => {
-                    if (item.image) {
-                        allItems.push({
-                            ...item,
-                            category: category.title
-                        });
-                    }
-                });
-            }
-        });
+        if (allMenuCategories.length === 0) {
+            console.warn('CMS Loader: No categories with images found');
+            return;
+        }
 
-        // Shuffle and pick 3 random items
-        const shuffled = allItems.sort(() => Math.random() - 0.5);
-        const featuredItems = shuffled.slice(0, 3);
-
-        // Display the featured dishes
-        displayFeaturedDishes(featuredItems, container);
+        // Initialize the carousel
+        createCategoryTabs();
+        createCategorySlides();
+        initializeCarouselNavigation();
+        updateSwipeIndicator();
 
     } catch (error) {
-        console.error('CMS Loader: Error loading featured dishes:', error);
-        displayFallbackFeatured();
+        console.error('CMS Loader: Error loading menu:', error);
     }
 }
 
-// Display featured dishes in elegant cards
-function displayFeaturedDishes(items, container) {
-    if (!items || items.length === 0) {
-        container.innerHTML = '<p class="no-dishes">Speisekarte wird aktualisiert...</p>';
-        return;
-    }
+// Create category tabs
+function createCategoryTabs() {
+    const tabsContainer = document.getElementById('categoryTabs');
+    if (!tabsContainer) return;
 
-    const html = `
-        <div class="featured-dishes-grid">
-            ${items.map(item => createFeaturedCard(item)).join('')}
+    tabsContainer.innerHTML = allMenuCategories.map((category, index) => `
+        <button class="category-tab ${index === 0 ? 'active' : ''}"
+                data-index="${index}"
+                aria-selected="${index === 0}">
+            ${category.title}
+        </button>
+    `).join('');
+
+    // Add click handlers to tabs
+    tabsContainer.querySelectorAll('.category-tab').forEach(tab => {
+        tab.addEventListener('click', () => {
+            const index = parseInt(tab.dataset.index);
+            goToCategory(index);
+        });
+    });
+}
+
+// Create category slides with products
+function createCategorySlides() {
+    const carousel = document.getElementById('categoryCarousel');
+    if (!carousel) return;
+
+    carousel.innerHTML = allMenuCategories.map((category, index) => `
+        <div class="category-slide ${index === 0 ? 'active' : ''}" data-index="${index}">
+            <div class="category-slide-header">
+                <h3 class="category-slide-title">${category.title}</h3>
+                ${category.description ? `<p class="category-slide-description">${category.description}</p>` : ''}
+            </div>
+            <div class="products-scroll-container">
+                <div class="products-grid">
+                    ${category.items
+                        .filter(item => item.image)
+                        .map(item => createProductCard(item))
+                        .join('')}
+                </div>
+            </div>
         </div>
-    `;
-
-    container.innerHTML = html;
-    console.log('CMS Loader: Featured dishes displayed');
+    `).join('');
 }
 
-// Create elegant featured dish card (without price)
-function createFeaturedCard(item) {
+// Create product card (without price)
+function createProductCard(item) {
     const imgUrl = formatImageUrl(item.image);
     const webpSrcset = getWebPSrcset(item.image);
 
@@ -101,21 +117,19 @@ function createFeaturedCard(item) {
         : [];
 
     return `
-        <article class="featured-dish-card">
-            <div class="featured-dish-image">
+        <article class="product-card">
+            <div class="product-card-image">
                 <picture>
-                    <source srcset="${webpSrcset}" sizes="(max-width: 480px) 100vw, (max-width: 768px) 50vw, 400px" type="image/webp">
-                    <img src="${imgUrl}" alt="${item.name}" loading="lazy" width="400" height="300">
+                    <source srcset="${webpSrcset}" sizes="(max-width: 480px) 280px, 300px" type="image/webp">
+                    <img src="${imgUrl}" alt="${item.name}" loading="lazy" width="300" height="200">
                 </picture>
-                <div class="featured-dish-overlay"></div>
             </div>
-            <div class="featured-dish-content">
-                <span class="featured-dish-category">${item.category}</span>
-                <h3 class="featured-dish-name">${item.name}</h3>
-                <p class="featured-dish-description">${truncateDescription(item.description, 100)}</p>
+            <div class="product-card-content">
+                <h4 class="product-card-name">${item.name}</h4>
+                <p class="product-card-description">${truncateDescription(item.description, 80)}</p>
                 ${displayTags.length > 0 ? `
-                    <div class="featured-dish-tags">
-                        ${displayTags.map(tag => `<span class="featured-tag">${tag}</span>`).join('')}
+                    <div class="product-card-tags">
+                        ${displayTags.map(tag => `<span class="product-tag">${tag}</span>`).join('')}
                     </div>
                 ` : ''}
             </div>
@@ -123,45 +137,136 @@ function createFeaturedCard(item) {
     `;
 }
 
-// Truncate description to specified length
+// Initialize carousel navigation
+function initializeCarouselNavigation() {
+    const carousel = document.getElementById('categoryCarousel');
+    const leftArrow = document.querySelector('.category-nav-left');
+    const rightArrow = document.querySelector('.category-nav-right');
+
+    // Arrow navigation
+    if (leftArrow) {
+        leftArrow.addEventListener('click', () => navigateCategory(-1));
+    }
+    if (rightArrow) {
+        rightArrow.addEventListener('click', () => navigateCategory(1));
+    }
+
+    // Touch/swipe support
+    if (carousel) {
+        carousel.addEventListener('touchstart', handleTouchStart, { passive: true });
+        carousel.addEventListener('touchend', handleTouchEnd, { passive: true });
+    }
+
+    // Keyboard navigation
+    document.addEventListener('keydown', (e) => {
+        const menuSection = document.getElementById('menu');
+        if (!menuSection) return;
+
+        const rect = menuSection.getBoundingClientRect();
+        const isInView = rect.top < window.innerHeight && rect.bottom > 0;
+
+        if (isInView) {
+            if (e.key === 'ArrowLeft') {
+                navigateCategory(-1);
+            } else if (e.key === 'ArrowRight') {
+                navigateCategory(1);
+            }
+        }
+    });
+
+    updateArrowVisibility();
+}
+
+// Navigate to next/previous category
+function navigateCategory(direction) {
+    const newIndex = currentCategoryIndex + direction;
+    if (newIndex >= 0 && newIndex < allMenuCategories.length) {
+        goToCategory(newIndex);
+    }
+}
+
+// Go to specific category
+function goToCategory(index) {
+    if (index < 0 || index >= allMenuCategories.length) return;
+
+    currentCategoryIndex = index;
+
+    // Update tabs
+    document.querySelectorAll('.category-tab').forEach((tab, i) => {
+        tab.classList.toggle('active', i === index);
+        tab.setAttribute('aria-selected', i === index);
+    });
+
+    // Scroll active tab into view
+    const activeTab = document.querySelector('.category-tab.active');
+    if (activeTab) {
+        activeTab.scrollIntoView({ behavior: 'smooth', inline: 'center', block: 'nearest' });
+    }
+
+    // Update slides
+    document.querySelectorAll('.category-slide').forEach((slide, i) => {
+        slide.classList.toggle('active', i === index);
+    });
+
+    updateArrowVisibility();
+    updateSwipeIndicator();
+}
+
+// Update arrow visibility based on current position
+function updateArrowVisibility() {
+    const leftArrow = document.querySelector('.category-nav-left');
+    const rightArrow = document.querySelector('.category-nav-right');
+
+    if (leftArrow) {
+        leftArrow.classList.toggle('hidden', currentCategoryIndex === 0);
+    }
+    if (rightArrow) {
+        rightArrow.classList.toggle('hidden', currentCategoryIndex === allMenuCategories.length - 1);
+    }
+}
+
+// Update swipe indicator visibility
+function updateSwipeIndicator() {
+    const indicator = document.querySelector('.swipe-indicator');
+    if (indicator) {
+        // Hide indicator if on last category or on desktop
+        const isLastCategory = currentCategoryIndex === allMenuCategories.length - 1;
+        const isMobile = window.innerWidth <= 768;
+        indicator.style.display = (isMobile && !isLastCategory) ? 'flex' : 'none';
+    }
+}
+
+// Touch handlers for swipe
+function handleTouchStart(e) {
+    touchStartX = e.changedTouches[0].screenX;
+}
+
+function handleTouchEnd(e) {
+    touchEndX = e.changedTouches[0].screenX;
+    handleSwipe();
+}
+
+function handleSwipe() {
+    const swipeThreshold = 50;
+    const diff = touchStartX - touchEndX;
+
+    if (Math.abs(diff) > swipeThreshold) {
+        if (diff > 0) {
+            // Swipe left - go to next category
+            navigateCategory(1);
+        } else {
+            // Swipe right - go to previous category
+            navigateCategory(-1);
+        }
+    }
+}
+
+// Truncate description
 function truncateDescription(text, maxLength) {
     if (!text) return '';
-    // Remove markdown formatting
     let clean = text.replace(/\*\*(.*?)\*\*/g, '$1').replace(/\*(.*?)\*/g, '$1');
     if (clean.length <= maxLength) return clean;
     return clean.substring(0, maxLength).trim() + '...';
-}
-
-// Fallback featured dishes
-function displayFallbackFeatured() {
-    const container = document.getElementById('featuredDishesContainer');
-    if (!container) return;
-
-    const fallbackItems = [
-        {
-            name: 'Açaí Energy Bowl',
-            description: 'Açaí, Banane, Beeren, Granola, Kokosflocken - ein kraftvoller Start in den Tag',
-            image: '/content/images/acai-bowl.jpg',
-            category: 'Power Bowls',
-            tags: ['vegetarisch', 'immunstärkend']
-        },
-        {
-            name: 'Avocado Toast Deluxe',
-            description: 'Cremige Avocado auf knusprigem Sauerteigbrot mit pochierten Eiern',
-            image: '/content/images/avocado-toast.jpg',
-            category: 'Avocado Friends',
-            tags: ['vegetarisch', 'proteinreich']
-        },
-        {
-            name: 'Golden Turmeric Latte',
-            description: 'Kurkuma, Ingwer, schwarzer Pfeffer in cremiger Hafermilch',
-            image: '/content/images/turmeric-latte.jpg',
-            category: 'Coffee & Tea',
-            tags: ['vegetarisch', 'belebend']
-        }
-    ];
-
-    displayFeaturedDishes(fallbackItems, container);
 }
 
 // Format Image URL
@@ -180,12 +285,19 @@ function getWebPSrcset(url) {
     return `${basePath}-400w.${ext} 400w, ${basePath}-800w.${ext} 800w, ${basePath}.${ext} 1200w`;
 }
 
+// Handle window resize
+window.addEventListener('resize', () => {
+    updateSwipeIndicator();
+});
+
 // Export for global access
 window.cmsLoader = {
     refresh: function() {
-        console.log('CMS Loader: Refreshing featured dishes...');
-        loadFeaturedDishes();
-    }
+        console.log('CMS Loader: Refreshing categories...');
+        loadMenuCategories();
+    },
+    goToCategory: goToCategory,
+    getCurrentCategory: () => currentCategoryIndex
 };
 
-console.log('CMS Loader: Featured dishes module initialized.');
+console.log('CMS Loader: Category carousel module initialized.');
