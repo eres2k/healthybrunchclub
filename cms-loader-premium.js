@@ -247,7 +247,7 @@ function createProductCard(item) {
                 <div class="product-image">
                     <picture>
                         <source srcset="${webpSrcset}" sizes="(max-width: 480px) 92vw, (max-width: 768px) 80vw, 600px" type="image/webp">
-                        <img src="${imgUrl}" alt="${item.name}" loading="eager" width="600" height="400">
+                        <img src="${imgUrl}" alt="${item.name}" loading="lazy" width="600" height="400">
                     </picture>
                 </div>
             ` : `

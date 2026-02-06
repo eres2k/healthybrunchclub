@@ -29,6 +29,11 @@
     "height": 400,
     "format": "jpeg"
   },
+  "dsc00348.jpg": {
+    "width": 1336,
+    "height": 2000,
+    "format": "jpeg"
+  },
   "dsc00362_ergebnis.jpg": {
     "width": 1200,
     "height": 400,
@@ -54,6 +59,11 @@
     "height": 1027,
     "format": "jpeg"
   },
+  "gemini_generated_image_htwuibhtwuibhtwu.png": {
+    "width": 2000,
+    "height": 1562,
+    "format": "png"
+  },
   "img-20250806-wa0002.jpg": {
     "width": 1068,
     "height": 1600,
@@ -67,6 +77,16 @@
   "img-20250806-wa0005.jpg": {
     "width": 1066,
     "height": 1600,
+    "format": "jpeg"
+  },
+  "img_5251.jpg": {
+    "width": 2000,
+    "height": 1500,
+    "format": "jpeg"
+  },
+  "img_5252.jpg": {
+    "width": 2000,
+    "height": 1500,
     "format": "jpeg"
   },
   "logo.png": {
@@ -89,9 +109,39 @@
     "height": 496,
     "format": "png"
   },
+  "Logo-Pilzbrueder-180.png": {
+    "width": 190,
+    "height": 100,
+    "format": "png"
+  },
+  "logo-joseph-brot.png": {
+    "width": 300,
+    "height": 300,
+    "format": "png"
+  },
+  "logo-myhoney.png": {
+    "width": 2000,
+    "height": 580,
+    "format": "png"
+  },
+  "logo-sonnentor.png": {
+    "width": 700,
+    "height": 700,
+    "format": "png"
+  },
+  "logo_mykotheke.png": {
+    "width": 744,
+    "height": 179,
+    "format": "png"
+  },
   "screenshot-2025-07-13-152752.png": {
     "width": 617,
     "height": 618,
+    "format": "png"
+  },
+  "screenshot-2026-01-24-1324100.png": {
+    "width": 1181,
+    "height": 310,
     "format": "png"
   },
   "whatsapp-image-2025-09-17-at-09.50.29.jpeg": {

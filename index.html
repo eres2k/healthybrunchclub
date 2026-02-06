@@ -17,8 +17,9 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link rel="preconnect" href="https://cdnjs.cloudflare.com" crossorigin>
 
-    <!-- Preload critical assets -->
-    <link rel="preload" href="content/images/logo.webp" as="image" type="image/webp">
+    <!-- Preload critical LCP image -->
+    <link rel="preload" href="content/images/logo-400w.webp" as="image" type="image/webp" media="(max-width: 600px)">
+    <link rel="preload" href="content/images/logo-800w.webp" as="image" type="image/webp" media="(min-width: 601px)">
 
     <!-- Critical CSS inline for above-the-fold content -->
     <style>
@@ -41,14 +42,16 @@
         .hero-overlay{position:absolute;inset:0;background:linear-gradient(to bottom,rgba(0,0,0,.4),rgba(0,0,0,.7))}
     </style>
 
-    <!-- Main stylesheet -->
+    <!-- Main stylesheet - high priority -->
     <link rel="stylesheet" href="mystyle-premium.css">
 
-    <!-- Fonts - with display swap for better performance -->
-    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,300;0,400;0,500;0,700;1,400&family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,400&family=Montserrat:wght@300;400;500;600&family=Lato:wght@300;400&display=swap" rel="stylesheet">
+    <!-- Fonts - loaded async to avoid render blocking -->
+    <link rel="preload" href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@300;400;500;700&family=Cormorant+Garamond:wght@300;400;500;600&family=Montserrat:wght@300;400;500;600&family=Lato:wght@300;400&display=swap" as="style" onload="this.onload=null;this.rel='stylesheet'">
+    <noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@300;400;500;700&family=Cormorant+Garamond:wght@300;400;500;600&family=Montserrat:wght@300;400;500;600&family=Lato:wght@300;400&display=swap"></noscript>
 
-    <!-- Icons -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Icons - loaded async to avoid render blocking -->
+    <link rel="preload" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
+    <noscript><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"></noscript>
     
     <!-- Mobile Specific Inline Styles -->
     <style>
@@ -86,7 +89,7 @@
     <div class="loading-screen" id="loadingScreen">
         <div class="loading-content">
             <picture>
-                <source srcset="content/images/logo.webp" type="image/webp">
+                <source srcset="content/images/logo-400w.webp" type="image/webp">
                 <img src="content/images/logo.png" alt="Healthy Brunch Club" class="loading-logo" width="200" height="90" fetchpriority="high">
             </picture>
             <div class="loading-bar">
@@ -101,7 +104,7 @@
         <div class="nav-container">
             <a href="#home" class="logo-premium">
                 <picture>
-                    <source srcset="content/images/logo.webp" type="image/webp">
+                    <source srcset="content/images/logo-400w.webp" type="image/webp">
                     <img src="content/images/logo.png" alt="Healthy Brunch Club" class="logo-img" width="140" height="63">
                 </picture>
             </a>
@@ -127,7 +130,7 @@
     <!-- Hero Section -->
     <section class="hero-premium" id="home">
         <div class="hero-video-container">
-            <video class="hero-video" autoplay muted loop playsinline preload="metadata" poster="content/images/dsc00153_ergebnis.webp">
+            <video class="hero-video" autoplay muted loop playsinline preload="none" poster="content/images/dsc00153_ergebnis-800w.webp">
                 <source src="/content/videos/healthybrunchclub.mp4" type="video/mp4">
             </video>
             <div class="hero-overlay"></div>
@@ -137,8 +140,8 @@
             <h1 class="hero-title">
                 <span class="hero-subtitle">willkommen</span>
                 <picture>
-                    <source srcset="content/images/logo-400w.webp 400w, content/images/logo-800w.webp 800w, content/images/logo.webp 1246w" sizes="(max-width: 600px) 280px, (max-width: 900px) 400px, 500px" type="image/webp">
-                    <img src="content/images/logo.png" alt="Healthy Brunch Club" class="main-logo" width="500" height="225" loading="eager">
+                    <source srcset="content/images/logo-400w.webp 400w, content/images/logo-800w.webp 800w" sizes="(max-width: 600px) 280px, (max-width: 900px) 400px, 500px" type="image/webp">
+                    <img src="content/images/logo.png" alt="Healthy Brunch Club" class="main-logo" width="500" height="225" loading="eager" fetchpriority="high">
                 </picture>
                 <span class="hero-tagline">healthy food, elevated brunch</span>
             </h1>
@@ -432,7 +435,7 @@
         <div class="footer-content">
             <div class="footer-section">
                 <picture>
-                    <source srcset="content/images/logo-400w.webp" type="image/webp">
+                    <source srcset="content/images/logo-400w.webp 400w" sizes="150px" type="image/webp">
                     <img src="content/images/logo.png" alt="Healthy Brunch Club" class="footer-logo" width="150" height="68" loading="lazy">
                 </picture>
                 <p class="footer-tagline">healthy food, elevated brunch</p>
@@ -533,7 +536,6 @@
     </div>
 
     <!-- Scripts - defer for non-blocking load -->
-    <script defer src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
     <script defer src="cms-loader-premium.js"></script>
     <script defer src="app-premium.js"></script>
     <script>

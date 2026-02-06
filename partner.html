@@ -6,13 +6,15 @@
     <title>Partner - Healthy Brunch Club Wien</title>
     <meta name="description" content="Unsere Partner und Lieferanten - Healthy Brunch Club Wien">
 
-    <!-- Fonts -->
+    <!-- Fonts - loaded async to avoid render blocking -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,300;0,400;0,500;0,700;1,400&family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,400&family=Montserrat:wght@300;400;500;600&family=Lato:wght@300;400&display=swap" rel="stylesheet">
+    <link rel="preload" href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@300;400;500;700&family=Cormorant+Garamond:wght@300;400;500;600&family=Montserrat:wght@300;400;500;600&family=Lato:wght@300;400&display=swap" as="style" onload="this.onload=null;this.rel='stylesheet'">
+    <noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@300;400;500;700&family=Cormorant+Garamond:wght@300;400;500;600&family=Montserrat:wght@300;400;500;600&family=Lato:wght@300;400&display=swap"></noscript>
 
-    <!-- Icons -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Icons - loaded async to avoid render blocking -->
+    <link rel="preload" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
+    <noscript><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"></noscript>
 
     <!-- Styles -->
     <link rel="stylesheet" href="mystyle-premium.css">
@@ -233,7 +235,10 @@
     <nav class="nav-premium" id="navbar">
         <div class="nav-container">
             <a href="/" class="logo-premium">
-                <img src="content/images/logo.png" alt="Healthy Brunch Club" class="logo-img">
+                <picture>
+                    <source srcset="content/images/logo-400w.webp" type="image/webp">
+                    <img src="content/images/logo.png" alt="Healthy Brunch Club" class="logo-img" width="140" height="63">
+                </picture>
             </a>
 
             <ul class="nav-menu">
@@ -326,6 +331,6 @@
     </main>
 
     <!-- Scripts -->
-    <script src="app-premium.js"></script>
+    <script defer src="app-premium.js"></script>
 </body>
 </html>

@@ -6,6 +6,13 @@
 [build.environment]
   NODE_VERSION = "18"
 
+# Image optimization runs on every build via npm run build (scripts/optimize-images.js)
+# This ensures any new CMS uploads (content/images/) are automatically:
+# - Converted to WebP format
+# - Resized to responsive variants (400w, 800w, 1200w)
+# - Compressed (JPEG: mozjpeg q80, PNG: compression level 9)
+# - Capped at 2000px max dimension
+
 [functions]
   directory = "netlify/functions"
   # Include content files and reservations data in the function bundle
@@ -21,6 +28,11 @@
 # Cache static assets for better performance
 [[headers]]
   for = "/content/images/*.webp"
+  [headers.values]
+    Cache-Control = "public, max-age=31536000, immutable"
+
+[[headers]]
+  for = "/content/images/*.avif"
   [headers.values]
     Cache-Control = "public, max-age=31536000, immutable"
 
@@ -53,6 +65,12 @@
   for = "/*.css"
   [headers.values]
     Cache-Control = "public, max-age=86400"
+
+# HTML pages - allow revalidation
+[[headers]]
+  for = "/*.html"
+  [headers.values]
+    Cache-Control = "public, max-age=0, must-revalidate"
 
 # Legal pages redirects
 [[redirects]]

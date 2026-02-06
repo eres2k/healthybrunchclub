@@ -30,7 +30,7 @@ function initLoadingScreen() {
             if (loadingScreen) {
                 loadingScreen.classList.add('hidden');
             }
-        }, 2000);
+        }, 800);
     });
 }
 
@@ -333,25 +333,32 @@ function initAnimations() {
 // Video Optimization
 function initVideoOptimization() {
     const heroVideo = document.querySelector('.hero-video');
-    
+
     if (heroVideo) {
-        // Pause video when not in viewport
+        // On mobile: don't autoplay video at all (saves data, improves LCP)
+        if (window.innerWidth <= 768) {
+            heroVideo.removeAttribute('autoplay');
+            heroVideo.preload = 'none';
+            return;
+        }
+
+        // On desktop: lazy-load video only when in viewport
         const videoObserver = new IntersectionObserver(function(entries) {
             entries.forEach(entry => {
                 if (entry.isIntersecting) {
-                    heroVideo.play();
+                    // Load and play video when visible
+                    if (heroVideo.preload === 'none') {
+                        heroVideo.preload = 'auto';
+                        heroVideo.load();
+                    }
+                    heroVideo.play().catch(function() {});
                 } else {
                     heroVideo.pause();
                 }
             });
         });
-        
+
         videoObserver.observe(heroVideo);
-        
-        // Optimize for mobile
-        if (window.innerWidth <= 768) {
-            heroVideo.removeAttribute('autoplay');
-        }
     }
 }
 
