@@ -2399,14 +2399,23 @@ html {
 /* accessibility improvements */
 @media (prefers-reduced-motion: reduce) {
     .mobile-filter-modal,
-    .mobile-filter-content,
-    .category-hero,
-    .category-hero img,
-    .menu-item-card {
+    .mobile-filter-content {
         transition: none !important;
         animation: none !important;
     }
-   
+
+    .category-hero,
+    .category-hero img {
+        transition: opacity 0.3s ease !important;
+        animation: none !important;
+    }
+
+    .menu-item-card {
+        transition: opacity 0.3s ease !important;
+        animation: none !important;
+        opacity: 1 !important;
+    }
+
     .category-hero:hover img {
         transform: none !important;
     }
@@ -2476,23 +2485,23 @@ html {
         transform: translatey(0);
     }
 }
-/* disable animations on mobile for performance */
+/* lighter animations on mobile for performance */
 @media (max-width: 768px) {
     .category-hero {
         opacity: 1;
         transform: none;
-        transition: none;
+        transition: opacity 0.4s ease;
     }
-   
+
     .category-hero::after {
         display: none;
     }
-   
+
     .category-hero.loaded ~ .menu-grid .menu-item-card {
-        animation: none;
-        opacity: 1;
+        animation: fadein 0.4s ease forwards;
+        opacity: 0;
     }
-   
+
     .category-title-overlay {
         background: rgba(0, 0, 0, 0.3);
         padding: 0.5rem 1rem;
@@ -4011,10 +4020,22 @@ body.dark-mode video:hover {
 /* --- Premium Date Cards --- */
 .dates-grid {
   display: flex;
-  justify-content: center;
-  flex-wrap: wrap;
+  overflow-x: auto;
+  scroll-snap-type: x mandatory;
+  -webkit-overflow-scrolling: touch;
   gap: 1rem;
   margin: 2rem 0;
+  padding: 0.5rem 0 1rem;
+  scrollbar-width: none;
+}
+
+.dates-grid::-webkit-scrollbar {
+  display: none;
+}
+
+.dates-grid .date-card {
+  flex: 0 0 auto;
+  scroll-snap-align: start;
 }
 
 .date-card {
@@ -4371,25 +4392,13 @@ body.dark-mode video:hover {
 
 @media (max-width: 768px) {
   .dates-grid {
-    display: flex;
-    overflow-x: auto;
-    scroll-snap-type: x mandatory;
-    -webkit-overflow-scrolling: touch;
     gap: 0.625rem;
-    padding: 0.5rem 0 1rem;
     margin: 1rem 0;
-    scrollbar-width: none;
-  }
-
-  .dates-grid::-webkit-scrollbar {
-    display: none;
   }
 
   .date-card {
-    flex: 0 0 auto;
     width: 110px;
     min-width: 110px;
-    scroll-snap-align: start;
     padding: 0.75rem 0.5rem;
     border-radius: 12px;
     border-width: 1.5px;
@@ -7313,14 +7322,17 @@ body.dark-mode .product-allergens .allergen-code {
     }
 }
 
-/* Respect reduced motion */
+/* Respect reduced motion - allow simple opacity fades, remove transforms */
 @media (prefers-reduced-motion: reduce) {
     [data-reveal] {
-        opacity: 1 !important;
         transform: none !important;
         clip-path: none !important;
         filter: none !important;
-        transition: none !important;
+        transition: opacity 0.4s ease !important;
+    }
+
+    [data-reveal].revealed {
+        opacity: 1 !important;
     }
 
     .hero-premium .hero-content,
@@ -7329,7 +7341,7 @@ body.dark-mode .product-allergens .allergen-code {
     .hero-premium .hero-actions {
         opacity: 1 !important;
         transform: none !important;
-        transition: none !important;
+        transition: opacity 0.3s ease !important;
     }
 
     .section-title-line {
@@ -7347,9 +7359,12 @@ body.dark-mode .product-allergens .allergen-code {
     }
 
     [data-stagger] > * {
-        opacity: 1 !important;
         transform: none !important;
-        transition: none !important;
+        transition: opacity 0.3s ease !important;
+    }
+
+    [data-stagger].revealed > * {
+        opacity: 1 !important;
     }
 
     .gold-line::after,
@@ -7380,8 +7395,12 @@ body.dark-mode .product-allergens .allergen-code {
 
     .wow-section,
     .wow-paragraph {
-        opacity: 1 !important;
         transform: none !important;
-        transition: none !important;
+        transition: opacity 0.4s ease !important;
+    }
+
+    .wow-section.wow-visible,
+    .wow-paragraph.wow-visible {
+        opacity: 1 !important;
     }
 }

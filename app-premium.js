@@ -1029,18 +1029,11 @@ document.head.appendChild(style);
 // ===============================================
 
 function initScrollReveal() {
-    // Check for reduced motion preference
-    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
-        // Immediately show all elements
-        document.querySelectorAll('[data-reveal]').forEach(function(el) {
-            el.classList.add('revealed');
-        });
-        return;
-    }
-
     var revealElements = document.querySelectorAll('[data-reveal]');
     if (!revealElements.length) return;
 
+    // Use IntersectionObserver for all cases (including reduced motion)
+    // CSS handles the visual difference — reduced motion gets simple fade, full motion gets transforms
     var revealObserver = new IntersectionObserver(function(entries) {
         entries.forEach(function(entry) {
             if (entry.isIntersecting) {
@@ -1049,13 +1042,22 @@ function initScrollReveal() {
             }
         });
     }, {
-        threshold: 0.15,
-        rootMargin: '0px 0px -60px 0px'
+        threshold: 0.1,
+        rootMargin: '0px 0px -40px 0px'
     });
 
     revealElements.forEach(function(el) {
         revealObserver.observe(el);
     });
+
+    // Safety fallback: ensure elements become visible even if observer fails
+    setTimeout(function() {
+        revealElements.forEach(function(el) {
+            if (!el.classList.contains('revealed')) {
+                el.classList.add('revealed');
+            }
+        });
+    }, 5000);
 }
 
 // Hero entrance animation
@@ -1085,16 +1087,21 @@ function initHeroEntrance() {
 // ===============================================
 
 function initPremiumEffects() {
-    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+    var reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
+    // Always run these — they handle visibility and are safe for reduced motion
     initScrollProgress();
-    initHeroScrollFade();
     initStaggerReveal();
-    initMagneticButtons();
-    initCursorGlow();
-    initParallaxFloat();
     initSmoothCounters();
     initScrollWowEffects();
+
+    // Only run heavy visual effects when full motion is allowed
+    if (!reducedMotion) {
+        initHeroScrollFade();
+        initMagneticButtons();
+        initCursorGlow();
+        initParallaxFloat();
+    }
 }
 
 // --- Scroll Progress Bar ---
