@@ -10,6 +10,12 @@ document.addEventListener('DOMContentLoaded', function() {
 });
 
 function initializeApp() {
+    // Ensure page starts at the top (prevent mobile scroll restoration)
+    if ('scrollRestoration' in history) {
+        history.scrollRestoration = 'manual';
+    }
+    window.scrollTo(0, 0);
+
     // Initialize all components
     initLoadingScreen();
     initNavigation();

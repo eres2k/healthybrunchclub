@@ -147,9 +147,9 @@ function renderActiveCategory() {
         return;
     }
 
-    // Clamp product index
-    if (activeProductIndex >= category.items.length) activeProductIndex = 0;
-    if (activeProductIndex < 0) activeProductIndex = category.items.length - 1;
+    // Clamp product index to valid range (no wrapping)
+    if (activeProductIndex >= category.items.length) activeProductIndex = category.items.length - 1;
+    if (activeProductIndex < 0) activeProductIndex = 0;
 
     const total = category.items.length;
 
@@ -196,14 +196,57 @@ function renderActiveCategory() {
     updateAllergenLegend(category);
 }
 
+function switchToCategory(newCatIndex, startAtEnd) {
+    if (newCatIndex < 0 || newCatIndex >= allMenuCategories.length) return;
+
+    activeCategoryIndex = newCatIndex;
+    const newCat = allMenuCategories[newCatIndex];
+    activeProductIndex = startAtEnd ? (newCat.items.length - 1) : 0;
+
+    updateCategoryNav();
+
+    // Fade-out then render new category
+    const container = document.getElementById('menuContainer');
+    if (container) {
+        container.style.transition = 'opacity 0.2s ease';
+        container.style.opacity = '0';
+        setTimeout(() => {
+            renderActiveCategory();
+            container.style.opacity = '1';
+            isAnimating = false;
+        }, 200);
+    } else {
+        renderActiveCategory();
+        isAnimating = false;
+    }
+}
+
 function slideToProduct(newIndex) {
     if (isAnimating) return;
     const category = allMenuCategories[activeCategoryIndex];
     if (!category || !category.items) return;
 
     const total = category.items.length;
-    if (newIndex < 0) newIndex = total - 1;
-    if (newIndex >= total) newIndex = 0;
+
+    // Cross-category navigation instead of wrapping
+    if (newIndex >= total) {
+        // Past last product → go to next category (first product)
+        if (activeCategoryIndex < allMenuCategories.length - 1) {
+            isAnimating = true;
+            switchToCategory(activeCategoryIndex + 1, false);
+            return;
+        }
+        return; // already at last product of last category, do nothing
+    }
+    if (newIndex < 0) {
+        // Before first product → go to previous category (last product)
+        if (activeCategoryIndex > 0) {
+            isAnimating = true;
+            switchToCategory(activeCategoryIndex - 1, true);
+            return;
+        }
+        return; // already at first product of first category, do nothing
+    }
     if (newIndex === activeProductIndex) return;
 
     isAnimating = true;
@@ -212,8 +255,6 @@ function slideToProduct(newIndex) {
 
     // Determine slide direction for momentum feel
     const direction = newIndex > activeProductIndex ? 1 : -1;
-    const isWrapping = (activeProductIndex === 0 && newIndex === total - 1) ||
-                       (activeProductIndex === total - 1 && newIndex === 0);
 
     activeProductIndex = newIndex;
 
@@ -370,8 +411,10 @@ function setupSwipe(el) {
             let dragPercent = (distX / el.offsetWidth) * 100;
             const category = allMenuCategories[activeCategoryIndex];
             const total = category ? category.items.length : 0;
-            const atEdge = (activeProductIndex === 0 && distX > 0) || (activeProductIndex === total - 1 && distX < 0);
-            if (atEdge) {
+            // Only apply rubber-band at the absolute edges (first product of first category, last product of last category)
+            const atAbsoluteStart = activeCategoryIndex === 0 && activeProductIndex === 0 && distX > 0;
+            const atAbsoluteEnd = activeCategoryIndex === allMenuCategories.length - 1 && activeProductIndex === total - 1 && distX < 0;
+            if (atAbsoluteStart || atAbsoluteEnd) {
                 dragPercent *= 0.3; // rubber-band resistance
             }
 
