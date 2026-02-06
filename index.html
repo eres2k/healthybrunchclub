@@ -156,13 +156,13 @@
 
     <!-- Premium Menu Section -->
     <section class="menu-premium" id="menu">
-        <div class="menu-intro">
-            <h2 class="section-title">unsere speisekarte</h2>
+        <div class="menu-intro" data-reveal="fade-up">
+            <h2 class="section-title">unsere speisekarte<span class="section-title-line"></span></h2>
             <p class="section-subtitle">mit gutem Gewissen genießen</p>
         </div>
 
         <!-- Modern Menu Downloads Section -->
-        <div class="menu-downloads-section">
+        <div class="menu-downloads-section" data-reveal="fade-up" data-delay="1">
             <!-- Main Menus - Primary Row -->
             <div class="menu-downloads-grid menu-grid-primary">
                 <a href="/content/HBC_DE_MENU.pdf" download="Healthy-Brunch-Club-Speisekarte.pdf" class="menu-download-card">
@@ -285,12 +285,12 @@
         </div>
 
         <!-- Category Carousel Navigation -->
-        <div class="category-carousel-nav" id="categoryFilters">
+        <div class="category-carousel-nav" id="categoryFilters" data-reveal="fade-up" data-delay="2">
             <!-- Category tabs populated dynamically -->
         </div>
 
         <!-- Menu Content - Single Product Carousel -->
-        <div class="menu-content" id="menuContainer">
+        <div class="menu-content" id="menuContainer" data-reveal="scale-in" data-delay="3">
             <div class="menu-loading">
                 <i class="fas fa-spinner fa-spin"></i>
                 <p>speisekarte wird geladen...</p>
@@ -309,8 +309,8 @@
     <!-- About Section -->
     <section class="about-premium" id="about">
         <div class="about-container">
-            <div class="about-content">
-                <h2 class="section-title">unsere geschichte</h2>
+            <div class="about-content" data-reveal="slide-left">
+                <h2 class="section-title">unsere geschichte<span class="section-title-line"></span></h2>
                 <p class="about-lead">
                     was einst als einfaches geburtstagsritual begann, lebt heute in unserem brunchlokal weiter.
                 </p>
@@ -330,7 +330,7 @@
                     kommt vorbei, bruncht mit uns!
                 </p>
             </div>
-            <div class="about-image">
+            <div class="about-image" data-reveal="slide-right">
                 <picture>
                     <source srcset="content/images/p38-400w.webp 400w, content/images/p38.webp 658w" sizes="(max-width: 768px) 100vw, 400px" type="image/webp">
                     <img src="content/images/p38.png" alt="Die Gründerinnen" class="founder-image" width="658" height="496" loading="lazy">
@@ -343,10 +343,12 @@
     <!-- Reservation Section -->
     <section id="reservierung" class="section-padding elegant-section">
       <div class="container">
-        <h2 class="section-title">Reservierung</h2>
-        <p class="section-subtitle">Wählen Sie Ihr gewünschtes Datum</p>
+        <div data-reveal="fade-up">
+            <h2 class="section-title">Reservierung<span class="section-title-line"></span></h2>
+            <p class="section-subtitle">Wählen Sie Ihr gewünschtes Datum</p>
+        </div>
 
-        <div id="reservation-container">
+        <div id="reservation-container" data-reveal="fade-up" data-delay="2">
           <!-- Step 1: Date Selection -->
           <div id="date-selection" class="reservation-step active">
             <h3 class="step-title">Verfügbare Termine</h3>
@@ -430,7 +432,7 @@
     <!-- Premium Footer -->
     <footer class="footer-premium">
         <div class="footer-content">
-            <div class="footer-section">
+            <div class="footer-section" data-reveal="fade-up">
                 <picture>
                     <source srcset="content/images/logo-400w.webp" type="image/webp">
                     <img src="content/images/logo.png" alt="Healthy Brunch Club" class="footer-logo" width="150" height="68" loading="lazy">
@@ -443,7 +445,7 @@
                 </div>
             </div>
             
-            <div class="footer-section">
+            <div class="footer-section" data-reveal="fade-up" data-delay="1">
                 <h4>kontakt</h4>
                 <address>
                     neubaugasse 15<br>
@@ -452,7 +454,7 @@
                 </address>
             </div>
             
-            <div class="footer-section">
+            <div class="footer-section" data-reveal="fade-up" data-delay="2">
                 <h4>newsletter</h4>
                 <p>exklusive einblicke und events</p>
                 <form name="newsletter" method="POST" data-netlify="true" class="newsletter-form">

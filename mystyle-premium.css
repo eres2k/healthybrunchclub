@@ -2040,50 +2040,50 @@ address a:hover {
 /* hero mobile fixes */
 @media (max-width: 768px) {
     .hero-content {
-        padding: var(--spacing-md) !important;
+        padding: var(--spacing-md) var(--spacing-sm) !important;
     }
 
     .hero-title .main-logo {
-        width: clamp(80px, 25vw, 120px) !important;
+        width: clamp(200px, 55vw, 300px) !important;
     }
 
     .hero-actions {
         flex-direction: column !important;
-        gap: var(--spacing-sm) !important;
+        gap: 0.75rem !important;
     }
 
     .btn-luxury {
         width: 100% !important;
-        padding: 1rem !important;
-        font-size: 0.875rem !important;
+        padding: 0.875rem 1.5rem !important;
+        font-size: 0.8rem !important;
     }
 }
 /* typography mobile */
 @media (max-width: 768px) {
     .section-title {
-        font-size: 2rem !important;
+        font-size: clamp(1.6rem, 6vw, 2rem) !important;
         margin-bottom: var(--spacing-sm) !important;
     }
-   
+
     .section-subtitle {
-        font-size: 1rem !important;
+        font-size: clamp(0.85rem, 3vw, 1rem) !important;
         margin-bottom: var(--spacing-md) !important;
     }
-   
+
     .hero-title {
-        font-size: 2rem !important;
+        font-size: clamp(1.5rem, 5vw, 2rem) !important;
     }
-   
+
     .hero-subtitle {
-        font-size: 0.75rem !important;
+        font-size: clamp(0.65rem, 2.5vw, 0.8rem) !important;
     }
-   
+
     .hero-tagline {
-        font-size: 1rem !important;
+        font-size: clamp(0.9rem, 3.5vw, 1.15rem) !important;
     }
-   
+
     .category-name {
-        font-size: 1.75rem !important;
+        font-size: clamp(1.3rem, 5vw, 1.75rem) !important;
     }
 }
 /* ensure hamburger menu is visible on mobile */
@@ -6040,5 +6040,741 @@ body.dark-mode .product-allergens .allergen-code {
 
     .product-name {
         font-size: 1.3rem;
+    }
+}
+
+/* ===============================================
+   AWWWARDS-STYLE SCROLL ANIMATIONS
+   Smooth reveals, parallax, stagger effects
+   =============================================== */
+
+/* Base reveal states */
+[data-reveal] {
+    opacity: 0;
+    will-change: transform, opacity;
+}
+
+[data-reveal="fade-up"] {
+    transform: translateY(60px);
+    transition: opacity 0.9s cubic-bezier(0.25, 0.46, 0.45, 0.94),
+                transform 0.9s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+}
+
+[data-reveal="fade-up"].revealed {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+[data-reveal="fade-in"] {
+    transition: opacity 1s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+}
+
+[data-reveal="fade-in"].revealed {
+    opacity: 1;
+}
+
+[data-reveal="slide-left"] {
+    transform: translateX(-80px);
+    transition: opacity 0.9s cubic-bezier(0.25, 0.46, 0.45, 0.94),
+                transform 0.9s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+}
+
+[data-reveal="slide-left"].revealed {
+    opacity: 1;
+    transform: translateX(0);
+}
+
+[data-reveal="slide-right"] {
+    transform: translateX(80px);
+    transition: opacity 0.9s cubic-bezier(0.25, 0.46, 0.45, 0.94),
+                transform 0.9s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+}
+
+[data-reveal="slide-right"].revealed {
+    opacity: 1;
+    transform: translateX(0);
+}
+
+[data-reveal="scale-in"] {
+    transform: scale(0.92);
+    transition: opacity 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94),
+                transform 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+}
+
+[data-reveal="scale-in"].revealed {
+    opacity: 1;
+    transform: scale(1);
+}
+
+[data-reveal="clip-up"] {
+    clip-path: inset(100% 0 0 0);
+    transition: clip-path 1s cubic-bezier(0.77, 0, 0.175, 1),
+                opacity 0.6s ease;
+}
+
+[data-reveal="clip-up"].revealed {
+    opacity: 1;
+    clip-path: inset(0 0 0 0);
+}
+
+/* Stagger delay support via data-delay */
+[data-delay="1"] { transition-delay: 0.1s; }
+[data-delay="2"] { transition-delay: 0.2s; }
+[data-delay="3"] { transition-delay: 0.3s; }
+[data-delay="4"] { transition-delay: 0.4s; }
+[data-delay="5"] { transition-delay: 0.5s; }
+[data-delay="6"] { transition-delay: 0.6s; }
+
+/* Hero entrance animation */
+.hero-premium .hero-content {
+    opacity: 0;
+    transform: translateY(40px);
+    transition: opacity 1.2s cubic-bezier(0.25, 0.46, 0.45, 0.94) 0.5s,
+                transform 1.2s cubic-bezier(0.25, 0.46, 0.45, 0.94) 0.5s;
+}
+
+.hero-premium .hero-content.hero-loaded {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+.hero-premium .hero-subtitle {
+    opacity: 0;
+    transform: translateY(20px);
+    transition: opacity 0.8s ease 0.8s, transform 0.8s ease 0.8s;
+}
+
+.hero-premium .hero-content.hero-loaded .hero-subtitle {
+    opacity: 0.8;
+    transform: translateY(0);
+}
+
+.hero-premium .hero-tagline {
+    opacity: 0;
+    transform: translateY(20px);
+    transition: opacity 0.8s ease 1s, transform 0.8s ease 1s;
+}
+
+.hero-premium .hero-content.hero-loaded .hero-tagline {
+    opacity: 0.9;
+    transform: translateY(0);
+}
+
+.hero-premium .hero-actions {
+    opacity: 0;
+    transform: translateY(20px);
+    transition: opacity 0.8s ease 1.2s, transform 0.8s ease 1.2s;
+}
+
+.hero-premium .hero-content.hero-loaded .hero-actions {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+/* Smooth line reveal for section titles */
+.section-title-line {
+    display: block;
+    width: 50px;
+    height: 1px;
+    background: var(--gold);
+    margin: var(--spacing-sm) auto 0;
+    transform: scaleX(0);
+    transition: transform 0.8s cubic-bezier(0.77, 0, 0.175, 1) 0.3s;
+}
+
+.revealed .section-title-line {
+    transform: scaleX(1);
+}
+
+/* Parallax scroll effect for images */
+.parallax-img {
+    will-change: transform;
+    transition: transform 0.1s linear;
+}
+
+/* Smooth counter for carousel */
+.carousel-counter {
+    transition: opacity 0.3s ease;
+}
+
+/* Enhanced carousel slide transitions */
+.product-slide-track {
+    transition: transform 0.6s cubic-bezier(0.23, 1, 0.32, 1);
+}
+
+/* ===============================================
+   ENHANCED MOBILE LAYOUT
+   Premium mobile-first experience
+   =============================================== */
+
+@media (max-width: 768px) {
+    /* -- Hero Section Mobile -- */
+    .hero-premium {
+        min-height: 100svh;
+        min-height: 100vh;
+    }
+
+    .hero-content {
+        padding: var(--spacing-md) var(--spacing-sm) !important;
+        max-width: 100%;
+    }
+
+    .hero-title .main-logo {
+        width: clamp(200px, 55vw, 300px) !important;
+        margin: var(--spacing-xs) auto;
+    }
+
+    .hero-subtitle {
+        font-size: clamp(0.65rem, 2.5vw, 0.8rem) !important;
+        letter-spacing: 0.15em;
+    }
+
+    .hero-tagline {
+        font-size: clamp(0.9rem, 3.5vw, 1.15rem) !important;
+        margin-top: 0.5rem;
+    }
+
+    .hero-actions {
+        flex-direction: column !important;
+        gap: 0.75rem !important;
+        padding: 0 var(--spacing-sm);
+        max-width: 320px;
+        margin: 0 auto;
+    }
+
+    .btn-luxury {
+        width: 100% !important;
+        padding: 0.875rem 1.5rem !important;
+        font-size: 0.8rem !important;
+        text-align: center;
+        letter-spacing: 0.08em;
+    }
+
+    .scroll-indicator {
+        bottom: 1.5rem;
+    }
+
+    .scroll-arrow {
+        width: 22px;
+        height: 22px;
+    }
+
+    /* -- Navigation Mobile -- */
+    .nav-container {
+        padding: 0.75rem 1rem;
+    }
+
+    .logo-img {
+        height: 40px;
+    }
+
+    .nav-menu.active {
+        gap: 0 !important;
+        padding: var(--spacing-sm) var(--spacing-md) !important;
+    }
+
+    .nav-menu.active .nav-link {
+        padding: 0.875rem 0;
+        font-size: 0.8rem;
+        letter-spacing: 0.06em;
+    }
+
+    .nav-menu.active .nav-cta {
+        margin-top: 0.5rem;
+        padding: 0.875rem !important;
+        font-size: 0.8rem !important;
+    }
+
+    /* -- Menu Section Mobile -- */
+    .menu-premium {
+        padding: var(--spacing-lg) 0 !important;
+    }
+
+    .menu-intro {
+        margin-bottom: var(--spacing-lg) !important;
+        padding: 0 var(--spacing-sm);
+    }
+
+    .menu-intro .section-title {
+        font-size: clamp(1.6rem, 6vw, 2rem) !important;
+    }
+
+    .menu-intro .section-subtitle {
+        font-size: clamp(0.85rem, 3vw, 1rem) !important;
+    }
+
+    /* -- Menu Downloads Mobile -- */
+    .menu-downloads-section {
+        padding: 0 var(--spacing-sm);
+        margin-bottom: var(--spacing-md);
+    }
+
+    .menu-grid-primary {
+        grid-template-columns: 1fr 1fr !important;
+        gap: 8px !important;
+    }
+
+    .menu-grid-secondary-home {
+        grid-template-columns: 1fr 1fr 1fr !important;
+        gap: 6px !important;
+    }
+
+    .menu-download-card {
+        padding: 12px 10px !important;
+        gap: 8px !important;
+        border-radius: 12px !important;
+    }
+
+    .menu-card-icon {
+        width: 36px !important;
+        height: 36px !important;
+        border-radius: 8px !important;
+    }
+
+    .menu-card-icon svg {
+        width: 16px !important;
+        height: 16px !important;
+    }
+
+    .menu-card-title {
+        font-size: 12px !important;
+    }
+
+    .menu-card-label {
+        font-size: 8px !important;
+    }
+
+    .menu-card-lang {
+        font-size: 10px !important;
+    }
+
+    .menu-card-download {
+        width: 28px !important;
+        height: 28px !important;
+    }
+
+    .menu-card-download svg {
+        width: 14px !important;
+        height: 14px !important;
+    }
+
+    .menu-grid-secondary-home .menu-download-card {
+        padding: 8px 6px !important;
+        flex-direction: column;
+        text-align: center;
+        gap: 4px !important;
+    }
+
+    .menu-grid-secondary-home .menu-card-download {
+        display: none;
+    }
+
+    .menu-grid-secondary-home .menu-card-icon {
+        width: 32px !important;
+        height: 32px !important;
+        margin: 0 auto;
+    }
+
+    .menu-grid-secondary-home .menu-card-content {
+        align-items: center;
+    }
+
+    .menu-grid-secondary-home .menu-card-title {
+        font-size: 10px !important;
+    }
+
+    .menu-grid-secondary-home .menu-card-label {
+        font-size: 7px !important;
+    }
+
+    /* -- Category Carousel Nav Mobile -- */
+    .category-carousel-nav {
+        padding: 0 var(--spacing-sm) !important;
+        margin-bottom: var(--spacing-sm) !important;
+        gap: 2px;
+    }
+
+    .cat-tab {
+        padding: 0.5rem 0.875rem !important;
+        font-size: clamp(0.55rem, 2.5vw, 0.7rem) !important;
+    }
+
+    /* -- Product Carousel Mobile -- */
+    .product-carousel {
+        padding: 0 !important;
+        max-width: 100% !important;
+    }
+
+    .product-carousel-inner {
+        gap: 4px !important;
+        padding: 0 var(--spacing-xs);
+    }
+
+    .carousel-btn {
+        width: 32px !important;
+        height: 32px !important;
+        font-size: 0.65rem !important;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    }
+
+    .product-image {
+        border-radius: 12px !important;
+        margin-bottom: var(--spacing-sm) !important;
+    }
+
+    .product-info {
+        padding: 0 var(--spacing-xs) !important;
+    }
+
+    .product-name {
+        font-size: clamp(1.15rem, 4.5vw, 1.5rem) !important;
+        margin-bottom: 0.25rem;
+    }
+
+    .product-description {
+        font-size: clamp(0.75rem, 2.8vw, 0.85rem) !important;
+        line-height: 1.6;
+        margin-bottom: 0.5rem;
+    }
+
+    .product-tags .menu-tag {
+        font-size: 0.55rem !important;
+        padding: 0.2rem 0.5rem !important;
+    }
+
+    .product-allergens {
+        font-size: 0.65rem !important;
+    }
+
+    .carousel-dots {
+        gap: 8px !important;
+        margin-top: var(--spacing-sm) !important;
+    }
+
+    .carousel-dot {
+        width: 6px !important;
+        height: 6px !important;
+    }
+
+    .carousel-dot.active {
+        width: 20px !important;
+    }
+
+    .carousel-counter {
+        font-size: 0.6rem !important;
+        margin-top: 0.25rem !important;
+    }
+
+    /* -- About Section Mobile -- */
+    .about-premium {
+        padding: var(--spacing-lg) 0 !important;
+    }
+
+    .about-container {
+        padding: 0 var(--spacing-sm) !important;
+        gap: var(--spacing-md) !important;
+    }
+
+    .about-content {
+        padding-right: 0 !important;
+        margin-bottom: 0 !important;
+    }
+
+    .about-content .section-title {
+        font-size: clamp(1.6rem, 6vw, 2rem) !important;
+    }
+
+    .about-lead {
+        font-size: clamp(1.1rem, 3.5vw, 1.3rem) !important;
+        line-height: 1.5;
+    }
+
+    .about-content p {
+        font-size: clamp(0.85rem, 3vw, 0.95rem) !important;
+        line-height: 1.7;
+        margin-bottom: var(--spacing-sm) !important;
+    }
+
+    .about-cta {
+        font-size: clamp(1rem, 3.5vw, 1.15rem) !important;
+        font-weight: 500;
+    }
+
+    .about-image {
+        margin: 0 !important;
+        border-radius: 12px;
+        overflow: hidden;
+    }
+
+    .image-caption {
+        font-size: 0.75rem !important;
+        margin-top: 0.5rem;
+    }
+
+    /* -- Reservation Section Mobile -- */
+    .elegant-section {
+        padding: var(--spacing-lg) 0 !important;
+    }
+
+    .elegant-section .container {
+        padding: 0 var(--spacing-sm);
+    }
+
+    .elegant-section .section-title {
+        font-size: clamp(1.6rem, 6vw, 2rem) !important;
+    }
+
+    .elegant-section .section-subtitle {
+        font-size: clamp(0.85rem, 3vw, 1rem) !important;
+    }
+
+    .step-title {
+        font-size: clamp(1.1rem, 4vw, 1.4rem) !important;
+        margin-bottom: var(--spacing-sm);
+    }
+
+    .dates-grid {
+        gap: 0.5rem !important;
+    }
+
+    .date-card {
+        padding: 0.875rem 0.5rem !important;
+    }
+
+    .date-card h4 {
+        font-size: clamp(0.65rem, 2.5vw, 0.8rem) !important;
+    }
+
+    .date-card .date-day {
+        font-size: clamp(1.5rem, 6vw, 2rem) !important;
+    }
+
+    .date-card .date-month {
+        font-size: clamp(0.65rem, 2.5vw, 0.8rem) !important;
+    }
+
+    .time-slots-grid {
+        gap: 0.5rem !important;
+    }
+
+    .time-slot {
+        padding: 0.75rem !important;
+    }
+
+    .slot-time {
+        font-size: clamp(0.9rem, 3.5vw, 1.1rem) !important;
+    }
+
+    .elegant-form .form-group label {
+        font-size: 0.8rem !important;
+    }
+
+    .elegant-form .form-group input,
+    .elegant-form .form-group select,
+    .elegant-form .form-group textarea {
+        padding: 0.875rem !important;
+        font-size: 16px !important;
+    }
+
+    .submit-button,
+    .back-button,
+    .reset-button {
+        font-size: 0.8rem !important;
+        padding: 0.875rem 1.5rem !important;
+    }
+
+    /* -- Footer Mobile -- */
+    .footer-premium {
+        padding: var(--spacing-lg) 0 var(--spacing-sm) !important;
+    }
+
+    .footer-content {
+        grid-template-columns: 1fr !important;
+        gap: var(--spacing-md) !important;
+        text-align: center !important;
+        padding: 0 var(--spacing-sm) !important;
+    }
+
+    .footer-section h4 {
+        font-size: 1rem;
+        margin-bottom: var(--spacing-sm);
+    }
+
+    .footer-logo {
+        width: 100px;
+        margin: 0 auto var(--spacing-xs);
+    }
+
+    .footer-tagline {
+        font-size: 0.85rem;
+    }
+
+    .social-links {
+        justify-content: center;
+    }
+
+    .social-links a {
+        width: 36px;
+        height: 36px;
+        font-size: 0.9rem;
+    }
+
+    address {
+        font-size: 0.85rem;
+        line-height: 1.7;
+    }
+
+    .newsletter-form {
+        max-width: 300px;
+        margin: var(--spacing-xs) auto 0;
+    }
+
+    .newsletter-form input {
+        padding: 0.625rem;
+        font-size: 0.85rem;
+    }
+
+    .btn-newsletter {
+        padding: 0.625rem 1rem;
+    }
+
+    .footer-bottom {
+        padding-top: var(--spacing-md);
+        font-size: 0.75rem;
+    }
+
+    .footer-bottom a {
+        margin: 0 0.5rem;
+    }
+
+    .footer-bottom .creator-credit {
+        font-size: 0.65rem;
+    }
+
+    /* -- Allergen Info Mobile -- */
+    .allergen-info {
+        margin: var(--spacing-md) var(--spacing-sm) 0 !important;
+        padding: var(--spacing-sm) !important;
+    }
+
+    .allergen-title {
+        font-size: 0.8rem !important;
+    }
+
+    .allergen-grid {
+        gap: 0.375rem !important;
+    }
+
+    .allergen-item {
+        font-size: 0.7rem !important;
+    }
+
+    /* -- Chatbot Mobile -- */
+    .chatbot-window {
+        width: calc(100vw - 1.5rem) !important;
+        max-width: 380px !important;
+        max-height: 70vh !important;
+        bottom: 60px !important;
+        right: 0.75rem !important;
+    }
+
+    .chatbot-toggle {
+        width: 48px !important;
+        height: 48px !important;
+    }
+
+    .chatbot-label {
+        display: none;
+    }
+
+    #chatbotInput {
+        font-size: 16px !important;
+    }
+}
+
+/* -- Extra small screens (< 375px) -- */
+@media (max-width: 375px) {
+    .hero-title .main-logo {
+        width: 180px !important;
+    }
+
+    .hero-subtitle {
+        font-size: 0.6rem !important;
+    }
+
+    .btn-luxury {
+        font-size: 0.75rem !important;
+        padding: 0.75rem 1rem !important;
+    }
+
+    .menu-grid-secondary-home {
+        grid-template-columns: 1fr 1fr 1fr !important;
+    }
+
+    .menu-grid-secondary-home .menu-card-title {
+        font-size: 9px !important;
+    }
+
+    .about-lead {
+        font-size: 1rem !important;
+    }
+
+    .about-content p {
+        font-size: 0.82rem !important;
+    }
+
+    .footer-content {
+        padding: 0 0.75rem !important;
+    }
+}
+
+/* -- Landscape mode mobile -- */
+@media (max-width: 768px) and (orientation: landscape) {
+    .hero-premium {
+        min-height: auto;
+        padding: var(--spacing-xl) 0;
+    }
+
+    .hero-title .main-logo {
+        width: 150px !important;
+    }
+
+    .hero-actions {
+        flex-direction: row !important;
+        max-width: 100%;
+    }
+
+    .btn-luxury {
+        width: auto !important;
+        padding: 0.625rem 1.5rem !important;
+        font-size: 0.7rem !important;
+    }
+}
+
+/* Respect reduced motion */
+@media (prefers-reduced-motion: reduce) {
+    [data-reveal] {
+        opacity: 1 !important;
+        transform: none !important;
+        clip-path: none !important;
+        transition: none !important;
+    }
+
+    .hero-premium .hero-content,
+    .hero-premium .hero-subtitle,
+    .hero-premium .hero-tagline,
+    .hero-premium .hero-actions {
+        opacity: 1 !important;
+        transform: none !important;
+        transition: none !important;
+    }
+
+    .section-title-line {
+        transform: scaleX(1) !important;
+        transition: none !important;
+    }
+
+    .product-slide-track {
+        transition: transform 0.3s ease !important;
     }
 }
