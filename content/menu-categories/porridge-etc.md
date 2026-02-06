@@ -49,8 +49,4 @@ items:
       vegan: true
       glutenFree: true
       lactoseFree: true
-  - special: false
-    name: extra
-    description: mit 15g protein geschmacksneutral +2,50
-    image: /content/images/screenshot-2026-01-24-1324100.png
 ---

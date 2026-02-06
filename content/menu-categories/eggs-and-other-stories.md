@@ -83,31 +83,4 @@ items:
 
 
       **your style:** speck / lachs
-  - name: extras
-    tags:
-      - optional
-      - zusatz
-      - proteinreich
-    description: |-
-      personalisiere dein gericht mit diesen extras:
-
-      * ei nach wunsch: 1.90
-      * käse: 1.50
-      * halbe avocado: 1,50
-      * biospeck: 2.50
-      * biolachs: 2.50
-      * pilzmix: 1.90
-      * zwei scheiben sauerteigbrot vom joseph: 2.50
-      * Süsskartoffel Scheiben (glutenfreie alternative): 2,50
-    allergens:
-      - c
-      - g
-      - d
-      - a
-    nutrition:
-      calories: ""
-      protein: ""
-      carbs: ""
-      fat: ""
-    image: /content/images/screenshot-2026-01-24-1324100.png
 ---

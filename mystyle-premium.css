@@ -5399,518 +5399,6 @@ body.dark-mode .info-modal-content p:last-child {
     }
 }
 
-/* ===============================================
-   SMART MENU RECOMMENDATIONS
-   =============================================== */
-
-.recommendations-section {
-    max-width: 1200px;
-    margin: 0 auto var(--spacing-lg);
-    padding: 0 var(--spacing-md);
-}
-
-.recommendations-header {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    margin-bottom: var(--spacing-md);
-    text-align: center;
-}
-
-.recommendations-title {
-    display: flex;
-    align-items: center;
-    gap: 0.75rem;
-    margin-bottom: 0.5rem;
-}
-
-.recommendations-title h3 {
-    font-family: var(--font-display);
-    font-size: 1.5rem;
-    font-weight: 400;
-    color: var(--charcoal);
-    margin: 0;
-}
-
-.sparkle-icon {
-    font-size: 1.25rem;
-}
-
-.preferences-btn {
-    background: none;
-    border: 1px solid var(--light-gray);
-    border-radius: 50%;
-    width: 32px;
-    height: 32px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    cursor: pointer;
-    color: var(--warm-gray);
-    transition: all var(--transition-fast);
-}
-
-.preferences-btn:hover {
-    border-color: var(--gold);
-    color: var(--gold);
-    background: rgba(201, 169, 97, 0.1);
-}
-
-.recommendations-subtitle {
-    font-family: var(--font-light);
-    font-size: 0.9rem;
-    color: var(--warm-gray);
-    margin: 0;
-}
-
-/* Carousel container */
-.recommendations-carousel {
-    position: relative;
-    display: flex;
-    align-items: center;
-    gap: 0.5rem;
-}
-
-.recommendations-track {
-    display: flex;
-    gap: 1rem;
-    overflow-x: auto;
-    scroll-behavior: smooth;
-    scrollbar-width: none;
-    -ms-overflow-style: none;
-    padding: 0.5rem 0;
-    flex: 1;
-}
-
-.recommendations-track::-webkit-scrollbar {
-    display: none;
-}
-
-/* Carousel arrows */
-.carousel-arrow {
-    flex-shrink: 0;
-    width: 40px;
-    height: 40px;
-    border-radius: 50%;
-    background: var(--pure-white);
-    border: 1px solid var(--light-gray);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    cursor: pointer;
-    color: var(--charcoal);
-    transition: all var(--transition-fast);
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
-    z-index: 2;
-}
-
-.carousel-arrow:hover {
-    border-color: var(--gold);
-    color: var(--gold);
-    box-shadow: 0 4px 12px rgba(201, 169, 97, 0.2);
-}
-
-/* Recommendation cards */
-.recommendation-card {
-    flex-shrink: 0;
-    width: 260px;
-    background: var(--pure-white);
-    border-radius: 16px;
-    overflow: hidden;
-    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
-    cursor: pointer;
-    transition: all var(--transition-normal);
-}
-
-.recommendation-card:hover {
-    transform: translateY(-4px);
-    box-shadow: 0 8px 30px rgba(0, 0, 0, 0.12);
-}
-
-.recommendation-image {
-    width: 100%;
-    height: 140px;
-    overflow: hidden;
-    background: var(--cream);
-}
-
-.recommendation-image img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-    transition: transform var(--transition-normal);
-}
-
-.recommendation-card:hover .recommendation-image img {
-    transform: scale(1.05);
-}
-
-.recommendation-image-placeholder {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-}
-
-.recommendation-icon {
-    font-size: 3rem;
-}
-
-.recommendation-content {
-    padding: 1rem;
-}
-
-.recommendation-name {
-    font-family: var(--font-display);
-    font-size: 1.1rem;
-    font-weight: 500;
-    margin: 0 0 0.5rem;
-    color: var(--charcoal);
-}
-
-.recommendation-tags {
-    display: block;
-    font-size: 0.75rem;
-    color: var(--sage);
-    margin-bottom: 0.5rem;
-    font-weight: 500;
-    text-transform: uppercase;
-    letter-spacing: 0.05em;
-}
-
-.recommendation-reason {
-    display: block;
-    font-size: 0.8rem;
-    color: var(--warm-gray);
-    margin-bottom: 0.5rem;
-    font-style: italic;
-}
-
-.recommendation-price {
-    display: block;
-    font-family: var(--font-body);
-    font-size: 1rem;
-    font-weight: 500;
-    color: var(--gold);
-}
-
-/* Loading state */
-.recommendation-loading {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 0.75rem;
-    padding: 2rem;
-    color: var(--warm-gray);
-    width: 100%;
-}
-
-.recommendation-loading i {
-    color: var(--gold);
-}
-
-/* Highlight animation for selected menu item */
-.menu-item-card.highlight-card {
-    animation: highlight-pulse 2s ease;
-}
-
-@keyframes highlight-pulse {
-    0%, 100% {
-        box-shadow: 0 3px 20px rgba(0, 0, 0, 0.06);
-    }
-    25%, 75% {
-        box-shadow: 0 0 0 4px var(--gold), 0 8px 30px rgba(201, 169, 97, 0.3);
-    }
-}
-
-/* ===============================================
-   PREFERENCES MODAL
-   =============================================== */
-
-.preferences-modal-overlay {
-    position: fixed;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    background: rgba(0, 0, 0, 0.5);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    z-index: 9999;
-    opacity: 0;
-    visibility: hidden;
-    transition: all var(--transition-normal);
-    padding: 1rem;
-}
-
-.preferences-modal-overlay.active {
-    opacity: 1;
-    visibility: visible;
-}
-
-.preferences-modal {
-    background: var(--pure-white);
-    border-radius: 20px;
-    max-width: 480px;
-    width: 100%;
-    max-height: 90vh;
-    overflow-y: auto;
-    position: relative;
-    transform: translateY(20px);
-    transition: transform var(--transition-normal);
-}
-
-.preferences-modal-overlay.active .preferences-modal {
-    transform: translateY(0);
-}
-
-.preferences-modal-close {
-    position: absolute;
-    top: 1rem;
-    right: 1rem;
-    background: var(--light-gray);
-    border: none;
-    width: 36px;
-    height: 36px;
-    border-radius: 50%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    cursor: pointer;
-    color: var(--warm-gray);
-    transition: all var(--transition-fast);
-}
-
-.preferences-modal-close:hover {
-    background: var(--gold);
-    color: var(--pure-white);
-}
-
-.preferences-modal-content {
-    padding: 2rem;
-}
-
-.preferences-modal-content h3 {
-    font-family: var(--font-display);
-    font-size: 1.5rem;
-    margin: 0 0 0.5rem;
-    display: flex;
-    align-items: center;
-    gap: 0.5rem;
-    color: var(--charcoal);
-}
-
-.preferences-modal-content h3 i {
-    color: var(--gold);
-}
-
-.preferences-intro {
-    color: var(--warm-gray);
-    margin-bottom: 1.5rem;
-    font-size: 0.95rem;
-}
-
-.preferences-section {
-    margin-bottom: 1.5rem;
-}
-
-.preferences-section h4 {
-    font-family: var(--font-body);
-    font-size: 0.85rem;
-    text-transform: uppercase;
-    letter-spacing: 0.1em;
-    color: var(--warm-gray);
-    margin-bottom: 0.75rem;
-}
-
-.preferences-options {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 0.5rem;
-}
-
-.preference-chip {
-    display: inline-flex;
-    cursor: pointer;
-}
-
-.preference-chip input {
-    display: none;
-}
-
-.preference-chip span {
-    display: inline-flex;
-    align-items: center;
-    gap: 0.5rem;
-    padding: 0.6rem 1rem;
-    border: 1px solid var(--light-gray);
-    border-radius: 100px;
-    font-size: 0.9rem;
-    color: var(--charcoal);
-    transition: all var(--transition-fast);
-    background: var(--pure-white);
-}
-
-.preference-chip:hover span {
-    border-color: var(--gold);
-}
-
-.preference-chip input:checked + span {
-    background: var(--gold);
-    border-color: var(--gold);
-    color: var(--pure-white);
-}
-
-.preferences-actions {
-    margin-top: 1.5rem;
-    display: flex;
-    justify-content: center;
-}
-
-.btn-save-preferences {
-    background: var(--charcoal);
-    color: var(--pure-white);
-    border: none;
-    padding: 1rem 2rem;
-    border-radius: 100px;
-    font-family: var(--font-body);
-    font-size: 0.95rem;
-    font-weight: 500;
-    cursor: pointer;
-    transition: all var(--transition-fast);
-}
-
-.btn-save-preferences:hover {
-    background: var(--gold);
-    transform: translateY(-2px);
-    box-shadow: 0 4px 12px rgba(201, 169, 97, 0.3);
-}
-
-/* ===============================================
-   RECOMMENDATIONS DARK MODE
-   =============================================== */
-
-body.dark-mode .recommendations-title h3 {
-    color: var(--charcoal);
-}
-
-body.dark-mode .preferences-btn {
-    border-color: var(--light-gray);
-    color: var(--warm-gray);
-}
-
-body.dark-mode .preferences-btn:hover {
-    border-color: var(--gold);
-    color: var(--gold);
-}
-
-body.dark-mode .carousel-arrow {
-    background: #1a1a1a;
-    border-color: var(--light-gray);
-    color: var(--charcoal);
-}
-
-body.dark-mode .carousel-arrow:hover {
-    border-color: var(--gold);
-    color: var(--gold);
-}
-
-body.dark-mode .recommendation-card {
-    background: #1a1a1a;
-    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
-}
-
-body.dark-mode .recommendation-card:hover {
-    box-shadow: 0 8px 30px rgba(0, 0, 0, 0.4);
-}
-
-body.dark-mode .recommendation-image {
-    background: var(--light-gray);
-}
-
-body.dark-mode .recommendation-name {
-    color: var(--charcoal);
-}
-
-body.dark-mode .recommendation-reason {
-    color: var(--warm-gray);
-}
-
-body.dark-mode .preferences-modal {
-    background: #1a1a1a;
-}
-
-body.dark-mode .preferences-modal-close {
-    background: #333;
-    color: var(--charcoal);
-}
-
-body.dark-mode .preferences-modal-content h3 {
-    color: var(--charcoal);
-}
-
-body.dark-mode .preferences-intro {
-    color: var(--warm-gray);
-}
-
-body.dark-mode .preference-chip span {
-    background: #222;
-    border-color: var(--light-gray);
-    color: var(--charcoal);
-}
-
-body.dark-mode .preference-chip input:checked + span {
-    background: var(--gold);
-    border-color: var(--gold);
-    color: var(--pure-white);
-}
-
-body.dark-mode .btn-save-preferences {
-    background: var(--gold);
-}
-
-body.dark-mode .btn-save-preferences:hover {
-    background: var(--sage);
-}
-
-/* ===============================================
-   RECOMMENDATIONS MOBILE RESPONSIVE
-   =============================================== */
-
-@media (max-width: 768px) {
-    .recommendations-section {
-        padding: 0 var(--spacing-sm);
-        margin-bottom: var(--spacing-md);
-    }
-
-    .recommendations-title h3 {
-        font-size: 1.25rem;
-    }
-
-    .carousel-arrow {
-        display: none;
-    }
-
-    .recommendation-card {
-        width: 220px;
-    }
-
-    .recommendation-image {
-        height: 120px;
-    }
-
-    .recommendation-content {
-        padding: 0.75rem;
-    }
-
-    .recommendation-name {
-        font-size: 1rem;
-    }
-
-    .preferences-modal-content {
-        padding: 1.5rem;
-    }
-}
 
 /* ===============================================
    MENU LAYOUT OPTIMIZATIONS FOR SMALLER SCREENS
@@ -6233,8 +5721,21 @@ body.dark-mode .cat-tab.active {
     position: relative;
 }
 
-.product-slide {
+/* Viewport clips overflow, track slides within it */
+.product-slide-viewport {
     flex: 1;
+    min-width: 0;
+    overflow: hidden;
+}
+
+.product-slide-track {
+    display: flex;
+    transition: transform 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+    will-change: transform;
+}
+
+.product-slide {
+    flex: 0 0 100%;
     min-width: 0;
 }
 
@@ -6261,7 +5762,12 @@ body.dark-mode .cat-tab.active {
 .carousel-btn:hover {
     border-color: var(--gold);
     color: var(--gold);
-    transform: scale(1.05);
+    transform: scale(1.08);
+    box-shadow: 0 4px 16px rgba(201, 169, 97, 0.2);
+}
+
+.carousel-btn:active {
+    transform: scale(0.95);
 }
 
 body.dark-mode .carousel-btn {
@@ -6280,7 +5786,7 @@ body.dark-mode .carousel-btn:hover {
 .carousel-dots {
     display: flex;
     justify-content: center;
-    gap: 8px;
+    gap: 10px;
     margin-top: var(--spacing-md);
 }
 
@@ -6292,16 +5798,18 @@ body.dark-mode .carousel-btn:hover {
     background: var(--light-gray);
     cursor: pointer;
     padding: 0;
-    transition: all var(--transition-fast);
+    transition: all 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
 }
 
 .carousel-dot.active {
     background: var(--gold);
-    transform: scale(1.3);
+    width: 24px;
+    border-radius: 4px;
 }
 
 .carousel-dot:hover:not(.active) {
     background: var(--warm-gray);
+    transform: scale(1.3);
 }
 
 body.dark-mode .carousel-dot {
@@ -6339,9 +5847,15 @@ body.dark-mode .carousel-counter {
     width: 100%;
     aspect-ratio: 3 / 2;
     overflow: hidden;
-    border-radius: 12px;
+    border-radius: 16px;
     margin-bottom: var(--spacing-md);
     background: var(--cream);
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.06);
+    transition: box-shadow 0.4s ease;
+}
+
+.product-card:hover .product-image {
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
 }
 
 .product-image img {
@@ -6349,11 +5863,11 @@ body.dark-mode .carousel-counter {
     height: 100%;
     object-fit: cover;
     display: block;
-    transition: transform 0.6s ease;
+    transition: transform 0.7s cubic-bezier(0.25, 0.46, 0.45, 0.94);
 }
 
 .product-card:hover .product-image img {
-    transform: scale(1.03);
+    transform: scale(1.04);
 }
 
 .product-image-placeholder {
