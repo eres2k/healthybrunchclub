@@ -144,8 +144,8 @@
             </h1>
             
             <div class="hero-actions">
-                <a href="#menu" class="btn-luxury btn-primary">speisekarte entdecken</a>
-                <a href="#reservierung" class="btn-luxury btn-secondary">tisch reservieren</a>
+                <a href="#menu" class="btn-luxury btn-primary btn-magnetic">speisekarte entdecken</a>
+                <a href="#reservierung" class="btn-luxury btn-secondary btn-magnetic">tisch reservieren</a>
             </div>
         </div>
         
@@ -154,17 +154,20 @@
         </div>
     </section>
 
+    <div class="section-divider"></div>
+
     <!-- Premium Menu Section -->
     <section class="menu-premium" id="menu">
-        <div class="menu-intro" data-reveal="fade-up">
+        <div class="menu-intro" data-reveal="blur-in">
             <h2 class="section-title">unsere speisekarte<span class="section-title-line"></span></h2>
+            <span class="gold-line"></span>
             <p class="section-subtitle">mit gutem Gewissen genießen</p>
         </div>
 
         <!-- Modern Menu Downloads Section -->
         <div class="menu-downloads-section" data-reveal="fade-up" data-delay="1">
             <!-- Main Menus - Primary Row -->
-            <div class="menu-downloads-grid menu-grid-primary">
+            <div class="menu-downloads-grid menu-grid-primary" data-stagger>
                 <a href="/content/HBC_DE_MENU.pdf" download="Healthy-Brunch-Club-Speisekarte.pdf" class="menu-download-card">
                     <div class="menu-card-icon">
                         <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
@@ -176,7 +179,7 @@
                     </div>
                     <div class="menu-card-content">
                         <span class="menu-card-label">HBC</span>
-                        <span class="menu-card-title">Speisekarte</span>
+                        <span class="menu-card-title">Menu</span>
                         <span class="menu-card-lang">Deutsch</span>
                     </div>
                     <div class="menu-card-download">
@@ -213,7 +216,7 @@
             </div>
 
             <!-- Secondary Menus Row -->
-            <div class="menu-downloads-grid menu-grid-secondary-home">
+            <div class="menu-downloads-grid menu-grid-secondary-home" data-stagger>
                 <a href="/content/HBC_KIDS_MENU.pdf" download="Healthy-Brunch-Club-Kids-Menu.pdf" class="menu-download-card menu-card-kids">
                     <div class="menu-card-icon">
                         <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
@@ -248,7 +251,7 @@
                     </div>
                     <div class="menu-card-content">
                         <span class="menu-card-label">LASA</span>
-                        <span class="menu-card-title">Speisekarte</span>
+                        <span class="menu-card-title">Menu</span>
                         <span class="menu-card-lang">Deutsch</span>
                     </div>
                     <div class="menu-card-download">
@@ -297,20 +300,26 @@
             </div>
         </div>
 
-        <!-- Allergen Legend -->
-        <div class="allergen-info" id="allergenLegend" style="display: none;">
-            <h4 class="allergen-title">allergeninformationen</h4>
+        <!-- Allergen Legend (collapsible) -->
+        <details class="allergen-info allergen-collapsible" id="allergenLegend" style="display: none;">
+            <summary class="allergen-toggle">
+                <h4 class="allergen-title">allergeninformationen</h4>
+                <span class="allergen-toggle-icon"><i class="fas fa-chevron-down"></i></span>
+            </summary>
             <div class="allergen-grid">
                 <!-- Allergens will be added dynamically -->
             </div>
-        </div>
+        </details>
     </section>
+
+    <div class="section-divider"></div>
 
     <!-- About Section -->
     <section class="about-premium" id="about">
         <div class="about-container">
-            <div class="about-content" data-reveal="slide-left">
+            <div class="about-content" data-reveal="fade-up">
                 <h2 class="section-title">unsere geschichte<span class="section-title-line"></span></h2>
+                <span class="gold-line"></span>
                 <p class="about-lead">
                     was einst als einfaches geburtstagsritual begann, lebt heute in unserem brunchlokal weiter.
                 </p>
@@ -330,9 +339,9 @@
                     kommt vorbei, bruncht mit uns!
                 </p>
             </div>
-            <div class="about-image" data-reveal="slide-right">
+            <div class="about-image" data-reveal="zoom-in" data-delay="2">
                 <picture>
-                    <source srcset="content/images/p38-400w.webp 400w, content/images/p38.webp 658w" sizes="(max-width: 768px) 100vw, 400px" type="image/webp">
+                    <source srcset="content/images/p38-400w.webp 400w, content/images/p38.webp 658w" sizes="(max-width: 768px) 100vw, 600px" type="image/webp">
                     <img src="content/images/p38.png" alt="Die Gründerinnen" class="founder-image" width="658" height="496" loading="lazy">
                 </picture>
                 <div class="image-caption">die drei schwestern – vereint in ihrer vision</div>
@@ -340,11 +349,14 @@
         </div>
     </section>
 
+    <div class="section-divider"></div>
+
     <!-- Reservation Section -->
     <section id="reservierung" class="section-padding elegant-section">
       <div class="container">
-        <div data-reveal="fade-up">
+        <div data-reveal="blur-in">
             <h2 class="section-title">Reservierung<span class="section-title-line"></span></h2>
+            <span class="gold-line"></span>
             <p class="section-subtitle">Wählen Sie Ihr gewünschtes Datum</p>
         </div>
 
@@ -429,9 +441,11 @@
       </div>
     </section>
 
+    <div class="section-divider"></div>
+
     <!-- Premium Footer -->
     <footer class="footer-premium">
-        <div class="footer-content">
+        <div class="footer-content" data-stagger>
             <div class="footer-section" data-reveal="fade-up">
                 <picture>
                     <source srcset="content/images/logo-400w.webp" type="image/webp">
