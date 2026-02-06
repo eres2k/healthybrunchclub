@@ -47,21 +47,6 @@ items:
       protein: 7g
       carbs: 14g
       fat: 6g
-  - special: false
-    name: extras
-    price: ""
-    description: |-
-      trinke deinen Kaffee mit 
-
-      15g protein von ESN geschmacksneutral +1,50
-
-      1﻿0g kollagen von animalbased.de
-
-
-
-      (vegane) milchalternativen:
-
-      hafer, soja, kokos, lactosefrei kostenlos
   - name: fenchel–anis–kümmel
     tags:
       - erfrischend
@@ -120,13 +105,6 @@ items:
     description: aromatischer chai mit wärmenden gewürzen wie zimt und ingwer
       (entzündungshemmend & antioxidativ)
     name: chai-tea (latte)
-extras:
-  - name: whey protein (esn, geschmacksneutral)
-    price: "1.90"
-  - name: vegane milchalternative (hafer, soja, kokos)
-    price: "2.50"
-  - name: shot warmes wasser mit bio-zitrone oder fermentiertem apfelessig
-    price: kostenlos
 facts:
   adaptogene: natürliche pflanzenstoffe, die helfen, sich besser an
     stresssituationen anzupassen und das innere gleichgewicht zu fördern.

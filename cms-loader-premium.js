@@ -120,7 +120,9 @@ function scrollActiveTabIntoView() {
     }
 }
 
-// --- Product Carousel (single product visible) ---
+// --- Product Carousel (smooth sliding) ---
+
+let isAnimating = false;
 
 function renderActiveCategory() {
     const container = document.getElementById('menuContainer');
@@ -136,14 +138,17 @@ function renderActiveCategory() {
     if (activeProductIndex >= category.items.length) activeProductIndex = 0;
     if (activeProductIndex < 0) activeProductIndex = category.items.length - 1;
 
-    const item = category.items[activeProductIndex];
     const total = category.items.length;
 
     container.innerHTML = `
         <div class="product-carousel">
             <div class="product-carousel-inner">
                 ${total > 1 ? `<button class="carousel-btn carousel-btn-prev" aria-label="Vorheriges Gericht"><i class="fas fa-chevron-left"></i></button>` : ''}
-                <div class="product-slide">${createProductCard(item)}</div>
+                <div class="product-slide-viewport">
+                    <div class="product-slide-track" style="transform: translateX(-${activeProductIndex * 100}%)">
+                        ${category.items.map(item => `<div class="product-slide">${createProductCard(item)}</div>`).join('')}
+                    </div>
+                </div>
                 ${total > 1 ? `<button class="carousel-btn carousel-btn-next" aria-label="Nächstes Gericht"><i class="fas fa-chevron-right"></i></button>` : ''}
             </div>
             ${total > 1 ? `
@@ -164,25 +169,60 @@ function renderActiveCategory() {
     // Dot navigation
     container.querySelectorAll('.carousel-dot').forEach(dot => {
         dot.addEventListener('click', (e) => {
-            activeProductIndex = parseInt(e.currentTarget.dataset.idx);
-            renderActiveCategory();
+            const idx = parseInt(e.currentTarget.dataset.idx);
+            if (idx !== activeProductIndex) {
+                slideToProduct(idx);
+            }
         });
     });
 
     // Touch/swipe support
-    setupSwipe(container.querySelector('.product-carousel-inner'));
+    setupSwipe(container.querySelector('.product-slide-viewport'));
 
     // Allergen legend
     updateAllergenLegend(category);
 }
 
-function navigateProduct(direction) {
+function slideToProduct(newIndex) {
+    if (isAnimating) return;
     const category = allMenuCategories[activeCategoryIndex];
     if (!category || !category.items) return;
-    activeProductIndex += direction;
-    if (activeProductIndex >= category.items.length) activeProductIndex = 0;
-    if (activeProductIndex < 0) activeProductIndex = category.items.length - 1;
-    renderActiveCategory();
+
+    const total = category.items.length;
+    if (newIndex < 0) newIndex = total - 1;
+    if (newIndex >= total) newIndex = 0;
+    if (newIndex === activeProductIndex) return;
+
+    isAnimating = true;
+    const track = document.querySelector('.product-slide-track');
+    if (!track) { isAnimating = false; return; }
+
+    activeProductIndex = newIndex;
+
+    // Slide the track
+    track.style.transform = `translateX(-${activeProductIndex * 100}%)`;
+
+    // Update dots
+    document.querySelectorAll('.carousel-dot').forEach((dot, i) => {
+        dot.classList.toggle('active', i === activeProductIndex);
+    });
+
+    // Update counter
+    const counter = document.querySelector('.carousel-counter');
+    if (counter) counter.textContent = `${activeProductIndex + 1} / ${total}`;
+
+    // Wait for transition to end
+    const onEnd = () => {
+        isAnimating = false;
+        track.removeEventListener('transitionend', onEnd);
+    };
+    track.addEventListener('transitionend', onEnd);
+    // Fallback in case transitionend doesn't fire
+    setTimeout(() => { isAnimating = false; }, 600);
+}
+
+function navigateProduct(direction) {
+    slideToProduct(activeProductIndex + direction);
 }
 
 // --- Product Card (no price, large image, minimal) ---
@@ -232,20 +272,49 @@ function setupSwipe(el) {
     let startX = 0;
     let startY = 0;
     let distX = 0;
+    let distY = 0;
+    let isDragging = false;
 
     el.addEventListener('touchstart', (e) => {
+        if (isAnimating) return;
         startX = e.touches[0].clientX;
         startY = e.touches[0].clientY;
         distX = 0;
+        distY = 0;
+        isDragging = true;
+
+        const track = el.querySelector('.product-slide-track');
+        if (track) track.style.transition = 'none';
     }, { passive: true });
 
     el.addEventListener('touchmove', (e) => {
+        if (!isDragging) return;
         distX = e.touches[0].clientX - startX;
+        distY = e.touches[0].clientY - startY;
+
+        // If scrolling more vertically, bail out
+        if (Math.abs(distY) > Math.abs(distX)) return;
+
+        const track = el.querySelector('.product-slide-track');
+        if (track) {
+            const baseOffset = -activeProductIndex * 100;
+            const dragPercent = (distX / el.offsetWidth) * 100;
+            track.style.transform = `translateX(${baseOffset + dragPercent}%)`;
+        }
     }, { passive: true });
 
     el.addEventListener('touchend', () => {
-        if (Math.abs(distX) > 50) {
+        if (!isDragging) return;
+        isDragging = false;
+
+        const track = el.querySelector('.product-slide-track');
+        if (track) track.style.transition = '';
+
+        if (Math.abs(distX) > 50 && Math.abs(distX) > Math.abs(distY)) {
             navigateProduct(distX < 0 ? 1 : -1);
+        } else {
+            // Snap back
+            if (track) track.style.transform = `translateX(-${activeProductIndex * 100}%)`;
         }
     });
 }
