@@ -300,13 +300,16 @@
             </div>
         </div>
 
-        <!-- Allergen Legend -->
-        <div class="allergen-info" id="allergenLegend" style="display: none;">
-            <h4 class="allergen-title">allergeninformationen</h4>
+        <!-- Allergen Legend (collapsible) -->
+        <details class="allergen-info allergen-collapsible" id="allergenLegend" style="display: none;">
+            <summary class="allergen-toggle">
+                <h4 class="allergen-title">allergeninformationen</h4>
+                <span class="allergen-toggle-icon"><i class="fas fa-chevron-down"></i></span>
+            </summary>
             <div class="allergen-grid">
                 <!-- Allergens will be added dynamically -->
             </div>
-        </div>
+        </details>
     </section>
 
     <div class="section-divider"></div>
