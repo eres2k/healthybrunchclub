@@ -1253,27 +1253,25 @@ h1, h2, h3, h4, h5, h6 {
     line-height: 1.6;
     color: var(--warm-gray);
 }
-/* about section */
+/* about section - centered layout */
 .about-premium {
     padding: var(--spacing-xxl) var(--spacing-md);
     background: var(--off-white);
 }
 .about-container {
-    max-width: 1200px;
+    max-width: 900px;
     margin: 0 auto;
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: var(--spacing-xl);
+    display: flex;
+    flex-direction: column;
     align-items: center;
+    gap: var(--spacing-lg);
 }
 .about-content {
-    padding-right: var(--spacing-lg);
-    text-align: left;
+    text-align: center;
+    max-width: 750px;
 }
 .about-content .section-title {
     text-align: center;
-    margin-left: auto;
-    margin-right: auto;
 }
 .about-lead {
     font-family: var(--font-heading);
@@ -1288,10 +1286,15 @@ h1, h2, h3, h4, h5, h6 {
 }
 .about-image {
     position: relative;
+    width: 100%;
+    max-width: 600px;
+    border-radius: 8px;
+    overflow: hidden;
 }
 .founder-image {
     width: 100%;
     height: auto;
+    display: block;
     filter: grayscale(20%);
 }
 .image-caption {
@@ -1705,14 +1708,6 @@ address a:hover {
         grid-template-columns: repeat(2, 1fr);
     }
    
-    .about-container {
-        grid-template-columns: 1fr;
-    }
-   
-    .about-content {
-        padding-right: 0;
-        margin-bottom: var(--spacing-lg);
-    }
 }
 /* mobile responsive styles */
 @media (max-width: 768px) {
@@ -1851,24 +1846,13 @@ address a:hover {
     .about-premium {
         padding: var(--spacing-lg) 0;
     }
-   
+
     .about-container {
         padding: 0 var(--spacing-sm);
-        grid-template-columns: 1fr;
     }
-   
-    .about-content {
-        padding-right: 0;
-        margin-bottom: var(--spacing-lg);
-    }
-   
+
     .about-image {
-        margin: 0 -var(--spacing-sm);
-    }
-   
-    .founder-image {
-        width: 100%;
-        height: auto;
+        max-width: 100%;
     }
    
     /* reservation section */
@@ -4024,52 +4008,82 @@ body.dark-mode video:hover {
   font-size: 1.4rem;
 }
 
+/* --- Premium Date Cards --- */
 .dates-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
   gap: 1rem;
-  margin: 1.5rem 0;
+  margin: 2rem 0;
 }
 
 .date-card {
-  background: var(--warm-white);
-  border: 2px solid var(--sage-green);
-  border-radius: 10px;
-  padding: 1rem;
+  background: var(--pure-white);
+  border: 1px solid var(--light-gray);
+  border-radius: 14px;
+  padding: 1.25rem 1.5rem;
   cursor: pointer;
-  transition: all 0.3s ease;
+  transition: transform 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94),
+              box-shadow 0.4s ease,
+              border-color 0.3s ease;
   text-align: center;
   color: inherit;
+  min-width: 140px;
+  position: relative;
+  overflow: hidden;
+}
+
+.date-card::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(135deg, rgba(201, 169, 97, 0.04) 0%, transparent 60%);
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+.date-card:hover::before {
+  opacity: 1;
 }
 
 .date-card:hover {
-  transform: translateY(-3px);
-  box-shadow: 0 6px 16px rgba(30, 74, 60, 0.12);
-  border-color: var(--forest-green);
+  transform: translateY(-5px);
+  box-shadow: 0 12px 32px rgba(30, 74, 60, 0.10);
+  border-color: var(--gold);
 }
 
 .date-card.selected {
-  background: var(--sage-green);
+  background: var(--forest-green);
+  border-color: var(--forest-green);
   color: #fff;
+  box-shadow: 0 8px 24px rgba(30, 74, 60, 0.2);
+}
+
+.date-card.selected::before {
+  opacity: 0;
 }
 
 .date-card h4 {
-  font-family: 'Lora', serif;
-  font-size: 0.95rem;
-  margin-bottom: 0.35rem;
-  color: var(--forest-green);
+  font-family: var(--font-heading);
+  font-size: 0.85rem;
+  margin-bottom: 0.25rem;
+  color: var(--warm-gray);
+  font-weight: 400;
+  text-transform: capitalize;
 }
 
 .date-card.selected h4 {
-  color: #fff;
+  color: rgba(255, 255, 255, 0.8);
 }
 
 .date-card .date-day {
-  font-size: 1.5rem;
-  font-weight: bold;
+  font-family: var(--font-display);
+  font-size: 2.4rem;
+  font-weight: 300;
   color: var(--forest-green);
   display: block;
-  line-height: 1.2;
+  line-height: 1.1;
+  margin: 0.25rem 0;
 }
 
 .date-card.selected .date-day {
@@ -4077,56 +4091,64 @@ body.dark-mode video:hover {
 }
 
 .date-card .date-month {
-  font-size: 0.75rem;
+  font-family: var(--font-body);
+  font-size: 0.7rem;
   text-transform: uppercase;
-  letter-spacing: 0.5px;
-  opacity: 0.8;
+  letter-spacing: 0.12em;
+  color: var(--warm-gray);
+  font-weight: 500;
+}
+
+.date-card.selected .date-month {
+  color: rgba(255, 255, 255, 0.85);
 }
 
 /* Date card availability badges */
 .date-availability {
-  display: block;
-  font-size: 0.65rem;
-  padding: 0.25rem 0.5rem;
-  border-radius: 10px;
-  margin-top: 0.5rem;
+  display: inline-block;
+  font-size: 0.6rem;
+  padding: 0.2rem 0.6rem;
+  border-radius: 20px;
+  margin-top: 0.625rem;
   font-weight: 600;
+  letter-spacing: 0.02em;
 }
 
 .date-availability.is-available {
-  background: rgba(76, 175, 80, 0.15);
+  background: rgba(76, 175, 80, 0.1);
   color: #2e7d32;
 }
 
 .date-availability.is-limited {
-  background: rgba(255, 152, 0, 0.15);
-  color: #e65100;
+  background: rgba(201, 169, 97, 0.15);
+  color: #b8860b;
 }
 
 .date-availability.is-full {
-  background: rgba(244, 67, 54, 0.15);
-  color: #c62828;
+  background: rgba(0, 0, 0, 0.06);
+  color: #999;
 }
 
 /* Fully booked date cards */
 .date-card.is-fully-booked {
-  opacity: 0.65;
-  background: #f5f5f5;
+  opacity: 0.5;
+  background: var(--off-white);
+  border-color: var(--light-gray);
 }
 
 .date-card.is-fully-booked:hover {
-  transform: translateY(-1px);
-  box-shadow: 0 3px 8px rgba(0, 0, 0, 0.08);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.06);
 }
 
 .date-card.is-fully-booked h4,
 .date-card.is-fully-booked .date-day {
-  color: #757575;
+  color: #999;
 }
 
 /* Limited availability warning */
 .date-card.is-limited {
-  border-color: #f5a623;
+  border-color: var(--gold);
 }
 
 .date-card .date-note {
@@ -5816,17 +5838,40 @@ body.dark-mode .cat-tab.active {
     flex: 1;
     min-width: 0;
     overflow: hidden;
+    perspective: 1200px;
 }
 
 .product-slide-track {
     display: flex;
     transition: transform 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94);
     will-change: transform;
+    transform-style: preserve-3d;
 }
 
 .product-slide {
     flex: 0 0 100%;
     min-width: 0;
+    transform-style: preserve-3d;
+    backface-visibility: hidden;
+}
+
+/* 3D tilt during swipe - applied via JS */
+.product-slide-track.is-dragging {
+    transition: none;
+}
+
+.product-slide-track.slide-3d {
+    transition: transform 0.6s cubic-bezier(0.23, 1, 0.32, 1);
+}
+
+/* Slide card 3D depth effect during navigation */
+.product-card {
+    transition: transform 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94),
+                box-shadow 0.5s ease;
+}
+
+.product-slide-track.is-dragging .product-card {
+    transition: none;
 }
 
 /* --- Carousel Navigation Buttons --- */
@@ -6565,11 +6610,6 @@ body.dark-mode .product-allergens .allergen-code {
         gap: var(--spacing-md) !important;
     }
 
-    .about-content {
-        padding-right: 0 !important;
-        margin-bottom: 0 !important;
-    }
-
     .about-content .section-title {
         font-size: clamp(1.6rem, 6vw, 2rem) !important;
     }
@@ -6591,9 +6631,8 @@ body.dark-mode .product-allergens .allergen-code {
     }
 
     .about-image {
-        margin: 0 !important;
+        max-width: 100% !important;
         border-radius: 12px;
-        overflow: hidden;
     }
 
     .image-caption {
@@ -6916,6 +6955,10 @@ body.dark-mode .product-allergens .allergen-code {
     transition: transform 1s cubic-bezier(0.77, 0, 0.175, 1);
 }
 
+[data-reveal="curtain"].revealed {
+    opacity: 1;
+}
+
 [data-reveal="curtain"].revealed::before {
     transform: scaleX(0);
 }
@@ -7123,9 +7166,59 @@ body.dark-mode .product-allergens .allergen-code {
     mix-blend-mode: screen;
 }
 
-/* --- Loading Screen Premium Entrance --- */
-.loading-screen {
-    background: linear-gradient(135deg, #0a0a0a 0%, #1a1a1a 100%);
+/* Loading screen stays light (original off-white) */
+
+/* --- Scroll Wow Effects --- */
+
+/* Section entrance */
+.wow-section {
+    opacity: 0;
+    transform: translateY(40px);
+    transition: opacity 0.9s cubic-bezier(0.25, 0.46, 0.45, 0.94),
+                transform 0.9s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+}
+
+.wow-section.wow-visible {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+/* About lead text emphasis */
+.about-lead {
+    transition: color 0.6s ease, letter-spacing 0.6s ease;
+}
+
+.about-lead.wow-text-emphasis {
+    color: var(--forest-green);
+}
+
+/* Progressive paragraph reveal */
+.wow-paragraph {
+    opacity: 0;
+    transform: translateY(20px);
+    transition: opacity 0.7s cubic-bezier(0.25, 0.46, 0.45, 0.94),
+                transform 0.7s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+}
+
+.wow-paragraph.wow-visible {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+/* Section divider glow */
+.section-divider {
+    transition: opacity 0.8s ease;
+    opacity: 0.4;
+}
+
+.section-divider.divider-glow {
+    opacity: 1;
+    box-shadow: 0 0 12px rgba(201, 169, 97, 0.15);
+}
+
+/* Scroll indicator smooth fade */
+.scroll-indicator {
+    transition: opacity 0.3s ease;
 }
 
 /* ===============================================
@@ -7190,6 +7283,16 @@ body.dark-mode .product-allergens .allergen-code {
     [data-stagger] > * {
         transform: translateY(15px);
     }
+
+    /* Lighter wow effects on mobile */
+    .wow-section {
+        transform: translateY(25px);
+        transition-duration: 0.7s;
+    }
+
+    .wow-paragraph {
+        transform: translateY(12px);
+    }
 }
 
 /* ===============================================
@@ -7236,6 +7339,11 @@ body.dark-mode .product-allergens .allergen-code {
 
     .product-slide-track {
         transition: transform 0.3s ease !important;
+        transform-style: flat !important;
+    }
+
+    .product-slide-viewport {
+        perspective: none !important;
     }
 
     [data-stagger] > * {
@@ -7267,6 +7375,13 @@ body.dark-mode .product-allergens .allergen-code {
     }
 
     .scroll-progress {
+        transition: none !important;
+    }
+
+    .wow-section,
+    .wow-paragraph {
+        opacity: 1 !important;
+        transform: none !important;
         transition: none !important;
     }
 }

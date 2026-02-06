@@ -217,9 +217,21 @@ function slideToProduct(newIndex) {
 
     activeProductIndex = newIndex;
 
-    // Use spring-like easing for the slide
+    const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+    // Use spring-like easing with subtle 3D tilt for the slide
     track.style.transition = 'transform 0.6s cubic-bezier(0.23, 1, 0.32, 1)';
-    track.style.transform = `translateX(-${activeProductIndex * 100}%)`;
+    if (!reducedMotion) {
+        const tilt = direction * 2; // subtle 2deg tilt in slide direction
+        track.style.transform = `translateX(-${activeProductIndex * 100}%) perspective(1200px) rotateY(${tilt}deg)`;
+        // Reset tilt after slide completes
+        setTimeout(() => {
+            track.style.transition = 'transform 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94)';
+            track.style.transform = `translateX(-${activeProductIndex * 100}%)`;
+        }, 350);
+    } else {
+        track.style.transform = `translateX(-${activeProductIndex * 100}%)`;
+    }
 
     // Update dots with animation
     document.querySelectorAll('.carousel-dot').forEach((dot, i) => {
@@ -317,6 +329,9 @@ function setupSwipe(el) {
     let isDragging = false;
     let isHorizontalSwipe = false;
 
+    // Check reduced motion preference
+    const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
     el.addEventListener('touchstart', (e) => {
         if (isAnimating) return;
         startX = e.touches[0].clientX;
@@ -328,7 +343,11 @@ function setupSwipe(el) {
         isHorizontalSwipe = false;
 
         const track = el.querySelector('.product-slide-track');
-        if (track) track.style.transition = 'none';
+        if (track) {
+            track.style.transition = 'none';
+            track.classList.add('is-dragging');
+            track.classList.remove('slide-3d');
+        }
     }, { passive: true });
 
     el.addEventListener('touchmove', (e) => {
@@ -351,10 +370,20 @@ function setupSwipe(el) {
             let dragPercent = (distX / el.offsetWidth) * 100;
             const category = allMenuCategories[activeCategoryIndex];
             const total = category ? category.items.length : 0;
-            if ((activeProductIndex === 0 && distX > 0) || (activeProductIndex === total - 1 && distX < 0)) {
+            const atEdge = (activeProductIndex === 0 && distX > 0) || (activeProductIndex === total - 1 && distX < 0);
+            if (atEdge) {
                 dragPercent *= 0.3; // rubber-band resistance
             }
-            track.style.transform = `translateX(${baseOffset + dragPercent}%)`;
+
+            // 3D tilt based on drag distance
+            if (!reducedMotion) {
+                const maxTilt = 4; // degrees
+                const tilt = Math.max(-maxTilt, Math.min(maxTilt, (distX / el.offsetWidth) * -maxTilt * 2));
+                const depth = Math.abs(distX / el.offsetWidth) * 20;
+                track.style.transform = `translateX(${baseOffset + dragPercent}%) perspective(1200px) rotateY(${tilt}deg) translateZ(-${depth}px)`;
+            } else {
+                track.style.transform = `translateX(${baseOffset + dragPercent}%)`;
+            }
         }
     }, { passive: true });
 
@@ -363,7 +392,11 @@ function setupSwipe(el) {
         isDragging = false;
 
         const track = el.querySelector('.product-slide-track');
-        if (track) track.style.transition = 'transform 0.6s cubic-bezier(0.23, 1, 0.32, 1)';
+        if (track) {
+            track.classList.remove('is-dragging');
+            track.classList.add('slide-3d');
+            track.style.transition = 'transform 0.6s cubic-bezier(0.23, 1, 0.32, 1)';
+        }
 
         // Calculate velocity for flick detection
         const elapsed = Date.now() - startTime;
@@ -375,8 +408,13 @@ function setupSwipe(el) {
         if (Math.abs(distX) > swipeThreshold && Math.abs(distX) > Math.abs(distY)) {
             navigateProduct(distX < 0 ? 1 : -1);
         } else {
-            // Snap back smoothly
+            // Snap back smoothly (reset 3D)
             if (track) track.style.transform = `translateX(-${activeProductIndex * 100}%)`;
+        }
+
+        // Clean up 3D class after transition
+        if (track) {
+            setTimeout(() => { track.classList.remove('slide-3d'); }, 650);
         }
     });
 }

@@ -1094,6 +1094,7 @@ function initPremiumEffects() {
     initCursorGlow();
     initParallaxFloat();
     initSmoothCounters();
+    initScrollWowEffects();
 }
 
 // --- Scroll Progress Bar ---
@@ -1276,6 +1277,105 @@ function animateCounter(el) {
     }
 
     requestAnimationFrame(step);
+}
+
+// --- Scroll Wow Effects (progressive section reveals) ---
+function initScrollWowEffects() {
+    // 1. Section depth effect - sections smoothly fade/scale as they enter
+    var sections = document.querySelectorAll('.menu-premium, .about-premium, .elegant-section, .footer-premium');
+    sections.forEach(function(section) {
+        section.classList.add('wow-section');
+    });
+
+    var sectionObserver = new IntersectionObserver(function(entries) {
+        entries.forEach(function(entry) {
+            if (entry.isIntersecting) {
+                entry.target.classList.add('wow-visible');
+            }
+        });
+    }, {
+        threshold: [0, 0.1, 0.2],
+        rootMargin: '0px 0px -80px 0px'
+    });
+
+    document.querySelectorAll('.wow-section').forEach(function(el) {
+        sectionObserver.observe(el);
+    });
+
+    // 2. Hero overlay parallax depth (darkens as you scroll)
+    var heroOverlay = document.querySelector('.hero-overlay');
+    if (heroOverlay) {
+        window.addEventListener('scroll', function() {
+            var scrollTop = window.pageYOffset;
+            var heroHeight = window.innerHeight;
+            if (scrollTop < heroHeight) {
+                var ratio = scrollTop / heroHeight;
+                var opacity = 0.4 + (ratio * 0.35);
+                heroOverlay.style.background = 'linear-gradient(to bottom, rgba(0,0,0,' + (opacity * 0.7) + '), rgba(0,0,0,' + opacity + '))';
+            }
+        }, { passive: true });
+    }
+
+    // 3. Scroll-activated text emphasis on about lead
+    var aboutLead = document.querySelector('.about-lead');
+    if (aboutLead) {
+        var leadObserver = new IntersectionObserver(function(entries) {
+            entries.forEach(function(entry) {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('wow-text-emphasis');
+                    leadObserver.unobserve(entry.target);
+                }
+            });
+        }, { threshold: 0.5 });
+        leadObserver.observe(aboutLead);
+    }
+
+    // 4. Progressive reveal for about paragraphs
+    var aboutParagraphs = document.querySelectorAll('.about-content p:not(.about-lead):not(.about-cta)');
+    aboutParagraphs.forEach(function(p, i) {
+        p.classList.add('wow-paragraph');
+        p.style.transitionDelay = (i * 0.12) + 's';
+    });
+
+    var paragraphObserver = new IntersectionObserver(function(entries) {
+        entries.forEach(function(entry) {
+            if (entry.isIntersecting) {
+                entry.target.classList.add('wow-visible');
+                paragraphObserver.unobserve(entry.target);
+            }
+        });
+    }, { threshold: 0.2, rootMargin: '0px 0px -40px 0px' });
+
+    document.querySelectorAll('.wow-paragraph').forEach(function(el) {
+        paragraphObserver.observe(el);
+    });
+
+    // 5. Scroll indicator fade on scroll
+    var scrollIndicator = document.querySelector('.scroll-indicator');
+    if (scrollIndicator) {
+        window.addEventListener('scroll', function() {
+            var scrollTop = window.pageYOffset;
+            if (scrollTop > 150) {
+                scrollIndicator.style.opacity = '0';
+                scrollIndicator.style.pointerEvents = 'none';
+            } else {
+                scrollIndicator.style.opacity = String(1 - (scrollTop / 150));
+                scrollIndicator.style.pointerEvents = '';
+            }
+        }, { passive: true });
+    }
+
+    // 6. Section divider glow on scroll
+    var dividers = document.querySelectorAll('.section-divider');
+    var dividerObserver = new IntersectionObserver(function(entries) {
+        entries.forEach(function(entry) {
+            if (entry.isIntersecting) {
+                entry.target.classList.add('divider-glow');
+            }
+        });
+    }, { threshold: 0.5 });
+
+    dividers.forEach(function(d) { dividerObserver.observe(d); });
 }
 
 // Initialize premium effects after DOM + loading screen
