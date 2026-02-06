@@ -20,6 +20,8 @@ function initializeApp() {
     initVideoOptimization();
     initParallax();
     fillAvailableDates();
+    initScrollReveal();
+    initHeroEntrance();
 }
 
 // Loading Screen
@@ -997,30 +999,84 @@ style.textContent = `
         transform: translateY(30px);
         transition: opacity 0.8s ease, transform 0.8s ease;
     }
-    
+
     .fade-in-up.visible {
         opacity: 1;
         transform: translateY(0);
     }
-    
+
     .success-message i {
         font-size: 4rem;
         color: var(--gold);
         margin-bottom: 1rem;
     }
-    
+
     .success-message h3 {
         font-family: var(--font-display);
         font-size: 2rem;
         margin-bottom: 1rem;
     }
-    
+
     .success-message p {
         font-size: 1.125rem;
         color: var(--warm-gray);
     }
 `;
 document.head.appendChild(style);
+
+// ===============================================
+// AWWWARDS-STYLE SCROLL REVEAL ANIMATIONS
+// ===============================================
+
+function initScrollReveal() {
+    // Check for reduced motion preference
+    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+        // Immediately show all elements
+        document.querySelectorAll('[data-reveal]').forEach(function(el) {
+            el.classList.add('revealed');
+        });
+        return;
+    }
+
+    var revealElements = document.querySelectorAll('[data-reveal]');
+    if (!revealElements.length) return;
+
+    var revealObserver = new IntersectionObserver(function(entries) {
+        entries.forEach(function(entry) {
+            if (entry.isIntersecting) {
+                entry.target.classList.add('revealed');
+                revealObserver.unobserve(entry.target);
+            }
+        });
+    }, {
+        threshold: 0.15,
+        rootMargin: '0px 0px -60px 0px'
+    });
+
+    revealElements.forEach(function(el) {
+        revealObserver.observe(el);
+    });
+}
+
+// Hero entrance animation
+function initHeroEntrance() {
+    var heroContent = document.querySelector('.hero-content');
+    if (!heroContent) return;
+
+    // Trigger hero animation after loading screen fades
+    window.addEventListener('load', function() {
+        setTimeout(function() {
+            heroContent.classList.add('hero-loaded');
+        }, 2200); // slightly after loading screen hides
+    });
+
+    // Fallback: trigger after 4s regardless
+    setTimeout(function() {
+        if (heroContent && !heroContent.classList.contains('hero-loaded')) {
+            heroContent.classList.add('hero-loaded');
+        }
+    }, 4000);
+}
 
 // Service Worker Registration (if you have one)
 if ('serviceWorker' in navigator) {

@@ -93,10 +93,23 @@ function renderCategoryNav(menuData) {
         btn.className = 'cat-tab' + (i === activeCategoryIndex ? ' active' : '');
         btn.textContent = cat.title;
         btn.addEventListener('click', () => {
+            if (i === activeCategoryIndex) return;
             activeCategoryIndex = i;
             activeProductIndex = 0;
             updateCategoryNav();
-            renderActiveCategory();
+
+            // Fade-out then render new category
+            const container = document.getElementById('menuContainer');
+            if (container) {
+                container.style.transition = 'opacity 0.2s ease';
+                container.style.opacity = '0';
+                setTimeout(() => {
+                    renderActiveCategory();
+                    container.style.opacity = '1';
+                }, 200);
+            } else {
+                renderActiveCategory();
+            }
         });
         nav.appendChild(btn);
     });
@@ -197,19 +210,46 @@ function slideToProduct(newIndex) {
     const track = document.querySelector('.product-slide-track');
     if (!track) { isAnimating = false; return; }
 
+    // Determine slide direction for momentum feel
+    const direction = newIndex > activeProductIndex ? 1 : -1;
+    const isWrapping = (activeProductIndex === 0 && newIndex === total - 1) ||
+                       (activeProductIndex === total - 1 && newIndex === 0);
+
     activeProductIndex = newIndex;
 
-    // Slide the track
+    // Use spring-like easing for the slide
+    track.style.transition = 'transform 0.6s cubic-bezier(0.23, 1, 0.32, 1)';
     track.style.transform = `translateX(-${activeProductIndex * 100}%)`;
 
-    // Update dots
+    // Update dots with animation
     document.querySelectorAll('.carousel-dot').forEach((dot, i) => {
         dot.classList.toggle('active', i === activeProductIndex);
     });
 
-    // Update counter
+    // Update counter with fade
     const counter = document.querySelector('.carousel-counter');
-    if (counter) counter.textContent = `${activeProductIndex + 1} / ${total}`;
+    if (counter) {
+        counter.style.opacity = '0';
+        setTimeout(() => {
+            counter.textContent = `${activeProductIndex + 1} / ${total}`;
+            counter.style.opacity = '1';
+        }, 150);
+    }
+
+    // Animate the product info in the new slide
+    const slides = document.querySelectorAll('.product-slide');
+    if (slides[activeProductIndex]) {
+        const info = slides[activeProductIndex].querySelector('.product-info');
+        if (info) {
+            info.style.opacity = '0';
+            info.style.transform = 'translateY(10px)';
+            setTimeout(() => {
+                info.style.transition = 'opacity 0.4s ease, transform 0.4s ease';
+                info.style.opacity = '1';
+                info.style.transform = 'translateY(0)';
+            }, 250);
+        }
+    }
 
     // Wait for transition to end
     const onEnd = () => {
@@ -218,7 +258,7 @@ function slideToProduct(newIndex) {
     };
     track.addEventListener('transitionend', onEnd);
     // Fallback in case transitionend doesn't fire
-    setTimeout(() => { isAnimating = false; }, 600);
+    setTimeout(() => { isAnimating = false; }, 700);
 }
 
 function navigateProduct(direction) {
@@ -271,17 +311,21 @@ function setupSwipe(el) {
     if (!el) return;
     let startX = 0;
     let startY = 0;
+    let startTime = 0;
     let distX = 0;
     let distY = 0;
     let isDragging = false;
+    let isHorizontalSwipe = false;
 
     el.addEventListener('touchstart', (e) => {
         if (isAnimating) return;
         startX = e.touches[0].clientX;
         startY = e.touches[0].clientY;
+        startTime = Date.now();
         distX = 0;
         distY = 0;
         isDragging = true;
+        isHorizontalSwipe = false;
 
         const track = el.querySelector('.product-slide-track');
         if (track) track.style.transition = 'none';
@@ -292,13 +336,24 @@ function setupSwipe(el) {
         distX = e.touches[0].clientX - startX;
         distY = e.touches[0].clientY - startY;
 
+        // Determine swipe direction on first significant movement
+        if (!isHorizontalSwipe && Math.abs(distX) > 8) {
+            isHorizontalSwipe = Math.abs(distX) > Math.abs(distY);
+        }
+
         // If scrolling more vertically, bail out
-        if (Math.abs(distY) > Math.abs(distX)) return;
+        if (!isHorizontalSwipe && Math.abs(distY) > Math.abs(distX)) return;
 
         const track = el.querySelector('.product-slide-track');
         if (track) {
             const baseOffset = -activeProductIndex * 100;
-            const dragPercent = (distX / el.offsetWidth) * 100;
+            // Add resistance at edges
+            let dragPercent = (distX / el.offsetWidth) * 100;
+            const category = allMenuCategories[activeCategoryIndex];
+            const total = category ? category.items.length : 0;
+            if ((activeProductIndex === 0 && distX > 0) || (activeProductIndex === total - 1 && distX < 0)) {
+                dragPercent *= 0.3; // rubber-band resistance
+            }
             track.style.transform = `translateX(${baseOffset + dragPercent}%)`;
         }
     }, { passive: true });
@@ -308,12 +363,19 @@ function setupSwipe(el) {
         isDragging = false;
 
         const track = el.querySelector('.product-slide-track');
-        if (track) track.style.transition = '';
+        if (track) track.style.transition = 'transform 0.6s cubic-bezier(0.23, 1, 0.32, 1)';
 
-        if (Math.abs(distX) > 50 && Math.abs(distX) > Math.abs(distY)) {
+        // Calculate velocity for flick detection
+        const elapsed = Date.now() - startTime;
+        const velocity = Math.abs(distX) / elapsed;
+
+        // Trigger swipe with lower threshold if velocity is high (quick flick)
+        const swipeThreshold = velocity > 0.5 ? 20 : 50;
+
+        if (Math.abs(distX) > swipeThreshold && Math.abs(distX) > Math.abs(distY)) {
             navigateProduct(distX < 0 ? 1 : -1);
         } else {
-            // Snap back
+            // Snap back smoothly
             if (track) track.style.transform = `translateX(-${activeProductIndex * 100}%)`;
         }
     });
