@@ -1078,6 +1078,212 @@ function initHeroEntrance() {
     }, 4000);
 }
 
+// ===============================================
+// PREMIUM AWARD-WINNING EFFECTS
+// Smooth scroll, parallax layers, magnetic cursor,
+// stagger reveals, scroll progress, hero fade
+// ===============================================
+
+function initPremiumEffects() {
+    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+
+    initScrollProgress();
+    initHeroScrollFade();
+    initStaggerReveal();
+    initMagneticButtons();
+    initCursorGlow();
+    initParallaxFloat();
+    initSmoothCounters();
+}
+
+// --- Scroll Progress Bar ---
+function initScrollProgress() {
+    var progressBar = document.createElement('div');
+    progressBar.className = 'scroll-progress';
+    document.body.appendChild(progressBar);
+
+    window.addEventListener('scroll', function() {
+        var scrollTop = window.pageYOffset;
+        var docHeight = document.documentElement.scrollHeight - window.innerHeight;
+        var scrollPercent = docHeight > 0 ? (scrollTop / docHeight) * 100 : 0;
+        progressBar.style.width = scrollPercent + '%';
+    }, { passive: true });
+}
+
+// --- Hero Scroll Fade (content fades as you scroll down) ---
+function initHeroScrollFade() {
+    var hero = document.querySelector('.hero-premium');
+    if (!hero) return;
+
+    var heroHeight = hero.offsetHeight;
+
+    window.addEventListener('scroll', function() {
+        var scrollTop = window.pageYOffset;
+
+        if (scrollTop > heroHeight * 0.3) {
+            hero.classList.add('hero-scrolled');
+        } else {
+            hero.classList.remove('hero-scrolled');
+        }
+    }, { passive: true });
+}
+
+// --- Stagger Reveal for Child Elements ---
+function initStaggerReveal() {
+    var staggerElements = document.querySelectorAll('[data-stagger]');
+    if (!staggerElements.length) return;
+
+    var staggerObserver = new IntersectionObserver(function(entries) {
+        entries.forEach(function(entry) {
+            if (entry.isIntersecting) {
+                entry.target.classList.add('revealed');
+                staggerObserver.unobserve(entry.target);
+            }
+        });
+    }, {
+        threshold: 0.1,
+        rootMargin: '0px 0px -40px 0px'
+    });
+
+    staggerElements.forEach(function(el) {
+        staggerObserver.observe(el);
+    });
+}
+
+// --- Magnetic Button Effect (desktop only) ---
+function initMagneticButtons() {
+    if (window.innerWidth <= 768 || 'ontouchstart' in window) return;
+
+    var magneticBtns = document.querySelectorAll('.btn-magnetic');
+    magneticBtns.forEach(function(btn) {
+        btn.addEventListener('mousemove', function(e) {
+            var rect = btn.getBoundingClientRect();
+            var x = e.clientX - rect.left - rect.width / 2;
+            var y = e.clientY - rect.top - rect.height / 2;
+            btn.style.transform = 'translate(' + (x * 0.2) + 'px, ' + (y * 0.2) + 'px)';
+        });
+
+        btn.addEventListener('mouseleave', function() {
+            btn.style.transform = 'translate(0, 0)';
+        });
+    });
+}
+
+// --- Cursor Glow Effect (desktop only) ---
+function initCursorGlow() {
+    if (window.innerWidth <= 768 || 'ontouchstart' in window) return;
+
+    var glow = document.createElement('div');
+    glow.className = 'cursor-glow';
+    glow.style.opacity = '0';
+    document.body.appendChild(glow);
+
+    var mouseX = 0, mouseY = 0;
+    var glowX = 0, glowY = 0;
+    var rafId = null;
+
+    document.addEventListener('mousemove', function(e) {
+        mouseX = e.clientX;
+        mouseY = e.clientY;
+        glow.style.opacity = '1';
+
+        if (!rafId) {
+            rafId = requestAnimationFrame(updateGlow);
+        }
+    });
+
+    document.addEventListener('mouseleave', function() {
+        glow.style.opacity = '0';
+    });
+
+    function updateGlow() {
+        glowX += (mouseX - glowX) * 0.15;
+        glowY += (mouseY - glowY) * 0.15;
+
+        glow.style.left = glowX + 'px';
+        glow.style.top = glowY + 'px';
+
+        if (Math.abs(mouseX - glowX) > 0.5 || Math.abs(mouseY - glowY) > 0.5) {
+            rafId = requestAnimationFrame(updateGlow);
+        } else {
+            rafId = null;
+        }
+    }
+}
+
+// --- Parallax Float Elements ---
+function initParallaxFloat() {
+    if (window.innerWidth <= 768) return;
+
+    var floatElements = document.querySelectorAll('.parallax-float');
+    if (!floatElements.length) return;
+
+    window.addEventListener('scroll', function() {
+        var scrollTop = window.pageYOffset;
+
+        floatElements.forEach(function(el) {
+            var speed = parseFloat(el.dataset.speed) || 0.05;
+            var rect = el.getBoundingClientRect();
+            var elementCenter = rect.top + rect.height / 2;
+            var windowCenter = window.innerHeight / 2;
+            var offset = (elementCenter - windowCenter) * speed;
+
+            el.style.transform = 'translateY(' + offset + 'px)';
+        });
+    }, { passive: true });
+}
+
+// --- Smooth Number Counter Animation ---
+function initSmoothCounters() {
+    var counters = document.querySelectorAll('[data-count]');
+    if (!counters.length) return;
+
+    var counterObserver = new IntersectionObserver(function(entries) {
+        entries.forEach(function(entry) {
+            if (entry.isIntersecting) {
+                animateCounter(entry.target);
+                counterObserver.unobserve(entry.target);
+            }
+        });
+    }, { threshold: 0.5 });
+
+    counters.forEach(function(el) {
+        counterObserver.observe(el);
+    });
+}
+
+function animateCounter(el) {
+    var target = parseInt(el.dataset.count, 10);
+    var duration = parseInt(el.dataset.duration, 10) || 2000;
+    var suffix = el.dataset.suffix || '';
+    var start = 0;
+    var startTime = null;
+
+    function step(timestamp) {
+        if (!startTime) startTime = timestamp;
+        var progress = Math.min((timestamp - startTime) / duration, 1);
+        // Ease out cubic
+        var eased = 1 - Math.pow(1 - progress, 3);
+        var current = Math.floor(eased * target);
+
+        el.textContent = current + suffix;
+
+        if (progress < 1) {
+            requestAnimationFrame(step);
+        } else {
+            el.textContent = target + suffix;
+        }
+    }
+
+    requestAnimationFrame(step);
+}
+
+// Initialize premium effects after DOM + loading screen
+document.addEventListener('DOMContentLoaded', function() {
+    // Wait for loading screen to finish before initializing effects
+    setTimeout(initPremiumEffects, 2200);
+});
+
 // Service Worker Registration (if you have one)
 if ('serviceWorker' in navigator) {
     window.addEventListener('load', () => {
