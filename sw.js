@@ -1,18 +1,15 @@
 // Service Worker for Healthy Brunch Club
-// Version 1.0.0
+// Version 2.0.0
 
-const CACHE_NAME = 'healthy-brunch-v1.0.0';
+const CACHE_NAME = 'healthy-brunch-v2.0.0';
 const OFFLINE_URL = '/offline.html';
 
 // Resources to cache immediately
+// Only cache offline essentials - HTML/JS/CSS are always fetched from network
 const STATIC_CACHE_URLS = [
-  '/',
-  '/index.html',
-  '/manifest.json',
   '/offline.html',
-  // Add critical CSS and JS files
+  '/manifest.json',
   'https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap',
-  // Icons
   '/icons/icon-192x192.png',
   '/icons/icon-512x512.png'
 ];
@@ -83,31 +80,16 @@ self.addEventListener('fetch', event => {
     return;
   }
 
-  // Handle navigation requests (HTML pages)
+  // Handle navigation requests (HTML pages) - always fetch from network
   if (request.mode === 'navigate') {
     event.respondWith(
       fetch(request)
         .then(response => {
-          // If we got a valid response, clone and cache it
-          if (response.status === 200) {
-            const responseClone = response.clone();
-            caches.open(CACHE_NAME)
-              .then(cache => {
-                cache.put(request, responseClone);
-              });
-          }
           return response;
         })
         .catch(() => {
-          // If network fails, try to serve from cache
-          return caches.match(request)
-            .then(response => {
-              if (response) {
-                return response;
-              }
-              // If not in cache, serve offline page
-              return caches.match(OFFLINE_URL);
-            });
+          // If network fails, serve offline page
+          return caches.match(OFFLINE_URL);
         })
     );
     return;
@@ -234,12 +216,14 @@ self.addEventListener('fetch', event => {
     return;
   }
 
-  // Default strategy: Network first, then cache
+  // Default strategy: Network first, skip caching for same-origin JS/CSS
   event.respondWith(
     fetch(request)
       .then(response => {
-        // Cache successful responses
-        if (response.status === 200) {
+        // Only cache non-JS/CSS resources from same origin
+        const isSameOrigin = url.origin === self.location.origin;
+        const isCodeAsset = request.destination === 'script' || request.destination === 'style';
+        if (response.status === 200 && !(isSameOrigin && isCodeAsset)) {
           const responseClone = response.clone();
           caches.open(CACHE_NAME)
             .then(cache => {

@@ -4018,6 +4018,56 @@ body.dark-mode video:hover {
 }
 
 /* --- Premium Date Cards --- */
+
+/* Scroll wrapper for desktop navigation arrows */
+.dates-scroll-wrapper {
+  position: relative;
+  padding: 0 28px;
+}
+
+.dates-scroll-wrapper .scroll-arrow {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  z-index: 2;
+  background: var(--forest-green);
+  color: #fff;
+  border: none;
+  border-radius: 50%;
+  width: 36px;
+  height: 36px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.4rem;
+  line-height: 1;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+  opacity: 0;
+  transition: opacity 0.3s ease, background 0.2s ease;
+}
+
+.dates-scroll-wrapper:hover .scroll-arrow:not(.hidden) {
+  opacity: 1;
+}
+
+.dates-scroll-wrapper .scroll-arrow:hover {
+  background: var(--dark-green, #163d30);
+}
+
+.dates-scroll-wrapper .scroll-arrow.scroll-left {
+  left: -4px;
+}
+
+.dates-scroll-wrapper .scroll-arrow.scroll-right {
+  right: -4px;
+}
+
+.dates-scroll-wrapper .scroll-arrow.hidden {
+  opacity: 0;
+  pointer-events: none;
+}
+
 .dates-grid {
   display: flex;
   overflow-x: auto;
@@ -4027,6 +4077,7 @@ body.dark-mode video:hover {
   margin: 2rem 0;
   padding: 0.5rem 0 1rem;
   scrollbar-width: none;
+  scroll-behavior: smooth;
 }
 
 .dates-grid::-webkit-scrollbar {
@@ -4034,7 +4085,7 @@ body.dark-mode video:hover {
 }
 
 .dates-grid .date-card {
-  flex: 0 0 auto;
+  flex: 0 0 180px;
   scroll-snap-align: start;
 }
 
@@ -4178,6 +4229,11 @@ body.dark-mode video:hover {
   font-style: italic;
   opacity: 0.7;
   line-height: 1.3;
+  overflow: hidden;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  text-overflow: ellipsis;
 }
 
 .time-slots-grid {
@@ -4391,9 +4447,21 @@ body.dark-mode video:hover {
 }
 
 @media (max-width: 768px) {
+  .dates-scroll-wrapper {
+    padding: 0;
+  }
+
+  .dates-scroll-wrapper .scroll-arrow {
+    display: none;
+  }
+
   .dates-grid {
     gap: 0.625rem;
     margin: 1rem 0;
+  }
+
+  .dates-grid .date-card {
+    flex: 0 0 110px;
   }
 
   .date-card {
