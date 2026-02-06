@@ -1,10 +1,10 @@
 {
-  "english_menu_pdf": "/content/englisch-speisekarte-hbc.pdf",
+  "english_menu_pdf": "/content/HBC_EN_MENU.pdf",
   "kids_menu_pdf": "/content/HBC_KIDS_MENU.pdf",
   "active": true,
   "lasa_menu_pdf": "/content/LASA_DE_MENU.PDF",
-  "last_updated": "2026-01-30T19:22:14.978Z",
-  "menu_pdf": "/content/speisekarte-hbc.pdf",
+  "last_updated": "2026-02-06T01:34:00.417Z",
+  "menu_pdf": "/content/HBC_DE_MENU.pdf",
   "version": "1.0",
   "title": "Speisekarte PDF",
   "description": "Aktuelle Speisekarte des Healthy Brunch Clubs x LASA"
