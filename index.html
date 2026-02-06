@@ -9,6 +9,11 @@
     <meta name="author" content="Healthy Brunch Club">
     <link rel="canonical" href="https://healthybrunchclub.at/">
     
+    <!-- Prevent caching of HTML page -->
+    <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+    <meta http-equiv="Pragma" content="no-cache">
+    <meta http-equiv="Expires" content="0">
+
     <!-- Theme Color for Mobile Browsers -->
     <meta name="theme-color" content="#1A1A1A">
     
@@ -678,6 +683,64 @@
 
         container.appendChild(card);
       });
+
+      // Set up scroll navigation after rendering dates
+      setupDateScrollNavigation();
+    }
+
+    function setupDateScrollNavigation() {
+      const container = document.getElementById('available-dates-container');
+      if (!container || container.parentElement.classList.contains('dates-scroll-wrapper')) return;
+
+      // Wrap in scroll wrapper
+      const wrapper = document.createElement('div');
+      wrapper.className = 'dates-scroll-wrapper';
+      container.parentNode.insertBefore(wrapper, container);
+      wrapper.appendChild(container);
+
+      // Add arrow buttons
+      const leftArrow = document.createElement('button');
+      leftArrow.className = 'scroll-arrow scroll-left hidden';
+      leftArrow.innerHTML = '&#8249;';
+      leftArrow.type = 'button';
+      leftArrow.setAttribute('aria-label', 'Vorherige Termine');
+
+      const rightArrow = document.createElement('button');
+      rightArrow.className = 'scroll-arrow scroll-right';
+      rightArrow.innerHTML = '&#8250;';
+      rightArrow.type = 'button';
+      rightArrow.setAttribute('aria-label', 'Nächste Termine');
+
+      wrapper.appendChild(leftArrow);
+      wrapper.appendChild(rightArrow);
+
+      function updateArrows() {
+        const maxScroll = container.scrollWidth - container.clientWidth;
+        leftArrow.classList.toggle('hidden', container.scrollLeft <= 5);
+        rightArrow.classList.toggle('hidden', container.scrollLeft >= maxScroll - 5);
+      }
+
+      leftArrow.addEventListener('click', function() {
+        container.scrollBy({ left: -220, behavior: 'smooth' });
+      });
+
+      rightArrow.addEventListener('click', function() {
+        container.scrollBy({ left: 220, behavior: 'smooth' });
+      });
+
+      container.addEventListener('scroll', updateArrows);
+      // Initial check after layout settles
+      setTimeout(updateArrows, 100);
+      window.addEventListener('resize', updateArrows);
+
+      // Enable mouse wheel horizontal scrolling on the dates grid
+      container.addEventListener('wheel', function(e) {
+        if (container.scrollWidth > container.clientWidth) {
+          e.preventDefault();
+          container.scrollLeft += e.deltaY;
+          updateArrows();
+        }
+      }, { passive: false });
     }
 
     function selectDate(dateData, card) {
