@@ -1,7 +1,7 @@
 ---
 title: avo-lution
 order: 2
-image: /content/images/img_1029.jpeg
+image: /content/images/dsc00338_ergebnis.webp
 description: avocado in ihrer besten form – auf brot oder in der bowl. frisch,
   cremig und voll guter fette für körper und geist.
 items:
@@ -24,7 +24,7 @@ items:
       - vegetarisch
       - glutenfrei
       - sättigend
-    image: /content/images/img-20250806-wa0004.jpg
+    image: /content/images/img_1029.jpeg
     recommended: true
     description: eine samtige kreation aus frisch zerdrückter avocado, veredelt mit
       fein geriebenem apfel für eine süß-frische note, gekrönt von zart
@@ -58,7 +58,7 @@ items:
       carbs: 38g
       fat: 16g
     price: "12.90"
-    image: /content/images/img-20250806-wa0002.jpg
+    image: /content/images/img_1028.jpeg
     dietary:
       vegetarian: false
       vegan: true
