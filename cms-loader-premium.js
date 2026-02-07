@@ -128,8 +128,14 @@ function updateCategoryNav() {
 
 function scrollActiveTabIntoView() {
     const activeTab = document.querySelector('.cat-tab.active');
-    if (activeTab) {
-        activeTab.scrollIntoView({ behavior: 'smooth', inline: 'center', block: 'nearest' });
+    if (activeTab && activeTab.parentElement) {
+        // Scroll only the tab container horizontally, not the entire page
+        const container = activeTab.parentElement;
+        const tabLeft = activeTab.offsetLeft;
+        const tabWidth = activeTab.offsetWidth;
+        const containerWidth = container.offsetWidth;
+        const scrollTarget = tabLeft - (containerWidth / 2) + (tabWidth / 2);
+        container.scrollTo({ left: scrollTarget, behavior: 'smooth' });
     }
 }
 

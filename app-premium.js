@@ -42,6 +42,9 @@ function initLoadingScreen() {
             if (loadingScreen) {
                 loadingScreen.classList.add('hidden');
             }
+
+            // Ensure page starts at the top after loading screen hides
+            window.scrollTo(0, 0);
         }, 2000);
     });
 
