@@ -1,7 +1,7 @@
 ---
 title: eggcitements
 order: 1
-image: /content/images/img_1026.jpeg
+image: /content/images/dsc00153_ergebnis.webp
 description: frisch, fluffig, voller protein – unsere eiergerichte tanzen auf
   deinem teller. perfekt für einen energiegeladenen start in den tag.
 items:
@@ -24,7 +24,7 @@ items:
       carbs: 49g
       fat: 21g
     price: "18.90"
-    image: /content/images/dsc00153_ergebnis.jpg
+    image: /content/images/img_1026.jpeg
     dietary:
       lactoseFree: true
       vegetarian: true
@@ -49,7 +49,7 @@ items:
       carbs: 31g
       fat: 15g
     price: "18.90"
-    image: /content/images/img-20250806-wa0005.jpg
+    image: /content/images/img_1027.jpeg
     dietary:
       vegetarian: true
       lactoseFree: true
@@ -74,7 +74,7 @@ items:
       - proteinreich
       - sättigend
     special: false
-    image: /content/images/whatsapp-image-2025-09-17-at-09.51.42.jpeg
+    image: /content/images/img_1025.jpeg
     recommended: true
     description: >-
       zwei pochierte eier auf knusprigem sauerteigbrot vom joseph, sautierten
