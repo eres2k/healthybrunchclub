@@ -34,12 +34,21 @@ function initializeApp() {
 function initLoadingScreen() {
     window.addEventListener('load', function() {
         setTimeout(function() {
-            const loadingScreen = document.getElementById('loadingScreen');
+            // Re-enable CSS transitions before hiding loading screen
+            // so the loading screen fade-out and all scroll animations work
+            document.body.classList.remove('no-transition');
+
+            var loadingScreen = document.getElementById('loadingScreen');
             if (loadingScreen) {
                 loadingScreen.classList.add('hidden');
             }
         }, 2000);
     });
+
+    // Fallback: remove no-transition even if window load event is delayed
+    setTimeout(function() {
+        document.body.classList.remove('no-transition');
+    }, 4000);
 }
 
 // Premium Navigation
