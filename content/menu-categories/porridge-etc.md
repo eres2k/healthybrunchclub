@@ -22,7 +22,7 @@ items:
       protein: 16g
       carbs: 60g
       fat: 12g
-    image: /content/images/whatsapp-image-2025-09-17-at-09.52.07.jpeg
+    image: /content/images/img_1030.jpeg
     dietary:
       vegan: true
       glutenFree: true
