@@ -41,11 +41,12 @@ items:
       vegan: true
       glutenFree: true
       lactoseFree: true
-  - special: false
+  - price: "4.50"
     name: kefir mango lassi
-    price: "4.50"
-    description: cremiger lassi aus kefir und mango. fruchtig, leicht spritzig und
-      erfrischend.
+    allergens:
+      - G
+    dietary:
+      glutenFree: true
     nutrition:
       calories: 55g
       protein: 2g
@@ -53,10 +54,10 @@ items:
       fat: 2g
     tags:
       - proteinreich
-    allergens:
-      - G
-    dietary:
-      glutenFree: true
+    special: false
+    image: /content/images/img_1032.jpeg
+    description: cremiger lassi aus kefir und mango. fruchtig, leicht spritzig und
+      erfrischend.
   - special: false
     name: cherry ice glow
     price: "4.50"
@@ -100,21 +101,22 @@ items:
       vegan: true
       glutenFree: true
       lactoseFree: true
-  - recommended: false
-    isNew: true
-    seasonal: false
+  - price: "8.80"
     name: roasted buko
-    price: "8.80"
-    description: s﻿anft geröstetes buko (junges kokoswasser) & mit pandan
-      infundierte mandelmilch, verfeinert mit sternanis und frischen
-      pandanblätter.
+    seasonal: false
+    dietary:
+      vegan: true
+      glutenFree: true
+      lactoseFree: true
+    isNew: true
     nutrition:
       calories: 215g
       protein: 2g
       carbs: 4g
       fat: 22g
-    dietary:
-      vegan: true
-      glutenFree: true
-      lactoseFree: true
+    image: /content/images/img_1021.jpeg
+    recommended: false
+    description: s﻿anft geröstetes buko (junges kokoswasser) & mit pandan
+      infundierte mandelmilch, verfeinert mit sternanis und frischen
+      pandanblätter.
 ---
