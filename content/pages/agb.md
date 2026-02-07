@@ -36,8 +36,8 @@ Das Restaurant behält sich das Hausrecht vor. Bei Störungen oder unangemessene
 
 ### 5. Öffnungszeiten
 
-**Sonntag:** 09:00 - 12:00 Uhr
-**Montag - Samstag:** Geschlossen
+**Donnerstag -Sonntag:** 09:00 - 16:30 Uhr
+**Montag - Mittwoch:** Geschlossen
 
 Änderungen der Öffnungszeiten werden rechtzeitig bekannt gegeben.
 
@@ -64,7 +64,7 @@ Gerichtsstand ist Wien, Österreich.
 **8.3 Salvatorische Klausel**
 Sollten einzelne Bestimmungen dieser AGB unwirksam sein oder werden, berührt dies die Wirksamkeit der übrigen Bestimmungen nicht.
 
----
+- - -
 
 **Kontakt:**
 Healthy Brunch Club
