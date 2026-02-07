@@ -36,7 +36,7 @@ Das Restaurant behält sich das Hausrecht vor. Bei Störungen oder unangemessene
 
 ### 5. Öffnungszeiten
 
-**Donnerstag -Sonntag:** 09:00 - 16:30 Uhr
+**Donnerstag - Sonntag:** 09:00 - 16:30 Uhr
 **Montag - Mittwoch:** Geschlossen
 
 Änderungen der Öffnungszeiten werden rechtzeitig bekannt gegeben.
@@ -72,4 +72,4 @@ Neubaugasse 15
 1070 Wien
 E-Mail: hello@healthybrunchclub.at
 
-*Stand: Januar 2025*
+*Stand: Februar 2026*
