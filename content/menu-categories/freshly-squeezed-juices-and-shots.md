@@ -12,7 +12,7 @@ items:
     description: frische karotten, orangen, ingwer und kurkuma.
     allergens: []
     price: "6.90"
-    image: /content/images/whatsapp-image-2025-09-17-at-14.16.58.jpeg
+    image: /content/images/img_1034.jpeg
     dietary:
       vegan: true
       glutenFree: true
@@ -24,7 +24,7 @@ items:
     description: karotten, äpfel, zitrone, rote beete und ingwer.
     allergens: []
     price: "6.90"
-    image: /content/images/dsc00362_ergebnis.jpg
+    image: /content/images/img_1035.jpeg
     dietary:
       vegan: true
       glutenFree: true
