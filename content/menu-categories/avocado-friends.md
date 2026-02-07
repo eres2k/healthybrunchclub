@@ -1,7 +1,7 @@
 ---
 title: avo-lution
 order: 2
-image: /content/images/dsc00338_ergebnis.jpg
+image: /content/images/img_1029.jpeg
 description: avocado in ihrer besten form – auf brot oder in der bowl. frisch,
   cremig und voll guter fette für körper und geist.
 items:
