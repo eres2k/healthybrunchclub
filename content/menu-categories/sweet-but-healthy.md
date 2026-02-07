@@ -2,15 +2,15 @@
 title: berry good choice
 order: 4
 image: /content/images/dsc00302_ergebnis.jpg
-description: "süß, aber gesund: vollkorn, topfen und beeren für den genussvollen
-  brunchmoment ohne reue."
+description: "süß, aber gesund: dinkel-vollkornmehl, topfen und beeren für den
+  genussvollen brunchmoment ohne reue."
 items:
   - name: vollkorn pfannkuchen mit topfenhimbeer-leinöl
     tags:
       - vegetarisch
       - proteinreich
       - sättigend
-    description: fluffige vollkorn-pfannkuchen, serviert mit cremigem
+    description: fluffige Dinkel-vollkorn-pfannkuchen, serviert mit cremigem
       topfenhimbeer-leinöl, verfeinert mit saftigen heidelbeeren, kräftigem
       ahornsirup, einem hauch zimt und gerösteten mandeln.
     allergens:
@@ -23,7 +23,7 @@ items:
       carbs: 42g
       fat: 12g
     price: "12.50"
-    image: /content/images/whatsapp-image-2025-09-17-at-14.16.00.jpeg
+    image: /content/images/img_1024.jpeg
   - special: false
     name: chia lovers
     price: "6.10"
@@ -40,5 +40,5 @@ items:
       - immunstärkend
       - belebend
     allergens: []
-    image: /content/images/img_5252.jpg
+    image: /content/images/img_1031.jpeg
 ---
