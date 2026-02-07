@@ -1,7 +1,7 @@
 ---
 title: eggcitements
 order: 1
-image: /content/images/whatsapp-image-2025-09-17-at-09.50.29.jpeg
+image: /content/images/img_1026.jpeg
 description: frisch, fluffig, voller protein – unsere eiergerichte tanzen auf
   deinem teller. perfekt für einen energiegeladenen start in den tag.
 items:
