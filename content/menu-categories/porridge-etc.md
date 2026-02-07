@@ -32,13 +32,13 @@ items:
       - glutenfrei
       - proteinreich
       - sättigend
-    description: "kräftige oats in cremiger kokosbasis mit hanf-, chiasamen, und
+    description: "kräftige oats in cremiger kokoscreme mit chia-,hanfsamen und
       kokosraspeln. für die süsse: ein hauch zerdrückte bananen.  garniert mit
       kokosflocken sowie frischen heidel-,himbeeren und eine scheibe, in
       agavendicksaft gebratene banane."
     allergens:
       - a
-    price: "9.50"
+    price: "6.10"
     nutrition:
       calories: "425"
       protein: 16g
