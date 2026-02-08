@@ -4,6 +4,18 @@ order: 5
 image: /content/images/whatsapp-image-2025-09-18-at-11.27.03.jpeg
 description: frisch gepresste säfte und shots für einen natürlichen energieschub.
 items:
+  - name: beet boost
+    tags:
+      - belebend
+      - vitaminreich
+    description: karotten, äpfel, zitrone, rote beete und ingwer.
+    allergens: []
+    price: "6.90"
+    image: /content/images/img_1035.jpeg
+    dietary:
+      vegan: true
+      glutenFree: true
+      lactoseFree: true
   - name: pure celery
     tags:
       - detox
@@ -14,31 +26,6 @@ items:
     image: /content/images/whatsapp-image-2025-09-17-at-14.18.11.jpeg
     dietary:
       vegetarian: false
-      vegan: true
-      glutenFree: true
-      lactoseFree: true
-  - name: immunity
-    tags:
-      - immunstärkend
-      - antioxidativ
-      - belebend
-    description: frische karotten, orangen, ingwer und kurkuma.
-    allergens: []
-    price: "6.90"
-    image: /content/images/img_1034.jpeg
-    dietary:
-      vegan: true
-      glutenFree: true
-      lactoseFree: true
-  - name: beet boost
-    tags:
-      - belebend
-      - vitaminreich
-    description: karotten, äpfel, zitrone, rote beete und ingwer.
-    allergens: []
-    price: "6.90"
-    image: /content/images/img_1035.jpeg
-    dietary:
       vegan: true
       glutenFree: true
       lactoseFree: true
@@ -55,12 +42,26 @@ items:
       vegan: true
       glutenFree: true
       lactoseFree: true
+  - name: immunity
+    tags:
+      - immunstärkend
+      - antioxidativ
+      - belebend
+    description: frische karotten, orangen, ingwer und kurkuma.
+    allergens: []
+    price: "6.90"
+    image: /content/images/img_1034.jpeg
+    dietary:
+      vegan: true
+      glutenFree: true
+      lactoseFree: true
+      vegetarian: false
   - name: shots
     tags:
       - immunstärkend
       - belebend
     description: |-
-      vitaminreiche shot mit frischem
+      vitaminreiche shots mit frischem
 
       * ingwer
       * ingwer/kurkuma
