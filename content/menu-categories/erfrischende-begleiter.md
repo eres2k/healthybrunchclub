@@ -20,7 +20,7 @@ items:
       protein: 8g
       carbs: 30g
       fat: 10g
-    image: /content/images/dscf2517-400w.webp
+    image: /content/images/dscf2517.jpg
     dietary:
       vegan: true
       glutenFree: true
