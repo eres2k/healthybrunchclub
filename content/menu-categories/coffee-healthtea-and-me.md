@@ -19,6 +19,7 @@ items:
       protein: 7g
       carbs: 14g
       fat: 6g
+    image: /content/images/dsc00407_ergebnis.jpg
   - name: reishi cappuccino
     tags:
       - vegetarisch
