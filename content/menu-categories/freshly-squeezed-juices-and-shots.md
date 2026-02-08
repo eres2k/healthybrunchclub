@@ -4,6 +4,19 @@ order: 5
 image: /content/images/whatsapp-image-2025-09-18-at-11.27.03.jpeg
 description: frisch gepresste säfte und shots für einen natürlichen energieschub.
 items:
+  - name: pure celery
+    tags:
+      - detox
+      - zuckerfrei
+    description: selleriesaft mit apfel und zitrone – pur und unverfälscht.
+    allergens: []
+    price: "6.90"
+    image: /content/images/whatsapp-image-2025-09-17-at-14.18.11.jpeg
+    dietary:
+      vegetarian: false
+      vegan: true
+      glutenFree: true
+      lactoseFree: true
   - name: immunity
     tags:
       - immunstärkend
@@ -42,30 +55,17 @@ items:
       vegan: true
       glutenFree: true
       lactoseFree: true
-  - name: pure celery
-    tags:
-      - detox
-      - zuckerfrei
-    description: selleriesaft mit apfel und zitrone – pur und unverfälscht.
-    allergens: []
-    price: "6.90"
-    image: /content/images/whatsapp-image-2025-09-17-at-14.18.11.jpeg
-    dietary:
-      vegetarian: false
-      vegan: true
-      glutenFree: true
-      lactoseFree: true
   - name: shots
     tags:
       - immunstärkend
       - belebend
     description: |-
-      wärmender shot mit frischem ingwer.
+      vitaminreiche shot mit frischem
 
       * ingwer
       * ingwer/kurkuma
       * sellerie
-      * orangen/zirone
+      * orangen/zitrone
     allergens: []
     price: "2.40"
     image: /content/images/whatsapp-image-2025-09-18-at-11.27.03.jpeg
